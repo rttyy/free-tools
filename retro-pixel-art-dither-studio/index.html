@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --border-color: #475569;
+      --active-tool: #0ea5e9;
+      --grid-line: rgba(255, 255, 255, 0.08);
+      --font-stack: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --checker-1: #1e293b;
+      --checker-2: #111827;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg-primary: #f1f5f9;
+        --bg-secondary: #ffffff;
+        --bg-tertiary: #e2e8f0;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --accent: #059669;
+        --accent-hover: #047857;
+        --border-color: #cbd5e1;
+        --active-tool: #0284c7;
+        --grid-line: rgba(0, 0, 0, 0.08);
+        --checker-1: #ffffff;
+        --checker-2: #cbd5e1;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand svg {
+      width: 1.75rem;
+      height: 1.75rem;
+      fill: var(--accent);
+    }
+
+    .brand h1 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* Layout */
+    .workspace {
+      display: grid;
+      grid-template-columns: 260px 1fr 300px;
+      flex: 1;
+      min-height: 400px;
+    }
+
+    @media (min-width: 1025px) {
+      .workspace {
+        height: calc(100vh - 190px);
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .workspace {
+        grid-template-columns: 240px 1fr;
+        height: auto;
+      }
+      .right-sidebar {
+        grid-column: span 2;
+        border-left: none !important;
+        border-top: 1px solid var(--border-color);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+      .left-sidebar {
+        grid-column: span 1;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .right-sidebar {
+        grid-column: span 1;
+      }
+    }
+
+    .left-sidebar, .right-sidebar {
+      background-color: var(--bg-secondary);
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .left-sidebar { border-right: 1px solid var(--border-color); }
+    .right-sidebar { border-left: 1px solid var(--border-color); }
+
+    .editor-viewport {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-primary);
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .canvas-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 1rem;
+      background-image: radial-gradient(var(--grid-line) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+      border: 4px solid var(--bg-tertiary);
+      border-radius: 4px;
+      background-color: var(--checker-1);
+      background-image: linear-gradient(45deg, var(--checker-2) 25%, transparent 25%), 
+                        linear-gradient(-45deg, var(--checker-2) 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, var(--checker-2) 75%), 
+                        linear-gradient(-45deg, transparent 75%, var(--checker-2) 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      touch-action: none;
+    }
+
+    #drawing-canvas {
+      display: block;
+      image-rendering: pixelated;
+      cursor: crosshair;
+      max-width: 100%;
+      max-height: 65vh;
+    }
+
+    .crt-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+      display: none;
+    }
+
+    .crt-active .crt-overlay {
+      display: block;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 3px, 3px 100%;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.4);
+    }
+
+    /* Buttons & Inputs */
+    .section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .btn {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: filter 0.1s;
+      user-select: none;
+    }
+
+    .btn:hover:not(:disabled) { filter: brightness(1.2); }
+    .btn:active:not(:disabled) { transform: translateY(1px); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-primary { background-color: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-active { background-color: var(--active-tool) !important; color: #fff !important; }
+
+    .select-input, .text-input {
+      width: 100%;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.4rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .tool-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; }
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 0.25rem;
+      background: var(--bg-primary);
+      padding: 0.4rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    .color-swatch {
+      aspect-ratio: 1;
+      min-width: 24px;
+      min-height: 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      transition: transform 0.1s;
+    }
+    .color-swatch.active { outline: 2px solid var(--text-primary); outline-offset: 1px; z-index: 2; }
+
+    /* Timeline */
+    .timeline-container {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .timeline-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      overflow-x: auto;
+    }
+
+    .timeline-frames-scroll {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+    }
+
+    .frame-thumb {
+      width: 50px;
+      height: 50px;
+      border: 2px solid var(--border-color);
+      background-color: var(--bg-primary);
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .frame-thumb.active { border-color: var(--active-tool); }
+    .frame-thumb canvas { width: 100%; height: 100%; image-rendering: pixelated; }
+
+    /* Utils */
+    .alert-banner {
+      background-color: rgba(245, 158, 11, 0.1);
+      border: 1px solid #f59e0b;
+      color: #f59e0b;
+      padding: 0.5rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      max-width: 550px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-body { padding: 1.25rem; overflow-y: auto; }
+    .code-output {
+      background: #000;
+      color: #10b981;
+      font-family: monospace;
+      padding: 1rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      white-space: pre;
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    .icon { width: 1.2rem; height: 1.2rem; stroke: currentColor; fill: none; stroke-width: 2; }
+  </style>
+<title>Retro Pixel Art Dither Studio - Free Online Sprite Tool</title>
+<meta name="description" content="Convert images to retro pixel art using authentic Bayer, Atkinson, and Floyd-Steinberg dithering. Export sprite sheets or RGB565 C arrays for ESP32.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/retro-pixel-art-dither-studio/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/retro-pixel-art-dither-studio/">
+<meta property="og:title" content="Retro Pixel Art Dither Studio - Free Online Sprite Tool"><meta property="og:description" content="Convert images to retro pixel art using authentic Bayer, Atkinson, and Floyd-Steinberg dithering. Export sprite sheets or RGB565 C arrays for ESP32.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/retro-pixel-art-dither-studio/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Retro Pixel Art Dither Studio - Free Online Sprite Tool","description":"Convert images to retro pixel art using authentic Bayer, Atkinson, and Floyd-Steinberg dithering. Export sprite sheets or RGB565 C arrays for ESP32.","url":"https://rttyy.github.io/free-tools/retro-pixel-art-dither-studio/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between the free web tool and the $9 Gumroad version?","acceptedAnswer":{"@type":"Answer","text":"The free web version includes the full feature set directly in your browser. The $9 paid edition provides a self-contained, standalone single HTML file that runs entirely offline with zero dependencies, external scripts, or internet connection required."}},{"@type":"Question","name":"Which dithering methods and hardware palettes are included?","acceptedAnswer":{"@type":"Answer","text":"The studio includes Ordered (Bayer 2x2, 4x4, 8x8), Floyd-Steinberg, and Atkinson error-diffusion dithering. Preloaded hardware palettes include classic 1-bit monochrome, Game Boy (4 shades), Commodore 64, PICO-8, and CGA."}},{"@type":"Question","name":"How does the RGB565 C-byte array export work for microcontrollers?","acceptedAnswer":{"@type":"Answer","text":"When you choose RGB565 export, the studio formats each pixel into a 16-bit 5-6-5 color value formatted as a C array (`const uint16_t sprite[]`). You can paste this directly into code for Adafruit GFX, TFT_eSPI, or custom drivers on Arduino, ESP32, and Raspberry Pi Pico."}},{"@type":"Question","name":"Do I need to install Node, Python, or any desktop software to run it?","acceptedAnswer":{"@type":"Answer","text":"No installation is required. The tool runs on standard web technologies and works out of the box in modern desktop browsers like Chrome, Firefox, Edge, and Safari."}}]}</script>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+      <h1>Pixel Dither Studio</h1>
+    </div>
+    <div class="header-actions">
+      <button class="btn" id="btn-toggle-crt" aria-label="Toggle CRT View">CRT View</button>
+      <button class="btn" id="btn-help" aria-label="Help">Help</button>
+      <button class="btn btn-primary" id="btn-export-trigger">Export</button>
+    </div>
+  </header>
+
+  <div class="workspace">
+    <aside class="left-sidebar">
+      <section>
+        <h3 class="section-title">Canvas</h3>
+        <select class="select-input" id="resolution-select">
+          <option value="16">16 x 16 (Icon)</option>
+          <option value="32" selected>32 x 32 (Sprite)</option>
+          <option value="64">64 x 64 (Detailed)</option>
+        </select>
+        <div class="tool-grid" style="margin-top:0.75rem;">
+          <button class="btn btn-icon btn-active" id="tool-pencil" title="Pencil (P)">P</button>
+          <button class="btn btn-icon" id="tool-eraser" title="Eraser (E)">E</button>
+          <button class="btn btn-icon" id="tool-bucket" title="Fill (G)">G</button>
+          <button class="btn btn-icon" id="tool-picker" title="Picker (I)">I</button>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-title">Brush: <span id="brush-val">1px</span></div>
+        <input type="range" id="brush-size" min="1" max="8" value="1" style="width:100%">
+      </section>
+
+      <section>
+        <div class="btn-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem;">
+          <button class="btn" id="btn-undo">Undo</button>
+          <button class="btn" id="btn-redo">Redo</button>
+          <button class="btn" id="btn-clear-frame" style="grid-column: span 2;">Clear Current Frame</button>
+          <button class="btn" id="btn-reset-all" style="grid-column: span 2; border-color:#ef4444; color:#ef4444;">Factory Reset</button>
+        </div>
+      </section>
+
+      <div class="alert-banner">
+        <strong>Note:</strong> Estimate only - verify with a qualified professional before relying on it.
+      </div>
+    </aside>
+
+    <main class="editor-viewport" id="viewport">
+      <div class="canvas-container">
+        <div class="canvas-wrapper" id="canvas-wrap">
+          <canvas id="drawing-canvas"></canvas>
+          <div class="crt-overlay"></div>
+        </div>
+      </div>
+      <div style="background:var(--bg-secondary); padding:0.4rem 1rem; font-size:0.7rem; display:flex; justify-content:space-between; border-top:1px solid var(--border-color);">
+        <span id="coords">0, 0</span>
+        <span id="zoom-lvl">100%</span>
+      </div>
+    </main>
+
+    <aside class="right-sidebar">
+      <section>
+        <h3 class="section-title">Palette</h3>
+        <select class="select-input" id="palette-preset" style="margin-bottom:0.5rem;">
+          <option value="pico8">PICO-8 (16 Color)</option>
+          <option value="gb">Game Boy (4 Color)</option>
+          <option value="c64">C64 (16 Color)</option>
+          <option value="mono">1-Bit (B&W)</option>
+        </select>
+        <div class="palette-grid" id="palette-ui"></div>
+        <input type="color" id="custom-color" style="width:100%; height:30px; margin-top:0.5rem; border:none; background:none; cursor:pointer;">
+      </section>
+
+      <section style="border-top: 1px solid var(--border-color); padding-top:1rem;">
+        <h3 class="section-title">Dither Importer</h3>
+        <div id="dropzone" style="border:2px dashed var(--border-color); padding:1rem; text-align:center; font-size:0.8rem; cursor:pointer; border-radius:8px;">
+          Click or Drop Image/Project JSON
+          <input type="file" id="file-input" hidden accept="image/*,.json">
+        </div>
+        
+        <div style="margin-top:0.75rem; display:flex; flex-direction:column; gap:0.5rem;">
+          <select class="select-input" id="dither-algo">
+            <option value="none">Nearest Match</option>
+            <option value="bayer4">Bayer 4x4</option>
+            <option value="floyd">Floyd-Steinberg</option>
+            <option value="atkinson">Atkinson</option>
+          </select>
+          <label style="font-size:0.7rem;">Brightness</label>
+          <input type="range" id="dither-bright" min="-100" max="100" value="0">
+          <label style="font-size:0.7rem;">Contrast</label>
+          <input type="range" id="dither-contrast" min="-100" max="100" value="0">
+          <button class="btn btn-primary" id="btn-apply-dither">Apply to Frame</button>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <div class="timeline-container">
+    <div class="timeline-controls">
+      <div style="display:flex; gap:0.4rem;">
+        <button class="btn" id="btn-play">Play</button>
+        <button class="btn" id="btn-add-frame">+ Frame</button>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.75rem; font-size:0.8rem;">
+        <span>FPS: <span id="fps-val">8</span></span>
+        <input type="range" id="fps-slider" min="1" max="24" value="8" style="width:80px;">
+      </div>
+    </div>
+    <div class="timeline-frames-scroll" id="timeline"></div>
+  </div>
+
+  <!-- Modals -->
+  <div class="modal-overlay" id="modal-export">
+    <div class="modal">
+      <div class="modal-body">
+        <h2 style="margin-bottom:1rem;">Export Assets</h2>
+        <select class="select-input" id="export-type">
+          <option value="png">Sprite Sheet (PNG)</option>
+          <option value="carray">Microcontroller C-Array (RGB565)</option>
+          <option value="json">Project Data (JSON)</option>
+        </select>
+        <div id="export-preview-container">
+          <div class="code-output" id="export-code"></div>
+        </div>
+        <div style="margin-top:1.5rem; display:flex; justify-content:flex-end; gap:0.5rem;">
+          <button class="btn" onclick="closeModals()">Cancel</button>
+          <button class="btn btn-primary" id="btn-download">Download / Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-help">
+    <div class="modal">
+      <div class="modal-body">
+        <h2 style="margin-bottom:1rem;">Manual</h2>
+        <ul style="font-size:0.9rem; margin-left:1.2rem; display:flex; flex-direction:column; gap:0.5rem;">
+          <li><strong>P / E / G / I</strong>: Tool Shortcuts (Pencil, Eraser, Fill, Color Picker).</li>
+          <li><strong>Ctrl + Z / Y</strong>: Undo and Redo.</li>
+          <li><strong>Dither</strong>: Import high-res images to create retro assets instantly.</li>
+          <li><strong>Export</strong>: Supports Sprite Sheets and raw C-Arrays for hardware like Arduino/ESP32.</li>
+        </ul>
+        <button class="btn btn-primary" style="margin-top:1.5rem; width:100%;" onclick="closeModals()">Dismiss</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Constants
+    const PALETTES = {
+      pico8: ["#000000","#1D2B53","#7E2553","#008751","#AB5236","#5F574F","#C2C3C7","#FFF1E8","#FF004D","#FFA300","#FFEC27","#00E436","#29ADFF","#83769C","#FF77A8","#FFCCAA"],
+      gb: ["#081820", "#346856", "#88c070", "#e0f8d0"],
+      c64: ["#000000","#FFFFFF","#880000","#AAFFEE","#CC44CC","#00CC55","#0000AA","#EEEE77","#DD8855","#664400","#FF7777","#333333","#777777","#AAFF99","#0088FF","#BBBBBB"],
+      mono: ["#000000", "#FFFFFF"]
+    };
+
+    // State
+    let state = {
+      res: 32,
+      frames: [Array(32*32).fill(null)],
+      currentFrame: 0,
+      palette: [...PALETTES.pico8],
+      color: "#FFFFFF",
+      tool: 'pencil',
+      brush: 1,
+      history: [[]],
+      historyStep: [-1],
+      playing: false,
+      fps: 8,
+      timer: null
+    };
+
+    const canvas = document.getElementById('drawing-canvas');
+    const ctx = canvas.getContext('2d', { alpha: true });
+
+    // Initialization
+    function init() {
+      loadSession();
+      renderPalette();
+      updateRes();
+      renderTimeline();
+      addHistory();
+    }
+
+    function updateRes() {
+      state.res = parseInt(document.getElementById('resolution-select').value) || 32;
+      canvas.width = state.res;
+      canvas.height = state.res;
+      
+      const containerWidth = document.querySelector('.canvas-container').clientWidth || 360;
+      const size = Math.min(window.innerHeight * 0.5, containerWidth - 32, 512);
+      canvas.style.width = size + 'px';
+      canvas.style.height = size + 'px';
+      document.getElementById('zoom-lvl').innerText = Math.round((size / state.res) * 100) + '%';
+      draw();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, state.res, state.res);
+      const data = state.frames[state.currentFrame];
+      if (data) {
+        for(let i=0; i<data.length; i++) {
+          if(data[i]) {
+            ctx.fillStyle = data[i];
+            ctx.fillRect(i % state.res, Math.floor(i / state.res), 1, 1);
+          }
+        }
+      }
+    }
+
+    // Logic: Tools
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const x = Math.floor((clientX - rect.left) / (rect.width / state.res));
+      const y = Math.floor((clientY - rect.top) / (rect.height / state.res));
+      return (x >= 0 && x < state.res && y >= 0 && y < state.res) ? {x, y} : null;
+    }
+
+    function pickColor(pos) {
+      if(!pos) return;
+      const idx = pos.y * state.res + pos.x;
+      const color = state.frames[state.currentFrame][idx];
+      if(color) {
+        state.color = color;
+        document.getElementById('custom-color').value = color;
+        renderPalette();
+      }
+    }
+
+    function paint(pos) {
+      if(!pos) return;
+      const frame = state.frames[state.currentFrame];
+      const b = state.brush;
+      
+      for(let dy=0; dy<b; dy++) {
+        for(let dx=0; dx<b; dx++) {
+          const nx = pos.x + dx;
+          const ny = pos.y + dy;
+          if(nx < state.res && ny < state.res) {
+            const idx = ny * state.res + nx;
+            if(state.tool === 'pencil') frame[idx] = state.color;
+            if(state.tool === 'eraser') frame[idx] = null;
+          }
+        }
+      }
+      draw();
+    }
+
+    function floodFill(pos) {
+      if (!pos) return;
+      const frame = state.frames[state.currentFrame];
+      const target = frame[pos.y * state.res + pos.x];
+      if(target === state.color) return;
+      
+      const stack = [pos];
+      while(stack.length) {
+        const p = stack.pop();
+        const idx = p.y * state.res + p.x;
+        if(frame[idx] === target) {
+          frame[idx] = state.color;
+          if(p.x > 0) stack.push({x: p.x - 1, y: p.y});
+          if(p.x < state.res - 1) stack.push({x: p.x + 1, y: p.y});
+          if(p.y > 0) stack.push({x: p.x, y: p.y - 1});
+          if(p.y < state.res - 1) stack.push({x: p.x, y: p.y + 1});
+        }
+      }
+      draw();
+    }
+
+    // History & Storage
+    function addHistory() {
+      const f = state.currentFrame;
+      if(!state.history[f]) state.history[f] = [];
+      state.history[f] = state.history[f].slice(0, state.historyStep[f] + 1);
+      state.history[f].push(JSON.stringify(state.frames[f]));
+      state.historyStep[f]++;
+      if(state.history[f].length > 30) {
+        state.history[f].shift();
+        state.historyStep[f]--;
+      }
+      saveSession();
+      renderTimeline();
+    }
+
+    function undo() {
+      const f = state.currentFrame;
+      if(state.historyStep[f] > 0) {
+        state.historyStep[f]--;
+        state.frames[f] = JSON.parse(state.history[f][state.historyStep[f]]);
+        draw();
+        renderTimeline();
+      }
+    }
+
+    function redo() {
+      const f = state.currentFrame;
+      if(state.history[f] && state.historyStep[f] < state.history[f].length - 1) {
+        state.historyStep[f]++;
+        state.frames[f] = JSON.parse(state.history[f][state.historyStep[f]]);
+        draw();
+        renderTimeline();
+      }
+    }
+
+    function saveSession() {
+      try {
+        localStorage.setItem('pixel_studio_data_v2', JSON.stringify({
+          res: state.res,
+          frames: state.frames,
+          palette: state.palette
+        }));
+      } catch(e) {
+        console.warn("Storage unreachable", e);
+      }
+    }
+
+    function loadSession() {
+      try {
+        const raw = localStorage.getItem('pixel_studio_data_v2');
+        if(raw) {
+          const d = JSON.parse(raw);
+          if (d && typeof d.res === 'number' && Array.isArray(d.frames)) {
+            state.res = d.res || 32;
+            state.frames = d.frames;
+            state.palette = Array.isArray(d.palette) ? d.palette : [...PALETTES.pico8];
+            document.getElementById('resolution-select').value = state.res;
+            return;
+          }
+        }
+      } catch(e) {
+        console.warn("Storage block fallback activated", e);
+      }
+      // Set safe default state
+      state.res = 32;
+      state.frames = [Array(32*32).fill(null)];
+      state.palette = [...PALETTES.pico8];
+    }
+
+    // Palette & UI
+    function renderPalette() {
+      const ui = document.getElementById('palette-ui');
+      ui.innerHTML = '';
+      state.palette.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'color-swatch' + (c === state.color ? ' active' : '');
+        div.style.backgroundColor = c;
+        div.onclick = () => {
+          state.color = c;
+          document.getElementById('custom-color').value = c;
+          renderPalette();
+        };
+        ui.appendChild(div);
+      });
+    }
+
+    function renderTimeline() {
+      const container = document.getElementById('timeline');
+      container.innerHTML = '';
+      state.frames.forEach((f, i) => {
+        const div = document.createElement('div');
+        div.className = 'frame-thumb' + (i === state.currentFrame ? ' active' : '');
+        
+        const label = document.createElement('span');
+        label.innerText = i + 1;
+        label.style.position = 'absolute';
+        label.style.bottom = '1px';
+        label.style.right = '3px';
+        label.style.fontSize = '0.6rem';
+        label.style.background = 'rgba(0,0,0,0.6)';
+        label.style.color = '#fff';
+        label.style.padding = '1px 3px';
+        label.style.borderRadius = '3px';
+
+        const thumb = document.createElement('canvas');
+        thumb.width = state.res; thumb.height = state.res;
+        const tCtx = thumb.getContext('2d');
+        f.forEach((px, idx) => {
+          if(px) {
+            tCtx.fillStyle = px;
+            tCtx.fillRect(idx % state.res, Math.floor(idx / state.res), 1, 1);
+          }
+        });
+        div.appendChild(thumb);
+        div.appendChild(label);
+
+        if (state.frames.length > 1) {
+          const delBtn = document.createElement('button');
+          delBtn.innerHTML = '&times;';
+          delBtn.style.position = 'absolute';
+          delBtn.style.top = '-5px';
+          delBtn.style.right = '-5px';
+          delBtn.style.background = '#ef4444';
+          delBtn.style.color = '#fff';
+          delBtn.style.border = 'none';
+          delBtn.style.borderRadius = '50%';
+          delBtn.style.width = '16px';
+          delBtn.style.height = '16px';
+          delBtn.style.fontSize = '10px';
+          delBtn.style.lineHeight = '14px';
+          delBtn.style.cursor = 'pointer';
+          delBtn.style.display = 'flex';
+          delBtn.style.alignItems = 'center';
+          delBtn.style.justifyContent = 'center';
+          delBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (confirm("Delete this frame?")) {
+              state.frames.splice(i, 1);
+              state.history.splice(i, 1);
+              state.historyStep.splice(i, 1);
+              if (state.currentFrame >= state.frames.length) {
+                state.currentFrame = state.frames.length - 1;
+              }
+              saveSession();
+              draw();
+              renderTimeline();
+            }
+          };
+          div.appendChild(delBtn);
+        }
+
+        div.onclick = () => {
+          state.currentFrame = i;
+          draw();
+          renderTimeline();
+        };
+        container.appendChild(div);
+      });
+    }
+
+    // Dither Engine
+    function applyDither() {
+      const img = document.getElementById('file-input')._loadedImage;
+      if(!img) return alert("Select or drop an image file first.");
+      
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = state.res;
+      tempCanvas.height = state.res;
+      const tCtx = tempCanvas.getContext('2d');
+      tCtx.drawImage(img, 0, 0, state.res, state.res);
+      
+      const imgData = tCtx.getImageData(0, 0, state.res, state.res);
+      const data = imgData.data;
+      const b = parseInt(document.getElementById('dither-bright').value) || 0;
+      
+      let cVal = parseInt(document.getElementById('dither-contrast').value);
+      if (isNaN(cVal)) cVal = 0;
+      if (cVal < -254) cVal = -254;
+      if (cVal > 254) cVal = 254;
+      const factor = (259 * (cVal + 255)) / (255 * (259 - cVal));
+
+      const algo = document.getElementById('dither-algo').value;
+
+      const buffer = new Float32Array(data.length);
+      for(let i=0; i<data.length; i+=4) {
+        for(let j=0; j<3; j++) {
+          let val = data[i+j] + b;
+          val = factor * (val - 128) + 128;
+          buffer[i+j] = Math.max(0, Math.min(255, val));
+        }
+        buffer[i+3] = data[i+3];
+      }
+
+      const findClosest = (r, g, b) => {
+        let min = Infinity, best = state.palette[0];
+        state.palette.forEach(pc => {
+          const rgb = hexToRgb(pc);
+          const d = Math.pow(r-rgb.r,2) + Math.pow(g-rgb.g,2) + Math.pow(b-rgb.b,2);
+          if(d < min) { min = d; best = pc; }
+        });
+        return best;
+      };
+
+      const out = state.frames[state.currentFrame];
+      
+      if(algo === 'none') {
+        for(let i=0; i<state.res*state.res; i++) {
+          out[i] = findClosest(buffer[i*4], buffer[i*4+1], buffer[i*4+2]);
+        }
+      } else if(algo === 'floyd') {
+        for(let y=0; y<state.res; y++) {
+          for(let x=0; x<state.res; x++) {
+            const i = (y * state.res + x) * 4;
+            const oldR = buffer[i], oldG = buffer[i+1], oldB = buffer[i+2];
+            const neu = findClosest(oldR, oldG, oldB);
+            out[y * state.res + x] = neu;
+            const nRgb = hexToRgb(neu);
+            const errR = oldR - nRgb.r, errG = oldG - nRgb.g, errB = oldB - nRgb.b;
+
+            const spread = (dx, dy, w) => {
+              const nx = x+dx, ny = y+dy;
+              if(nx >= 0 && nx < state.res && ny >= 0 && ny < state.res) {
+                const ni = (ny * state.res + nx) * 4;
+                buffer[ni] += errR * w; buffer[ni+1] += errG * w; buffer[ni+2] += errB * w;
+              }
+            };
+            spread(1,0,7/16); spread(-1,1,3/16); spread(0,1,5/16); spread(1,1,1/16);
+          }
+        }
+      } else if(algo === 'atkinson') {
+        for(let y=0; y<state.res; y++) {
+          for(let x=0; x<state.res; x++) {
+            const i = (y * state.res + x) * 4;
+            const oldR = buffer[i], oldG = buffer[i+1], oldB = buffer[i+2];
+            const neu = findClosest(oldR, oldG, oldB);
+            out[y * state.res + x] = neu;
+            const nRgb = hexToRgb(neu);
+            const errR = oldR - nRgb.r, errG = oldG - nRgb.g, errB = oldB - nRgb.b;
+
+            const spread = (dx, dy, w) => {
+              const nx = x+dx, ny = y+dy;
+              if(nx >= 0 && nx < state.res && ny >= 0 && ny < state.res) {
+                const ni = (ny * state.res + nx) * 4;
+                buffer[ni] += errR * w; buffer[ni+1] += errG * w; buffer[ni+2] += errB * w;
+              }
+            };
+            spread(1, 0, 1/8);
+            spread(2, 0, 1/8);
+            spread(-1, 1, 1/8);
+            spread(0, 1, 1/8);
+            spread(1, 1, 1/8);
+            spread(0, 2, 1/8);
+          }
+        }
+      } else {
+        // Simple 4x4 Bayer Dithering
+        const matrix = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+        for(let i=0; i<state.res*state.res; i++) {
+          const x = i % state.res, y = Math.floor(i / state.res);
+          const thresh = (matrix[(y%4)*4 + (x%4)] / 16 - 0.5) * 64;
+          out[i] = findClosest(buffer[i*4]+thresh, buffer[i*4+1]+thresh, buffer[i*4+2]+thresh);
+        }
+      }
+      
+      addHistory();
+      draw();
+    }
+
+    function hexToRgb(hex) {
+      const bigint = parseInt(hex.replace('#',''), 16);
+      return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+    }
+
+    // Export
+    function showExport() {
+      const type = document.getElementById('export-type').value;
+      const codeEl = document.getElementById('export-code');
+      const container = document.getElementById('export-preview-container');
+      const dlBtn = document.getElementById('btn-download');
+      
+      if(type === 'png') {
+        codeEl.style.display = 'none';
+        dlBtn.innerText = "Download Sprite Sheet (PNG)";
+        
+        const can = document.createElement('canvas');
+        can.width = state.res * state.frames.length;
+        can.height = state.res;
+        const c = can.getContext('2d');
+        state.frames.forEach((f, i) => {
+          f.forEach((px, idx) => {
+            if(px) {
+              c.fillStyle = px;
+              c.fillRect(i*state.res + (idx % state.res), Math.floor(idx / state.res), 1, 1);
+            }
+          });
+        });
+        container.innerHTML = '';
+        const img = new Image();
+        img.src = can.toDataURL();
+        img.style.maxWidth = "100%";
+        img.style.maxHeight = "300px";
+        img.style.imageRendering = "pixelated";
+        img.style.border = "2px dashed var(--border-color)";
+        img.style.display = "block";
+        img.style.margin = "1rem auto";
+        container.appendChild(img);
+      } else if(type === 'carray') {
+        codeEl.style.display = 'block';
+        dlBtn.innerText = "Copy to Clipboard";
+        container.innerHTML = '';
+        let s = `/* Generated Retro Sprite - Estimate Only */\nconst uint16_t sprite[${state.frames.length}][${state.res*state.res}] = {\n`;
+        state.frames.forEach(f => {
+          s += "  {";
+          f.forEach(px => {
+            const rgb = px ? hexToRgb(px) : {r:0,g:0,b:0};
+            const r5 = (rgb.r >> 3) & 0x1F;
+            const g6 = (rgb.g >> 2) & 0x3F;
+            const b5 = (rgb.b >> 3) & 0x1F;
+            const val = (r5 << 11) | (g6 << 5) | b5;
+            s += "0x" + val.toString(16).padStart(4,'0') + ",";
+          });
+          s += "},\n";
+        });
+        s += "};";
+        codeEl.textContent = s;
+        container.appendChild(codeEl);
+      } else {
+        codeEl.style.display = 'block';
+        dlBtn.innerText = "Download JSON Project File";
+        container.innerHTML = '';
+        codeEl.textContent = JSON.stringify(state, null, 2);
+        container.appendChild(codeEl);
+      }
+      document.getElementById('modal-export').style.display = 'flex';
+    }
+
+    // Interactive Drawing Events
+    let active = false;
+    canvas.onmousedown = (e) => { 
+      active = true; 
+      const pos = getPos(e);
+      if(state.tool === 'bucket') { 
+        floodFill(pos); 
+        addHistory(); 
+      } else if(state.tool === 'picker') {
+        pickColor(pos);
+      } else { 
+        paint(pos); 
+      } 
+    };
+    
+    window.onmousemove = (e) => { 
+      const pos = getPos(e);
+      if(pos) {
+        document.getElementById('coords').innerText = `${pos.x}, ${pos.y}`;
+        if(active) {
+          if (state.tool === 'picker') {
+            pickColor(pos);
+          } else if (state.tool !== 'bucket') {
+            paint(pos);
+          }
+        }
+      } 
+    };
+    
+    window.onmouseup = () => { 
+      if(active) { 
+        active = false; 
+        if (state.tool !== 'picker' && state.tool !== 'bucket') {
+          addHistory(); 
+        }
+      } 
+    };
+
+    // Mobile touch events support
+    function handleTouch(e) {
+      if (e.touches.length > 0) {
+        const pos = getPos(e);
+        if (pos) {
+          e.preventDefault();
+          if (state.tool === 'bucket') {
+            floodFill(pos);
+            addHistory();
+          } else if (state.tool === 'picker') {
+            pickColor(pos);
+          } else {
+            paint(pos);
+          }
+        }
+      }
+    }
+
+    canvas.addEventListener('touchstart', (e) => {
+      active = true;
+      handleTouch(e);
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+      if (active) {
+        handleTouch(e);
+      }
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', () => {
+      if (active) {
+        active = false;
+        if (state.tool !== 'picker' && state.tool !== 'bucket') {
+          addHistory();
+        }
+      }
+    });
+
+    // Tool Picker
+    document.getElementById('tool-pencil').onclick = () => { state.tool = 'pencil'; updateToolUI(); };
+    document.getElementById('tool-eraser').onclick = () => { state.tool = 'eraser'; updateToolUI(); };
+    document.getElementById('tool-bucket').onclick = () => { state.tool = 'bucket'; updateToolUI(); };
+    document.getElementById('tool-picker').onclick = () => { state.tool = 'picker'; updateToolUI(); };
+
+    function updateToolUI() {
+      document.querySelectorAll('.tool-grid .btn').forEach(b => b.classList.remove('btn-active'));
+      const activeBtn = document.getElementById(`tool-${state.tool}`);
+      if (activeBtn) activeBtn.classList.add('btn-active');
+      
+      if (state.tool === 'eraser') {
+        canvas.style.cursor = 'cell';
+      } else if (state.tool === 'picker') {
+        canvas.style.cursor = 'copy';
+      } else if (state.tool === 'bucket') {
+        canvas.style.cursor = 'context-menu';
+      } else {
+        canvas.style.cursor = 'crosshair';
+      }
+    }
+
+    document.getElementById('palette-preset').onchange = (e) => {
+      state.palette = [...PALETTES[e.target.value]];
+      renderPalette();
+    };
+
+    document.getElementById('custom-color').oninput = (e) => {
+      state.color = e.target.value;
+      if(!state.palette.includes(state.color)) {
+        state.palette.push(state.color);
+        renderPalette();
+      }
+    };
+
+    document.getElementById('btn-add-frame').onclick = () => {
+      state.frames.push(Array(state.res*state.res).fill(null));
+      state.currentFrame = state.frames.length - 1;
+      state.history.push([]);
+      state.historyStep.push(-1);
+      addHistory();
+      draw();
+      renderTimeline();
+    };
+
+    document.getElementById('btn-undo').onclick = undo;
+    document.getElementById('btn-redo').onclick = redo;
+    document.getElementById('btn-clear-frame').onclick = () => { 
+      if(confirm("Clear this frame?")) { 
+        state.frames[state.currentFrame].fill(null); 
+        addHistory(); 
+        draw(); 
+      } 
+    };
+    
+    document.getElementById('btn-reset-all').onclick = () => { 
+      if(confirm("Delete EVERYTHING and start over?")) { 
+        try { localStorage.clear(); } catch(e){} 
+        location.reload(); 
+      } 
+    };
+
+    document.getElementById('brush-size').oninput = (e) => { 
+      let brushVal = parseInt(e.target.value);
+      if (isNaN(brushVal) || brushVal <= 0) brushVal = 1;
+      state.brush = brushVal; 
+      document.getElementById('brush-val').innerText = state.brush + 'px'; 
+    };
+
+    document.getElementById('fps-slider').oninput = (e) => {
+      let fpsVal = parseInt(e.target.value);
+      if (isNaN(fpsVal) || fpsVal <= 0) fpsVal = 8;
+      state.fps = fpsVal;
+      document.getElementById('fps-val').innerText = state.fps;
+      if(state.playing) { togglePlay(); togglePlay(); }
+    };
+
+    function togglePlay() {
+      if(state.playing) {
+        clearInterval(state.timer);
+        state.playing = false;
+        document.getElementById('btn-play').innerText = "Play";
+      } else {
+        state.playing = true;
+        document.getElementById('btn-play').innerText = "Stop";
+        state.timer = setInterval(() => {
+          state.currentFrame = (state.currentFrame + 1) % state.frames.length;
+          draw();
+          renderTimeline();
+        }, 1000 / state.fps);
+      }
+    }
+    document.getElementById('btn-play').onclick = togglePlay;
+
+    document.getElementById('resolution-select').onchange = () => {
+      if(confirm("Changing resolution will clear your work. Proceed?")) {
+        updateRes(); 
+        state.frames = [Array(state.res*state.res).fill(null)];
+        state.currentFrame = 0;
+        state.history = [[]]; 
+        state.historyStep = [-1];
+        addHistory();
+        draw();
+        renderTimeline();
+      } else {
+        document.getElementById('resolution-select').value = state.res;
+      }
+    };
+
+    // Importer (Image + JSON Project Load)
+    const drop = document.getElementById('dropzone');
+    const input = document.getElementById('file-input');
+    drop.onclick = () => input.click();
+    
+    function updateDropzoneLabel(name) {
+      drop.innerHTML = `<strong>Selected:</strong><br><span style="font-size:0.75rem;word-break:break-all;">${name}</span><br><span style="font-size:0.7rem;color:var(--text-secondary);">Click to change</span>`;
+    }
+
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if(!file) return;
+      
+      updateDropzoneLabel(file.name);
+      
+      if (file.name.endsWith('.json')) {
+        const reader = new FileReader();
+        reader.onload = (re) => {
+          try {
+            const parsed = JSON.parse(re.target.result);
+            if (parsed.res && parsed.frames) {
+              state.res = parseInt(parsed.res) || 32;
+              state.frames = parsed.frames;
+              state.palette = Array.isArray(parsed.palette) ? parsed.palette : [...PALETTES.pico8];
+              state.currentFrame = 0;
+              state.history = [[]];
+              state.historyStep = [-1];
+              
+              document.getElementById('resolution-select').value = state.res;
+              updateRes();
+              addHistory();
+              renderPalette();
+              renderTimeline();
+              alert("Project loaded successfully!");
+            } else {
+              alert("Invalid project format.");
+            }
+          } catch(err) {
+            alert("Error parsing JSON file.");
+          }
+        };
+        reader.readAsText(file);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (re) => {
+        const img = new Image();
+        img.onload = () => { 
+          input._loadedImage = img; 
+          applyDither(); 
+        };
+        img.src = re.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    document.getElementById('btn-apply-dither').onclick = applyDither;
+    document.getElementById('btn-toggle-crt').onclick = () => {
+      document.getElementById('viewport').classList.toggle('crt-active');
+      document.getElementById('btn-toggle-crt').classList.toggle('btn-active');
+    };
+
+    document.getElementById('btn-export-trigger').onclick = showExport;
+    document.getElementById('export-type').onchange = showExport;
+    document.getElementById('btn-help').onclick = () => document.getElementById('modal-help').style.display='flex';
+    
+    function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display='none'); }
+
+    document.getElementById('btn-download').onclick = () => {
+      const type = document.getElementById('export-type').value;
+      if(type === 'png') {
+        const link = document.createElement('a');
+        link.download = 'spritesheet.png';
+        const img = document.querySelector('#export-preview-container img');
+        if (img && img.src) {
+          link.href = img.src;
+          link.click();
+        } else {
+          alert("Error: Preview image is not ready.");
+        }
+      } else if (type === 'carray') {
+        navigator.clipboard.writeText(document.getElementById('export-code').textContent);
+        alert("C-Array copied to clipboard!");
+      } else if (type === 'json') {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(document.getElementById('export-code').textContent);
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", "pixel-project.json");
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+      }
+    };
+
+    window.onkeydown = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+      
+      if (e.ctrlKey && e.key.toLowerCase() === 'z') { e.preventDefault(); undo(); return; }
+      if (e.ctrlKey && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); return; }
+      
+      const k = e.key.toLowerCase();
+      if(k === 'p') { document.getElementById('tool-pencil').click(); }
+      if(k === 'e') { document.getElementById('tool-eraser').click(); }
+      if(k === 'g') { document.getElementById('tool-bucket').click(); }
+      if(k === 'i') { document.getElementById('tool-picker').click(); }
+    };
+
+    window.addEventListener('resize', () => {
+      const containerWidth = document.querySelector('.canvas-container').clientWidth || 360;
+      const size = Math.min(window.innerHeight * 0.5, containerWidth - 32, 512);
+      canvas.style.width = size + 'px';
+      canvas.style.height = size + 'px';
+      document.getElementById('zoom-lvl').innerText = Math.round((size / state.res) * 100) + '%';
+    });
+
+    init();
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>Retro Pixel Art Dither Studio lets you turn reference artwork into authentic retro sprites or draw animations frame-by-frame directly in your browser. Built for indie game developers, pixel artists, and microcontroller makers, it applies real vintage dithering and exports clean assets in seconds. Use the tool online for free, or grab the offline single-file edition.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Import a reference image or create a blank canvas in your target resolution.</li><li>Select a hardware palette such as Game Boy, Commodore 64, PICO-8, or 1-bit monochrome.</li><li>Choose a dithering algorithm (Bayer, Floyd-Steinberg, or Atkinson) and adjust contrast.</li><li>Draw frame-by-frame animations on the timeline and preview playback.</li><li>Export as a PNG sprite sheet, GIF, or RGB565 C-byte array for microcontrollers.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free web tool and the $9 Gumroad version?</h4><p style="margin:0">The free web version includes the full feature set directly in your browser. The $9 paid edition provides a self-contained, standalone single HTML file that runs entirely offline with zero dependencies, external scripts, or internet connection required.</p><h4 style="font-size:16px;margin:16px 0 4px">Which dithering methods and hardware palettes are included?</h4><p style="margin:0">The studio includes Ordered (Bayer 2x2, 4x4, 8x8), Floyd-Steinberg, and Atkinson error-diffusion dithering. Preloaded hardware palettes include classic 1-bit monochrome, Game Boy (4 shades), Commodore 64, PICO-8, and CGA.</p><h4 style="font-size:16px;margin:16px 0 4px">How does the RGB565 C-byte array export work for microcontrollers?</h4><p style="margin:0">When you choose RGB565 export, the studio formats each pixel into a 16-bit 5-6-5 color value formatted as a C array (`const uint16_t sprite[]`). You can paste this directly into code for Adafruit GFX, TFT_eSPI, or custom drivers on Arduino, ESP32, and Raspberry Pi Pico.</p><h4 style="font-size:16px;margin:16px 0 4px">Do I need to install Node, Python, or any desktop software to run it?</h4><p style="margin:0">No installation is required. The tool runs on standard web technologies and works out of the box in modern desktop browsers like Chrome, Firefox, Edge, and Safari.</p>
+<p style="margin:24px 0;padding:16px;border:1px solid rgba(128,128,128,.35);border-radius:12px"><strong>Want it offline?</strong> Get the offline pack (the tool as a single file, a quick-start guide and a license) and support this project: <a href="https://ferrywave73.gumroad.com/l/lasvfc" rel="noopener" style="font-weight:700;color:inherit">download it on Gumroad</a>.</p><p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a></p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">About · Offline pack</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"About · Offline pack"});</script>
+</body>
+</html>
