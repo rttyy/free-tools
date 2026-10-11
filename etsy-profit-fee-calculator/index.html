@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    /* Reset and Base Styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Light Mode Palette */
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --border-color: #e2e8f0;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      
+      /* Etsy Warm Accent colors */
+      --accent-primary: #f1641e;
+      --accent-hover: #d74f0f;
+      --accent-light: #fff1eb;
+      
+      /* Semantic colors */
+      --color-success: #10b981;
+      --color-success-light: #ecfdf5;
+      --color-success-text: #065f46;
+      --color-warning: #f59e0b;
+      --color-warning-light: #fffbeb;
+      --color-warning-text: #92400e;
+      --color-danger: #ef4444;
+      --color-danger-light: #fef2f2;
+      --color-danger-text: #991b1b;
+      --color-info: #3b82f6;
+      --color-info-light: #eff6ff;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #09090b;
+        --bg-secondary: #18181b;
+        --bg-tertiary: #27272a;
+        --border-color: #3f3f46;
+        --text-primary: #f4f4f5;
+        --text-secondary: #d4d4d8;
+        --text-muted: #a1a1aa;
+        --accent-light: #2d1d15;
+        --color-success-light: #062f1e;
+        --color-success-text: #6ee7b7;
+        --color-warning-light: #2e1e02;
+        --color-warning-text: #fcd34d;
+        --color-danger-light: #3b0d0d;
+        --color-danger-text: #fca5a5;
+        --color-info-light: #091e3a;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      padding: 0;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Layout Utilities */
+    .container {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 1.25rem;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        padding: 1.75rem;
+      }
+    }
+
+    header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+    }
+
+    .brand svg {
+      color: var(--accent-primary);
+      flex-shrink: 0;
+    }
+
+    .brand h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.15rem;
+    }
+
+    .global-controls {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* Main Grid Layout */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (min-width: 1024px) {
+      .dashboard-grid {
+        grid-template-columns: 1.15fr 1fr;
+      }
+    }
+
+    /* Cards and Panels */
+    .card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    @media (min-width: 768px) {
+      .card {
+        padding: 1.5rem;
+      }
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    .card-title svg {
+      color: var(--accent-primary);
+      flex-shrink: 0;
+    }
+
+    /* Forms and Inputs */
+    .form-group {
+      margin-bottom: 1.125rem;
+    }
+
+    .form-group-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.875rem;
+    }
+
+    @media (min-width: 520px) {
+      .form-group-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    label {
+      display: block;
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.35rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .input-prefix {
+      position: absolute;
+      left: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      user-select: none;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .input-suffix {
+      position: absolute;
+      right: 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      user-select: none;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      width: 100%;
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.55rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.925rem;
+      font-weight: 500;
+      transition: var(--transition);
+      outline: none;
+      font-family: inherit;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input.has-prefix {
+      padding-left: 1.85rem;
+    }
+    input.has-suffix {
+      padding-right: 2.25rem;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    select:focus {
+      border-color: var(--accent-primary);
+      background-color: var(--bg-secondary);
+      box-shadow: 0 0 0 3px var(--accent-light);
+    }
+
+    /* Range Slider */
+    .slider-container {
+      background-color: var(--bg-tertiary);
+      padding: 0.875rem 1rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .slider-value {
+      font-weight: 700;
+      color: var(--accent-primary);
+      font-size: 0.95rem;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border-color);
+      outline: none;
+      margin: 0.35rem 0;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      cursor: pointer;
+      border: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: var(--accent-hover);
+      transform: scale(1.15);
+    }
+
+    /* Segmented Controls */
+    .segmented-control {
+      display: flex;
+      background-color: var(--bg-tertiary);
+      padding: 0.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      gap: 0.25rem;
+    }
+
+    .segmented-control label {
+      flex: 1;
+      text-align: center;
+      margin: 0;
+      padding: 0.4rem 0.25rem;
+      cursor: pointer;
+      border-radius: calc(var(--radius-md) - 3px);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .segmented-control input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .segmented-control input[type="radio"]:checked + span {
+      background-color: var(--bg-secondary);
+      color: var(--accent-primary);
+      box-shadow: var(--shadow-sm);
+      display: block;
+      width: 100%;
+      border-radius: calc(var(--radius-md) - 4px);
+      padding: 0.25rem 0.1rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      accent-color: var(--accent-primary);
+      width: 1.1rem;
+      height: 1.1rem;
+      cursor: pointer;
+    }
+
+    /* Metric Cards */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    @media (min-width: 480px) {
+      .metric-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .metric-card {
+      background-color: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      padding: 0.875rem 1rem;
+      border-left: 4px solid var(--accent-primary);
+      transition: var(--transition);
+    }
+
+    .metric-card.success {
+      border-left-color: var(--color-success);
+    }
+
+    .metric-card.warning {
+      border-left-color: var(--color-warning);
+    }
+
+    .metric-card.danger {
+      border-left-color: var(--color-danger);
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .metric-value {
+      font-size: 1.4rem;
+      font-weight: 800;
+      word-break: break-all;
+      line-height: 1.2;
+    }
+
+    /* Margin Bar */
+    .margin-bar-container {
+      margin: 1.25rem 0;
+    }
+
+    .margin-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .margin-bar-bg {
+      height: 10px;
+      background-color: var(--border-color);
+      border-radius: 5px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .margin-bar-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    /* Cost Breakdown List */
+    .breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+      margin-top: 0.875rem;
+    }
+
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 0.45rem;
+      border-bottom: 1px dashed var(--border-color);
+      font-size: 0.875rem;
+    }
+
+    .breakdown-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .breakdown-item .label {
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .breakdown-item .value {
+      font-weight: 600;
+      text-align: right;
+    }
+
+    /* Alerts */
+    .alert {
+      padding: 0.75rem 0.875rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 1.25rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      line-height: 1.4;
+    }
+
+    .alert-warning {
+      background-color: var(--color-warning-light);
+      border: 1px solid var(--color-warning);
+      color: var(--color-warning-text);
+    }
+    
+    .alert-danger {
+      background-color: var(--color-danger-light);
+      border: 1px solid var(--color-danger);
+      color: var(--color-danger-text);
+    }
+
+    .alert-success {
+      background-color: var(--color-success-light);
+      border: 1px solid var(--color-success);
+      color: var(--color-success-text);
+    }
+
+    .alert svg {
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    /* Catalog Section */
+    .catalog-section {
+      margin-top: 1.75rem;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      margin-top: 1rem;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+      min-width: 680px;
+    }
+
+    th, td {
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: var(--bg-tertiary);
+      font-weight: 700;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: var(--bg-tertiary);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      font-weight: 600;
+      font-size: 0.825rem;
+      padding: 0.55rem 0.875rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid transparent;
+      outline: none;
+      user-select: none;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+
+    .btn:focus-visible {
+      box-shadow: 0 0 0 3px var(--accent-light);
+    }
+
+    .btn-primary {
+      background-color: var(--accent-primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-color: var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--border-color);
+    }
+
+    .btn-danger {
+      background-color: var(--color-danger-light);
+      color: var(--color-danger);
+      border-color: var(--color-danger);
+    }
+
+    .btn-danger:hover {
+      background-color: var(--color-danger);
+      color: #ffffff;
+    }
+
+    .btn-sm {
+      padding: 0.35rem 0.6rem;
+      font-size: 0.75rem;
+    }
+
+    .actions-cell {
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .info-tooltip-box {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+      line-height: 1.35;
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background-color: var(--text-primary);
+      color: var(--bg-primary);
+      padding: 0.65rem 1.1rem;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Print media style optimization */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        font-size: 10.5pt;
+      }
+      .container {
+        max-width: 100% !important;
+        padding: 0 !important;
+      }
+      .no-print, 
+      header, 
+      .segmented-control, 
+      .slider-container, 
+      .catalog-controls, 
+      .actions-cell,
+      .btn,
+      #toast,
+      .global-controls {
+        display: none !important;
+      }
+      .card {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        padding: 1rem !important;
+        margin-bottom: 1rem;
+        page-break-inside: avoid;
+      }
+      .dashboard-grid {
+        grid-template-columns: 1fr !important;
+      }
+      table {
+        min-width: 100% !important;
+        border: 1px solid #000000 !important;
+      }
+      th, td {
+        border-bottom: 1px solid #000000 !important;
+        padding: 4px 6px !important;
+        color: #000 !important;
+      }
+    }
+  </style>
+<title>Etsy Fee &amp; Profit Margin Pricing Calculator</title>
+<meta name="description" content="Calculate your exact Etsy fees, net profit margin, and discount break-even price. Free online calculator factoring in transaction fees, processing, and COGS.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/etsy-profit-fee-calculator/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/etsy-profit-fee-calculator/">
+<meta property="og:title" content="Etsy Fee &amp; Profit Margin Pricing Calculator"><meta property="og:description" content="Calculate your exact Etsy fees, net profit margin, and discount break-even price. Free online calculator factoring in transaction fees, processing, and COGS.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/etsy-profit-fee-calculator/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Etsy Fee & Profit Margin Pricing Calculator","description":"Calculate your exact Etsy fees, net profit margin, and discount break-even price. Free online calculator factoring in transaction fees, processing, and COGS.","url":"https://rttyy.github.io/free-tools/etsy-profit-fee-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What percentage does Etsy take per sale in total?","acceptedAnswer":{"@type":"Answer","text":"For US sellers, Etsy charges a $0.20 listing fee, a 6.5% transaction fee on the combined item and shipping cost, and a payment processing fee of 3% plus $0.25. In total, standard platform fees usually average between 9.5% and 12% of the order total. If an order comes through Etsy's Offsite Ads program, an additional 12% to 15% fee applies."}},{"@type":"Question","name":"Does the calculator account for Etsy Offsite Ads fees?","acceptedAnswer":{"@type":"Answer","text":"Yes. You can toggle Offsite Ads on or off and select either the 15% rate (standard for shops under $10,000 USD in trailing 12-month sales) or the 12% rate (for shops over $10,000 USD). This shows you whether an advertised order remains profitable at your current price point."}},{"@type":"Question","name":"How does the discount slider calculate break-even pricing?","acceptedAnswer":{"@type":"Answer","text":"The break-even slider recalculates your net take-home profit as you adjust your promo percentage from 0% to 50%. It identifies the exact discount threshold where net profit drops to zero after all listing fees, transaction cuts, payment processing, and cost of goods sold are subtracted."}},{"@type":"Question","name":"What is included in the $9 offline pack versus the free tool?","acceptedAnswer":{"@type":"Answer","text":"The free web tool provides full fee calculation and margin analysis for single products directly in your browser. The $9 offline pack includes an offline-compatible workspace that lets you save, edit, and organize multiple SKUs locally on your machine without recurring software subscriptions, plus export printable summaries and CSVs."}}]}</script>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+        <div>
+          <h1>Etsy Fee & Profit Margin Pricing Calculator</h1>
+          <p>Real-time platform fee breakdown, margin stress testing, and listing catalog manager.</p>
+        </div>
+      </div>
+      
+      <div class="global-controls no-print">
+        <div style="display:flex; align-items:center; gap:0.4rem;">
+          <label for="currency-selector" style="margin:0;">Currency:</label>
+          <select id="currency-selector" style="width: 85px; padding: 0.35rem 0.5rem;" onchange="updateAll()">
+            <option value="$">$ (USD)</option>
+            <option value="€">€ (EUR)</option>
+            <option value="£">£ (GBP)</option>
+            <option value="CA$">CA$ (CAD)</option>
+            <option value="AU$">AU$ (AUD)</option>
+            <option value="¥">¥ (JPY)</option>
+          </select>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="resetCalculator()" title="Reset all inputs to default">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+          Reset
+        </button>
+      </div>
+    </header>
+
+    <!-- Content Dashboard Grid -->
+    <div class="dashboard-grid">
+      
+      <!-- Column 1: Input controls -->
+      <div class="card no-print">
+        <h2 class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          Step 1: Product & Cost Architecture
+        </h2>
+
+        <!-- Product Name / SKU Info -->
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="input-sku">SKU / ID</label>
+            <input type="text" id="input-sku" placeholder="e.g. WOOD-COASTER-01" oninput="updateAll()">
+          </div>
+          <div class="form-group">
+            <label for="input-title">Product Title</label>
+            <input type="text" id="input-title" placeholder="e.g. Oak Coaster Set" oninput="updateAll()">
+          </div>
+        </div>
+
+        <!-- Pricing Strategy -->
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="input-retail-price">Base Retail Price</label>
+            <div class="input-wrapper">
+              <span class="input-prefix curr-symbol">$</span>
+              <input type="number" id="input-retail-price" class="has-prefix" value="29.99" step="0.01" min="0" oninput="updateAll()">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="input-shipping-charged">Shipping Charged (Buyer)</label>
+            <div class="input-wrapper">
+              <span class="input-prefix curr-symbol">$</span>
+              <input type="number" id="input-shipping-charged" class="has-prefix" value="4.99" step="0.01" min="0" oninput="updateAll()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Costs Breakdowns -->
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="input-cost-materials">Raw Materials Cost</label>
+            <div class="input-wrapper">
+              <span class="input-prefix curr-symbol">$</span>
+              <input type="number" id="input-cost-materials" class="has-prefix" value="4.50" step="0.01" min="0" oninput="updateAll()">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="input-cost-packaging">Packaging Materials</label>
+            <div class="input-wrapper">
+              <span class="input-prefix curr-symbol">$</span>
+              <input type="number" id="input-cost-packaging" class="has-prefix" value="1.20" step="0.01" min="0" oninput="updateAll()">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="input-cost-shipping">Shipping Paid (Seller Cost)</label>
+            <div class="input-wrapper">
+              <span class="input-prefix curr-symbol">$</span>
+              <input type="number" id="input-cost-shipping" class="has-prefix" value="5.50" step="0.01" min="0" oninput="updateAll()">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="input-labor-hours">Labor (Hours & Hourly Rate)</label>
+            <div style="display: grid; grid-template-columns: 1fr 1.25fr; gap: 0.4rem;">
+              <div class="input-wrapper">
+                <input type="number" id="input-labor-hours" aria-label="Labor Hours" class="has-suffix" value="0.5" step="0.1" min="0" oninput="updateAll()">
+                <span class="input-suffix">hrs</span>
+              </div>
+              <div class="input-wrapper">
+                <span class="input-prefix curr-symbol" style="left:0.5rem;">$</span>
+                <input type="number" id="input-labor-rate" aria-label="Hourly Labor Rate" class="has-prefix" style="padding-left:1.5rem;" value="20.00" step="0.5" min="0" oninput="updateAll()" title="Hourly Rate">
+                <span class="input-suffix" style="right:0.35rem; font-size:0.75rem;">/hr</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="card-title" style="margin-top: 1.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          Step 2: Etsy Fees & Region Parameters
+        </h2>
+
+        <!-- Etsy Payment Processor Dropdown -->
+        <div class="form-group">
+          <label for="payment-region">Etsy Payments Processor Tier</label>
+          <select id="payment-region" onchange="updateAll()">
+            <option value="us">United States (3.0% + $0.25)</option>
+            <option value="uk">United Kingdom (4.0% + £0.20)</option>
+            <option value="eu">Eurozone (4.0% + €0.30)</option>
+            <option value="ca">Canada (3.0% + CA$0.25)</option>
+            <option value="au">Australia (3.0% + AU$0.25)</option>
+            <option value="custom">Custom Override Rate</option>
+          </select>
+          <div class="info-tooltip-box">Etsy Processing Fees apply to total amount collected (Item + Shipping Charged).</div>
+        </div>
+
+        <!-- Custom Rate Overrides (Hidden unless 'Custom' is selected) -->
+        <div class="form-group-row" id="custom-rates-row" style="display:none;">
+          <div class="form-group">
+            <label for="custom-proc-percent">Custom Proc %</label>
+            <div class="input-wrapper">
+              <input type="number" id="custom-proc-percent" value="3.0" step="0.1" min="0" oninput="updateAll()">
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="custom-proc-fixed">Custom Fixed Fee</label>
+            <div class="input-wrapper">
+              <span class="input-prefix curr-symbol">$</span>
+              <input type="number" id="custom-proc-fixed" class="has-prefix" value="0.25" step="0.01" min="0" oninput="updateAll()">
+            </div>
+          </div>
+        </div>
+
+        <!-- Listing and Renewal Fees -->
+        <div class="form-group">
+          <div class="checkbox-group">
+            <input type="checkbox" id="check-listing-renewal" checked onchange="updateAll()">
+            <label for="check-listing-renewal" style="margin:0;">Include Standard Listing / Renewal Fee (0.20)</label>
+          </div>
+        </div>
+
+        <!-- Offsite Ads Toggles -->
+        <div class="form-group">
+          <label id="offsite-ads-label">Etsy Offsite Ads Participation</label>
+          <div class="segmented-control" role="radiogroup" aria-labelledby="offsite-ads-label">
+            <label>
+              <input type="radio" name="offsite-ads" value="0" checked onchange="updateAll()">
+              <span>No Ads (0%)</span>
+            </label>
+            <label>
+              <input type="radio" name="offsite-ads" value="12" onchange="updateAll()">
+              <span>Standard (12%)</span>
+            </label>
+            <label>
+              <input type="radio" name="offsite-ads" value="15" onchange="updateAll()">
+              <span>Voluntary (15%)</span>
+            </label>
+          </div>
+          <div class="info-tooltip-box">Offsite ads fee is capped at a maximum of $100 (or currency equivalent) per order.</div>
+        </div>
+
+        <!-- Regulatory Operating Fees -->
+        <div class="form-group">
+          <label for="regulatory-fee-tier">Local Regulatory Operating Fee</label>
+          <select id="regulatory-fee-tier" onchange="updateAll()">
+            <option value="0">None / Other Regions (0.00%)</option>
+            <option value="0.25">United Kingdom (0.25%)</option>
+            <option value="0.40">France (0.40%)</option>
+            <option value="0.25">Italy (0.25%)</option>
+            <option value="0.40">Spain (0.40%)</option>
+            <option value="1.10">Turkey (1.10%)</option>
+          </select>
+          <div class="info-tooltip-box">Etsy charges operational fees in designated countries on overall transaction value.</div>
+        </div>
+
+        <!-- Interactive stress test slider -->
+        <h2 class="card-title" style="margin-top: 1.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m19 12-7-7-7 7"/><path d="m12 5v14"/></svg>
+          Step 3: Profit Stress Test
+        </h2>
+        <div class="form-group">
+          <div class="slider-container">
+            <div class="slider-header">
+              <label for="input-discount" style="margin:0;">Campaign Discount Slider</label>
+              <span class="slider-value" id="discount-display">0%</span>
+            </div>
+            <input type="range" id="input-discount" min="0" max="75" value="0" oninput="updateAll()">
+            <div class="info-tooltip-box" style="text-align:center;">Simulate running sales or coupon codes to test real-world net profitability.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Column 2: Live calculations and interactive charts -->
+      <div>
+        <div class="card">
+          <h2 class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+            Live Financial Performance
+          </h2>
+
+          <!-- Alert dynamic banner -->
+          <div id="alert-banner" class="alert alert-success" role="alert">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            <span id="alert-text">Safe Margin Zone! Your pricing strategy delivers healthy profits.</span>
+          </div>
+
+          <!-- Main Metric Cards -->
+          <div class="metric-grid">
+            <div class="metric-card success" id="net-profit-card">
+              <div class="metric-label">Net Profit (Per Item)</div>
+              <div class="metric-value" id="val-net-profit">$0.00</div>
+            </div>
+            <div class="metric-card success" id="margin-card">
+              <div class="metric-label">Profit Margin</div>
+              <div class="metric-value" id="val-margin">0.0%</div>
+            </div>
+          </div>
+
+          <!-- Margin Level Fill Bar -->
+          <div class="margin-bar-container">
+            <div class="margin-bar-labels">
+              <span>Costs &amp; Etsy Fees (<span id="pct-costs">0%</span>)</span>
+              <span>Net Profit (<span id="pct-profit">0%</span>)</span>
+            </div>
+            <div class="margin-bar-bg" aria-hidden="true">
+              <div id="bar-costs-fill" class="margin-bar-fill" style="width: 50%; background-color: var(--text-muted);"></div>
+              <div id="bar-profit-fill" class="margin-bar-fill" style="width: 50%; background-color: var(--color-success);"></div>
+            </div>
+          </div>
+
+          <!-- Comprehensive Cost & Fee breakdown list -->
+          <h3 style="font-size: 0.9rem; font-weight:700; margin-bottom:0.75rem; color:var(--text-secondary); text-transform: uppercase; letter-spacing:0.03em;">Fee &amp; Cost Breakdown</h3>
+          <div class="breakdown-list">
+            
+            <div class="breakdown-item">
+              <div class="label">
+                <span>Gross Revenue (Item + Ship Collected)</span>
+              </div>
+              <div class="value" id="lbl-gross-income">$0.00</div>
+            </div>
+
+            <div class="breakdown-item" id="row-discount" style="display:none;">
+              <div class="label">
+                <span>Discount Deduction</span>
+              </div>
+              <div class="value" id="lbl-discount-deduction" style="color:var(--color-danger);">-$0.00</div>
+            </div>
+
+            <div class="breakdown-item">
+              <div class="label">
+                <span>Listing Fee</span>
+              </div>
+              <div class="value" id="lbl-fee-listing">$0.20</div>
+            </div>
+
+            <div class="breakdown-item">
+              <div class="label">
+                <span>Etsy Transaction Fee (6.5%)</span>
+              </div>
+              <div class="value" id="lbl-fee-transaction">$0.00</div>
+            </div>
+
+            <div class="breakdown-item">
+              <div class="label">
+                <span>Etsy Payment Processing Fee</span>
+              </div>
+              <div class="value" id="lbl-fee-processing">$0.00</div>
+            </div>
+
+            <div class="breakdown-item">
+              <div class="label">
+                <span>Regulatory Operating Fee</span>
+              </div>
+              <div class="value" id="lbl-fee-regulatory">$0.00</div>
+            </div>
+
+            <div class="breakdown-item">
+              <div class="label">
+                <span>Offsite Ads Fee</span>
+              </div>
+              <div class="value" id="lbl-fee-ads">$0.00</div>
+            </div>
+
+            <div class="breakdown-item">
+              <div class="label" style="font-weight: 700;">
+                <span>Total Etsy Platform Fees</span>
+              </div>
+              <div class="value" id="lbl-total-etsy-fees" style="font-weight: 700; color: var(--accent-primary);">$0.00</div>
+            </div>
+
+            <div class="breakdown-item">
+              <div class="label">
+                <span>Total Operating Costs (Labor, Goods, Ship)</span>
+              </div>
+              <div class="value" id="lbl-total-operating-costs" style="font-weight:600;">$0.00</div>
+            </div>
+
+            <div class="breakdown-item" style="border-top:1px solid var(--border-color); padding-top:0.65rem; margin-top:0.25rem;">
+              <div class="label" style="font-weight: 700; color:var(--text-primary);">
+                <span>Recommended Break-Even Retail Price</span>
+              </div>
+              <div class="value" id="lbl-breakeven-price" style="font-weight: 800; color: var(--accent-primary);">$0.00</div>
+            </div>
+
+          </div>
+
+          <!-- Action Buttons -->
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 1.25rem;" class="no-print">
+            <button class="btn btn-primary" onclick="saveToCatalog()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Save to Catalog
+            </button>
+            <button class="btn btn-secondary" onclick="copySummary()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              Copy Summary
+            </button>
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr; gap: 0.5rem; margin-top: 0.5rem;" class="no-print">
+            <button class="btn btn-secondary" onclick="window.print()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Print / Save as PDF
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Section: Catalog / Saved SKUs table -->
+    <div class="catalog-section">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; border-bottom:1px solid var(--border-color); padding-bottom:0.75rem; margin-bottom:1rem;">
+          <h2 class="card-title" style="border-bottom:none; padding-bottom:0; margin-bottom:0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Saved Listing Catalog Matrix
+          </h2>
+          <div class="catalog-controls no-print" style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+            <button class="btn btn-secondary btn-sm" onclick="exportCSV()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="exportJSON()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export JSON
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-file-input').click()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Import JSON
+            </button>
+            <input type="file" id="import-file-input" style="display:none;" accept=".json" onchange="importJSON(event)">
+            <button class="btn btn-danger btn-sm" onclick="clearCatalog()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              Clear All
+            </button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table id="catalog-table">
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Product Title</th>
+                <th>Retail Price</th>
+                <th>Discount</th>
+                <th>Etsy Fees</th>
+                <th>Operating Costs</th>
+                <th>Net Profit</th>
+                <th>Margin</th>
+                <th class="no-print">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="catalog-body">
+              <!-- Dynamically populated rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast Element -->
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // State storage variables
+    let savedCatalog = [];
+
+    // Processing fee tiers by region
+    const paymentTiers = {
+      us: { percent: 3.0, fixed: 0.25 },
+      uk: { percent: 4.0, fixed: 0.20 },
+      eu: { percent: 4.0, fixed: 0.30 },
+      ca: { percent: 3.0, fixed: 0.25 },
+      au: { percent: 3.0, fixed: 0.25 },
+      custom: { percent: 3.0, fixed: 0.25 }
+    };
+
+    // Initialize application state
+    window.addEventListener('DOMContentLoaded', () => {
+      loadCatalogFromStorage();
+      updateAll();
+    });
+
+    // Helper: Safely retrieve non-negative float values
+    function getVal(id) {
+      const el = document.getElementById(id);
+      if (!el) return 0;
+      const num = parseFloat(el.value);
+      return (isNaN(num) || num < 0) ? 0 : num;
+    }
+
+    // Helper: Toast notification
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    // Main calculation engine
+    function calculateMetrics(data) {
+      const basePrice = Math.max(0, data.retailPrice || 0);
+      const shippingCharged = Math.max(0, data.shippingCharged || 0);
+      const costMaterials = Math.max(0, data.costMaterials || 0);
+      const costPackaging = Math.max(0, data.costPackaging || 0);
+      const costShipping = Math.max(0, data.costShipping || 0);
+      const laborHours = Math.max(0, data.laborHours || 0);
+      const laborRate = Math.max(0, data.laborRate || 0);
+      const discount = Math.min(100, Math.max(0, data.discount || 0));
+
+      const discountDeduction = basePrice * (discount / 100);
+      const discountedPrice = basePrice - discountDeduction;
+      const totalRevenue = discountedPrice + shippingCharged;
+
+      const costLabor = laborHours * laborRate;
+      const totalOperatingCosts = costMaterials + costPackaging + costShipping + costLabor;
+
+      const listingFee = data.listingRenewal ? 0.20 : 0.00;
+      const transactionFee = totalRevenue * 0.065;
+
+      let procPercent = 3.0;
+      let procFixed = 0.25;
+
+      if (data.region === 'custom') {
+        procPercent = Math.max(0, data.customProcPercent !== undefined ? data.customProcPercent : 3.0);
+        procFixed = Math.max(0, data.customProcFixed !== undefined ? data.customProcFixed : 0.25);
+      } else if (paymentTiers[data.region]) {
+        procPercent = paymentTiers[data.region].percent;
+        procFixed = paymentTiers[data.region].fixed;
+      }
+
+      const paymentProcessingFee = totalRevenue > 0 ? ((totalRevenue * (procPercent / 100)) + procFixed) : 0;
+      const regulatoryPercent = Math.max(0, data.regulatoryPercent || 0);
+      const regulatoryFee = totalRevenue * (regulatoryPercent / 100);
+
+      const adRate = Math.max(0, data.offsiteAds || 0);
+      const offsiteAdsFee = Math.min(100.00, totalRevenue * (adRate / 100));
+
+      const totalEtsyFees = listingFee + transactionFee + paymentProcessingFee + regulatoryFee + offsiteAdsFee;
+      const netProfit = totalRevenue - totalOperatingCosts - totalEtsyFees;
+      const margin = totalRevenue > 0 ? (netProfit / totalRevenue) * 100 : (totalOperatingCosts + totalEtsyFees > 0 ? -100 : 0);
+
+      // Break-even retail price calculation
+      const variableFeeRate = 0.065 + (procPercent / 100) + (regulatoryPercent / 100) + (adRate / 100);
+      const totalFixedFees = listingFee + (totalRevenue > 0 ? procFixed : 0);
+      let breakevenRetailPrice = 0;
+
+      if (variableFeeRate < 1) {
+        const requiredRevenue = (totalOperatingCosts + totalFixedFees) / (1 - variableFeeRate);
+        const requiredDiscountedPrice = Math.max(0, requiredRevenue - shippingCharged);
+        const discountFactor = 1 - (discount / 100);
+        breakevenRetailPrice = discountFactor > 0 ? (requiredDiscountedPrice / discountFactor) : requiredDiscountedPrice;
+      }
+
+      return {
+        basePrice,
+        shippingCharged,
+        discount,
+        discountDeduction,
+        discountedPrice,
+        totalRevenue,
+        costLabor,
+        totalOperatingCosts,
+        listingFee,
+        transactionFee,
+        paymentProcessingFee,
+        regulatoryFee,
+        offsiteAdsFee,
+        totalEtsyFees,
+        netProfit,
+        margin,
+        breakevenRetailPrice,
+        procPercent,
+        procFixed
+      };
+    }
+
+    // Controller: updates current UI from input fields
+    function updateAll() {
+      const currencySymbol = document.getElementById('currency-selector').value;
+      const elements = document.getElementsByClassName('curr-symbol');
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].textContent = currencySymbol;
+      }
+
+      const region = document.getElementById('payment-region').value;
+      const customRatesRow = document.getElementById('custom-rates-row');
+      if (region === 'custom') {
+        customRatesRow.style.display = 'grid';
+      } else {
+        customRatesRow.style.display = 'none';
+      }
+
+      const adOption = document.querySelector('input[name="offsite-ads"]:checked');
+      const adRate = adOption ? parseFloat(adOption.value) : 0;
+      const discountPercentage = getVal('input-discount');
+      document.getElementById('discount-display').textContent = `${discountPercentage}%`;
+
+      const inputData = {
+        retailPrice: getVal('input-retail-price'),
+        shippingCharged: getVal('input-shipping-charged'),
+        costMaterials: getVal('input-cost-materials'),
+        costPackaging: getVal('input-cost-packaging'),
+        costShipping: getVal('input-cost-shipping'),
+        laborHours: getVal('input-labor-hours'),
+        laborRate: getVal('input-labor-rate'),
+        discount: discountPercentage,
+        listingRenewal: document.getElementById('check-listing-renewal').checked,
+        region: region,
+        customProcPercent: getVal('custom-proc-percent'),
+        customProcFixed: getVal('custom-proc-fixed'),
+        offsiteAds: adRate,
+        regulatoryPercent: parseFloat(document.getElementById('regulatory-fee-tier').value) || 0
+      };
+
+      const m = calculateMetrics(inputData);
+
+      // Render metrics
+      document.getElementById('val-net-profit').textContent = formatCurrency(m.netProfit, currencySymbol);
+      document.getElementById('val-margin').textContent = `${m.margin.toFixed(1)}%`;
+      
+      document.getElementById('lbl-gross-income').textContent = formatCurrency(m.totalRevenue, currencySymbol);
+      
+      const rowDiscount = document.getElementById('row-discount');
+      if (m.discount > 0) {
+        rowDiscount.style.display = 'flex';
+        document.getElementById('lbl-discount-deduction').textContent = `-${formatCurrency(m.discountDeduction, currencySymbol)}`;
+      } else {
+        rowDiscount.style.display = 'none';
+      }
+
+      document.getElementById('lbl-fee-listing').textContent = formatCurrency(m.listingFee, currencySymbol);
+      document.getElementById('lbl-fee-transaction').textContent = formatCurrency(m.transactionFee, currencySymbol);
+      document.getElementById('lbl-fee-processing').textContent = formatCurrency(m.paymentProcessingFee, currencySymbol);
+      document.getElementById('lbl-fee-regulatory').textContent = formatCurrency(m.regulatoryFee, currencySymbol);
+      document.getElementById('lbl-fee-ads').textContent = formatCurrency(m.offsiteAdsFee, currencySymbol);
+      document.getElementById('lbl-total-etsy-fees').textContent = formatCurrency(m.totalEtsyFees, currencySymbol);
+      document.getElementById('lbl-total-operating-costs').textContent = formatCurrency(m.totalOperatingCosts, currencySymbol);
+      document.getElementById('lbl-breakeven-price').textContent = formatCurrency(m.breakevenRetailPrice, currencySymbol);
+
+      // Visual progress bar
+      const totalAllCosts = m.totalOperatingCosts + m.totalEtsyFees;
+      let costRatio = 50;
+      let profitRatio = 50;
+
+      if (m.totalRevenue > 0) {
+        costRatio = Math.max(0, Math.min(100, (totalAllCosts / m.totalRevenue) * 100));
+        profitRatio = Math.max(0, 100 - costRatio);
+      } else {
+        costRatio = 100;
+        profitRatio = 0;
+      }
+
+      document.getElementById('pct-costs').textContent = `${costRatio.toFixed(0)}%`;
+      document.getElementById('pct-profit').textContent = `${Math.max(0, m.margin).toFixed(0)}%`;
+      document.getElementById('bar-costs-fill').style.width = `${Math.min(100, costRatio)}%`;
+      document.getElementById('bar-profit-fill').style.width = `${profitRatio}%`;
+
+      // Status banners and cards
+      const netProfitCard = document.getElementById('net-profit-card');
+      const marginCard = document.getElementById('margin-card');
+      const profitFillBar = document.getElementById('bar-profit-fill');
+
+      if (m.netProfit < 0) {
+        netProfitCard.className = "metric-card danger";
+        marginCard.className = "metric-card danger";
+        profitFillBar.style.backgroundColor = "var(--color-danger)";
+        setAlertBanner('danger', 'Loss Detected! Your retail price does not cover operating costs and platform fees.');
+      } else if (m.margin < 20) {
+        netProfitCard.className = "metric-card warning";
+        marginCard.className = "metric-card warning";
+        profitFillBar.style.backgroundColor = "var(--color-warning)";
+        setAlertBanner('warning', 'Low Margin Warning! Margin is under 20%, vulnerable to discounts or shipping spikes.');
+      } else {
+        netProfitCard.className = "metric-card success";
+        marginCard.className = "metric-card success";
+        profitFillBar.style.backgroundColor = "var(--color-success)";
+        setAlertBanner('success', 'Safe Margin Zone! Pricing allows sustainable profits and marketing reinvestment.');
+      }
+    }
+
+    function setAlertBanner(type, message) {
+      const banner = document.getElementById('alert-banner');
+      banner.className = `alert alert-${type}`;
+
+      let iconSvg = '';
+      if (type === 'danger') {
+        iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+      } else if (type === 'warning') {
+        iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+      } else {
+        iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>`;
+      }
+      banner.innerHTML = iconSvg + `<span id="alert-text">${escapeHtml(message)}</span>`;
+    }
+
+    // Helper: Formatter with correct negative sign placement
+    function formatCurrency(amount, symbol) {
+      const val = Number(amount) || 0;
+      if (val < 0) {
+        return `-${symbol}${Math.abs(val).toFixed(2)}`;
+      }
+      return `${symbol}${val.toFixed(2)}`;
+    }
+
+    function resetCalculator() {
+      document.getElementById('input-sku').value = '';
+      document.getElementById('input-title').value = '';
+      document.getElementById('input-retail-price').value = '29.99';
+      document.getElementById('input-shipping-charged').value = '4.99';
+      document.getElementById('input-cost-materials').value = '4.50';
+      document.getElementById('input-cost-packaging').value = '1.20';
+      document.getElementById('input-cost-shipping').value = '5.50';
+      document.getElementById('input-labor-hours').value = '0.5';
+      document.getElementById('input-labor-rate').value = '20.00';
+      document.getElementById('input-discount').value = '0';
+      document.getElementById('payment-region').value = 'us';
+      document.getElementById('custom-proc-percent').value = '3.0';
+      document.getElementById('custom-proc-fixed').value = '0.25';
+      document.getElementById('check-listing-renewal').checked = true;
+      document.querySelector('input[name="offsite-ads"][value="0"]').checked = true;
+      document.getElementById('regulatory-fee-tier').value = '0';
+      
+      updateAll();
+      showToast("Calculator reset to defaults.");
+    }
+
+    // Copy formatted summary
+    function copySummary() {
+      const sku = document.getElementById('input-sku').value.trim() || 'Untitled';
+      const title = document.getElementById('input-title').value.trim() || 'Custom Product';
+      const currency = document.getElementById('currency-selector').value;
+      const profit = document.getElementById('val-net-profit').textContent;
+      const margin = document.getElementById('val-margin').textContent;
+      const totalFees = document.getElementById('lbl-total-etsy-fees').textContent;
+      const costs = document.getElementById('lbl-total-operating-costs').textContent;
+      const breakeven = document.getElementById('lbl-breakeven-price').textContent;
+
+      const text = `Etsy Pricing Summary: [${sku}] ${title}\n` +
+                   `• Net Profit: ${profit} (${margin})\n` +
+                   `• Etsy Fees: ${totalFees}\n` +
+                   `• Operating Costs: ${costs}\n` +
+                   `• Break-Even Retail Price: ${breakeven}\n` +
+                   `Calculated at currency: ${currency}`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast("Summary copied to clipboard!");
+        }).catch(() => {
+          showToast("Failed to copy automatically.");
+        });
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          showToast("Summary copied to clipboard!");
+        } catch (e) {
+          showToast("Failed to copy.");
+        }
+        document.body.removeChild(ta);
+      }
+    }
+
+    // --- Saved Catalog and Storage Engine ---
+    function loadCatalogFromStorage() {
+      try {
+        const stored = localStorage.getItem('etsy_saved_catalog');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) {
+            savedCatalog = parsed;
+          }
+        } else {
+          // Starter baseline entry
+          savedCatalog = [
+            {
+              sku: "STARTER-01",
+              title: "Handmade Ceramic Mug",
+              retailPrice: 35.00,
+              shippingCharged: 5.99,
+              costMaterials: 6.00,
+              costPackaging: 2.00,
+              costShipping: 6.50,
+              laborHours: 1.0,
+              laborRate: 15.00,
+              discount: 0,
+              listingRenewal: true,
+              region: "us",
+              customProcPercent: 3.0,
+              customProcFixed: 0.25,
+              offsiteAds: 0,
+              regulatoryPercent: 0,
+              currencySymbol: "$"
+            }
+          ];
+          saveCatalogToStorage();
+        }
+      } catch (e) {
+        console.warn("localStorage is blocked or unavailable:", e);
+      }
+      renderCatalogTable();
+    }
+
+    function saveCatalogToStorage() {
+      try {
+        localStorage.setItem('etsy_saved_catalog', JSON.stringify(savedCatalog));
+      } catch (e) {
+        console.warn("Unable to write catalog to localStorage:", e);
+      }
+    }
+
+    function saveToCatalog() {
+      const sku = document.getElementById('input-sku').value.trim() || `SKU-${Date.now().toString().slice(-4)}`;
+      const title = document.getElementById('input-title').value.trim() || 'Untitled Product';
+      const adOption = document.querySelector('input[name="offsite-ads"]:checked');
+      
+      const newItem = {
+        sku: sku,
+        title: title,
+        retailPrice: getVal('input-retail-price'),
+        shippingCharged: getVal('input-shipping-charged'),
+        costMaterials: getVal('input-cost-materials'),
+        costPackaging: getVal('input-cost-packaging'),
+        costShipping: getVal('input-cost-shipping'),
+        laborHours: getVal('input-labor-hours'),
+        laborRate: getVal('input-labor-rate'),
+        discount: getVal('input-discount'),
+        listingRenewal: document.getElementById('check-listing-renewal').checked,
+        region: document.getElementById('payment-region').value,
+        customProcPercent: getVal('custom-proc-percent'),
+        customProcFixed: getVal('custom-proc-fixed'),
+        offsiteAds: adOption ? parseFloat(adOption.value) : 0,
+        regulatoryPercent: parseFloat(document.getElementById('regulatory-fee-tier').value) || 0,
+        currencySymbol: document.getElementById('currency-selector').value
+      };
+
+      const existingIdx = savedCatalog.findIndex(item => item.sku.toLowerCase() === sku.toLowerCase());
+      if (existingIdx !== -1) {
+        savedCatalog[existingIdx] = newItem;
+        showToast(`Updated SKU: ${sku}`);
+      } else {
+        savedCatalog.push(newItem);
+        showToast(`Saved SKU: ${sku}`);
+      }
+
+      saveCatalogToStorage();
+      renderCatalogTable();
+    }
+
+    function loadCatalogItem(index) {
+      const item = savedCatalog[index];
+      if (!item) return;
+
+      document.getElementById('input-sku').value = item.sku || '';
+      document.getElementById('input-title').value = item.title || '';
+      document.getElementById('input-retail-price').value = item.retailPrice !== undefined ? item.retailPrice : '';
+      document.getElementById('input-shipping-charged').value = item.shippingCharged !== undefined ? item.shippingCharged : '';
+      document.getElementById('input-cost-materials').value = item.costMaterials !== undefined ? item.costMaterials : '';
+      document.getElementById('input-cost-packaging').value = item.costPackaging !== undefined ? item.costPackaging : '';
+      document.getElementById('input-cost-shipping').value = item.costShipping !== undefined ? item.costShipping : '';
+      document.getElementById('input-labor-hours').value = item.laborHours !== undefined ? item.laborHours : '';
+      document.getElementById('input-labor-rate').value = item.laborRate !== undefined ? item.laborRate : '';
+      document.getElementById('input-discount').value = item.discount || 0;
+      document.getElementById('check-listing-renewal').checked = item.listingRenewal !== false;
+      document.getElementById('payment-region').value = item.region || 'us';
+      document.getElementById('custom-proc-percent').value = item.customProcPercent || 3.0;
+      document.getElementById('custom-proc-fixed').value = item.customProcFixed || 0.25;
+      document.getElementById('regulatory-fee-tier').value = item.regulatoryPercent || 0;
+      document.getElementById('currency-selector').value = item.currencySymbol || "$";
+
+      const adVal = (item.offsiteAds !== undefined) ? item.offsiteAds.toString() : "0";
+      const adSelector = document.querySelector(`input[name="offsite-ads"][value="${adVal}"]`);
+      if (adSelector) adSelector.checked = true;
+
+      updateAll();
+      showToast(`Loaded ${item.sku}`);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteCatalogItem(index) {
+      if (index >= 0 && index < savedCatalog.length) {
+        const removed = savedCatalog.splice(index, 1);
+        saveCatalogToStorage();
+        renderCatalogTable();
+        showToast(`Deleted ${removed[0].sku}`);
+      }
+    }
+
+    function clearCatalog() {
+      if (savedCatalog.length === 0) {
+        showToast("Catalog is already empty.");
+        return;
+      }
+      if (confirm("Clear all saved SKUs from your local catalog?")) {
+        savedCatalog = [];
+        saveCatalogToStorage();
+        renderCatalogTable();
+        showToast("Catalog cleared.");
+      }
+    }
+
+    function renderCatalogTable() {
+      const body = document.getElementById('catalog-body');
+      body.innerHTML = '';
+
+      if (savedCatalog.length === 0) {
+        body.innerHTML = `<tr><td colspan="9" style="text-align:center; color:var(--text-muted); padding: 1.75rem 1rem;">Catalog is empty. Configure product inputs above and click "Save to Catalog".</td></tr>`;
+        return;
+      }
+
+      savedCatalog.forEach((item, index) => {
+        const symbol = item.currencySymbol || "$";
+        const m = calculateMetrics(item);
+
+        const row = document.createElement('tr');
+        
+        const tdSku = document.createElement('td');
+        tdSku.style.fontWeight = '700';
+        tdSku.textContent = item.sku;
+        row.appendChild(tdSku);
+
+        const tdTitle = document.createElement('td');
+        tdTitle.textContent = item.title;
+        row.appendChild(tdTitle);
+
+        const tdPrice = document.createElement('td');
+        tdPrice.textContent = formatCurrency(item.retailPrice, symbol);
+        row.appendChild(tdPrice);
+
+        const tdDisc = document.createElement('td');
+        tdDisc.textContent = `${item.discount || 0}%`;
+        row.appendChild(tdDisc);
+
+        const tdFees = document.createElement('td');
+        tdFees.style.color = 'var(--accent-primary)';
+        tdFees.style.fontWeight = '600';
+        tdFees.textContent = formatCurrency(m.totalEtsyFees, symbol);
+        row.appendChild(tdFees);
+
+        const tdCosts = document.createElement('td');
+        tdCosts.textContent = formatCurrency(m.totalOperatingCosts, symbol);
+        row.appendChild(tdCosts);
+
+        const tdProfit = document.createElement('td');
+        tdProfit.style.fontWeight = '700';
+        tdProfit.style.color = m.netProfit < 0 ? 'var(--color-danger)' : 'var(--color-success)';
+        tdProfit.textContent = formatCurrency(m.netProfit, symbol);
+        row.appendChild(tdProfit);
+
+        const tdMargin = document.createElement('td');
+        const marginSpan = document.createElement('span');
+        marginSpan.style.fontWeight = '700';
+        marginSpan.style.padding = '2px 6px';
+        marginSpan.style.borderRadius = '4px';
+        marginSpan.style.fontSize = '0.75rem';
+        marginSpan.style.backgroundColor = m.margin < 20 ? 'var(--color-danger-light)' : 'var(--color-success-light)';
+        marginSpan.style.color = m.margin < 20 ? 'var(--color-danger-text)' : 'var(--color-success-text)';
+        marginSpan.textContent = `${m.margin.toFixed(1)}%`;
+        tdMargin.appendChild(marginSpan);
+        row.appendChild(tdMargin);
+
+        const tdActions = document.createElement('td');
+        tdActions.className = 'actions-cell no-print';
+
+        const btnLoad = document.createElement('button');
+        btnLoad.className = 'btn btn-secondary btn-sm';
+        btnLoad.textContent = 'Load';
+        btnLoad.onclick = () => loadCatalogItem(index);
+        tdActions.appendChild(btnLoad);
+
+        const btnDel = document.createElement('button');
+        btnDel.className = 'btn btn-danger btn-sm';
+        btnDel.setAttribute('aria-label', `Delete ${item.sku}`);
+        btnDel.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
+        btnDel.onclick = () => deleteCatalogItem(index);
+        tdActions.appendChild(btnDel);
+
+        row.appendChild(tdActions);
+        body.appendChild(row);
+      });
+    }
+
+    function escapeHtml(str) {
+      if (typeof str !== 'string') return '';
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    // Export Catalog to CSV via Blob
+    function exportCSV() {
+      if (savedCatalog.length === 0) {
+        showToast("Catalog is empty. Nothing to export.");
+        return;
+      }
+
+      const headers = [
+        "SKU", "Title", "Retail Price", "Shipping Charged", 
+        "Raw Materials Cost", "Packaging Cost", "Shipping Cost Paid", 
+        "Labor Hours", "Labor Rate", "Discount Applied", 
+        "Payment Region", "Custom Proc Percent", "Custom Proc Fixed",
+        "Offsite Ads Rate", "Regulatory Percent", "Currency"
+      ];
+
+      const csvRows = [headers.join(",")];
+
+      savedCatalog.forEach(item => {
+        const values = [
+          `"${(item.sku || '').replace(/"/g, '""')}"`,
+          `"${(item.title || '').replace(/"/g, '""')}"`,
+          item.retailPrice || 0,
+          item.shippingCharged || 0,
+          item.costMaterials || 0,
+          item.costPackaging || 0,
+          item.costShipping || 0,
+          item.laborHours || 0,
+          item.laborRate || 0,
+          item.discount || 0,
+          `"${item.region || 'us'}"`,
+          item.customProcPercent || 3.0,
+          item.customProcFixed || 0.25,
+          item.offsiteAds || 0,
+          item.regulatoryPercent || 0,
+          `"${item.currencySymbol || '$'}"`
+        ];
+        csvRows.push(values.join(","));
+      });
+
+      const blob = new Blob([csvRows.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Etsy_Pricing_Catalog_${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast("CSV export downloaded.");
+    }
+
+    // Export Catalog to JSON via Blob
+    function exportJSON() {
+      if (savedCatalog.length === 0) {
+        showToast("Catalog is empty. Nothing to export.");
+        return;
+      }
+
+      const blob = new Blob([JSON.stringify(savedCatalog, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Etsy_Pricing_Catalog_${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast("JSON export downloaded.");
+    }
+
+    // Import Catalog from JSON file
+    function importJSON(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (Array.isArray(imported)) {
+            savedCatalog = imported;
+            saveCatalogToStorage();
+            renderCatalogTable();
+            showToast(`Imported ${imported.length} SKUs successfully.`);
+          } else {
+            showToast("Invalid JSON catalog format.");
+          }
+        } catch (err) {
+          showToast("Error parsing JSON file.");
+        }
+        event.target.value = '';
+      };
+      reader.readAsText(file);
+    }
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This calculator helps Etsy sellers, handmade crafters, and digital creators accurately calculate platform fees and real net margins. Enter your production costs and retail price to see exact deductions and stress-test sale discounts. Use the free web tool anytime, or grab the offline pack to manage your catalog locally.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Enter your base product costs, including materials, packaging, and hourly labor time.</li><li>Input your retail price and the shipping amount charged to the buyer.</li><li>Select your applicable fee settings, such as payment processing region and Offsite Ads rate.</li><li>Review your net profit per unit and adjust the discount slider to find your exact break-even price.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What percentage does Etsy take per sale in total?</h4><p style="margin:0">For US sellers, Etsy charges a $0.20 listing fee, a 6.5% transaction fee on the combined item and shipping cost, and a payment processing fee of 3% plus $0.25. In total, standard platform fees usually average between 9.5% and 12% of the order total. If an order comes through Etsy&#39;s Offsite Ads program, an additional 12% to 15% fee applies.</p><h4 style="font-size:16px;margin:16px 0 4px">Does the calculator account for Etsy Offsite Ads fees?</h4><p style="margin:0">Yes. You can toggle Offsite Ads on or off and select either the 15% rate (standard for shops under $10,000 USD in trailing 12-month sales) or the 12% rate (for shops over $10,000 USD). This shows you whether an advertised order remains profitable at your current price point.</p><h4 style="font-size:16px;margin:16px 0 4px">How does the discount slider calculate break-even pricing?</h4><p style="margin:0">The break-even slider recalculates your net take-home profit as you adjust your promo percentage from 0% to 50%. It identifies the exact discount threshold where net profit drops to zero after all listing fees, transaction cuts, payment processing, and cost of goods sold are subtracted.</p><h4 style="font-size:16px;margin:16px 0 4px">What is included in the $9 offline pack versus the free tool?</h4><p style="margin:0">The free web tool provides full fee calculation and margin analysis for single products directly in your browser. The $9 offline pack includes an offline-compatible workspace that lets you save, edit, and organize multiple SKUs locally on your machine without recurring software subscriptions, plus export printable summaries and CSVs.</p>
+<p style="margin:24px 0;padding:16px;border:1px solid rgba(128,128,128,.35);border-radius:12px"><strong>Want it offline?</strong> Get the offline pack (the tool as a single file, a quick-start guide and a license) and support this project: <a href="https://ferrywave73.gumroad.com/l/imbupc" rel="noopener" style="font-weight:700;color:inherit">download it on Gumroad</a>.</p><p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a></p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">About · Offline pack</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"About · Offline pack"});</script>
+</body>
+</html>
