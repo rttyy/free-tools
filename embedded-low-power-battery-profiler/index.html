@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --surface-hover: #e2e8f0;
+      --border: #cbd5e1;
+      --border-focus: #2563eb;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --danger: #dc2626;
+      --danger-bg: #fee2e2;
+      --danger-border: #fca5a5;
+      --warning: #b45309;
+      --warning-bg: #fef3c7;
+      --warning-border: #fde68a;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --success-border: #86efac;
+      --radius: 8px;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b0f19;
+        --surface: #141c2e;
+        --surface-subtle: #1e293b;
+        --surface-hover: #334155;
+        --border: #334155;
+        --border-focus: #3b82f6;
+        --text: #f1f5f9;
+        --text-muted: #94a3b8;
+        --accent: #3b82f6;
+        --accent-hover: #60a5fa;
+        --danger: #ef4444;
+        --danger-bg: #450a0a;
+        --danger-border: #7f1d1d;
+        --warning: #f59e0b;
+        --warning-bg: #451a03;
+        --warning-border: #78350f;
+        --success: #22c55e;
+        --success-bg: #052e16;
+        --success-border: #14532d;
+        --shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 14px;
+      display: flex;
+      justify-content: center;
+      min-width: 320px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      word-break: break-word;
+    }
+    header p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+      width: 100%;
+    }
+    @media (min-width: 960px) {
+      .grid-2 {
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      }
+    }
+
+    .grid-col {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    button {
+      background: var(--surface-subtle);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+      min-height: 34px;
+      max-width: 100%;
+    }
+    button:hover {
+      background: var(--surface-hover);
+    }
+    button:focus-visible {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 1px;
+    }
+    button.primary {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+    button.primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+    button.danger {
+      color: var(--danger);
+    }
+    button.danger:hover {
+      background: var(--danger-bg);
+      border-color: var(--danger-border);
+    }
+    button.sm-btn {
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      min-height: 28px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+    label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    input, select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 7px 10px;
+      color: var(--text);
+      font-size: 0.88rem;
+      font-family: inherit;
+      width: 100%;
+      min-width: 0;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    }
+
+    .param-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      width: 100%;
+    }
+    .span-full {
+      grid-column: 1 / -1;
+    }
+
+    /* States table */
+    .table-container {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      -webkit-overflow-scrolling: touch;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      min-width: 460px;
+    }
+    th, td {
+      padding: 6px 8px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    th {
+      background: var(--surface-subtle);
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+    td input {
+      padding: 5px 6px;
+      font-size: 0.82rem;
+    }
+    td select {
+      padding: 5px 6px;
+      font-size: 0.82rem;
+    }
+
+    /* Timeline visualization */
+    .timeline-container {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+    .timeline-bar {
+      display: flex;
+      width: 100%;
+      height: 26px;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #88888820;
+    }
+    .timeline-segment {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+      white-space: nowrap;
+      overflow: hidden;
+      cursor: help;
+      min-width: 3px;
+      user-select: none;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      font-size: 0.74rem;
+      word-break: break-word;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .legend-box {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* Metrics display */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+      width: 100%;
+    }
+    .metric-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 9px;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .metric-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .metric-val {
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      margin-top: 2px;
+      word-break: break-all;
+    }
+    .metric-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      word-break: break-word;
+    }
+
+    /* Alert / Validation banner */
+    .alert-banner {
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 0.82rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      word-break: break-word;
+    }
+    .alert-banner.danger {
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      color: var(--text);
+    }
+    .alert-banner.warning {
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      color: var(--text);
+    }
+    .alert-banner.success {
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: var(--text);
+    }
+
+    /* Canvas styling */
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      min-width: 0;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Recommendations */
+    .rec-item {
+      padding: 9px 11px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-size: 0.82rem;
+      background: var(--surface-subtle);
+      word-break: break-word;
+    }
+    .rec-item:last-child {
+      margin-bottom: 0;
+    }
+    .rec-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Mandatory Engineering Note */
+    .footer-note {
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 12px 14px;
+      border-top: 1px dashed var(--border);
+      margin-top: 8px;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      font-size: 0.7rem;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .badge-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger-border); }
+    .badge-warning { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning-border); }
+    .badge-success { background: var(--success-bg); color: var(--success); border: 1px solid var(--success-border); }
+
+    /* Icons */
+    .icon {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2;
+      stroke: currentColor;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 8px; }
+      header { padding: 12px; }
+      .card { padding: 12px; gap: 10px; }
+      .param-grid { grid-template-columns: 1fr; }
+      .metric-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media print {
+      body { background: #ffffff !important; color: #000000 !important; padding: 0 !important; }
+      .toolbar, button { display: none !important; }
+      .card { box-shadow: none !important; border: 1px solid #ccc !important; break-inside: avoid; }
+      .container { max-width: 100% !important; }
+      header { border-bottom: 2px solid #000; }
+    }
+  </style>
+<title>Embedded Low-Power Battery Life &amp; Duty Cycle Profiler</title>
+<meta name="description" content="Accurately calculate IoT battery life, microamp sleep states, and ESR voltage sags. Interactive profiler for CR2032, 18650, LiFePO4, and AA cells.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/embedded-low-power-battery-profiler/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/embedded-low-power-battery-profiler/">
+<meta property="og:title" content="Embedded Low-Power Battery Life &amp; Duty Cycle Profiler"><meta property="og:description" content="Accurately calculate IoT battery life, microamp sleep states, and ESR voltage sags. Interactive profiler for CR2032, 18650, LiFePO4, and AA cells.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/embedded-low-power-battery-profiler/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Embedded Low-Power Battery Life & Duty Cycle Profiler","description":"Accurately calculate IoT battery life, microamp sleep states, and ESR voltage sags. Interactive profiler for CR2032, 18650, LiFePO4, and AA cells.","url":"https://rttyy.github.io/free-tools/embedded-low-power-battery-profiler/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How can I get my atmega328 to run for a year on batteries?","acceptedAnswer":{"@type":"Answer","text":"To achieve a year or more on batteries, use a bare ATmega328P running at 8MHz on its internal oscillator without an onboard USB bridge or power LED. Power it directly from 2x AA alkaline or 1x LiFePO4 cell to bypass inefficient linear regulators, put the chip into deep sleep (`SLEEP_MODE_PWR_DOWN`) with ADC and BOD disabled, and keep active tasks brief so your average current stays below 20-30 microamps."}},{"@type":"Question","name":"Batteries. Why use 9V?","acceptedAnswer":{"@type":"Answer","text":"9V batteries (PP3) are usually a poor choice for modern low-power microcontrollers because they have very low capacity (around 400-500mAh) and contain six tiny 1.5V AAAA cells with relatively high internal resistance. If you step 9V down to 3.3V using a typical linear regulator, you waste more than 60% of the energy as heat; they are typically only used when compact high voltage is required for legacy sensors, op-amps, or smoke detectors."}},{"@type":"Question","name":"Measure Lithium ion battery voltage (thus remaining capacity)","acceptedAnswer":{"@type":"Answer","text":"Because standard Li-ion cells maintain a flat discharge plateau between roughly 3.7V and 3.6V, measuring terminal voltage with an ADC only gives a rough estimate of state-of-charge and is heavily skewed under load. For accurate readings, sample the voltage using a high-value resistive divider only after the device has rested in sleep mode, or implement a dedicated I2C fuel gauge IC that uses Coulomb counting."}},{"@type":"Question","name":"Smart and effective ways to light up a garage without relying on power outlets?","acceptedAnswer":{"@type":"Answer","text":"The most effective approach is pairing 12V LED strips with a 12V deep-cycle LiFePO4 or SLA battery recharged by a modest 20W-50W solar panel mounted outside with a charge controller. To minimize battery draw, place the lights on a low-quiescent-current 12V PIR motion sensor switch or a timed relay so illumination automatically cuts off when the garage is unoccupied."}}]}</script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
+        <div>
+          <h1>
+            <svg class="icon" style="width:20px; height:20px;" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="2" y="7" width="16" height="11" rx="2" ry="2"></rect>
+              <line x1="20" y1="11" x2="20" y2="14"></line>
+              <line x1="6" y1="11" x2="6" y2="14"></line>
+              <line x1="10" y1="11" x2="10" y2="14"></line>
+            </svg>
+            Embedded Low-Power Battery Life and Duty Cycle Profiler
+          </h1>
+          <p>Model multi-state quiescent sleep currents, peak pulse voltage sags, brownout margins, and self-discharge kinetics.</p>
+        </div>
+      </div>
+      <div class="toolbar" role="toolbar" aria-label="Profiler actions">
+        <button type="button" id="btn-reset" title="Reset all inputs to default CR2032 setup">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+          Reset Defaults
+        </button>
+        <button type="button" id="btn-export-json" title="Export full setup configuration as JSON">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export JSON
+        </button>
+        <button type="button" id="btn-export-csv" title="Export states breakdown as CSV spreadsheet">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="16" y2="17"></line></svg>
+          Export CSV
+        </button>
+        <button type="button" id="btn-copy-summary" title="Copy formatted engineering summary to clipboard">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          Copy Report
+        </button>
+        <button type="button" id="btn-print" title="Print profile report or save as PDF">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          Print Report
+        </button>
+      </div>
+    </header>
+
+    <div class="grid-2">
+      <!-- Left Column: Inputs & Schedule Editor -->
+      <div class="grid-col">
+        <!-- Battery Chemistry & Hardware Profile -->
+        <div class="card">
+          <div class="card-title">
+            <span>Battery Parameters & Hardware Setup</span>
+          </div>
+
+          <div class="param-grid">
+            <div class="form-group span-full">
+              <label for="chem-preset">Battery Chemistry Preset</label>
+              <select id="chem-preset">
+                <option value="cr2032">CR2032 Coin Cell (3.0V, 220 mAh, ~15.0Ω ESR)</option>
+                <option value="cr2450">CR2450 Coin Cell (3.0V, 620 mAh, ~10.0Ω ESR)</option>
+                <option value="li_18650">18650 Li-ion Cell (3.7V nom, 2600 mAh, ~0.06Ω ESR)</option>
+                <option value="alkaline_2aa">2x AA Alkaline Series (3.0V, 2400 mAh, ~0.40Ω ESR)</option>
+                <option value="lifepo4">LiFePO4 Cell (3.2V, 1500 mAh, ~0.08Ω ESR)</option>
+                <option value="lisocl2">Li-SOCl2 Bobbin Cell (3.6V, 1200 mAh, ~8.0Ω ESR)</option>
+                <option value="zinc_9v">9V Alkaline (9.0V, 500 mAh, ~2.50Ω ESR)</option>
+                <option value="custom">Custom Parameters</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="bat-cells">Cells in Parallel</label>
+              <input type="number" id="bat-cells" min="1" max="20" step="1" value="1">
+            </div>
+
+            <div class="form-group">
+              <label for="bat-capacity">Rated Capacity (mAh)</label>
+              <input type="number" id="bat-capacity" min="1" max="100000" step="10" value="220">
+            </div>
+
+            <div class="form-group">
+              <label for="bat-vnom">Nominal Rail (V)</label>
+              <input type="number" id="bat-vnom" min="0.5" max="48" step="0.05" value="3.0">
+            </div>
+
+            <div class="form-group">
+              <label for="bat-vcutoff">Cell Cutoff (V)</label>
+              <input type="number" id="bat-vcutoff" min="0.2" max="48" step="0.05" value="2.0">
+            </div>
+
+            <div class="form-group">
+              <label for="bat-esr">Cell Internal ESR (Ω)</label>
+              <input type="number" id="bat-esr" min="0.001" max="500" step="0.1" value="15.0">
+            </div>
+
+            <div class="form-group">
+              <label for="bat-selfdischarge">Self-Discharge (%/yr)</label>
+              <input type="number" id="bat-selfdischarge" min="0" max="60" step="0.2" value="1.0">
+            </div>
+
+            <div class="form-group">
+              <label for="sys-bod">MCU Brownout V<sub>BOD</sub> (V)</label>
+              <input type="number" id="sys-bod" min="0.1" max="24" step="0.05" value="2.20">
+            </div>
+
+            <div class="form-group">
+              <label for="sys-temp">Operating Temp (°C)</label>
+              <input type="number" id="sys-temp" min="-40" max="85" step="1" value="25">
+            </div>
+
+            <div class="form-group span-full">
+              <label for="sys-margin">Design Safety Derating Factor (%)</label>
+              <select id="sys-margin">
+                <option value="0">0% (Ideal / Raw Theoretical Capacity)</option>
+                <option value="15">15% (Standard Lab Prototype Margin)</option>
+                <option value="20" selected>20% (Recommended Conservative Margin for Industrial IoT)</option>
+                <option value="30">30% (Harsh-Environment / Extended Storage Margin)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Dynamic parameter validation feedback -->
+          <div id="param-validation-box"></div>
+        </div>
+
+        <!-- Duty Cycle State Timeline Table -->
+        <div class="card">
+          <div class="card-title">
+            <span>Sequential Operational States</span>
+            <button type="button" class="primary sm-btn" id="btn-add-state">+ Add State</button>
+          </div>
+
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: -4px;">
+            Specify current draw and duration for one cycle period. Order executes sequentially. Table scrolls horizontally if needed.
+          </p>
+
+          <div class="table-container" tabindex="0" role="region" aria-label="States cycle table">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width: 30%;">State Name</th>
+                  <th style="width: 22%;">Current</th>
+                  <th style="width: 14%;">Unit</th>
+                  <th style="width: 20%;">Duration</th>
+                  <th style="width: 14%;">Unit</th>
+                  <th style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="states-tbody">
+                <!-- Dynamically Populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Timeline graphical bar -->
+          <div class="timeline-container">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; font-weight:600; flex-wrap:wrap; gap:4px;">
+              <span>Duty Cycle Visual Breakdown</span>
+              <span id="cycle-total-time-label" style="font-family:var(--font-mono);">Total Period: --</span>
+            </div>
+            <div class="timeline-bar" id="timeline-bar" title="Proportional cycle time breakdown"></div>
+            <div class="legend" id="timeline-legend"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Outputs, Pulse Sag Analysis, Discharge Curve, Recommendations -->
+      <div class="grid-col">
+        <!-- Calculated Battery Lifetime Metrics -->
+        <div class="card">
+          <div class="card-title">
+            <span>Calculated Runtime & Margins</span>
+            <span class="badge badge-success" id="life-badge">Pass</span>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric-box">
+              <span class="metric-label">Derated Battery Life</span>
+              <span class="metric-val" id="metric-lifetime-main">--</span>
+              <span class="metric-sub" id="metric-lifetime-sub">--</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Average Current</span>
+              <span class="metric-val" id="metric-avg-current">--</span>
+              <span class="metric-sub" id="metric-avg-sub">active + self-discharge</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Cycle Energy</span>
+              <span class="metric-val" id="metric-cycle-energy">--</span>
+              <span class="metric-sub" id="metric-cycle-sub">per execution period</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Peak Pulse Sag</span>
+              <span class="metric-val" id="metric-pulse-sag">--</span>
+              <span class="metric-sub" id="metric-pulse-v">--</span>
+            </div>
+          </div>
+
+          <!-- Brownout & Peak Current Alert Banner -->
+          <div id="alert-container"></div>
+        </div>
+
+        <!-- Dynamic Simulated Discharge Curve -->
+        <div class="card">
+          <div class="card-title">
+            <span>Rail Voltage vs. Depth of Discharge</span>
+          </div>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-top:-4px;">
+            Blue curve represents quiescent cell rail; orange curve shows peak pulse sag over discharge cycle. Dashed red line is MCU Brownout Reset (V<sub>BOD</sub>).
+          </p>
+          <div class="canvas-container">
+            <canvas id="discharge-chart"></canvas>
+          </div>
+        </div>
+
+        <!-- Automated Engineering Recommendations -->
+        <div class="card">
+          <div class="card-title">
+            <span>Low-Power Engineering Advisories</span>
+          </div>
+          <div id="recommendations-container">
+            <!-- Dynamically populated recommendations -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mandatory technical note with explicit disclaimer -->
+    <div class="footer-note">
+      Estimate only - verify with a qualified professional before relying on it. Physical electrochemical variation, transient ripple, regulator dropouts, ambient temperature swings, and PCB flux leakage will alter real-world runtimes.
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // Color palette for states
+      const STATE_COLORS = [
+        '#2563eb', '#059669', '#d97706', '#db2777', '#7c3aed', '#0891b2', '#65a30d', '#ea580c'
+      ];
+
+      // Default State Profiles
+      const DEFAULT_STATES = [
+        { id: 1, name: 'Deep Sleep', current: 3.5, currentUnit: 'uA', duration: 30, durationUnit: 's', color: '#2563eb' },
+        { id: 2, name: 'Sensor Warmup & Read', current: 2.2, currentUnit: 'mA', duration: 15, durationUnit: 'ms', color: '#059669' },
+        { id: 3, name: 'MCU Processing', current: 7.5, currentUnit: 'mA', duration: 10, durationUnit: 'ms', color: '#d97706' },
+        { id: 4, name: 'Radio TX Burst', current: 25.0, currentUnit: 'mA', duration: 20, durationUnit: 'ms', color: '#db2777' }
+      ];
+
+      // Battery Presets definitions
+      const BATTERY_PRESETS = {
+        'cr2032': { capacity: 220, vnom: 3.0, vcutoff: 2.0, esr: 15.0, selfdischarge: 1.0, bod: 2.20 },
+        'cr2450': { capacity: 620, vnom: 3.0, vcutoff: 2.0, esr: 10.0, selfdischarge: 1.0, bod: 2.20 },
+        'li_18650': { capacity: 2600, vnom: 3.7, vcutoff: 3.0, esr: 0.06, selfdischarge: 3.0, bod: 2.80 },
+        'alkaline_2aa': { capacity: 2400, vnom: 3.0, vcutoff: 1.8, esr: 0.40, selfdischarge: 2.0, bod: 1.90 },
+        'lifepo4': { capacity: 1500, vnom: 3.2, vcutoff: 2.5, esr: 0.08, selfdischarge: 2.0, bod: 2.40 },
+        'lisocl2': { capacity: 1200, vnom: 3.6, vcutoff: 2.5, esr: 8.0, selfdischarge: 0.8, bod: 2.50 },
+        'zinc_9v': { capacity: 500, vnom: 9.0, vcutoff: 5.4, esr: 2.50, selfdischarge: 5.0, bod: 5.00 }
+      };
+
+      // Application State
+      let profile = {
+        chemPreset: 'cr2032',
+        cellsParallel: 1,
+        capacity: 220,
+        vnom: 3.0,
+        vcutoff: 2.0,
+        esr: 15.0,
+        selfDischarge: 1.0,
+        bod: 2.20,
+        temp: 25,
+        safetyMargin: 20,
+        states: JSON.parse(JSON.stringify(DEFAULT_STATES))
+      };
+
+      // Safe localStorage wrapper
+      function loadSavedData() {
+        try {
+          const raw = localStorage.getItem('embedded_profiler_cfg');
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === 'object') {
+              if (Array.isArray(parsed.states) && parsed.states.length > 0) {
+                const validStates = parsed.states.filter(s => s && typeof s.name === 'string');
+                if (validStates.length > 0) profile.states = validStates;
+              }
+              if (typeof parsed.chemPreset === 'string') profile.chemPreset = parsed.chemPreset;
+              if (Number.isFinite(parsed.cellsParallel)) profile.cellsParallel = Math.max(1, parsed.cellsParallel);
+              if (Number.isFinite(parsed.capacity)) profile.capacity = Math.max(0.1, parsed.capacity);
+              if (Number.isFinite(parsed.vnom)) profile.vnom = Math.max(0.5, parsed.vnom);
+              if (Number.isFinite(parsed.vcutoff)) profile.vcutoff = Math.max(0.2, parsed.vcutoff);
+              if (Number.isFinite(parsed.esr)) profile.esr = Math.max(0.001, parsed.esr);
+              if (Number.isFinite(parsed.selfDischarge)) profile.selfDischarge = Math.max(0, parsed.selfDischarge);
+              if (Number.isFinite(parsed.bod)) profile.bod = Math.max(0.1, parsed.bod);
+              if (Number.isFinite(parsed.temp)) profile.temp = parsed.temp;
+              if (Number.isFinite(parsed.safetyMargin)) profile.safetyMargin = parsed.safetyMargin;
+            }
+          }
+        } catch (e) {
+          // localStorage disabled or blocked
+        }
+      }
+
+      function saveData() {
+        try {
+          localStorage.setItem('embedded_profiler_cfg', JSON.stringify(profile));
+        } catch (e) {
+          // localStorage disabled or full
+        }
+      }
+
+      // DOM Elements
+      const chemSelect = document.getElementById('chem-preset');
+      const cellsInput = document.getElementById('bat-cells');
+      const capInput = document.getElementById('bat-capacity');
+      const vnomInput = document.getElementById('bat-vnom');
+      const vcutoffInput = document.getElementById('bat-vcutoff');
+      const esrInput = document.getElementById('bat-esr');
+      const sdInput = document.getElementById('bat-selfdischarge');
+      const bodInput = document.getElementById('sys-bod');
+      const tempInput = document.getElementById('sys-temp');
+      const marginSelect = document.getElementById('sys-margin');
+      const paramValidationBox = document.getElementById('param-validation-box');
+
+      const statesTbody = document.getElementById('states-tbody');
+      const btnAddState = document.getElementById('btn-add-state');
+      const timelineBar = document.getElementById('timeline-bar');
+      const timelineLegend = document.getElementById('timeline-legend');
+      const cycleTotalLabel = document.getElementById('cycle-total-time-label');
+
+      const metricLifeMain = document.getElementById('metric-lifetime-main');
+      const metricLifeSub = document.getElementById('metric-lifetime-sub');
+      const metricAvgCurrent = document.getElementById('metric-avg-current');
+      const metricAvgSub = document.getElementById('metric-avg-sub');
+      const metricCycleEnergy = document.getElementById('metric-cycle-energy');
+      const metricCycleSub = document.getElementById('metric-cycle-sub');
+      const metricPulseSag = document.getElementById('metric-pulse-sag');
+      const metricPulseV = document.getElementById('metric-pulse-v');
+      const lifeBadge = document.getElementById('life-badge');
+      const alertContainer = document.getElementById('alert-container');
+      const recContainer = document.getElementById('recommendations-container');
+      const dischargeCanvas = document.getElementById('discharge-chart');
+
+      // Unit conversion helpers
+      function currentToAmps(val, unit) {
+        val = parseFloat(val);
+        if (isNaN(val) || val < 0) val = 0;
+        if (unit === 'uA') return val * 1e-6;
+        if (unit === 'mA') return val * 1e-3;
+        if (unit === 'A') return val;
+        return val * 1e-6;
+      }
+
+      function durationToSeconds(val, unit) {
+        val = parseFloat(val);
+        if (isNaN(val) || val < 0) val = 0;
+        if (unit === 'us') return val * 1e-6;
+        if (unit === 'ms') return val * 1e-3;
+        if (unit === 's') return val;
+        if (unit === 'm') return val * 60;
+        if (unit === 'h') return val * 3600;
+        return val;
+      }
+
+      function formatDuration(sec) {
+        if (!isFinite(sec) || sec <= 0) return '0 s';
+        if (sec < 0.001) return (sec * 1e6).toFixed(1) + ' µs';
+        if (sec < 1) return (sec * 1000).toFixed(1) + ' ms';
+        if (sec < 60) return sec.toFixed(2) + ' s';
+        if (sec < 3600) return (sec / 60).toFixed(1) + ' min';
+        return (sec / 3600).toFixed(2) + ' hrs';
+      }
+
+      function formatCurrent(amps) {
+        if (!isFinite(amps) || amps <= 0) return '0.00 µA';
+        if (amps < 1e-6) return (amps * 1e9).toFixed(1) + ' nA';
+        if (amps < 1e-3) return (amps * 1e6).toFixed(2) + ' µA';
+        if (amps < 1) return (amps * 1e3).toFixed(2) + ' mA';
+        return amps.toFixed(3) + ' A';
+      }
+
+      function formatLifeTime(days) {
+        if (!isFinite(days)) return { main: 'Indefinite', sub: 'No current draw calculated' };
+        if (days <= 0) return { main: '0 Days', sub: 'Immediate Brownout or Exhaustion' };
+        if (days < (1 / 24)) {
+          const mins = Math.max(0.1, days * 1440).toFixed(1);
+          return { main: `${mins} Minutes`, sub: 'Heavy continuous load' };
+        }
+        if (days < 1) {
+          const hours = (days * 24).toFixed(1);
+          return { main: `${hours} Hours`, sub: `${(days * 1440).toFixed(0)} Operating Minutes` };
+        }
+        if (days < 60) {
+          return { main: `${days.toFixed(1)} Days`, sub: `${(days * 24).toFixed(0)} Operating Hours` };
+        }
+        const years = days / 365.25;
+        const months = days / 30.44;
+        if (years >= 1) {
+          return { main: `${years.toFixed(2)} Years`, sub: `~${months.toFixed(1)} Months (${Math.round(days)} Days)` };
+        }
+        return { main: `${months.toFixed(1)} Months`, sub: `${Math.round(days)} Operating Days` };
+      }
+
+      // Populate input fields
+      function populateForm() {
+        chemSelect.value = profile.chemPreset || 'custom';
+        cellsInput.value = profile.cellsParallel || 1;
+        capInput.value = profile.capacity || 220;
+        vnomInput.value = profile.vnom || 3.0;
+        vcutoffInput.value = profile.vcutoff || 2.0;
+        esrInput.value = profile.esr || 15.0;
+        sdInput.value = profile.selfDischarge !== undefined ? profile.selfDischarge : 1.0;
+        bodInput.value = profile.bod || 2.20;
+        tempInput.value = profile.temp !== undefined ? profile.temp : 25;
+        marginSelect.value = profile.safetyMargin !== undefined ? profile.safetyMargin : 20;
+      }
+
+      // Render states table
+      function renderStatesTable() {
+        statesTbody.innerHTML = '';
+        profile.states.forEach((st, idx) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${st.color}; flex-shrink:0;"></span>
+                <input type="text" class="st-name" value="${st.name.replace(/"/g, '&quot;')}" data-id="${st.id}" aria-label="State Name" placeholder="State ${idx + 1}">
+              </div>
+            </td>
+            <td>
+              <input type="number" class="st-current" value="${st.current}" min="0" step="any" data-id="${st.id}" aria-label="Current draw">
+            </td>
+            <td>
+              <select class="st-current-unit" data-id="${st.id}" aria-label="Current unit">
+                <option value="uA" ${st.currentUnit === 'uA' ? 'selected' : ''}>µA</option>
+                <option value="mA" ${st.currentUnit === 'mA' ? 'selected' : ''}>mA</option>
+                <option value="A" ${st.currentUnit === 'A' ? 'selected' : ''}>A</option>
+              </select>
+            </td>
+            <td>
+              <input type="number" class="st-duration" value="${st.duration}" min="0" step="any" data-id="${st.id}" aria-label="Duration">
+            </td>
+            <td>
+              <select class="st-duration-unit" data-id="${st.id}" aria-label="Duration unit">
+                <option value="us" ${st.durationUnit === 'us' ? 'selected' : ''}>µs</option>
+                <option value="ms" ${st.durationUnit === 'ms' ? 'selected' : ''}>ms</option>
+                <option value="s" ${st.durationUnit === 's' ? 'selected' : ''}>s</option>
+                <option value="m" ${st.durationUnit === 'm' ? 'selected' : ''}>min</option>
+                <option value="h" ${st.durationUnit === 'h' ? 'selected' : ''}>hr</option>
+              </select>
+            </td>
+            <td style="text-align: center;">
+              <button type="button" class="danger sm-btn btn-del-state" data-id="${st.id}" ${profile.states.length <= 1 ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''} aria-label="Delete state ${idx + 1}" title="Remove state">✕</button>
+            </td>
+          `;
+          statesTbody.appendChild(tr);
+        });
+
+        statesTbody.querySelectorAll('.st-name').forEach(el => {
+          el.addEventListener('input', (e) => {
+            const id = parseInt(e.target.dataset.id, 10);
+            const item = profile.states.find(s => s.id === id);
+            if (item) {
+              item.name = e.target.value;
+              updateProfiler();
+            }
+          });
+        });
+
+        statesTbody.querySelectorAll('.st-current').forEach(el => {
+          el.addEventListener('input', (e) => {
+            const id = parseInt(e.target.dataset.id, 10);
+            const item = profile.states.find(s => s.id === id);
+            if (item) {
+              const val = parseFloat(e.target.value);
+              item.current = (isNaN(val) || val < 0) ? 0 : val;
+              updateProfiler();
+            }
+          });
+        });
+
+        statesTbody.querySelectorAll('.st-current-unit').forEach(el => {
+          el.addEventListener('change', (e) => {
+            const id = parseInt(e.target.dataset.id, 10);
+            const item = profile.states.find(s => s.id === id);
+            if (item) {
+              item.currentUnit = e.target.value;
+              updateProfiler();
+            }
+          });
+        });
+
+        statesTbody.querySelectorAll('.st-duration').forEach(el => {
+          el.addEventListener('input', (e) => {
+            const id = parseInt(e.target.dataset.id, 10);
+            const item = profile.states.find(s => s.id === id);
+            if (item) {
+              const val = parseFloat(e.target.value);
+              item.duration = (isNaN(val) || val < 0) ? 0 : val;
+              updateProfiler();
+            }
+          });
+        });
+
+        statesTbody.querySelectorAll('.st-duration-unit').forEach(el => {
+          el.addEventListener('change', (e) => {
+            const id = parseInt(e.target.dataset.id, 10);
+            const item = profile.states.find(s => s.id === id);
+            if (item) {
+              item.durationUnit = e.target.value;
+              updateProfiler();
+            }
+          });
+        });
+
+        statesTbody.querySelectorAll('.btn-del-state').forEach(el => {
+          el.addEventListener('click', (e) => {
+            const id = parseInt(e.currentTarget.dataset.id, 10);
+            if (profile.states.length > 1) {
+              profile.states = profile.states.filter(s => s.id !== id);
+              renderStatesTable();
+              updateProfiler();
+            }
+          });
+        });
+      }
+
+      // Add state handler
+      btnAddState.addEventListener('click', () => {
+        const nextId = profile.states.length ? Math.max(...profile.states.map(s => s.id)) + 1 : 1;
+        const color = STATE_COLORS[(profile.states.length) % STATE_COLORS.length];
+        profile.states.push({
+          id: nextId,
+          name: `State ${nextId}`,
+          current: 5.0,
+          currentUnit: 'mA',
+          duration: 50,
+          durationUnit: 'ms',
+          color: color
+        });
+        renderStatesTable();
+        updateProfiler();
+      });
+
+      // Chemistry selector event
+      chemSelect.addEventListener('change', (e) => {
+        const val = e.target.value;
+        profile.chemPreset = val;
+        if (BATTERY_PRESETS[val]) {
+          const cfg = BATTERY_PRESETS[val];
+          profile.capacity = cfg.capacity;
+          profile.vnom = cfg.vnom;
+          profile.vcutoff = cfg.vcutoff;
+          profile.esr = cfg.esr;
+          profile.selfDischarge = cfg.selfdischarge;
+          profile.bod = cfg.bod;
+          populateForm();
+        }
+        updateProfiler();
+      });
+
+      // Safety margin select handler
+      marginSelect.addEventListener('change', (e) => {
+        profile.safetyMargin = parseFloat(e.target.value) || 0;
+        updateProfiler();
+      });
+
+      // Numeric input bindings
+      function bindNumericInput(elem, key, isFloat, min, max) {
+        elem.addEventListener('input', () => {
+          let v = isFloat ? parseFloat(elem.value) : parseInt(elem.value, 10);
+          if (isNaN(v)) {
+            profile[key] = min;
+          } else {
+            if (v < min) v = min;
+            if (max !== undefined && v > max) v = max;
+            profile[key] = v;
+          }
+
+          if (key !== 'chemPreset' && chemSelect.value !== 'custom') {
+            chemSelect.value = 'custom';
+            profile.chemPreset = 'custom';
+          }
+          updateProfiler();
+        });
+
+        elem.addEventListener('blur', () => {
+          let v = isFloat ? parseFloat(elem.value) : parseInt(elem.value, 10);
+          if (isNaN(v) || v < min) v = min;
+          if (max !== undefined && v > max) v = max;
+          elem.value = v;
+          profile[key] = v;
+          updateProfiler();
+        });
+      }
+
+      bindNumericInput(cellsInput, 'cellsParallel', false, 1, 20);
+      bindNumericInput(capInput, 'capacity', true, 0.1, 500000);
+      bindNumericInput(vnomInput, 'vnom', true, 0.5, 48.0);
+      bindNumericInput(vcutoffInput, 'vcutoff', true, 0.2, 48.0);
+      bindNumericInput(esrInput, 'esr', true, 0.001, 1000.0);
+      bindNumericInput(sdInput, 'selfDischarge', true, 0.0, 99.0);
+      bindNumericInput(bodInput, 'bod', true, 0.1, 24.0);
+      bindNumericInput(tempInput, 'temp', true, -40, 85);
+
+      // Core calculation logic
+      function calculateMetrics() {
+        const numCells = Math.max(1, parseInt(profile.cellsParallel, 10) || 1);
+        const cellCap = Math.max(0.01, parseFloat(profile.capacity) || 0);
+        const totalCapacityMah = cellCap * numCells;
+
+        let tempFactor = 1.0;
+        const curTemp = parseFloat(profile.temp) || 25;
+        if (curTemp < 25) {
+          tempFactor += (25 - curTemp) * 0.025;
+        } else if (curTemp > 25) {
+          tempFactor = Math.max(0.65, 1.0 - (curTemp - 25) * 0.005);
+        }
+        const effectiveEsr = Math.max(0.0001, ((parseFloat(profile.esr) || 0.01) / numCells) * tempFactor);
+
+        let totalCycleTimeSec = 0;
+        let totalCycleCoulombs = 0;
+        let peakCurrentAmps = 0;
+        let peakState = null;
+
+        const breakdown = profile.states.map(st => {
+          const durSec = durationToSeconds(st.duration, st.durationUnit);
+          const currA = currentToAmps(st.current, st.currentUnit);
+          totalCycleTimeSec += durSec;
+          totalCycleCoulombs += (durSec * currA);
+
+          if (currA >= peakCurrentAmps) {
+            peakCurrentAmps = currA;
+            peakState = st;
+          }
+
+          return { ...st, durSec, currA };
+        });
+
+        const safeCycleSec = totalCycleTimeSec > 0 ? totalCycleTimeSec : 1e-9;
+        const activeAvgAmps = totalCycleCoulombs / safeCycleSec;
+
+        const selfDischargePct = Math.max(0, parseFloat(profile.selfDischarge) || 0);
+        const selfDischargeAmps = ((totalCapacityMah / 1000) * (selfDischargePct / 100)) / (365.25 * 24);
+        const totalAvgAmps = activeAvgAmps + selfDischargeAmps;
+
+        const peakVoltageSag = peakCurrentAmps * effectiveEsr;
+        const vnom = Math.max(0.1, parseFloat(profile.vnom) || 3.0);
+        const vcutoff = Math.max(0.1, parseFloat(profile.vcutoff) || 2.0);
+        const vbod = Math.max(0.1, parseFloat(profile.bod) || 2.2);
+
+        const worstCaseActiveV = Math.max(0, vnom - peakVoltageSag);
+        const cutoffPulseV = Math.max(0, vcutoff - peakVoltageSag);
+
+        const willBrownoutNominal = worstCaseActiveV < vbod;
+        const willBrownoutCutoff = cutoffPulseV < vbod;
+
+        const userMarginPct = Math.min(60, Math.max(0, parseFloat(profile.safetyMargin) || 0));
+        let chemistryPenalty = 1.0;
+        if (profile.chemPreset === 'cr2032' && peakCurrentAmps > 0.015) {
+          chemistryPenalty = 0.85;
+        }
+
+        const deratingFactor = ((100 - userMarginPct) / 100) * chemistryPenalty;
+        const totalUsableAh = (totalCapacityMah / 1000) * deratingFactor;
+        const rawAh = (totalCapacityMah / 1000);
+
+        const runtimeHours = totalAvgAmps > 0 ? (totalUsableAh / totalAvgAmps) : Infinity;
+        const rawRuntimeHours = totalAvgAmps > 0 ? (rawAh / totalAvgAmps) : Infinity;
+
+        const runtimeDays = runtimeHours / 24;
+        const rawRuntimeDays = rawRuntimeHours / 24;
+        const cycleJoules = totalCycleCoulombs * vnom;
+
+        return {
+          totalCapacityMah,
+          effectiveEsr,
+          totalCycleTimeSec,
+          totalCycleCoulombs,
+          peakCurrentAmps,
+          peakState,
+          activeAvgAmps,
+          selfDischargeAmps,
+          totalAvgAmps,
+          peakVoltageSag,
+          worstCaseActiveV,
+          cutoffPulseV,
+          willBrownoutNominal,
+          willBrownoutCutoff,
+          runtimeDays,
+          rawRuntimeDays,
+          cycleJoules,
+          breakdown,
+          vnom,
+          vcutoff,
+          vbod,
+          deratingFactor,
+          userMarginPct
+        };
+      }
+
+      // Update UI components
+      function updateProfiler() {
+        saveData();
+
+        const vnom = parseFloat(profile.vnom) || 0;
+        const vcutoff = parseFloat(profile.vcutoff) || 0;
+        const vbod = parseFloat(profile.bod) || 0;
+
+        paramValidationBox.innerHTML = '';
+        if (vcutoff >= vnom) {
+          const warn = document.createElement('div');
+          warn.className = 'alert-banner danger';
+          warn.style.marginTop = '8px';
+          warn.innerHTML = `<strong>Invalid Voltage Range:</strong> Cutoff voltage (${vcutoff.toFixed(2)} V) must be lower than nominal voltage (${vnom.toFixed(2)} V).`;
+          paramValidationBox.appendChild(warn);
+        } else if (vbod >= vnom) {
+          const warn = document.createElement('div');
+          warn.className = 'alert-banner danger';
+          warn.style.marginTop = '8px';
+          warn.innerHTML = `<strong>Configuration Issue:</strong> MCU Brownout threshold (${vbod.toFixed(2)} V) is higher than nominal cell voltage (${vnom.toFixed(2)} V). System will not boot.`;
+          paramValidationBox.appendChild(warn);
+        }
+
+        const m = calculateMetrics();
+
+        const lifeFmt = formatLifeTime(m.runtimeDays);
+        metricLifeMain.textContent = lifeFmt.main;
+        metricLifeSub.textContent = `${lifeFmt.sub} (${m.userMarginPct}% margin)`;
+
+        metricAvgCurrent.textContent = formatCurrent(m.totalAvgAmps);
+        metricAvgSub.textContent = `Active: ${formatCurrent(m.activeAvgAmps)} | Leak: ${formatCurrent(m.selfDischargeAmps)}`;
+
+        if (m.totalCycleTimeSec > 0) {
+          metricCycleEnergy.textContent = (m.cycleJoules * 1000).toFixed(2) + ' mJ';
+          metricCycleSub.textContent = `over ${formatDuration(m.totalCycleTimeSec)} period`;
+        } else {
+          metricCycleEnergy.textContent = '0 mJ';
+          metricCycleSub.textContent = '0 s period';
+        }
+
+        metricPulseSag.textContent = (m.peakVoltageSag * 1000).toFixed(1) + ' mV drop';
+        metricPulseV.textContent = `Rail to ${m.worstCaseActiveV.toFixed(2)} V on peak pulse`;
+
+        alertContainer.innerHTML = '';
+        if (m.willBrownoutNominal) {
+          lifeBadge.className = 'badge badge-danger';
+          lifeBadge.textContent = 'Critical Brownout';
+
+          const alert = document.createElement('div');
+          alert.className = 'alert-banner danger';
+          alert.innerHTML = `
+            <strong>Warning: Immediate Brownout Reset Detected!</strong>
+            During peak current (${formatCurrent(m.peakCurrentAmps)} in state "${m.peakState ? m.peakState.name : 'Peak'}"), internal ESR drop plunges rail to ${m.worstCaseActiveV.toFixed(2)} V, breaching MCU brownout threshold (${m.vbod.toFixed(2)} V).
+          `;
+          alertContainer.appendChild(alert);
+        } else if (m.willBrownoutCutoff) {
+          lifeBadge.className = 'badge badge-warning';
+          lifeBadge.textContent = 'Early Dropout';
+
+          const alert = document.createElement('div');
+          alert.className = 'alert-banner warning';
+          alert.innerHTML = `
+            <strong>Premature Cutoff:</strong>
+            Peak pulse sag breaches brownout threshold before the cell reaches rated cutoff voltage (${m.vcutoff.toFixed(2)} V), stranding residual capacity.
+          `;
+          alertContainer.appendChild(alert);
+        } else {
+          lifeBadge.className = 'badge badge-success';
+          lifeBadge.textContent = 'Operating Safe';
+
+          const headroom = (m.worstCaseActiveV - m.vbod).toFixed(2);
+          const alert = document.createElement('div');
+          alert.className = 'alert-banner success';
+          alert.innerHTML = `
+            <span>Safe Operating Margin: <strong>+${headroom} V</strong> headroom maintained above brownout reset during worst peak pulse.</span>
+          `;
+          alertContainer.appendChild(alert);
+        }
+
+        cycleTotalLabel.textContent = `Total Period: ${formatDuration(m.totalCycleTimeSec)}`;
+        timelineBar.innerHTML = '';
+        timelineLegend.innerHTML = '';
+
+        if (m.totalCycleTimeSec > 0) {
+          m.breakdown.forEach(st => {
+            const ratio = (st.durSec / m.totalCycleTimeSec);
+            const pct = (ratio * 100);
+
+            const seg = document.createElement('div');
+            seg.className = 'timeline-segment';
+            seg.style.flex = `${Math.max(0.002, ratio)} 0 auto`;
+            seg.style.backgroundColor = st.color;
+            seg.title = `${st.name}: ${formatDuration(st.durSec)} (${pct.toFixed(2)}% time), Current: ${formatCurrent(st.currA)}`;
+            if (pct >= 12) {
+              seg.textContent = st.name.length > 12 ? st.name.substring(0, 10) + '…' : st.name;
+            }
+            timelineBar.appendChild(seg);
+
+            const leg = document.createElement('div');
+            leg.className = 'legend-item';
+            const energyShare = m.totalCycleCoulombs > 0 ? ((st.durSec * st.currA) / m.totalCycleCoulombs) * 100 : 0;
+            leg.innerHTML = `
+              <div class="legend-box" style="background:${st.color};"></div>
+              <span><strong>${st.name}</strong>: ${pct < 0.1 ? '<0.1%' : pct.toFixed(1) + '%'} time, <strong>${energyShare.toFixed(1)}% energy</strong></span>
+            `;
+            timelineLegend.appendChild(leg);
+          });
+        }
+
+        renderDischargeGraph(m);
+        renderRecommendations(m);
+      }
+
+      // Canvas Curve Simulation
+      function renderDischargeGraph(m) {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = dischargeCanvas.parentElement.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) return;
+
+        dischargeCanvas.width = rect.width * dpr;
+        dischargeCanvas.height = rect.height * dpr;
+
+        const ctx = dischargeCanvas.getContext('2d');
+        ctx.scale(dpr, dpr);
+        const w = rect.width;
+        const h = rect.height;
+
+        const padLeft = 40;
+        const padRight = 12;
+        const padTop = 14;
+        const padBottom = 24;
+
+        ctx.clearRect(0, 0, w, h);
+
+        let vMax = Math.max(m.vnom * 1.15, m.vbod * 1.15, 3.6);
+        let vMin = Math.max(0, Math.min(m.vcutoff * 0.7, m.vbod * 0.8, 1.0));
+        if (vMax <= vMin + 0.2) vMax = vMin + 1.0;
+
+        function yToPx(v) {
+          if (vMax <= vMin) return padTop;
+          return padTop + (1 - (v - vMin) / (vMax - vMin)) * (h - padTop - padBottom);
+        }
+        function xToPx(pct) {
+          return padLeft + (pct / 100) * (w - padLeft - padRight);
+        }
+
+        const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const gridColor = isDark ? '#334155' : '#e2e8f0';
+        const labelColor = isDark ? '#94a3b8' : '#64748b';
+        const textColor = isDark ? '#f1f5f9' : '#0f172a';
+
+        ctx.strokeStyle = gridColor;
+        ctx.fillStyle = labelColor;
+        ctx.font = '10px ui-monospace, SFMono-Regular, monospace';
+        ctx.lineWidth = 1;
+
+        const vStep = (vMax - vMin) / 4;
+        for (let i = 0; i <= 4; i++) {
+          const vVal = vMin + i * vStep;
+          const y = yToPx(vVal);
+          ctx.beginPath();
+          ctx.moveTo(padLeft, y);
+          ctx.lineTo(w - padRight, y);
+          ctx.stroke();
+          ctx.fillText(vVal.toFixed(1) + 'V', 4, y + 3);
+        }
+
+        for (let p = 0; p <= 100; p += 25) {
+          const x = xToPx(p);
+          ctx.beginPath();
+          ctx.moveTo(x, padTop);
+          ctx.lineTo(x, h - padBottom);
+          ctx.stroke();
+          ctx.fillText(p + '%', x - 9, h - 8);
+        }
+
+        const bodY = yToPx(m.vbod);
+        if (bodY >= padTop && bodY <= h - padBottom) {
+          ctx.save();
+          ctx.setLineDash([4, 4]);
+          ctx.strokeStyle = '#dc2626';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(padLeft, bodY);
+          ctx.lineTo(w - padRight, bodY);
+          ctx.stroke();
+          ctx.fillStyle = '#dc2626';
+          ctx.fillText(`VBOD: ${m.vbod.toFixed(2)}V`, padLeft + 6, bodY - 4);
+          ctx.restore();
+        }
+
+        function getCellOcv(soc) {
+          const span = m.vnom - m.vcutoff;
+          let normV;
+          if (profile.chemPreset === 'lifepo4') {
+            normV = 0.5 + 0.45 * Math.pow(soc, 0.25) - 0.25 * Math.pow(1 - soc, 3);
+          } else if (profile.chemPreset === 'cr2032' || profile.chemPreset === 'cr2450') {
+            normV = 0.15 + 0.85 * Math.pow(soc, 0.45);
+          } else if (profile.chemPreset === 'lisocl2') {
+            normV = 0.85 + 0.15 * Math.pow(soc, 0.2) - 0.8 * Math.pow(1 - soc, 6);
+          } else {
+            normV = 0.2 + 0.8 * Math.pow(soc, 0.6);
+          }
+          return Math.max(m.vcutoff * 0.8, m.vcutoff + normV * span);
+        }
+
+        ctx.beginPath();
+        ctx.strokeStyle = '#2563eb';
+        ctx.lineWidth = 2.5;
+        for (let pct = 0; pct <= 100; pct++) {
+          const soc = (100 - pct) / 100;
+          const v = getCellOcv(soc);
+          const px = xToPx(pct);
+          const py = yToPx(v);
+          if (pct === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.strokeStyle = '#ea580c';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 2]);
+
+        for (let pct = 0; pct <= 100; pct++) {
+          const soc = (100 - pct) / 100;
+          const vOcv = getCellOcv(soc);
+          const esrMult = 1.0 + Math.pow(pct / 100, 2) * 1.8;
+          const dynamicDrop = m.peakCurrentAmps * (m.effectiveEsr * esrMult);
+          const vLoaded = Math.max(0, vOcv - dynamicDrop);
+
+          const px = xToPx(pct);
+          const py = yToPx(vLoaded);
+          if (pct === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.stroke();
+        ctx.restore();
+
+        const legendX = Math.max(padLeft + 6, w - 150);
+        ctx.fillStyle = '#2563eb';
+        ctx.fillRect(legendX, 8, 8, 8);
+        ctx.fillStyle = textColor;
+        ctx.fillText('Quiescent Rail', legendX + 12, 15);
+
+        ctx.fillStyle = '#ea580c';
+        ctx.fillRect(legendX, 22, 8, 8);
+        ctx.fillStyle = textColor;
+        ctx.fillText('Peak Sag Rail', legendX + 12, 29);
+      }
+
+      // Engineering Advisory Engine
+      function renderRecommendations(m) {
+        recContainer.innerHTML = '';
+        const recs = [];
+
+        if ((profile.chemPreset === 'cr2032' || profile.chemPreset === 'cr2450') && m.peakCurrentAmps > 0.015) {
+          recs.push({
+            title: 'High Peak Pulse On Coin Cell ESR',
+            desc: `Peak pulse of ${(m.peakCurrentAmps * 1000).toFixed(0)} mA through ${m.effectiveEsr.toFixed(1)}Ω ESR causes ${(m.peakVoltageSag * 1000).toFixed(0)} mV drop. Place a 100 µF to 220 µF low-leakage capacitor with a current-limiting series resistor in parallel with the cell.`
+          });
+        }
+
+        if (profile.chemPreset === 'lisocl2' && m.peakCurrentAmps > 0.02) {
+          recs.push({
+            title: 'Li-SOCl2 Voltage Delay & Passivation',
+            desc: `Lithium thionyl chloride cells form a passivation film during sleep. Pulses >20 mA require a hybrid layer capacitor (HLC) or supercapacitor buffer to prevent severe initial pulse sag.`
+          });
+        }
+
+        if (!m.willBrownoutNominal && (m.worstCaseActiveV - m.vbod) < 0.25) {
+          recs.push({
+            title: 'Narrow Brownout Operating Margin (< 250 mV)',
+            desc: `Peak rail drops within ${((m.worstCaseActiveV - m.vbod) * 1000).toFixed(0)} mV of the brownout threshold. Reduce MCU clock speed during pulse or configure fuse registers to lower VBOD.`
+          });
+        }
+
+        const sleepState = profile.states.reduce((prev, curr) => (curr.current < prev.current ? curr : prev), profile.states[0]);
+        if (sleepState) {
+          const sleepDur = durationToSeconds(sleepState.duration, sleepState.durationUnit);
+          const sleepCurrentA = currentToAmps(sleepState.current, sleepState.currentUnit);
+          const sleepCoulombs = sleepDur * sleepCurrentA;
+          const sleepShare = m.totalCycleCoulombs > 0 ? (sleepCoulombs / m.totalCycleCoulombs) * 100 : 0;
+
+          if (sleepShare > 45 && sleepCurrentA > 10e-6) {
+            recs.push({
+              title: 'Sleep Current Dominates Lifetime Budget',
+              desc: `Deep sleep accounts for ${sleepShare.toFixed(0)}% of consumed energy. Check for floating MCU GPIOs, pull-up resistors to ground, active ADC clocks, or high-quiescent LDO regulators.`
+            });
+          }
+        }
+
+        if (m.runtimeDays > 365 && profile.selfDischarge > 2.0) {
+          recs.push({
+            title: 'Self-Discharge Outpaces Active Draw',
+            desc: `Battery self-discharge consumes ${formatCurrent(m.selfDischargeAmps)} continuously. For multi-year designs, prioritize Li-SOCl2 or Li-MnO2 chemistry over standard consumer alkaline.`
+          });
+        }
+
+        if (profile.temp < 0) {
+          recs.push({
+            title: 'Sub-Zero Temperature Impedance Multiplication',
+            desc: `Operating at ${profile.temp}°C increases effective ESR by ~${((m.effectiveEsr / (profile.esr / profile.cellsParallel) - 1) * 100).toFixed(0)}%. Chemistry reaction kinetics slow down significantly at low temperatures.`
+          });
+        }
+
+        if (recs.length === 0) {
+          recs.push({
+            title: 'Profile Margins Nominal',
+            desc: `Operating voltages, peak pulse current sags, and quiescent sleep ratios fall within standard low-power IoT embedded design limits.`
+          });
+        }
+
+        recs.forEach(r => {
+          const div = document.createElement('div');
+          div.className = 'rec-item';
+          div.innerHTML = `
+            <div class="rec-title">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              ${r.title}
+            </div>
+            <div style="color:var(--text-muted); font-size:0.78rem;">${r.desc}</div>
+          `;
+          recContainer.appendChild(div);
+        });
+      }
+
+      // Export JSON via Blob
+      document.getElementById('btn-export-json').addEventListener('click', () => {
+        const payload = JSON.stringify(profile, null, 2);
+        const blob = new Blob([payload], { type: 'application/json;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'embedded-battery-profile.json';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 100);
+      });
+
+      // Export CSV via Blob
+      document.getElementById('btn-export-csv').addEventListener('click', () => {
+        const m = calculateMetrics();
+        let csv = 'State Name,Current (mA),Duration (s),Time Share (%),Energy Share (%)\r\n';
+        m.breakdown.forEach(st => {
+          const timePct = m.totalCycleTimeSec > 0 ? ((st.durSec / m.totalCycleTimeSec) * 100).toFixed(2) : '0';
+          const energyPct = m.totalCycleCoulombs > 0 ? (((st.durSec * st.currA) / m.totalCycleCoulombs) * 100).toFixed(2) : '0';
+          const safeName = (st.name || '').replace(/"/g, '""');
+          csv += `"${safeName}",${(st.currA * 1000).toFixed(4)},${st.durSec.toFixed(6)},${timePct}%,${energyPct}%\r\n`;
+        });
+
+        csv += `\r\nProfiler Parameter,Value\r\n`;
+        csv += `Battery Preset,"${profile.chemPreset}"\r\n`;
+        csv += `Rated Capacity (mAh),${m.totalCapacityMah}\r\n`;
+        csv += `Effective Internal ESR (Ohms),${m.effectiveEsr.toFixed(3)}\r\n`;
+        csv += `Total Cycle Period (s),${m.totalCycleTimeSec.toFixed(4)}\r\n`;
+        csv += `Average Current (mA),${(m.totalAvgAmps * 1000).toFixed(5)}\r\n`;
+        csv += `Peak Current (mA),${(m.peakCurrentAmps * 1000).toFixed(2)}\r\n`;
+        csv += `Peak Voltage Sag (V),${m.peakVoltageSag.toFixed(4)}\r\n`;
+        csv += `Loaded Worst Rail (V),${m.worstCaseActiveV.toFixed(4)}\r\n`;
+        csv += `Safety Margin Derating (%),${m.userMarginPct}%\r\n`;
+        csv += `Estimated Runtime (Days),${m.runtimeDays.toFixed(2)}\r\n`;
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'battery-duty-cycle-profile.csv';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 100);
+      });
+
+      // Copy Text Report with fallback
+      document.getElementById('btn-copy-summary').addEventListener('click', () => {
+        const m = calculateMetrics();
+        const life = formatLifeTime(m.runtimeDays);
+        const reportText = `=== Embedded Low-Power Battery Life & Duty Cycle Report ===
+Battery: ${m.totalCapacityMah} mAh (${profile.chemPreset}), ${m.vnom}V Nom, ${m.vcutoff}V Cutoff, ${m.effectiveEsr.toFixed(2)}Ω ESR
+Total Cycle Execution Period: ${formatDuration(m.totalCycleTimeSec)}
+Average Active Current: ${formatCurrent(m.activeAvgAmps)}
+Self-Discharge Leakage: ${formatCurrent(m.selfDischargeAmps)}
+Total Average Current: ${formatCurrent(m.totalAvgAmps)}
+Peak Current Pulse: ${formatCurrent(m.peakCurrentAmps)} in "${m.peakState ? m.peakState.name : 'N/A'}"
+Peak Rail Voltage Sag: ${(m.peakVoltageSag * 1000).toFixed(1)} mV drop (Down to ${m.worstCaseActiveV.toFixed(2)} V)
+MCU Brownout (BOD) Threshold: ${m.vbod.toFixed(2)} V
+Brownout Margin Headroom: +${(m.worstCaseActiveV - m.vbod).toFixed(2)} V
+Safety Derating Margin Applied: ${m.userMarginPct}%
+Projected Operating Lifetime: ${life.main} (${life.sub})
+Status: ${m.willBrownoutNominal ? 'CRITICAL BROWNOUT' : m.willBrownoutCutoff ? 'PREMATURE CUTOFF' : 'PASS'}
+
+Estimate only - verify with a qualified professional before relying on it.`;
+
+        const copyBtn = document.getElementById('btn-copy-summary');
+        function markCopied() {
+          const originalHTML = copyBtn.innerHTML;
+          copyBtn.innerHTML = `<span>Copied!</span>`;
+          setTimeout(() => { copyBtn.innerHTML = originalHTML; }, 2000);
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(reportText).then(markCopied).catch(() => {
+            fallbackCopy(reportText, markCopied);
+          });
+        } else {
+          fallbackCopy(reportText, markCopied);
+        }
+      });
+
+      function fallbackCopy(text, callback) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          callback();
+        } catch (err) {
+          // ignore error
+        }
+        document.body.removeChild(ta);
+      }
+
+      // Print Button handler
+      document.getElementById('btn-print').addEventListener('click', () => {
+        window.print();
+      });
+
+      // Reset Defaults
+      document.getElementById('btn-reset').addEventListener('click', () => {
+        try {
+          localStorage.removeItem('embedded_profiler_cfg');
+        } catch (e) {}
+
+        profile = {
+          chemPreset: 'cr2032',
+          cellsParallel: 1,
+          capacity: 220,
+          vnom: 3.0,
+          vcutoff: 2.0,
+          esr: 15.0,
+          selfDischarge: 1.0,
+          bod: 2.20,
+          temp: 25,
+          safetyMargin: 20,
+          states: JSON.parse(JSON.stringify(DEFAULT_STATES))
+        };
+        saveData();
+        populateForm();
+        renderStatesTable();
+        updateProfiler();
+      });
+
+      // Resize observer to maintain crisp canvas without blur
+      if (window.ResizeObserver) {
+        const ro = new ResizeObserver(() => {
+          updateProfiler();
+        });
+        ro.observe(dischargeCanvas.parentElement);
+      } else {
+        window.addEventListener('resize', () => {
+          updateProfiler();
+        });
+      }
+
+      // Dark mode change listener
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+          updateProfiler();
+        });
+      }
+
+      // Bootstrap initialization
+      loadSavedData();
+      populateForm();
+      renderStatesTable();
+      updateProfiler();
+    })();
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Embedded Low-Power Battery Life &amp; Duty Cycle Profiler is a dedicated tool for firmware developers and hardware engineers designing battery-operated sensors. It calculates realistic operating lifespan and evaluates instantaneous voltage sag across real battery chemistry curves. Use the free browser version to test your power budget, or purchase the standalone offline HTML version for air-gapped, zero-dependency engineering work.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your battery chemistry (CR2032, AA alkaline, 18650 Li-ion, or LiFePO4) and configure cell count.</li><li>Enter your hardware&#39;s operating parameters, including MCU brownout reset voltage and sleep current in microamps.</li><li>Add your active duty cycle states with execution time and current draw (e.g., sensor read, radio transmit).</li><li>Analyze the predicted lifespan, peak voltage drop under load, and export your setup to JSON or CSV.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">How can I get my atmega328 to run for a year on batteries?</h4><p style="margin:0">To achieve a year or more on batteries, use a bare ATmega328P running at 8MHz on its internal oscillator without an onboard USB bridge or power LED. Power it directly from 2x AA alkaline or 1x LiFePO4 cell to bypass inefficient linear regulators, put the chip into deep sleep (`SLEEP_MODE_PWR_DOWN`) with ADC and BOD disabled, and keep active tasks brief so your average current stays below 20-30 microamps.</p><h4 style="font-size:16px;margin:16px 0 4px">Batteries. Why use 9V?</h4><p style="margin:0">9V batteries (PP3) are usually a poor choice for modern low-power microcontrollers because they have very low capacity (around 400-500mAh) and contain six tiny 1.5V AAAA cells with relatively high internal resistance. If you step 9V down to 3.3V using a typical linear regulator, you waste more than 60% of the energy as heat; they are typically only used when compact high voltage is required for legacy sensors, op-amps, or smoke detectors.</p><h4 style="font-size:16px;margin:16px 0 4px">Measure Lithium ion battery voltage (thus remaining capacity)</h4><p style="margin:0">Because standard Li-ion cells maintain a flat discharge plateau between roughly 3.7V and 3.6V, measuring terminal voltage with an ADC only gives a rough estimate of state-of-charge and is heavily skewed under load. For accurate readings, sample the voltage using a high-value resistive divider only after the device has rested in sleep mode, or implement a dedicated I2C fuel gauge IC that uses Coulomb counting.</p><h4 style="font-size:16px;margin:16px 0 4px">Smart and effective ways to light up a garage without relying on power outlets?</h4><p style="margin:0">The most effective approach is pairing 12V LED strips with a 12V deep-cycle LiFePO4 or SLA battery recharged by a modest 20W-50W solar panel mounted outside with a charge controller. To minimize battery draw, place the lights on a low-quiescent-current 12V PIR motion sensor switch or a timed relay so illumination automatically cuts off when the garage is unoccupied.</p>
+<p style="margin:24px 0;padding:16px;border:1px solid rgba(128,128,128,.35);border-radius:12px"><strong>Want it offline?</strong> Get the offline pack (the tool as a single file, a quick-start guide and a license) and support this project: <a href="https://ferrywave73.gumroad.com/l/rwnxwqy" rel="noopener" style="font-weight:700;color:inherit">download it on Gumroad</a>.</p><p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a></p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">About · Offline pack</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"About · Offline pack"});</script>
+</body>
+</html>
