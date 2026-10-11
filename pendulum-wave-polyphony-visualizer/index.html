@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg-primary: #0a0b10;
+      --bg-secondary: #121420;
+      --bg-tertiary: #1a1d30;
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.4);
+      --accent-success: #10b981;
+      --border: #2d3142;
+      --card-bg: rgba(18, 20, 32, 0.7);
+      --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --accent: #4f46e5;
+      --accent-glow: rgba(79, 70, 229, 0.2);
+      --accent-success: #059669;
+      --border: #e2e8f0;
+      --card-bg: rgba(255, 255, 255, 0.8);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-stack);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand svg {
+      width: 2rem;
+      height: 2rem;
+      fill: var(--accent);
+    }
+
+    .brand h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      background: linear-gradient(to right, var(--accent), #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 0.375rem;
+      border: 1px solid var(--border);
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background-color: var(--bg-tertiary);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: #4f46e5;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .btn-danger {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      flex-grow: 1;
+      height: calc(100vh - 65px);
+      overflow: hidden;
+    }
+
+    .settings-pane {
+      background-color: var(--bg-secondary);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .visualizer-pane {
+      position: relative;
+      background-color: var(--bg-primary);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #visualizer-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: crosshair;
+    }
+
+    .control-group {
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .control-group-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .control-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .control-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .label-val {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8125rem;
+    }
+
+    .label-val span:last-child {
+      font-family: monospace;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    input[type="range"]:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    select, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 0.5rem;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    select:focus-visible, input:focus-visible {
+      border-color: var(--accent);
+      outline: 2px solid var(--accent);
+    }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    .preset-card {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      padding: 0.5rem;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .preset-card:hover {
+      border-color: var(--accent);
+      background-color: var(--bg-tertiary);
+    }
+
+    .preset-card.active {
+      background-color: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    .audio-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(10, 11, 16, 0.95);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 2rem;
+      text-align: center;
+      z-index: 5;
+    }
+
+    .audio-overlay h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .audio-overlay p {
+      color: var(--text-secondary);
+      max-width: 400px;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    .hud {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background-color: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      pointer-events: none;
+      font-family: monospace;
+      font-size: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      z-index: 2;
+    }
+
+    .hud div span:first-child {
+      color: var(--text-secondary);
+    }
+
+    .hud div span:last-child {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .timeline-scrubber {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--card-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-top: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 2;
+    }
+
+    .timeline-scrubber span {
+      font-family: monospace;
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+
+    .message-toast {
+      position: fixed;
+      bottom: 5rem;
+      right: 1.5rem;
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.375rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 100;
+      font-size: 0.875rem;
+      color: var(--text-primary);
+      opacity: 0;
+      transform: translateY(1rem);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .message-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .recording-pulse {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background-color: #ef4444;
+      border-radius: 50%;
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.8); opacity: 0.5; }
+      100% { transform: scale(1.2); opacity: 1; }
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    @media (max-width: 1024px) {
+      .container {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: visible;
+      }
+      .settings-pane {
+        overflow-y: visible;
+        height: auto;
+        border-right: none;
+        border-top: 1px solid var(--border);
+      }
+      .visualizer-pane {
+        height: 50vh;
+        min-height: 380px;
+        order: -1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 0.75rem 1rem;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .header-actions {
+        justify-content: space-between;
+        width: 100%;
+      }
+      .btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+      }
+      .timeline-scrubber {
+        padding: 0.5rem 1rem;
+        gap: 0.5rem;
+      }
+    }
+  </style>
+<title>Pendulum Wave: Polyrhythm &amp; Polyphony Visualizer</title>
+<meta name="description" content="Hypnotic acoustic physics sandbox turning harmonic pendulum waves into generative ambient bells and polyrhythms. Run online or offline with WAV export.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/pendulum-wave-polyphony-visualizer/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/pendulum-wave-polyphony-visualizer/">
+<meta property="og:title" content="Pendulum Wave: Polyrhythm &amp; Polyphony Visualizer"><meta property="og:description" content="Hypnotic acoustic physics sandbox turning harmonic pendulum waves into generative ambient bells and polyrhythms. Run online or offline with WAV export.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/pendulum-wave-polyphony-visualizer/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Pendulum Wave: Polyrhythm & Polyphony Visualizer","description":"Hypnotic acoustic physics sandbox turning harmonic pendulum waves into generative ambient bells and polyrhythms. Run online or offline with WAV export.","url":"https://rttyy.github.io/free-tools/pendulum-wave-polyphony-visualizer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between the free online version and the $9 Gumroad pack?","acceptedAnswer":{"@type":"Answer","text":"The online version is free to use on the web anytime. The $9 download gives you the complete standalone offline file: a single, self-contained HTML/JS file that works anywhere without an internet connection, forever, with no telemetry or external asset requests."}},{"@type":"Question","name":"How does the audio recording feature work?","acceptedAnswer":{"@type":"Answer","text":"The tool uses the browser's native audio buffer rendering to record the synthesis output in real time. When you press stop, it immediately compiles the buffer into a 16-bit lossless WAV file that downloads straight to your machine for use in your DAW or sampler."}},{"@type":"Question","name":"Can I use the recorded audio in commercial music releases?","acceptedAnswer":{"@type":"Answer","text":"Yes. Any sample loops, textures, or ambient recordings generated by the tool are 100% royalty-free for both personal and commercial use."}},{"@type":"Question","name":"What software or dependencies do I need to run the offline version?","acceptedAnswer":{"@type":"Answer","text":"None. It runs out of the box in any standard modern web browser (Chrome, Firefox, Safari, Edge, Brave) on macOS, Windows, Linux, or iOS/Android by simply double-clicking the HTML file."}}]}</script>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+      </svg>
+      <div>
+        <h1>Pendulum Wave</h1>
+        <p style="font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Polyphony & Polyrhythm Visualizer</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn" id="theme-toggle" aria-label="Toggle Theme">
+        <svg id="sun-icon" class="visually-hidden" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+        </svg>
+        <svg id="moon-icon" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.277 a7.29 7.29 0 0 0 3.074-.683.748.748 0 0 1 .921.999A8.298 8.298 0 0 1 8 16c-4.58 0-8.302-3.723-8.302-8.302C0 3.9 3.255.636 7.726.071a.782.782 0 0 1 .278.207z"/>
+        </svg>
+        <span>Theme</span>
+      </button>
+      <button class="btn" id="btn-export-preset">Export JSON</button>
+      <button class="btn" id="btn-import-preset">Import JSON</button>
+      <input type="file" id="file-import" accept=".json" style="display: none;">
+    </div>
+  </header>
+
+  <div class="container">
+    <aside class="settings-pane">
+      
+      <!-- Quick Presets -->
+      <section class="control-group">
+        <h2 class="control-group-title">Rhythmic Presets</h2>
+        <div class="preset-grid">
+          <button class="preset-card active" data-preset="classic">Classic Wave</button>
+          <button class="preset-card" data-preset="fibonacci">Fibonacci</button>
+          <button class="preset-card" data-preset="golden">Golden Ratio</button>
+          <button class="preset-card" data-preset="polyrhythm">3:4 Polyrhythm</button>
+        </div>
+      </section>
+
+      <!-- Physics Controls -->
+      <section class="control-group">
+        <h2 class="control-group-title">Physics & Motion</h2>
+        
+        <div class="control-row">
+          <div class="label-val">
+            <span>Pendulums</span>
+            <span id="val-count">16</span>
+          </div>
+          <input type="range" id="param-count" min="4" max="48" step="1" value="16" aria-label="Pendulum Count">
+        </div>
+
+        <div class="control-row">
+          <div class="label-val">
+            <span>Base Cycle Period (s)</span>
+            <span id="val-cycle">60</span>
+          </div>
+          <input type="range" id="param-cycle" min="5" max="300" step="5" value="60" aria-label="Base Cycle Period">
+        </div>
+
+        <div class="control-row">
+          <div class="label-val">
+            <span>Base Oscillations</span>
+            <span id="val-base-osc">12</span>
+          </div>
+          <input type="range" id="param-base-osc" min="1" max="50" step="1" value="12" aria-label="Base Oscillations">
+        </div>
+
+        <div class="control-row">
+          <div class="label-val">
+            <span>Max Sweep Angle (deg)</span>
+            <span id="val-angle">35</span>
+          </div>
+          <input type="range" id="param-angle" min="5" max="85" step="1" value="35" aria-label="Maximum Sweep Angle">
+        </div>
+
+        <div class="control-row">
+          <div class="label-val">
+            <span>Speed Multiplier</span>
+            <span id="val-speed">1.0</span>
+          </div>
+          <input type="range" id="param-speed" min="0" max="5" step="0.1" value="1" aria-label="Speed Multiplier">
+        </div>
+      </section>
+
+      <!-- Synthesizer Engine Controls -->
+      <section class="control-group">
+        <h2 class="control-group-title">Audio Synthesizer</h2>
+        
+        <div class="control-row">
+          <label for="param-scale" style="font-size: 0.8125rem;">Musical Scale</label>
+          <select id="param-scale">
+            <option value="pentatonic">C Major Pentatonic</option>
+            <option value="dorian">C Dorian</option>
+            <option value="harmonicMinor">C Harmonic Minor</option>
+            <option value="just">Harmonic Just Intonation</option>
+          </select>
+        </div>
+
+        <div class="control-row">
+          <label for="param-timbre" style="font-size: 0.8125rem;">Synth Timbre</label>
+          <select id="param-timbre">
+            <option value="soft">Soft FM Pad</option>
+            <option value="chime">Classic Chime</option>
+            <option value="steel">Metallic Drum</option>
+            <option value="organ">Hollow Drawbars</option>
+          </select>
+        </div>
+
+        <div class="control-row">
+          <div class="label-val">
+            <span>Stereo Echo Feedback</span>
+            <span id="val-delay">40%</span>
+          </div>
+          <input type="range" id="param-delay" min="0" max="80" step="5" value="40" aria-label="Stereo Echo Feedback">
+        </div>
+
+        <div class="control-row">
+          <div class="label-val">
+            <span>Synthesizer Volume</span>
+            <span id="val-volume">60%</span>
+          </div>
+          <input type="range" id="param-volume" min="0" max="100" step="5" value="60" aria-label="Synthesizer Volume">
+        </div>
+      </section>
+
+      <!-- Visual Customizer -->
+      <section class="control-group">
+        <h2 class="control-group-title">Visual Customizer</h2>
+        
+        <div class="control-row">
+          <label for="param-theme" style="font-size: 0.8125rem;">Color Scheme</label>
+          <select id="param-theme">
+            <option value="neon">Neon Spectra</option>
+            <option value="gold">Solar Gold</option>
+            <option value="emerald">Cyber Emerald</option>
+            <option value="mono">Deep Contrast</option>
+          </select>
+        </div>
+
+        <div class="control-row">
+          <label for="param-layout" style="font-size: 0.8125rem;">Motion Plane</label>
+          <select id="param-layout">
+            <option value="parallel">Parallel Waves</option>
+            <option value="radial">Radial Hub</option>
+          </select>
+        </div>
+
+        <div class="control-row">
+          <div class="label-val">
+            <span>Trail Decay Length</span>
+            <span id="val-trail">15</span>
+          </div>
+          <input type="range" id="param-trail" min="0" max="50" step="5" value="15" aria-label="Trail Decay Length">
+        </div>
+
+        <div class="control-row" style="flex-direction: row; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+          <label for="param-glow" style="font-size: 0.8125rem; cursor: pointer;">Enable Energy Glow</label>
+          <input type="checkbox" id="param-glow" checked style="width: 1.25rem; height: 1.25rem; accent-color: var(--accent);">
+        </div>
+      </section>
+
+      <!-- Lossless WAV Recorder -->
+      <section class="control-group">
+        <h2 class="control-group-title">WAV Audio Recorder</h2>
+        <div class="control-row">
+          <button class="btn btn-primary" id="btn-record" style="width: 100%;">
+            <span id="record-icon" class="recording-pulse" style="display: none;"></span>
+            <span id="record-text">Record 15s Loop</span>
+          </button>
+          <p style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.25rem; line-height: 1.3;">
+            Captures lossless WAV directly from the master audio mix. Perfect for importing straight to your DAW.
+          </p>
+        </div>
+      </section>
+
+      <!-- Reset and Utility -->
+      <button class="btn btn-danger" id="btn-reset" style="width: 100%;">Reset to Defaults</button>
+    </aside>
+
+    <main class="visualizer-pane">
+      <!-- HUD Overlay -->
+      <div class="hud" aria-live="polite">
+        <div><span>Oscillation Phase: </span><span id="hud-time">0.00s</span></div>
+        <div><span>Cycle progress: </span><span id="hud-progress">0.0%</span></div>
+        <div><span>Active Audio Polyphony: </span><span id="hud-voices">0</span></div>
+      </div>
+
+      <!-- Canvas -->
+      <canvas id="visualizer-canvas"></canvas>
+
+      <!-- Timeline Scrubber -->
+      <div class="timeline-scrubber">
+        <button class="btn btn-primary" id="btn-play-pause" aria-label="Play or Pause Simulation">
+          <span id="play-pause-label">Pause</span>
+        </button>
+        <span style="font-weight: 600;">Time Scrub:</span>
+        <input type="range" id="timeline-scrub" min="0" max="1000" value="0" aria-label="Timeline Scrubber" style="flex-grow: 1;">
+        <span id="scrub-percentage">0%</span>
+      </div>
+
+      <!-- Welcome Audio Initializer Overlay -->
+      <div class="audio-overlay" id="audio-init-overlay">
+        <h2>Harmonic Audio &amp; Visual Physics Engine</h2>
+        <p>This synthesizer creates mathematical soundscapes of physical pendulums crossing their zero-point equilibrium.</p>
+        <button class="btn btn-primary" id="btn-init-audio" style="font-size: 1rem; padding: 0.75rem 1.5rem;">
+          Initialize Audio Engine
+        </button>
+        <p style="font-size: 0.75rem;">Clicking initializes the browser Web Audio API environment securely.</p>
+      </div>
+    </main>
+  </div>
+
+  <div class="message-toast" id="toast" role="status">State Saved Successfully</div>
+
+  <script>
+    // System Config & Presets
+    const SCALES = {
+      pentatonic: {
+        name: "C Major Pentatonic",
+        steps: [0, 2, 4, 7, 9],
+        baseFreq: 65.41 // C2
+      },
+      dorian: {
+        name: "C Dorian",
+        steps: [0, 2, 3, 5, 7, 9, 10],
+        baseFreq: 65.41
+      },
+      harmonicMinor: {
+        name: "C Harmonic Minor",
+        steps: [0, 2, 3, 5, 7, 8, 11],
+        baseFreq: 65.41
+      },
+      just: {
+        name: "Just Intonation Harmonic Series",
+        ratios: [1/1, 9/8, 5/4, 4/3, 3/2, 5/3, 15/8, 2/1],
+        baseFreq: 65.41
+      }
+    };
+
+    const THEMES = {
+      neon: {
+        bg: '#0a0b10',
+        line: 'rgba(255,255,255,0.06)',
+        colorFn: (i, count) => `hsl(${(i * 360 / count) % 360}, 90%, 65%)`,
+        glowFn: (i, count) => `hsl(${(i * 360 / count) % 360}, 90%, 65%)`
+      },
+      gold: {
+        bg: '#0c0a05',
+        line: 'rgba(212,175,55,0.05)',
+        colorFn: (i, count) => `hsl(${35 + (i * 30 / count)}, 85%, ${50 + (i * 20 / count)}%)`,
+        glowFn: (i, count) => `hsl(35, 100%, 55%)`
+      },
+      emerald: {
+        bg: '#020d08',
+        line: 'rgba(16,185,129,0.05)',
+        colorFn: (i, count) => `hsl(${135 + (i * 50 / count)}, 90%, ${55 + (i * 10 / count)}%)`,
+        glowFn: (i, count) => `hsl(140, 100%, 60%)`
+      },
+      mono: {
+        bg: '#050505',
+        line: 'rgba(255,255,255,0.05)',
+        colorFn: (i, count) => `hsl(0, 0%, ${90 - (i * 60 / count)}%)`,
+        glowFn: (i, count) => `hsl(0, 0%, 100%)`
+      }
+    };
+
+    // State Variables
+    let state = {
+      isPlaying: true,
+      count: 16,
+      cyclePeriod: 60,
+      baseOsc: 12,
+      maxAngle: 35,
+      speed: 1.0,
+      scale: "pentatonic",
+      timbre: "soft",
+      delay: 40,
+      volume: 60,
+      theme: "neon",
+      layout: "parallel",
+      trail: 15,
+      glow: true,
+      time: 0,
+      selectedPreset: 'classic',
+      uiTheme: 'dark'
+    };
+
+    let isScrubbing = false; // Prevents play-tick/scrub fighting behavior
+
+    // Robust State Validation to prevent blank screen on corrupted cache or import data
+    function validateAndSanitizeState(s) {
+      if (!s || typeof s !== 'object') s = {};
+      return {
+        isPlaying: typeof s.isPlaying === 'boolean' ? s.isPlaying : true,
+        count: Math.max(4, Math.min(48, parseInt(s.count) || 16)),
+        cyclePeriod: Math.max(5, Math.min(300, parseInt(s.cyclePeriod) || 60)),
+        baseOsc: Math.max(1, Math.min(50, parseInt(s.baseOsc) || 12)),
+        maxAngle: Math.max(5, Math.min(85, parseInt(s.maxAngle) || 35)),
+        speed: Math.max(0, Math.min(5, parseFloat(s.speed) !== undefined ? parseFloat(s.speed) : 1.0)),
+        scale: SCALES[s.scale] ? s.scale : "pentatonic",
+        timbre: ['soft', 'chime', 'steel', 'organ'].includes(s.timbre) ? s.timbre : "soft",
+        delay: Math.max(0, Math.min(80, parseInt(s.delay) !== undefined ? parseInt(s.delay) : 40)),
+        volume: Math.max(0, Math.min(100, parseInt(s.volume) !== undefined ? parseInt(s.volume) : 60)),
+        theme: THEMES[s.theme] ? s.theme : "neon",
+        layout: ['parallel', 'radial'].includes(s.layout) ? s.layout : "parallel",
+        trail: Math.max(0, Math.min(50, parseInt(s.trail) !== undefined ? parseInt(s.trail) : 15)),
+        glow: typeof s.glow === 'boolean' ? s.glow : true,
+        time: Math.max(0, parseFloat(s.time) || 0),
+        selectedPreset: ['classic', 'fibonacci', 'golden', 'polyrhythm'].includes(s.selectedPreset) ? s.selectedPreset : 'classic',
+        uiTheme: s.uiTheme === 'light' ? 'light' : 'dark'
+      };
+    }
+
+    // Local Storage Wrapper
+    function saveState() {
+      try {
+        localStorage.setItem("pend_wave_polyphony_state", JSON.stringify(state));
+      } catch (e) {
+        console.warn("Storage restricted. State not cached.");
+      }
+    }
+
+    // Load state safely
+    function loadCachedState() {
+      try {
+        const data = localStorage.getItem("pend_wave_polyphony_state");
+        if (data) {
+          state = validateAndSanitizeState({ ...state, ...JSON.parse(data) });
+        } else {
+          const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+          state.uiTheme = prefersLight ? "light" : "dark";
+          state = validateAndSanitizeState(state);
+        }
+      } catch (e) {
+        console.warn("Storage restricted. Initializing default states.");
+        state = validateAndSanitizeState(state);
+      }
+    }
+
+    // Audio Engine
+    let audioCtx = null;
+    let masterGain = null;
+    let delayNode = null;
+    let delayFeedback = null;
+    let compressor = null;
+    let isRecording = false;
+    let recordBufferLength = 0;
+    let recordLeftBuffer = [];
+    let recordRightBuffer = [];
+    let recordTimer = null;
+    let activeVoiceCount = 0;
+    let suppressAudio = false;
+
+    // Canvas Elements
+    const canvas = document.getElementById("visualizer-canvas");
+    const ctx = canvas.getContext("2d");
+    let cssWidth = 800;
+    let cssHeight = 600;
+    let ripples = [];
+    let particles = [];
+
+    // Math Mechanics
+    class Pendulum {
+      constructor(index, freq, noteName) {
+        this.index = index;
+        this.freq = freq; // Oscillation frequency in Hz (cycles/sec)
+        this.noteName = noteName;
+        this.theta = 0;
+        this.prevTheta = 0;
+        this.history = [];
+      }
+
+      update(simTime, angleRad) {
+        this.prevTheta = this.theta;
+        // Harmonic motion formula: theta = theta_max * cos(2 * pi * f * t)
+        this.theta = angleRad * Math.cos(2 * Math.PI * this.freq * simTime);
+
+        const count = state.count;
+        const trailLimit = state.trail;
+        
+        let visualLength = calculateVisualLength(this.index, count);
+        let coords = getBobCoordinates(this.index, this.theta, visualLength);
+
+        if (trailLimit > 0) {
+          this.history.push(coords);
+          if (this.history.length > trailLimit) {
+            this.history.shift();
+          }
+        } else {
+          this.history = [];
+        }
+
+        // Trigger Audio Chime on Crossing Center Axis (theta = 0)
+        if (!suppressAudio && state.isPlaying && this.prevTheta !== 0 && Math.sign(this.theta) !== Math.sign(this.prevTheta)) {
+          triggerChime(this.index);
+          createTriggersVisual(coords.x, coords.y, this.index);
+        }
+      }
+    }
+
+    let pendulums = [];
+
+    function getNoteForIndex(index, scaleKey) {
+      const scaleObj = SCALES[scaleKey] || SCALES.pentatonic;
+      if (scaleObj.ratios) {
+        const len = scaleObj.ratios.length;
+        const octave = Math.floor(index / len);
+        const step = index % len;
+        const ratio = scaleObj.ratios[step];
+        const freq = scaleObj.baseFreq * ratio * Math.pow(2, octave);
+        return { freq, name: `JI:${(ratio).toFixed(2)}` };
+      } else {
+        const len = scaleObj.steps.length;
+        const octave = Math.floor(index / len);
+        const step = index % len;
+        const semitone = scaleObj.steps[step];
+        const pitchIndex = semitone + (octave * 12);
+        const freq = scaleObj.baseFreq * Math.pow(2, pitchIndex / 12);
+        
+        const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+        const curNoteName = noteNames[semitone % 12] + (octave + 2);
+        return { freq, name: curNoteName };
+      }
+    }
+
+    function calculateVisualLength(index, totalCount) {
+      const minLength = cssHeight * 0.22;
+      const maxLength = cssHeight * 0.72;
+      if (totalCount <= 1) return maxLength;
+      const t = index / (totalCount - 1);
+      return minLength + (maxLength - minLength) * (1 - t);
+    }
+
+    function getBobCoordinates(index, theta, visualLength) {
+      const count = state.count;
+      const margin = cssWidth * 0.08;
+      let pivotX, pivotY;
+
+      if (state.layout === 'parallel') {
+        pivotX = margin + index * (cssWidth - 2 * margin) / Math.max(1, count - 1);
+        pivotY = 60;
+      } else {
+        pivotX = cssWidth / 2;
+        pivotY = 60;
+      }
+
+      return {
+        pivotX,
+        pivotY,
+        x: pivotX + visualLength * Math.sin(theta),
+        y: pivotY + visualLength * Math.cos(theta)
+      };
+    }
+
+    function initPendulums() {
+      pendulums = [];
+      const num = state.count;
+      
+      for (let i = 0; i < num; i++) {
+        let oscFreq;
+        
+        if (state.selectedPreset === 'classic') {
+          oscFreq = (state.baseOsc + i) / state.cyclePeriod;
+        } else if (state.selectedPreset === 'fibonacci') {
+          const fibs = [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597];
+          oscFreq = (state.baseOsc + fibs[i % fibs.length] * 0.2) / state.cyclePeriod;
+        } else if (state.selectedPreset === 'golden') {
+          const phi = 1.61803398875;
+          oscFreq = (state.baseOsc * Math.pow(phi, i * 0.08)) / state.cyclePeriod;
+        } else if (state.selectedPreset === 'polyrhythm') {
+          const polyFactors = [3, 4, 6, 8, 9, 12, 16, 18, 24, 27, 32, 36, 48];
+          oscFreq = (state.baseOsc * (polyFactors[i % polyFactors.length] / 3)) / state.cyclePeriod;
+        } else {
+          oscFreq = (state.baseOsc + i) / state.cyclePeriod;
+        }
+
+        const noteInfo = getNoteForIndex(i, state.scale);
+        pendulums.push(new Pendulum(i, oscFreq, noteInfo.name));
+      }
+    }
+
+    // Canvas UI Drawing Loop
+    function draw() {
+      const activeTheme = THEMES[state.theme] || THEMES.neon;
+      ctx.fillStyle = activeTheme.bg;
+      ctx.fillRect(0, 0, cssWidth, cssHeight);
+
+      // Draw Top Anchor Rod
+      ctx.strokeStyle = activeTheme.line;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(0, 60);
+      ctx.lineTo(cssWidth, 60);
+      ctx.stroke();
+
+      // Render Trails First
+      if (state.trail > 0) {
+        for (let p of pendulums) {
+          if (p.history.length > 1) {
+            ctx.beginPath();
+            ctx.strokeStyle = activeTheme.colorFn(p.index, state.count);
+            ctx.globalAlpha = 0.15;
+            ctx.lineWidth = 1.5;
+            ctx.moveTo(p.history[0].x, p.history[0].y);
+            for (let j = 1; j < p.history.length; j++) {
+              ctx.lineTo(p.history[j].x, p.history[j].y);
+            }
+            ctx.stroke();
+            ctx.globalAlpha = 1.0;
+          }
+        }
+      }
+
+      // Render Strings and Bobs
+      for (let p of pendulums) {
+        let visualLength = calculateVisualLength(p.index, state.count);
+        let coords = getBobCoordinates(p.index, p.theta, visualLength);
+        let color = activeTheme.colorFn(p.index, state.count);
+
+        // String
+        ctx.strokeStyle = activeTheme.line;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(coords.pivotX, coords.pivotY);
+        ctx.lineTo(coords.x, coords.y);
+        ctx.stroke();
+
+        if (state.glow) {
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = activeTheme.glowFn(p.index, state.count);
+        }
+
+        // Bob Center Node
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(coords.x, coords.y, 7 + (1 - p.index / state.count) * 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+
+        if (state.count <= 24) {
+          ctx.fillStyle = state.uiTheme === 'light' ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.4)";
+          ctx.font = "9px monospace";
+          ctx.fillText(p.noteName, coords.x - 10, coords.y - 12);
+        }
+      }
+
+      // Draw Trigger Ripples
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const r = ripples[i];
+        r.radius += r.speed;
+        r.alpha -= 0.02;
+        if (r.alpha <= 0) {
+          ripples.splice(i, 1);
+          continue;
+        }
+        ctx.strokeStyle = r.color;
+        ctx.globalAlpha = r.alpha;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.globalAlpha = 1.0;
+      }
+
+      // Draw Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const pt = particles[i];
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.vy += 0.05; // gravity pull
+        pt.alpha -= 0.02;
+        if (pt.alpha <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+        ctx.fillStyle = pt.color;
+        ctx.globalAlpha = pt.alpha;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
+      }
+    }
+
+    function createTriggersVisual(x, y, index) {
+      const themeColor = (THEMES[state.theme] || THEMES.neon).colorFn(index, state.count);
+      
+      ripples.push({
+        x, y, radius: 2, speed: 2.5, color: themeColor, alpha: 0.8
+      });
+
+      for (let i = 0; i < 8; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1 + Math.random() * 3;
+        particles.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          color: themeColor,
+          alpha: 0.9,
+          size: 1.5 + Math.random() * 2
+        });
+      }
+    }
+
+    // Audio Trigger Logic
+    function triggerChime(index) {
+      if (!audioCtx) return;
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
+      const p = pendulums[index];
+      if (!p) return;
+
+      const noteInfo = getNoteForIndex(index, state.scale);
+      const panVal = (index / (state.count - 1)) * 2 - 1;
+
+      activeVoiceCount++;
+      document.getElementById("hud-voices").textContent = activeVoiceCount;
+
+      const carrier = audioCtx.createOscillator();
+      const modulator = audioCtx.createOscillator();
+      const modGain = audioCtx.createGain();
+      const voiceGain = audioCtx.createGain();
+      const panner = audioCtx.createStereoPanner ? audioCtx.createStereoPanner() : null;
+
+      let harmonicity = 1.0;
+      let modIndex = 2.0;
+      let attack = 0.005;
+      let decay = 1.5;
+
+      switch (state.timbre) {
+        case 'chime':
+          harmonicity = 2.5;
+          modIndex = 3.5;
+          attack = 0.002;
+          decay = 1.8;
+          break;
+        case 'steel':
+          harmonicity = 3.2;
+          modIndex = 5.0;
+          attack = 0.001;
+          decay = 0.8;
+          break;
+        case 'organ':
+          harmonicity = 0.5;
+          modIndex = 0.8;
+          attack = 0.05;
+          decay = 2.5;
+          break;
+        case 'soft':
+        default:
+          harmonicity = 1.0;
+          modIndex = 1.2;
+          attack = 0.01;
+          decay = 2.0;
+          break;
+      }
+
+      carrier.type = 'sine';
+      modulator.type = 'sine';
+
+      carrier.frequency.setValueAtTime(noteInfo.freq, audioCtx.currentTime);
+      modulator.frequency.setValueAtTime(noteInfo.freq * harmonicity, audioCtx.currentTime);
+
+      modGain.gain.setValueAtTime(noteInfo.freq * modIndex, audioCtx.currentTime);
+      modGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + decay);
+
+      const amp = (state.volume / 100) * 0.15;
+      voiceGain.gain.setValueAtTime(0, audioCtx.currentTime);
+      voiceGain.gain.linearRampToValueAtTime(amp, audioCtx.currentTime + attack);
+      voiceGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + decay);
+
+      modulator.connect(modGain);
+      modGain.connect(carrier.frequency);
+
+      carrier.connect(voiceGain);
+
+      if (panner) {
+        panner.pan.setValueAtTime(panVal, audioCtx.currentTime);
+        voiceGain.connect(panner);
+        panner.connect(compressor);
+      } else {
+        voiceGain.connect(compressor);
+      }
+
+      if (state.delay > 0) {
+        voiceGain.connect(delayNode);
+      }
+
+      carrier.start();
+      modulator.start();
+
+      carrier.stop(audioCtx.currentTime + decay);
+      modulator.stop(audioCtx.currentTime + decay);
+
+      setTimeout(() => {
+        try {
+          carrier.disconnect();
+          modulator.disconnect();
+          modGain.disconnect();
+          voiceGain.disconnect();
+          if (panner) panner.disconnect();
+        } catch (err) {}
+        activeVoiceCount = Math.max(0, activeVoiceCount - 1);
+        document.getElementById("hud-voices").textContent = activeVoiceCount;
+      }, decay * 1000 + 100);
+    }
+
+    // Sound System Initialization
+    function initAudioEngine() {
+      if (audioCtx) return;
+
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContextClass({ latencyHint: 'interactive', sampleRate: 44100 });
+
+      compressor = audioCtx.createDynamicsCompressor();
+      compressor.threshold.setValueAtTime(-12, audioCtx.currentTime);
+      compressor.knee.setValueAtTime(10, audioCtx.currentTime);
+      compressor.ratio.setValueAtTime(4, audioCtx.currentTime);
+      compressor.release.setValueAtTime(0.1, audioCtx.currentTime);
+
+      masterGain = audioCtx.createGain();
+      masterGain.gain.setValueAtTime(1.0, audioCtx.currentTime);
+
+      delayNode = audioCtx.createDelay(2.0);
+      delayFeedback = audioCtx.createGain();
+      
+      delayNode.delayTime.setValueAtTime(0.375, audioCtx.currentTime);
+      delayFeedback.gain.setValueAtTime(state.delay / 100 * 0.7, audioCtx.currentTime);
+
+      delayNode.connect(delayFeedback);
+      delayFeedback.connect(delayNode);
+
+      compressor.connect(masterGain);
+      delayNode.connect(masterGain);
+
+      masterGain.connect(audioCtx.destination);
+
+      const recorderNode = audioCtx.createScriptProcessor(4096, 2, 2);
+      masterGain.connect(recorderNode);
+      recorderNode.connect(audioCtx.destination);
+
+      recorderNode.onaudioprocess = (e) => {
+        if (!isRecording) return;
+        const left = e.inputBuffer.getChannelData(0);
+        const right = e.inputBuffer.getChannelData(1);
+        
+        recordLeftBuffer.push(new Float32Array(left));
+        recordRightBuffer.push(new Float32Array(right));
+        recordBufferLength += left.length;
+      };
+
+      document.getElementById("audio-init-overlay").style.display = "none";
+    }
+
+    function ensureAudioInit() {
+      if (!audioCtx) {
+        initAudioEngine();
+      } else if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // WAV Exporter Logic
+    function writeWavHeader(view, offset, size, channels, sampleRate, byteRate, blockAlign, bitsPerSample) {
+      writeUTFBytes(view, offset, 'RIFF');
+      view.setUint32(offset + 4, size + 36, true);
+      writeUTFBytes(view, offset + 8, 'WAVE');
+      writeUTFBytes(view, offset + 12, 'fmt ');
+      view.setUint32(offset + 16, 16, true);
+      view.setUint16(offset + 20, 1, true); 
+      view.setUint16(offset + 22, channels, true);
+      view.setUint32(offset + 24, sampleRate, true);
+      view.setUint32(offset + 28, byteRate, true);
+      view.setUint16(offset + 32, blockAlign, true);
+      view.setUint16(offset + 34, bitsPerSample, true);
+      writeUTFBytes(view, offset + 36, 'data');
+      view.setUint32(offset + 40, size, true);
+    }
+
+    function writeUTFBytes(view, offset, string) {
+      for (let i = 0; i < string.length; i++) {
+        view.setUint8(offset + i, string.charCodeAt(i));
+      }
+    }
+
+    function mergeBuffers(channelBuffer, length) {
+      const result = new Float32Array(length);
+      let offset = 0;
+      for (let i = 0; i < channelBuffer.length; i++) {
+        let buffer = channelBuffer[i];
+        result.set(buffer, offset);
+        offset += buffer.length;
+      }
+      return result;
+    }
+
+    function generateWav() {
+      if (recordBufferLength === 0) {
+        showToast("No audio recorded");
+        return;
+      }
+      const sampleRate = audioCtx.sampleRate;
+      const leftFlat = mergeBuffers(recordLeftBuffer, recordBufferLength);
+      const rightFlat = mergeBuffers(recordRightBuffer, recordBufferLength);
+
+      const buffer = new ArrayBuffer(44 + recordBufferLength * 2 * 2);
+      const view = new DataView(buffer);
+
+      const blockAlign = 4;
+      const byteRate = sampleRate * blockAlign;
+      const dataSize = recordBufferLength * blockAlign;
+      
+      writeWavHeader(view, 0, dataSize, 2, sampleRate, byteRate, blockAlign, 16);
+
+      let offset = 44;
+      for (let i = 0; i < recordBufferLength; i++) {
+        let lSample = Math.max(-1, Math.min(1, leftFlat[i]));
+        view.setInt16(offset, lSample < 0 ? lSample * 0x8000 : lSample * 0x7FFF, true);
+        
+        let rSample = Math.max(-1, Math.min(1, rightFlat[i]));
+        view.setInt16(offset + 2, rSample < 0 ? rSample * 0x8000 : rSample * 0x7FFF, true);
+        
+        offset += 4;
+      }
+
+      const blob = new Blob([view], { type: 'audio/wav' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `pendulum_polyrhythm_${Date.now()}.wav`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function handleRecordToggle() {
+      ensureAudioInit();
+      if (!audioCtx) return;
+
+      const recordButton = document.getElementById("btn-record");
+      const recordText = document.getElementById("record-text");
+      const recordIcon = document.getElementById("record-icon");
+
+      if (isRecording) {
+        isRecording = false;
+        clearInterval(recordTimer);
+        generateWav();
+        recordText.textContent = "Record 15s Loop";
+        recordIcon.style.display = "none";
+        showToast("WAV Export Complete");
+      } else {
+        recordLeftBuffer = [];
+        recordRightBuffer = [];
+        recordBufferLength = 0;
+        isRecording = true;
+
+        let secondsRemaining = 15;
+        recordText.textContent = `Recording (${secondsRemaining}s)...`;
+        recordIcon.style.display = "inline-block";
+
+        recordTimer = setInterval(() => {
+          secondsRemaining--;
+          if (secondsRemaining <= 0) {
+            handleRecordToggle();
+          } else {
+            recordText.textContent = `Recording (${secondsRemaining}s)...`;
+          }
+        }, 1000);
+      }
+    }
+
+    // Canvas Auto-Scaler matching physical with logical sizing layout
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      cssWidth = rect.width || 800;
+      cssHeight = rect.height || 600;
+      canvas.width = cssWidth * dpr;
+      canvas.height = cssHeight * dpr;
+      ctx.resetTransform();
+      ctx.scale(dpr, dpr);
+    }
+
+    // Main Engine Tick Loop
+    let lastTick = performance.now();
+    function tick(now) {
+      requestAnimationFrame(tick);
+
+      let delta = (now - lastTick) / 1000;
+      lastTick = now;
+
+      if (delta > 0.1) delta = 0.1; 
+
+      // Only progress time automatically if the user is NOT dragging the scrubber
+      if (state.isPlaying && !isScrubbing) {
+        state.time += delta * state.speed;
+        
+        if (state.time >= state.cyclePeriod) {
+          state.time -= state.cyclePeriod;
+        }
+
+        const progress = state.time / state.cyclePeriod;
+        document.getElementById("timeline-scrub").value = Math.floor(progress * 1000);
+        document.getElementById("scrub-percentage").textContent = Math.floor(progress * 100) + "%";
+      }
+
+      const maxAngleRad = state.maxAngle * Math.PI / 180;
+      for (let p of pendulums) {
+        p.update(state.time, maxAngleRad);
+      }
+
+      document.getElementById("hud-time").textContent = state.time.toFixed(2) + "s";
+      document.getElementById("hud-progress").textContent = (state.time / state.cyclePeriod * 100).toFixed(1) + "%";
+
+      draw();
+    }
+
+    // Toast Notice Alert
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      setTimeout(() => {
+        el.classList.remove("show");
+      }, 2500);
+    }
+
+    // Presets Installer
+    function loadPreset(presetName) {
+      state.selectedPreset = presetName;
+      
+      if (presetName === 'classic') {
+        state.count = 16;
+        state.baseOsc = 12;
+        state.scale = "pentatonic";
+        state.timbre = "soft";
+      } else if (presetName === 'fibonacci') {
+        state.count = 12;
+        state.baseOsc = 8;
+        state.scale = "dorian";
+        state.timbre = "chime";
+      } else if (presetName === 'golden') {
+        state.count = 14;
+        state.baseOsc = 6;
+        state.scale = "harmonicMinor";
+        state.timbre = "organ";
+      } else if (presetName === 'polyrhythm') {
+        state.count = 13;
+        state.baseOsc = 4;
+        state.scale = "just";
+        state.timbre = "steel";
+      }
+
+      syncUI();
+      initPendulums();
+      saveState();
+      showToast(`Loaded ${presetName.toUpperCase()} Preset`);
+    }
+
+    // User Interface Syncing Engine
+    function syncUI() {
+      document.getElementById("param-count").value = state.count;
+      document.getElementById("val-count").textContent = state.count;
+
+      document.getElementById("param-cycle").value = state.cyclePeriod;
+      document.getElementById("val-cycle").textContent = state.cyclePeriod;
+
+      document.getElementById("param-base-osc").value = state.baseOsc;
+      document.getElementById("val-base-osc").textContent = state.baseOsc;
+
+      document.getElementById("param-angle").value = state.maxAngle;
+      document.getElementById("val-angle").textContent = state.maxAngle;
+
+      document.getElementById("param-speed").value = state.speed;
+      document.getElementById("val-speed").textContent = state.speed.toFixed(1);
+
+      document.getElementById("param-scale").value = state.scale;
+      document.getElementById("param-timbre").value = state.timbre;
+
+      document.getElementById("param-delay").value = state.delay;
+      document.getElementById("val-delay").textContent = state.delay + "%";
+
+      document.getElementById("param-volume").value = state.volume;
+      document.getElementById("val-volume").textContent = state.volume + "%";
+
+      document.getElementById("param-theme").value = state.theme;
+      document.getElementById("param-layout").value = state.layout;
+
+      document.getElementById("param-trail").value = state.trail;
+      document.getElementById("val-trail").textContent = state.trail;
+
+      document.getElementById("param-glow").checked = state.glow;
+
+      document.querySelectorAll(".preset-card").forEach(el => {
+        if (el.dataset.preset === state.selectedPreset) {
+          el.classList.add("active");
+        } else {
+          el.classList.remove("active");
+        }
+      });
+
+      if (delayFeedback && audioCtx) {
+        delayFeedback.gain.setValueAtTime(state.delay / 100 * 0.7, audioCtx.currentTime);
+      }
+
+      if (state.uiTheme === 'light') {
+        document.body.setAttribute("data-theme", "light");
+        document.getElementById("sun-icon").classList.remove("visually-hidden");
+        document.getElementById("moon-icon").classList.add("visually-hidden");
+      } else {
+        document.body.removeAttribute("data-theme");
+        document.getElementById("sun-icon").classList.add("visually-hidden");
+        document.getElementById("moon-icon").classList.remove("visually-hidden");
+      }
+    }
+
+    function setupEventListeners() {
+      // Audio Engine Initializer
+      document.getElementById("btn-init-audio").addEventListener("click", () => {
+        initAudioEngine();
+      });
+
+      canvas.addEventListener("mousedown", () => {
+        ensureAudioInit();
+      });
+      canvas.addEventListener("touchstart", () => {
+        ensureAudioInit();
+      });
+
+      document.querySelectorAll(".preset-card").forEach(card => {
+        card.addEventListener("click", (e) => {
+          ensureAudioInit();
+          loadPreset(e.target.dataset.preset);
+        });
+      });
+
+      // Controls listeners
+      document.getElementById("param-count").addEventListener("input", (e) => {
+        state.count = parseInt(e.target.value) || 4;
+        document.getElementById("val-count").textContent = state.count;
+        initPendulums();
+        saveState();
+      });
+
+      document.getElementById("param-cycle").addEventListener("input", (e) => {
+        state.cyclePeriod = parseInt(e.target.value) || 5;
+        document.getElementById("val-cycle").textContent = state.cyclePeriod;
+        initPendulums();
+        saveState();
+      });
+
+      document.getElementById("param-base-osc").addEventListener("input", (e) => {
+        state.baseOsc = parseInt(e.target.value) || 1;
+        document.getElementById("val-base-osc").textContent = state.baseOsc;
+        initPendulums();
+        saveState();
+      });
+
+      document.getElementById("param-angle").addEventListener("input", (e) => {
+        state.maxAngle = parseInt(e.target.value) || 5;
+        document.getElementById("val-angle").textContent = state.maxAngle;
+        saveState();
+      });
+
+      document.getElementById("param-speed").addEventListener("input", (e) => {
+        state.speed = parseFloat(e.target.value) || 0;
+        document.getElementById("val-speed").textContent = state.speed.toFixed(1);
+        saveState();
+      });
+
+      document.getElementById("param-scale").addEventListener("change", (e) => {
+        ensureAudioInit();
+        state.scale = e.target.value;
+        initPendulums();
+        saveState();
+      });
+
+      document.getElementById("param-timbre").addEventListener("change", (e) => {
+        ensureAudioInit();
+        state.timbre = e.target.value;
+        saveState();
+      });
+
+      document.getElementById("param-theme").addEventListener("change", (e) => {
+        state.theme = e.target.value;
+        saveState();
+      });
+
+      document.getElementById("param-layout").addEventListener("change", (e) => {
+        state.layout = e.target.value;
+        saveState();
+      });
+
+      document.getElementById("param-delay").addEventListener("input", (e) => {
+        ensureAudioInit();
+        state.delay = parseInt(e.target.value) || 0;
+        document.getElementById("val-delay").textContent = state.delay + "%";
+        if (delayFeedback && audioCtx) {
+          delayFeedback.gain.setValueAtTime(state.delay / 100 * 0.7, audioCtx.currentTime);
+        }
+        saveState();
+      });
+
+      document.getElementById("param-volume").addEventListener("input", (e) => {
+        ensureAudioInit();
+        state.volume = parseInt(e.target.value) || 0;
+        document.getElementById("val-volume").textContent = state.volume + "%";
+        saveState();
+      });
+
+      document.getElementById("param-trail").addEventListener("input", (e) => {
+        state.trail = parseInt(e.target.value) || 0;
+        document.getElementById("val-trail").textContent = state.trail;
+        saveState();
+      });
+
+      document.getElementById("param-glow").addEventListener("change", (e) => {
+        state.glow = e.target.checked;
+        saveState();
+      });
+
+      // Timeline Scrubber Jitter Prevention
+      const timelineScrub = document.getElementById("timeline-scrub");
+      
+      const onScrubStart = () => {
+        isScrubbing = true;
+        suppressAudio = true;
+      };
+
+      const onScrubInput = (e) => {
+        isScrubbing = true;
+        suppressAudio = true;
+        const pct = parseInt(e.target.value) / 1000;
+        state.time = pct * state.cyclePeriod;
+        document.getElementById("scrub-percentage").textContent = Math.floor(pct * 100) + "%";
+        
+        const maxAngleRad = state.maxAngle * Math.PI / 180;
+        for (let p of pendulums) {
+          p.update(state.time, maxAngleRad);
+        }
+      };
+
+      const onScrubEnd = () => {
+        isScrubbing = false;
+        suppressAudio = false;
+      };
+
+      timelineScrub.addEventListener("pointerdown", onScrubStart);
+      timelineScrub.addEventListener("touchstart", onScrubStart, { passive: true });
+      timelineScrub.addEventListener("input", onScrubInput);
+      timelineScrub.addEventListener("change", onScrubEnd);
+      timelineScrub.addEventListener("pointerup", onScrubEnd);
+      timelineScrub.addEventListener("touchend", onScrubEnd, { passive: true });
+
+      document.getElementById("btn-play-pause").addEventListener("click", () => {
+        ensureAudioInit();
+        state.isPlaying = !state.isPlaying;
+        document.getElementById("play-pause-label").textContent = state.isPlaying ? "Pause" : "Play";
+      });
+
+      document.getElementById("btn-record").addEventListener("click", () => {
+        handleRecordToggle();
+      });
+
+      // Factory Reset
+      document.getElementById("btn-reset").addEventListener("click", () => {
+        if (confirm("Reset simulation parameters to default?")) {
+          state = {
+            isPlaying: true,
+            count: 16,
+            cyclePeriod: 60,
+            baseOsc: 12,
+            maxAngle: 35,
+            speed: 1.0,
+            scale: "pentatonic",
+            timbre: "soft",
+            delay: 40,
+            volume: 60,
+            theme: "neon",
+            layout: "parallel",
+            trail: 15,
+            glow: true,
+            time: 0,
+            selectedPreset: 'classic',
+            uiTheme: window.matchMedia("(prefers-color-scheme: light)").matches ? 'light' : 'dark'
+          };
+          syncUI();
+          initPendulums();
+          saveState();
+          showToast("Settings Reset Completed");
+        }
+      });
+
+      // Dark/Light Theme Switching Engine
+      document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (state.uiTheme === "light") {
+          state.uiTheme = "dark";
+        } else {
+          state.uiTheme = "light";
+        }
+        syncUI();
+        saveState();
+      });
+
+      // JSON Configuration Export
+      document.getElementById("btn-export-preset").addEventListener("click", () => {
+        const jsonStr = JSON.stringify(state, null, 2);
+        const blob = new Blob([jsonStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `pendulum_preset_${Date.now()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast("Preset Exported");
+      });
+
+      // JSON Configuration Import
+      document.getElementById("btn-import-preset").addEventListener("click", () => {
+        document.getElementById("file-import").click();
+      });
+
+      document.getElementById("file-import").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const parsed = JSON.parse(event.target.result);
+            state = validateAndSanitizeState({ ...state, ...parsed });
+            syncUI();
+            initPendulums();
+            saveState();
+            showToast("Presets Loaded");
+          } catch (err) {
+            alert("Corrupted configuration. Import aborted.");
+          }
+          e.target.value = ""; 
+        };
+        reader.readAsText(file);
+      });
+
+      window.addEventListener("resize", resize);
+    }
+
+    // Load initial structures
+    window.addEventListener("DOMContentLoaded", () => {
+      loadCachedState();
+      syncUI();
+      resize();
+      initPendulums();
+      setupEventListeners();
+      requestAnimationFrame(tick);
+    });
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>Pendulum Wave is a free interactive acoustics sandbox that transforms physical harmonic pendulum oscillations into polyrhythmic bell patterns and generative soundscapes. Designed for ambient producers, sound designers, and physics enthusiasts, it offers a real-time visual and auditory demonstration of phase relationships and microtonal tuning systems.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your tuning system, such as Just Intonation or overtone series presets.</li><li>Adjust the pendulum count, frequency spread, and dampening parameters to shape the phase cycle.</li><li>Engage visualizer modes to view kinetic trajectories and wave formations.</li><li>Hit the record button to capture the generative acoustic output directly into a lossless WAV file.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free online version and the $9 Gumroad pack?</h4><p style="margin:0">The online version is free to use on the web anytime. The $9 download gives you the complete standalone offline file: a single, self-contained HTML/JS file that works anywhere without an internet connection, forever, with no telemetry or external asset requests.</p><h4 style="font-size:16px;margin:16px 0 4px">How does the audio recording feature work?</h4><p style="margin:0">The tool uses the browser&#39;s native audio buffer rendering to record the synthesis output in real time. When you press stop, it immediately compiles the buffer into a 16-bit lossless WAV file that downloads straight to your machine for use in your DAW or sampler.</p><h4 style="font-size:16px;margin:16px 0 4px">Can I use the recorded audio in commercial music releases?</h4><p style="margin:0">Yes. Any sample loops, textures, or ambient recordings generated by the tool are 100% royalty-free for both personal and commercial use.</p><h4 style="font-size:16px;margin:16px 0 4px">What software or dependencies do I need to run the offline version?</h4><p style="margin:0">None. It runs out of the box in any standard modern web browser (Chrome, Firefox, Safari, Edge, Brave) on macOS, Windows, Linux, or iOS/Android by simply double-clicking the HTML file.</p>
+<p style="margin:24px 0;padding:16px;border:1px solid rgba(128,128,128,.35);border-radius:12px"><strong>Want it offline?</strong> Get the offline pack (the tool as a single file, a quick-start guide and a license) and support this project: <a href="https://ferrywave73.gumroad.com/l/anfpaj" rel="noopener" style="font-weight:700;color:inherit">download it on Gumroad</a>.</p><p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a></p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">About · Offline pack</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"About · Offline pack"});</script>
+</body>
+</html>
