@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+        :root {
+            --bg: #0d1117;
+            --panel: #161b22;
+            --panel-sub: #21262d;
+            --text: #e6edf3;
+            --text-dim: #8b949e;
+            --accent: #2f81f7;
+            --accent-hover: #4493f8;
+            --border: #30363d;
+            --success: #238636;
+            --success-hover: #2ea043;
+            --danger: #da3633;
+            --danger-hover: #f85149;
+            --warning: #d29922;
+            --canvas-bg: #05070a;
+            --orbit-current: #2f81f7;
+            --orbit-predicted: #f0883e;
+            --orbit-target: #8b949e;
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f6f8fa;
+                --panel: #ffffff;
+                --panel-sub: #f0f2f5;
+                --text: #1f2328;
+                --text-dim: #636c76;
+                --accent: #0969da;
+                --accent-hover: #1052af;
+                --border: #d0d7de;
+                --success: #1a7f37;
+                --success-hover: #22863a;
+                --danger: #cf222e;
+                --danger-hover: #a40e26;
+                --warning: #9a6700;
+                --canvas-bg: #fdfdfd;
+                --orbit-current: #0969da;
+                --orbit-predicted: #bc4c00;
+                --orbit-target: #57606a;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-stack);
+            background-color: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            height: 100svh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 0.6rem 1rem;
+            background: var(--panel);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .header-title h1 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.4rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #simulation-canvas {
+            flex: 1;
+            background: var(--canvas-bg);
+            cursor: grab;
+            touch-action: none;
+            display: block;
+            min-height: 240px;
+        }
+
+        #simulation-canvas:active {
+            cursor: grabbing;
+        }
+
+        .sidebar {
+            width: 350px;
+            max-width: 100%;
+            background: var(--panel);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 1rem;
+            gap: 1rem;
+            z-index: 90;
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.85rem;
+            background: var(--panel-sub);
+        }
+
+        h2 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+            margin-bottom: 0.75rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .label-val {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.35rem;
+            font-size: 0.82rem;
+        }
+
+        .label-val span:last-child {
+            font-family: var(--mono-font);
+            font-weight: 600;
+        }
+
+        .control-group {
+            margin-bottom: 0.75rem;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            margin-bottom: 0.3rem;
+            color: var(--text-dim);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 4px;
+            accent-color: var(--accent);
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.45rem 0.6rem;
+            border-radius: 5px;
+            font-size: 0.82rem;
+            font-family: var(--mono-font);
+        }
+
+        button {
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: background 0.15s ease, transform 0.05s ease;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            user-select: none;
+        }
+
+        button:hover { background: var(--accent-hover); }
+        button:active { transform: translateY(1px); }
+        button.secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        button.secondary:hover {
+            background: var(--border);
+        }
+        button.danger {
+            background: var(--danger);
+            color: #ffffff;
+        }
+        button.danger:hover { background: var(--danger-hover); }
+        button.success {
+            background: var(--success);
+            color: #ffffff;
+        }
+        button.success:hover { background: var(--success-hover); }
+
+        .flex-row {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .telemetry-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 0.8rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-paused { background: rgba(210, 153, 34, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+        .status-running { background: rgba(35, 134, 54, 0.2); color: var(--success); border: 1px solid var(--success); }
+
+        .warning-note {
+            font-size: 0.72rem;
+            color: var(--text-dim);
+            padding: 0.65rem;
+            border-radius: 6px;
+            background: rgba(210, 153, 34, 0.12);
+            border-left: 3px solid var(--warning);
+            line-height: 1.35;
+        }
+
+        .maneuver-ui {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.55);
+            display: none;
+            flex-direction: column;
+            gap: 0.75rem;
+            width: 320px;
+            max-width: calc(100% - 2rem);
+            z-index: 110;
+        }
+
+        .maneuver-ui.active {
+            display: flex;
+        }
+
+        .burn-stats {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem;
+            font-size: 0.75rem;
+            font-family: var(--mono-font);
+            line-height: 1.4;
+        }
+
+        .canvas-overlay-hints {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background: rgba(13, 17, 23, 0.75);
+            backdrop-filter: blur(4px);
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            pointer-events: none;
+            border: 1px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: 48%;
+                border-left: none;
+                border-top: 1px solid var(--border);
+            }
+            .maneuver-ui {
+                bottom: auto;
+                top: 0.5rem;
+            }
+        }
+
+        /* Focus States */
+        button:focus-visible, input:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 1px;
+        }
+
+        .btn-icon {
+            width: 15px;
+            height: 15px;
+            fill: currentColor;
+            display: inline-block;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+
+        .feedback-msg {
+            font-size: 0.75rem;
+            margin-top: 0.4rem;
+            line-height: 1.4;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: #ffffff;
+                color: #000000;
+                height: auto;
+                overflow: visible;
+            }
+            header button, .sidebar button, .maneuver-ui, .canvas-overlay-hints {
+                display: none !important;
+            }
+            .main-container {
+                display: block;
+            }
+            #simulation-canvas {
+                width: 100% !important;
+                height: 350px !important;
+                border: 1px solid #ccc;
+            }
+            .sidebar {
+                width: 100%;
+                border: none;
+                padding: 1rem 0;
+            }
+            .card {
+                border: 1px solid #ccc;
+                background: #fff;
+                break-inside: avoid;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+<title>2D Orbital Transfer &amp; Gravity Mission Planner</title>
+<meta name="description" content="Interactive 2D orbital mechanics sandbox. Calculate Hohmann transfers, test delta-v burns, and export telemetry to JSON/CSV. Free tool with offline pack.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/two-dimensional-orbital-transfer-mission-planner/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/two-dimensional-orbital-transfer-mission-planner/">
+<meta property="og:title" content="2D Orbital Transfer &amp; Gravity Mission Planner"><meta property="og:description" content="Interactive 2D orbital mechanics sandbox. Calculate Hohmann transfers, test delta-v burns, and export telemetry to JSON/CSV. Free tool with offline pack.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/two-dimensional-orbital-transfer-mission-planner/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"2D Orbital Transfer & Gravity Mission Planner","description":"Interactive 2D orbital mechanics sandbox. Calculate Hohmann transfers, test delta-v burns, and export telemetry to JSON/CSV. Free tool with offline pack.","url":"https://rttyy.github.io/free-tools/two-dimensional-orbital-transfer-mission-planner/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the formula to predict lunar and solar eclipses accurately?","acceptedAnswer":{"@type":"Answer","text":"Eclipse prediction cannot be solved with a single algebraic equation because it requires calculating when the Moon's phase (syzygy) coincides with its crossing of the ecliptic plane (nodes). Astronomers use the Saros cycle (roughly 6,585.3 days) for cyclical recurrence, paired with Besselian elements and numerical ephemerides (like JPL DE440) to solve the precise geometry of the Sun-Earth-Moon shadow cones over time."}},{"@type":"Question","name":"Exercise: 2D orbital mechanics simulation (python)","acceptedAnswer":{"@type":"Answer","text":"To build a minimal 2D orbital simulation in Python, model Newton's law of gravitation using numerical integration like Velocity Verlet or Symplectic Euler. At each timestep `dt`, compute distance `r = sqrt(x^2 + y^2)` and gravitational acceleration `a = -G*M / r^2`. Update velocity via `vx += a * (x/r) * dt` and `vy += a * (y/r) * dt`, then update coordinates `x += vx * dt` and `y += vy * dt`."}},{"@type":"Question","name":"Is there a upper limit to the number of planets orbiting a star?","acceptedAnswer":{"@type":"Answer","text":"Yes, orbital stability imposes a physical limit determined by mutual Hill radii. For planets to avoid chaotic gravitational perturbations, ejections, or collisions over billions of years, their orbits must remain spaced by several mutual Hill radii (typically at least 8 to 10 for long-term stability). In a star's habitable zone or total gravitational sphere of influence, this geometric and dynamical packing constraint limits the maximum number of stable coplanar planets."}},{"@type":"Question","name":"Doesn't gravity attract objects in space until they collide?","acceptedAnswer":{"@type":"Answer","text":"Gravity pulls objects directly toward one another, but objects in orbit possess sufficient sideways (tangential) velocity. As gravity accelerates the object downward toward the central body, the object moves forward fast enough that the surface of the body curves away underneath it at the exact same rate. This continuous free fall without collision is what forms a stable closed orbit."}}]}</script>
+</head>
+<body>
+
+<header>
+    <div class="header-title">
+        <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="5" fill="var(--accent)"/>
+            <ellipse cx="12" cy="12" rx="10" ry="4.5" stroke="currentColor" stroke-width="1.8" fill="none" transform="rotate(-25 12 12)"/>
+        </svg>
+        <h1>2D Orbital Transfer &amp; Mission Planner</h1>
+    </div>
+    <div class="header-actions">
+        <button id="btn-play-pause" onclick="togglePause()" class="secondary" style="width: auto; padding: 0.4rem 0.7rem;" aria-label="Pause or Resume Orbit Simulation">
+            <span id="play-pause-icon">⏸</span> <span id="play-pause-text">Pause</span>
+        </button>
+        <button onclick="copyTelemetry()" class="secondary" style="width: auto; padding: 0.4rem 0.6rem;" title="Copy Mission Telemetry to Clipboard" aria-label="Copy to Clipboard">
+            <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"/></svg>
+        </button>
+        <button onclick="resetSimulation()" class="danger" style="width: auto; padding: 0.4rem 0.6rem;" aria-label="Reset simulation to initial state">Reset</button>
+    </div>
+</header>
+
+<div class="main-container">
+    <div class="canvas-overlay-hints" id="canvas-hints">
+        Drag to pan &bull; Scroll / Pinch to zoom &bull; Central body R = 50 km
+    </div>
+
+    <canvas id="simulation-canvas" aria-label="Orbital simulation view showing spacecraft, trajectory, and maneuver projections"></canvas>
+
+    <!-- Maneuver Node UI -->
+    <div class="maneuver-ui" id="node-panel" role="region" aria-labelledby="node-title">
+        <div class="label-val" style="margin-bottom: 0.2rem;">
+            <strong id="node-title" style="font-size: 0.85rem;">Maneuver Node Planner</strong>
+            <button onclick="closeNode()" class="secondary" style="width: auto; padding: 0.1rem 0.4rem; border: none; font-size: 1rem;" aria-label="Close Maneuver Planner">✕</button>
+        </div>
+        <div style="font-size: 0.72rem; color: var(--text-dim); line-height: 1.3;">
+            Simulation paused at node. Configure planned &Delta;v, then execute burn.
+        </div>
+        
+        <div class="control-group">
+            <div class="label-val">
+                <label for="node-pro" style="margin:0;">Prograde / Retrograde:</label>
+                <span id="val-pro" style="font-family: var(--mono-font); font-size: 0.8rem;">0.00 km/s</span>
+            </div>
+            <input type="range" id="node-pro" min="-30" max="30" step="0.1" value="0">
+        </div>
+
+        <div class="control-group">
+            <div class="label-val">
+                <label for="node-rad" style="margin:0;">Radial Out / In:</label>
+                <span id="val-rad" style="font-family: var(--mono-font); font-size: 0.8rem;">0.00 km/s</span>
+            </div>
+            <input type="range" id="node-rad" min="-30" max="30" step="0.1" value="0">
+        </div>
+
+        <div class="burn-stats" id="node-summary">
+            Total &Delta;v: 0.00 km/s<br>
+            Post-burn speed: 0.00 km/s
+        </div>
+
+        <div class="flex-row">
+            <button onclick="executeBurn()" class="success" id="btn-exec-burn">Execute Burn at Node</button>
+            <button onclick="closeNode()" class="secondary">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Sidebar Controls & Telemetry -->
+    <div class="sidebar">
+        <div class="card">
+            <h2>
+                <span>Live Telemetry</span>
+                <span id="sim-status" class="status-badge status-running">Running</span>
+            </h2>
+            <div class="telemetry-grid">
+                <div class="label-val"><span>Speed</span><span id="tel-v">0.00 km/s</span></div>
+                <div class="label-val"><span>Altitude</span><span id="tel-alt">0.0 km</span></div>
+                <div class="label-val"><span>Apoapsis</span><span id="tel-ap">0.0 km</span></div>
+                <div class="label-val"><span>Periapsis</span><span id="tel-pe">0.0 km</span></div>
+                <div class="label-val"><span>Period</span><span id="tel-t">0.0 s</span></div>
+                <div class="label-val"><span>Eccentricity</span><span id="tel-e">0.000</span></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Maneuver Controls</h2>
+            <button onclick="placeNode()" id="btn-node" class="accent">
+                <svg class="btn-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                Place Maneuver Node
+            </button>
+        </div>
+
+        <div class="card">
+            <h2>Hohmann Transfer Calculator</h2>
+            <div class="control-group">
+                <label for="target-alt">Target Orbit Altitude (km):</label>
+                <input type="number" id="target-alt" value="300" min="1" max="50000" step="10">
+            </div>
+            <button onclick="calcHohmann()" class="secondary">Calculate Transfer</button>
+            <div id="hohmann-res" class="feedback-msg" style="color: var(--text-dim);"></div>
+        </div>
+
+        <div class="card">
+            <h2>Environment &amp; Warp</h2>
+            <div class="control-group">
+                <div class="label-val">
+                    <label for="time-warp" style="margin:0;">Time Warp:</label>
+                    <span id="warp-val" style="font-family: var(--mono-font); font-size: 0.8rem;">1.0x</span>
+                </div>
+                <input type="range" id="time-warp" min="0" max="20" step="0.5" value="1">
+            </div>
+            <div class="control-group">
+                <div class="label-val">
+                    <label for="mass-slider" style="margin:0;">Central Body Mass (&mu;):</label>
+                    <span id="mass-val" style="font-family: var(--mono-font); font-size: 0.8rem;">100k km³/s²</span>
+                </div>
+                <input type="range" id="mass-slider" min="10000" max="500000" step="10000" value="100000">
+            </div>
+            <button onclick="centerView()" class="secondary" style="font-size: 0.75rem; padding: 0.35rem 0.5rem;">Reset Camera View</button>
+        </div>
+
+        <div class="flex-row">
+            <button onclick="exportJSON()" class="secondary" title="Export trajectory &amp; telemetry to JSON">Export JSON</button>
+            <button onclick="exportCSV()" class="secondary" title="Export telemetry log to CSV">Export CSV</button>
+        </div>
+
+        <div class="warning-note">
+            <strong>Engineering Notice:</strong> Hohmann transfer calculations include a standard 10% delta-v safety margin for attitude correction and steering dispersion. Estimate only - verify with a qualified professional before relying on it.
+        </div>
+    </div>
+</div>
+
+<script>
+    /* LOCAL STORAGE SAFEKEEPER */
+    const safeStorage = {
+        setItem: (key, val) => { try { localStorage.setItem(key, val); } catch(e) {} },
+        getItem: (key) => { try { return localStorage.getItem(key); } catch(e) { return null; } }
+    };
+
+    function parseSafe(val, fallback = 0) {
+        const n = parseFloat(val);
+        return isFinite(n) ? n : fallback;
+    }
+
+    /* PHYSICS & CONSTANTS */
+    // All simulation units:
+    // Distance: km
+    // Time: s
+    // Velocity: km/s
+    // Central parameter mu (G * M): km^3 / s^2
+    const bodyRadius = 50; // km
+    let centralMu = 100000; // km^3 / s^2
+    const INITIAL_ALTITUDE = 130; // km -> radius = 180 km
+    const INITIAL_RADIUS = bodyRadius + INITIAL_ALTITUDE; // 180 km
+
+    let ship = {
+        x: INITIAL_RADIUS,
+        y: 0,
+        vx: 0,
+        vy: Math.sqrt(centralMu / INITIAL_RADIUS),
+        path: [],
+        maxPath: 600
+    };
+
+    // Maneuver Node State
+    let node = {
+        active: false,
+        x: 0,
+        y: 0,
+        vx: 0, // Recorded spacecraft velocity at node creation
+        vy: 0,
+        pro: 0, // km/s
+        rad: 0, // km/s
+        postVx: 0,
+        postVy: 0,
+        predictedPath: []
+    };
+
+    let targetOrbit = {
+        active: false,
+        radius: 350
+    };
+
+    let camera = { x: 0, y: 0, zoom: 1 };
+    let timeWarp = 1.0;
+    let isPaused = false;
+    let resumeAfterNode = false;
+
+    // Canvas setup
+    const canvas = document.getElementById('simulation-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) return;
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.resetTransform ? ctx.resetTransform() : ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+        if (camera.x === 0 && camera.y === 0) {
+            camera.x = rect.width / 2;
+            camera.y = rect.height / 2;
+        }
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+
+    function worldToScreen(x, y) {
+        return {
+            x: camera.x + x * camera.zoom,
+            y: camera.y - y * camera.zoom // Invert Y for standard Cartesian orbital plane
+        };
+    }
+
+    function screenToWorld(sx, sy) {
+        return {
+            x: (sx - camera.x) / camera.zoom,
+            y: -(sy - camera.y) / camera.zoom
+        };
+    }
+
+    function centerView() {
+        const rect = canvas.getBoundingClientRect();
+        camera.x = rect.width / 2;
+        camera.y = rect.height / 2;
+        camera.zoom = Math.min(rect.width, rect.height) / 500;
+    }
+
+    /* ORBITAL MECHANICS & NUMERICAL INTEGRATION */
+    function getGravityAccel(pos, mu) {
+        const r2 = pos.x * pos.x + pos.y * pos.y;
+        const r = Math.sqrt(r2);
+        if (r < 0.1) return { ax: 0, ay: 0 };
+        const factor = -mu / (r2 * r);
+        return { ax: pos.x * factor, ay: pos.y * factor };
+    }
+
+    // Runge-Kutta 4th Order Integrator
+    function rk4Step(state, dt, mu) {
+        const a1 = getGravityAccel(state, mu);
+
+        const s2 = {
+            x: state.x + state.vx * dt * 0.5,
+            y: state.y + state.vy * dt * 0.5,
+            vx: state.vx + a1.ax * dt * 0.5,
+            vy: state.vy + a1.ay * dt * 0.5
+        };
+        const a2 = getGravityAccel(s2, mu);
+
+        const s3 = {
+            x: state.x + s2.vx * dt * 0.5,
+            y: state.y + s2.vy * dt * 0.5,
+            vx: state.vx + a2.ax * dt * 0.5,
+            vy: state.vy + a2.ay * dt * 0.5
+        };
+        const a3 = getGravityAccel(s3, mu);
+
+        const s4 = {
+            x: state.x + s3.vx * dt,
+            y: state.y + s3.vy * dt,
+            vx: state.vx + a3.ax * dt,
+            vy: state.vy + a3.ay * dt
+        };
+        const a4 = getGravityAccel(s4, mu);
+
+        return {
+            x: state.x + (dt / 6) * (state.vx + 2 * (s2.vx + s3.vx) + s4.vx),
+            y: state.y + (dt / 6) * (state.vy + 2 * (s2.vy + s3.vy) + s4.vy),
+            vx: state.vx + (dt / 6) * (a1.ax + 2 * (a2.ax + a3.ax) + a4.ax),
+            vy: state.vy + (dt / 6) * (a1.ay + 2 * (a2.ay + a3.ay) + a4.ay)
+        };
+    }
+
+    /* TELEMETRY CALCULATIONS */
+    function getOrbitalElements(x, y, vx, vy, mu) {
+        const r = Math.hypot(x, y);
+        const v2 = vx * vx + vy * vy;
+        const v = Math.sqrt(v2);
+
+        // Specific energy epsilon
+        const eps = (v2 / 2) - (mu / Math.max(r, 0.001));
+
+        // Specific angular momentum h = r x v (in 2D: z-component)
+        const h = x * vy - y * vx;
+
+        // Eccentricity vector e = ((v^2 - mu/r)*r - (r.v)*v) / mu
+        const rDotV = x * vx + y * vy;
+        const ex = ((v2 - mu / r) * x - rDotV * vx) / mu;
+        const ey = ((v2 - mu / r) * y - rDotV * vy) / mu;
+        const ecc = Math.hypot(ex, ey);
+
+        let semiMajor = 0;
+        let apoapsisAlt = 0;
+        let periapsisAlt = 0;
+        let period = 0;
+
+        if (Math.abs(eps) > 1e-9) {
+            semiMajor = -mu / (2 * eps);
+        }
+
+        if (semiMajor > 0 && ecc < 1) {
+            const ra = semiMajor * (1 + ecc);
+            const rp = semiMajor * (1 - ecc);
+            apoapsisAlt = ra - bodyRadius;
+            periapsisAlt = rp - bodyRadius;
+            period = 2 * Math.PI * Math.sqrt(Math.pow(semiMajor, 3) / mu);
+        } else {
+            // Parabolic or hyperbolic
+            const rp = (h * h) / (mu * (1 + ecc));
+            periapsisAlt = rp - bodyRadius;
+            apoapsisAlt = Infinity;
+            period = Infinity;
+        }
+
+        return {
+            speed: v,
+            radius: r,
+            altitude: Math.max(0, r - bodyRadius),
+            eccentricity: ecc,
+            semiMajor,
+            apoapsisAlt,
+            periapsisAlt,
+            period,
+            energy: eps
+        };
+    }
+
+    function updateTelemetryUI() {
+        const elem = getOrbitalElements(ship.x, ship.y, ship.vx, ship.vy, centralMu);
+
+        document.getElementById('tel-v').textContent = `${elem.speed.toFixed(2)} km/s`;
+        document.getElementById('tel-alt').textContent = `${elem.altitude.toFixed(1)} km`;
+        document.getElementById('tel-ap').textContent = isFinite(elem.apoapsisAlt) ? `${elem.apoapsisAlt.toFixed(1)} km` : 'Escaping';
+        document.getElementById('tel-pe').textContent = `${elem.periapsisAlt.toFixed(1)} km`;
+        document.getElementById('tel-t').textContent = isFinite(elem.period) ? `${elem.period.toFixed(1)} s` : 'N/A';
+        document.getElementById('tel-e').textContent = elem.eccentricity.toFixed(3);
+
+        const statusBadge = document.getElementById('sim-status');
+        if (isPaused) {
+            statusBadge.textContent = 'Paused';
+            statusBadge.className = 'status-badge status-paused';
+        } else {
+            statusBadge.textContent = 'Running';
+            statusBadge.className = 'status-badge status-running';
+        }
+    }
+
+    /* MANEUVER PREDICTION */
+    function calculatePredictedPath() {
+        if (!node.active) return;
+
+        // Prograde unit vector at the maneuver node position
+        const nodeVMag = Math.hypot(node.vx, node.vy);
+        const proX = nodeVMag > 0 ? (node.vx / nodeVMag) : 1;
+        const proY = nodeVMag > 0 ? (node.vy / nodeVMag) : 0;
+
+        // Radial outward unit vector pointing directly away from central body
+        const nodeRMag = Math.hypot(node.x, node.y);
+        const radX = nodeRMag > 0 ? (node.x / nodeRMag) : 1;
+        const radY = nodeRMag > 0 ? (node.y / nodeRMag) : 0;
+
+        // Post-burn velocity at node
+        node.postVx = node.vx + (proX * node.pro) + (radX * node.rad);
+        node.postVy = node.vy + (proY * node.pro) + (radY * node.rad);
+
+        const totalDv = Math.hypot(node.pro, node.rad);
+        const postSpeed = Math.hypot(node.postVx, node.postVy);
+
+        document.getElementById('node-summary').innerHTML = `
+            Planned &Delta;v: ${totalDv.toFixed(2)} km/s<br>
+            Post-burn speed: ${postSpeed.toFixed(2)} km/s
+        `;
+
+        // Predict path forward from the fixed node coordinates and burnt velocity
+        let simState = {
+            x: node.x,
+            y: node.y,
+            vx: node.postVx,
+            vy: node.postVy
+        };
+
+        node.predictedPath = [{ x: simState.x, y: simState.y }];
+
+        const simSteps = 750;
+        const dt = 0.45;
+        for (let i = 0; i < simSteps; i++) {
+            simState = rk4Step(simState, dt, centralMu);
+            node.predictedPath.push({ x: simState.x, y: simState.y });
+
+            // Stop if impact central body
+            if (simState.x * simState.x + simState.y * simState.y < bodyRadius * bodyRadius) {
+                break;
+            }
+            // Stop if escaping very far
+            if (simState.x * simState.x + simState.y * simState.y > 6000000) {
+                break;
+            }
+        }
+    }
+
+    function placeNode() {
+        // Record spacecraft position AND orbital velocity at this exact instant
+        node.active = true;
+        node.x = ship.x;
+        node.y = ship.y;
+        node.vx = ship.vx;
+        node.vy = ship.vy;
+        node.pro = 0;
+        node.rad = 0;
+
+        // Automatically pause the simulation during planning so spacecraft doesn't drift away
+        resumeAfterNode = !isPaused;
+        isPaused = true;
+        updatePlayPauseUI();
+
+        document.getElementById('node-pro').value = 0;
+        document.getElementById('node-rad').value = 0;
+        document.getElementById('val-pro').textContent = '0.00 km/s';
+        document.getElementById('val-rad').textContent = '0.00 km/s';
+        document.getElementById('node-panel').classList.add('active');
+
+        calculatePredictedPath();
+    }
+
+    function closeNode() {
+        node.active = false;
+        node.predictedPath = [];
+        document.getElementById('node-panel').classList.remove('active');
+
+        if (resumeAfterNode) {
+            isPaused = false;
+            updatePlayPauseUI();
+        }
+    }
+
+    function executeBurn() {
+        if (!node.active) return;
+
+        // Apply delta-v at the planned node location:
+        // Spacecraft snaps to node coordinates with the planned post-burn velocity vector
+        ship.x = node.x;
+        ship.y = node.y;
+        ship.vx = node.postVx;
+        ship.vy = node.postVy;
+        ship.path = [{ x: ship.x, y: ship.y }];
+
+        closeNode();
+        isPaused = false;
+        updatePlayPauseUI();
+    }
+
+    /* SIMULATION LOOP */
+    function togglePause() {
+        isPaused = !isPaused;
+        resumeAfterNode = false;
+        updatePlayPauseUI();
+    }
+
+    function updatePlayPauseUI() {
+        const icon = document.getElementById('play-pause-icon');
+        const text = document.getElementById('play-pause-text');
+        if (isPaused) {
+            icon.textContent = '▶';
+            text.textContent = 'Play';
+        } else {
+            icon.textContent = '⏸';
+            text.textContent = 'Pause';
+        }
+    }
+
+    function resetSimulation() {
+        centralMu = 100000;
+        timeWarp = 1.0;
+        document.getElementById('mass-slider').value = 100000;
+        document.getElementById('mass-val').textContent = '100k km³/s²';
+        document.getElementById('time-warp').value = 1;
+        document.getElementById('warp-val').textContent = '1.0x';
+
+        targetOrbit.active = false;
+        document.getElementById('hohmann-res').innerHTML = '';
+
+        closeNode();
+
+        ship.x = INITIAL_RADIUS;
+        ship.y = 0;
+        ship.vx = 0;
+        ship.vy = Math.sqrt(centralMu / INITIAL_RADIUS);
+        ship.path = [{ x: ship.x, y: ship.y }];
+
+        isPaused = false;
+        updatePlayPauseUI();
+        centerView();
+    }
+
+    function loop() {
+        if (!isPaused && timeWarp > 0) {
+            const subSteps = 12;
+            const dt = (0.016 * timeWarp) / subSteps;
+
+            for (let i = 0; i < subSteps; i++) {
+                const next = rk4Step(ship, dt, centralMu);
+                ship.x = next.x;
+                ship.y = next.y;
+                ship.vx = next.vx;
+                ship.vy = next.vy;
+
+                // Collision with surface
+                if (ship.x * ship.x + ship.y * ship.y <= bodyRadius * bodyRadius) {
+                    // Reset to stable circular orbit
+                    ship.x = INITIAL_RADIUS;
+                    ship.y = 0;
+                    ship.vx = 0;
+                    ship.vy = Math.sqrt(centralMu / INITIAL_RADIUS);
+                    ship.path = [];
+                    break;
+                }
+            }
+
+            ship.path.push({ x: ship.x, y: ship.y });
+            if (ship.path.length > ship.maxPath) {
+                ship.path.shift();
+            }
+        }
+
+        updateTelemetryUI();
+        renderScene();
+        requestAnimationFrame(loop);
+    }
+
+    /* CANVAS RENDERING */
+    function renderScene() {
+        const rect = canvas.getBoundingClientRect();
+        ctx.clearRect(0, 0, rect.width, rect.height);
+
+        const center = worldToScreen(0, 0);
+
+        // 1. Central Body
+        const rScreen = bodyRadius * camera.zoom;
+        const bodyGrad = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, Math.max(1, rScreen));
+        bodyGrad.addColorStop(0, '#3081f7');
+        bodyGrad.addColorStop(0.7, '#1b4b91');
+        bodyGrad.addColorStop(1, '#0c2242');
+
+        ctx.fillStyle = bodyGrad;
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, Math.max(1, rScreen), 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#58a6ff';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // 2. Target Orbit (if active)
+        if (targetOrbit.active) {
+            ctx.save();
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--orbit-target') || '#8b949e';
+            ctx.setLineDash([6, 6]);
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(center.x, center.y, targetOrbit.radius * camera.zoom, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // 3. Spacecraft Historic Trajectory
+        if (ship.path.length > 1) {
+            ctx.save();
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--orbit-current') || '#2f81f7';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i < ship.path.length; i++) {
+                const s = worldToScreen(ship.path[i].x, ship.path[i].y);
+                if (i === 0) ctx.moveTo(s.x, s.y);
+                else ctx.lineTo(s.x, s.y);
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // 4. Maneuver Node Prediction Trajectory
+        if (node.active && node.predictedPath.length > 1) {
+            ctx.save();
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--orbit-predicted') || '#f0883e';
+            ctx.setLineDash([4, 4]);
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i < node.predictedPath.length; i++) {
+                const s = worldToScreen(node.predictedPath[i].x, node.predictedPath[i].y);
+                if (i === 0) ctx.moveTo(s.x, s.y);
+                else ctx.lineTo(s.x, s.y);
+            }
+            ctx.stroke();
+            ctx.restore();
+
+            // Maneuver Node Anchor marker
+            const nScr = worldToScreen(node.x, node.y);
+            ctx.fillStyle = '#f0883e';
+            ctx.beginPath();
+            ctx.arc(nScr.x, nScr.y, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        }
+
+        // 5. Spacecraft representation
+        const shipScr = worldToScreen(ship.x, ship.y);
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = '#58a6ff';
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.arc(shipScr.x, shipScr.y, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Spacecraft velocity vector arrow indicator
+        const vMag = Math.hypot(ship.vx, ship.vy);
+        if (vMag > 0.01) {
+            const arrowLen = Math.min(30, vMag * 1.2);
+            const vxUnit = ship.vx / vMag;
+            const vyUnit = -ship.vy / vMag; // Inverted for screen Y
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(shipScr.x, shipScr.y);
+            ctx.lineTo(shipScr.x + vxUnit * arrowLen, shipScr.y + vyUnit * arrowLen);
+            ctx.stroke();
+        }
+    }
+
+    /* HOHMANN TRANSFER CALCULATOR */
+    function calcHohmann() {
+        const altInputRaw = document.getElementById('target-alt').value.trim();
+        const altInput = parseSafe(altInputRaw, NaN);
+
+        if (isNaN(altInput) || altInput <= 0) {
+            document.getElementById('hohmann-res').innerHTML = '<span style="color:var(--danger)">Please enter a valid positive target altitude (> 0 km).</span>';
+            return;
+        }
+
+        const r1 = Math.hypot(ship.x, ship.y);
+        const r2 = altInput + bodyRadius; // Target orbital radius in km
+
+        if (Math.abs(r1 - r2) < 0.5) {
+            document.getElementById('hohmann-res').innerHTML = '<span style="color:var(--warning)">Target altitude is identical to current spacecraft orbit.</span>';
+            targetOrbit.radius = r2;
+            targetOrbit.active = true;
+            return;
+        }
+
+        const mu = centralMu;
+
+        // Circular velocity at current orbit:
+        const v1 = Math.sqrt(mu / r1);
+        // Transfer orbit velocities:
+        const aTx = (r1 + r2) / 2;
+        const vTx1 = Math.sqrt(mu * (2 / r1 - 1 / aTx));
+        const dv1 = Math.abs(vTx1 - v1);
+
+        const v2 = Math.sqrt(mu / r2);
+        const vTx2 = Math.sqrt(mu * (2 / r2 - 1 / aTx));
+        const dv2 = Math.abs(v2 - vTx2);
+
+        const totalNominalDv = dv1 + dv2;
+        const safetyMarginFactor = 1.10; // 10% delta-v engineering safety margin
+        const totalBudgetDv = totalNominalDv * safetyMarginFactor;
+
+        // Transfer flight duration: half the orbital period of the transfer ellipse
+        const transferTime = Math.PI * Math.sqrt(Math.pow(aTx, 3) / mu);
+
+        targetOrbit.radius = r2;
+        targetOrbit.active = true;
+
+        document.getElementById('hohmann-res').innerHTML = `
+            <strong>Hohmann Transfer Plan:</strong><br>
+            &bull; Initial Orbit Radius (r₁): ${r1.toFixed(1)} km<br>
+            &bull; Target Orbit Radius (r₂): ${r2.toFixed(1)} km<br>
+            &bull; Injection Burn &Delta;v₁: ${dv1.toFixed(2)} km/s<br>
+            &bull; Circularization &Delta;v₂: ${dv2.toFixed(2)} km/s<br>
+            &bull; Nominal Total &Delta;v: ${totalNominalDv.toFixed(2)} km/s<br>
+            &bull; Budget Total (+10% margin): <strong>${totalBudgetDv.toFixed(2)} km/s</strong><br>
+            &bull; Transfer Time (TOF): ${transferTime.toFixed(1)} s
+        `;
+    }
+
+    /* DATA EXPORTS & CLIPBOARD */
+    function exportJSON() {
+        const elem = getOrbitalElements(ship.x, ship.y, ship.vx, ship.vy, centralMu);
+        const missionState = {
+            timestamp: new Date().toISOString(),
+            centralBody: {
+                radiusKm: bodyRadius,
+                gravitationalParameterMu: centralMu
+            },
+            spacecraft: {
+                positionKm: { x: parseFloat(ship.x.toFixed(3)), y: parseFloat(ship.y.toFixed(3)) },
+                velocityKmPerSec: { vx: parseFloat(ship.vx.toFixed(4)), vy: parseFloat(ship.vy.toFixed(4)) },
+                speedKmPerSec: parseFloat(elem.speed.toFixed(4)),
+                altitudeKm: parseFloat(elem.altitude.toFixed(2)),
+                eccentricity: parseFloat(elem.eccentricity.toFixed(4)),
+                apoapsisKm: isFinite(elem.apoapsisAlt) ? parseFloat(elem.apoapsisAlt.toFixed(2)) : null,
+                periapsisKm: parseFloat(elem.periapsisAlt.toFixed(2)),
+                orbitalPeriodSec: isFinite(elem.period) ? parseFloat(elem.period.toFixed(2)) : null
+            },
+            targetOrbit: targetOrbit.active ? { radiusKm: targetOrbit.radius } : null,
+            plannedManeuver: node.active ? {
+                positionKm: { x: node.x, y: node.y },
+                progradeKmPerSec: node.pro,
+                radialKmPerSec: node.rad,
+                totalDeltaVKmPerSec: Math.hypot(node.pro, node.rad)
+            } : null
+        };
+
+        const blob = new Blob([JSON.stringify(missionState, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `orbital-mission-plan-${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function exportCSV() {
+        const elem = getOrbitalElements(ship.x, ship.y, ship.vx, ship.vy, centralMu);
+        const headers = ["Parameter", "Value", "Unit"];
+        const rows = [
+            ["Speed", elem.speed.toFixed(3), "km/s"],
+            ["Altitude", elem.altitude.toFixed(2), "km"],
+            ["Apoapsis", isFinite(elem.apoapsisAlt) ? elem.apoapsisAlt.toFixed(2) : "Escaping", "km"],
+            ["Periapsis", elem.periapsisAlt.toFixed(2), "km"],
+            ["Eccentricity", elem.eccentricity.toFixed(4), ""],
+            ["Orbital Period", isFinite(elem.period) ? elem.period.toFixed(2) : "N/A", "s"],
+            ["Central Body Radius", bodyRadius, "km"],
+            ["Standard Gravitational Parameter", centralMu, "km^3/s^2"]
+        ];
+
+        let csvContent = headers.join(",") + "\n" + rows.map(r => r.join(",")).join("\n");
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `mission-telemetry-${Date.now()}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function copyTelemetry() {
+        const elem = getOrbitalElements(ship.x, ship.y, ship.vx, ship.vy, centralMu);
+        const summary = [
+            `2D Orbital Mission Telemetry:`,
+            `Speed: ${elem.speed.toFixed(2)} km/s`,
+            `Altitude: ${elem.altitude.toFixed(1)} km`,
+            `Apoapsis: ${isFinite(elem.apoapsisAlt) ? elem.apoapsisAlt.toFixed(1) + ' km' : 'Escaping'}`,
+            `Periapsis: ${elem.periapsisAlt.toFixed(1)} km`,
+            `Eccentricity: ${elem.eccentricity.toFixed(3)}`,
+            `Period: ${isFinite(elem.period) ? elem.period.toFixed(1) + ' s' : 'N/A'}`
+        ].join('\n');
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(summary).then(() => {
+                showCopyFeedback();
+            }).catch(() => {
+                fallbackCopy(summary);
+            });
+        } else {
+            fallbackCopy(summary);
+        }
+    }
+
+    function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+            document.execCommand('copy');
+            showCopyFeedback();
+        } catch(e) {}
+        document.body.removeChild(ta);
+    }
+
+    function showCopyFeedback() {
+        const btn = document.querySelector('button[title="Copy Mission Telemetry to Clipboard"]');
+        if (!btn) return;
+        const originalHtml = btn.innerHTML;
+        btn.textContent = '✓ Copied';
+        setTimeout(() => { btn.innerHTML = originalHtml; }, 1800);
+    }
+
+    /* INTERACTION & EVENT LISTENERS */
+    document.getElementById('time-warp').addEventListener('input', (e) => {
+        timeWarp = parseSafe(e.target.value, 1.0);
+        document.getElementById('warp-val').textContent = `${timeWarp.toFixed(1)}x`;
+    });
+
+    document.getElementById('mass-slider').addEventListener('input', (e) => {
+        centralMu = parseSafe(e.target.value, 100000);
+        document.getElementById('mass-val').textContent = `${(centralMu / 1000).toFixed(0)}k km³/s²`;
+        safeStorage.setItem('orbital_sim_mu', centralMu.toString());
+        if (node.active) calculatePredictedPath();
+    });
+
+    document.getElementById('node-pro').addEventListener('input', (e) => {
+        node.pro = parseSafe(e.target.value, 0);
+        document.getElementById('val-pro').textContent = `${node.pro >= 0 ? '+' : ''}${node.pro.toFixed(2)} km/s`;
+        calculatePredictedPath();
+    });
+
+    document.getElementById('node-rad').addEventListener('input', (e) => {
+        node.rad = parseSafe(e.target.value, 0);
+        document.getElementById('val-rad').textContent = `${node.rad >= 0 ? '+' : ''}${node.rad.toFixed(2)} km/s`;
+        calculatePredictedPath();
+    });
+
+    // Panning & Zooming logic (Mouse & Touch)
+    let isDragging = false;
+    let dragStart = { x: 0, y: 0 };
+    let initialPinchDistance = null;
+
+    canvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        dragStart = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - dragStart.x;
+        const dy = e.clientY - dragStart.y;
+        camera.x += dx;
+        camera.y += dy;
+        dragStart = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('mouseup', () => { isDragging = false; });
+
+    // Touch events for single finger pan and pinch zoom
+    canvas.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+            isDragging = true;
+            dragStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            initialPinchDistance = null;
+        } else if (e.touches.length === 2) {
+            isDragging = false;
+            initialPinchDistance = Math.hypot(
+                e.touches[0].clientX - e.touches[1].clientX,
+                e.touches[0].clientY - e.touches[1].clientY
+            );
+        }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+        if (isDragging && e.touches.length === 1) {
+            const dx = e.touches[0].clientX - dragStart.x;
+            const dy = e.touches[0].clientY - dragStart.y;
+            camera.x += dx;
+            camera.y += dy;
+            dragStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        } else if (e.touches.length === 2 && initialPinchDistance) {
+            const currentDist = Math.hypot(
+                e.touches[0].clientX - e.touches[1].clientX,
+                e.touches[0].clientY - e.touches[1].clientY
+            );
+            const factor = currentDist / initialPinchDistance;
+            camera.zoom = Math.max(0.05, Math.min(25, camera.zoom * factor));
+            initialPinchDistance = currentDist;
+        }
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+        if (e.touches.length === 0) {
+            isDragging = false;
+            initialPinchDistance = null;
+        }
+    });
+
+    // Wheel Zoom centered around pointer
+    canvas.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const factor = e.deltaY > 0 ? 0.9 : 1.1;
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        const newZoom = Math.max(0.05, Math.min(30, camera.zoom * factor));
+        camera.x = mouseX - (mouseX - camera.x) * (newZoom / camera.zoom);
+        camera.y = mouseY - (mouseY - camera.y) * (newZoom / camera.zoom);
+        camera.zoom = newZoom;
+    }, { passive: false });
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT') return;
+        if (e.code === 'Space') {
+            e.preventDefault();
+            togglePause();
+        } else if (e.code === 'KeyR') {
+            resetSimulation();
+        }
+    });
+
+    /* INITIALIZATION */
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedMu = safeStorage.getItem('orbital_sim_mu');
+        if (savedMu) {
+            const parsed = parseSafe(savedMu, 100000);
+            if (parsed >= 10000 && parsed <= 500000) {
+                centralMu = parsed;
+                document.getElementById('mass-slider').value = centralMu;
+                document.getElementById('mass-val').textContent = `${(centralMu / 1000).toFixed(0)}k km³/s²`;
+            }
+        }
+        resizeCanvas();
+        centerView();
+        resetSimulation();
+        requestAnimationFrame(loop);
+    });
+</script>
+
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The 2D Orbital Transfer &amp; Gravity Mission Planner is a free browser-based sandbox that lets students, educators, and game developers plan orbital burns and calculate Hohmann transfers visually. It displays real-time trajectory projections, delta-v budgets, and telemetry readouts like eccentricity and orbital period. An offline single-file HTML pack is also available for distraction-free use without accounts or internet access.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your central body gravitational parameter and set initial orbit parameters (radius and velocity).</li><li>Set your target orbit altitude to instantly generate Hohmann transfer delta-v requirements and burn timings.</li><li>Apply prograde or retrograde burns manually to observe real-time trajectory overlays and eccentricity shifts.</li><li>Export telemetry data to JSON or CSV for physics assignments or game engine integration.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What is the formula to predict lunar and solar eclipses accurately?</h4><p style="margin:0">Eclipse prediction cannot be solved with a single algebraic equation because it requires calculating when the Moon&#39;s phase (syzygy) coincides with its crossing of the ecliptic plane (nodes). Astronomers use the Saros cycle (roughly 6,585.3 days) for cyclical recurrence, paired with Besselian elements and numerical ephemerides (like JPL DE440) to solve the precise geometry of the Sun-Earth-Moon shadow cones over time.</p><h4 style="font-size:16px;margin:16px 0 4px">Exercise: 2D orbital mechanics simulation (python)</h4><p style="margin:0">To build a minimal 2D orbital simulation in Python, model Newton&#39;s law of gravitation using numerical integration like Velocity Verlet or Symplectic Euler. At each timestep `dt`, compute distance `r = sqrt(x^2 + y^2)` and gravitational acceleration `a = -G*M / r^2`. Update velocity via `vx += a * (x/r) * dt` and `vy += a * (y/r) * dt`, then update coordinates `x += vx * dt` and `y += vy * dt`.</p><h4 style="font-size:16px;margin:16px 0 4px">Is there a upper limit to the number of planets orbiting a star?</h4><p style="margin:0">Yes, orbital stability imposes a physical limit determined by mutual Hill radii. For planets to avoid chaotic gravitational perturbations, ejections, or collisions over billions of years, their orbits must remain spaced by several mutual Hill radii (typically at least 8 to 10 for long-term stability). In a star&#39;s habitable zone or total gravitational sphere of influence, this geometric and dynamical packing constraint limits the maximum number of stable coplanar planets.</p><h4 style="font-size:16px;margin:16px 0 4px">Doesn&#39;t gravity attract objects in space until they collide?</h4><p style="margin:0">Gravity pulls objects directly toward one another, but objects in orbit possess sufficient sideways (tangential) velocity. As gravity accelerates the object downward toward the central body, the object moves forward fast enough that the surface of the body curves away underneath it at the exact same rate. This continuous free fall without collision is what forms a stable closed orbit.</p>
+<p style="margin:24px 0;padding:16px;border:1px solid rgba(128,128,128,.35);border-radius:12px"><strong>Want it offline?</strong> Get the offline pack (the tool as a single file, a quick-start guide and a license) and support this project: <a href="https://ferrywave73.gumroad.com/l/dnptvw" rel="noopener" style="font-weight:700;color:inherit">download it on Gumroad</a>.</p><p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a></p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">About · Offline pack</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"About · Offline pack"});</script>
+</body>
+</html>
