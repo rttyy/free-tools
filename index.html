@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Free Interactive Tools: free tools that run in your browser</title>
+<meta name="description" content="A growing collection of free interactive tools, simulators and visual calculators. No signup, nothing to install.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/"><style>
+body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:#f6f5f2;color:#1d1c1a}
+main{max-width:1100px;margin:0 auto;padding:40px 16px}h1{font-size:30px;margin:0 0 6px}p.intro{color:#5c5953;margin:0 0 20px}
+input{width:100%;max-width:420px;font:inherit;padding:10px 12px;border:1px solid #d6d2ca;border-radius:10px;margin-bottom:24px;background:#fff;color:inherit}
+.grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.carte{display:flex;flex-direction:column;gap:6px;background:#fff;border:1px solid #e4e1db;border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;padding-bottom:14px}
+.carte img{width:100%;aspect-ratio:16/9;object-fit:cover;background:#ddd}.carte b,.carte span{padding:0 14px}.carte span{color:#5c5953;font-size:14px}
+@media (prefers-color-scheme:dark){body{background:#141413;color:#ecebe8}.carte,input{background:#1f1e1c;border-color:#34322f}p.intro,.carte span{color:#a3a09a}}
+</style></head><body><main><h1>Free Interactive Tools</h1><p class="intro">Free tools, simulators and visual calculators that run in your browser. No signup, nothing to install.</p>
+<input id="q" type="search" placeholder="Search a tool" aria-label="Search a tool"><div class="grille">
+<a class="carte" href="embedded-low-power-battery-profiler/"><img src="embedded-low-power-battery-profiler/cover.png" alt="" loading="lazy"><b>Embedded Low-Power Battery Life &amp; Duty Cycle Profiler</b><span>Model microamp sleep states, peak voltage sags, and true battery runtime in your browser. Single offline HTML tool.</span></a>
+</div></main><script>
+document.getElementById("q").addEventListener("input",(e)=>{const v=e.target.value.toLowerCase();document.querySelectorAll(".carte").forEach((c)=>{c.style.display=c.textContent.toLowerCase().includes(v)?"":"none"})});
+</script></body></html>
