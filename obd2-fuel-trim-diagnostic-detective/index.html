@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #0f141c;
+      --surface: #18202c;
+      --surface-2: #222d3d;
+      --surface-3: #2c3a4e;
+      --border: #334358;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --lean: #f59e0b;
+      --lean-dark: #b45309;
+      --rich: #818cf8;
+      --rich-dark: #4338ca;
+      --normal: #10b981;
+      --danger: #ef4444;
+      --shadow: 0 4px 16px -2px rgba(0,0,0,0.4);
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --surface-2: #f1f5f9;
+        --surface-3: #e2e8f0;
+        --border: #cbd5e1;
+        --text: #0f172a;
+        --text-muted: #64748b;
+        --accent: #0284c7;
+        --accent-hover: #0369a1;
+        --shadow: 0 4px 12px -2px rgba(0,0,0,0.08);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1rem;
+      min-height: 100vh;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0.5rem;
+      }
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      width: 100%;
+      min-width: 0;
+    }
+
+    header {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .header-title {
+      flex: 1 1 280px;
+      min-width: 0;
+    }
+
+    .header-title h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.45rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.825rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background: var(--surface-3);
+      border-color: var(--accent);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+      gap: 1.25rem;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      min-width: 0;
+      width: 100%;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 0.875rem;
+      }
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+
+    .card-title .badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      background: var(--surface-3);
+      color: var(--accent);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* Engine Bay & Gauges layout */
+    .sim-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+      min-width: 0;
+    }
+
+    .control-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      min-width: 0;
+    }
+
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      min-width: 0;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      background: var(--surface-3);
+      border-radius: 4px;
+      outline: none;
+      accent-color: var(--accent);
+      cursor: pointer;
+      min-width: 0;
+    }
+
+    .rpm-display {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-align: right;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .preset-chips {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .chip-btn {
+      padding: 0.25rem 0.6rem;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .chip-btn.active, .chip-btn:hover {
+      background: var(--surface-3);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .fault-select {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      padding: 0.5rem;
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+
+    /* Gauges */
+    .gauges-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 95px), 1fr));
+      gap: 0.6rem;
+      margin-top: 0.75rem;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .gauge-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.4rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .gauge-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .gauge-svg {
+      width: 100px;
+      max-width: 100%;
+      height: 65px;
+      margin: 0.2rem 0;
+    }
+
+    .gauge-value {
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .total-trim-summary {
+      margin-top: 0.75rem;
+      background: var(--surface-2);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      border-left: 4px solid var(--normal);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 0.825rem;
+      transition: all 0.2s ease;
+      min-width: 0;
+    }
+
+    /* Engine Bay SVG Visualizer */
+    .engine-view-box {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+
+    .engine-svg {
+      width: 100%;
+      height: auto;
+      max-height: 180px;
+      display: block;
+    }
+
+    /* 4-Point Differential Matrix & Scorecard */
+    .four-point-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0;
+      width: 100%;
+    }
+
+    .state-input-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-width: 0;
+    }
+
+    .state-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .state-desc {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      line-height: 1.25;
+      min-height: 2.2rem;
+    }
+
+    .scorecard-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    .score-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      transition: all 0.2s ease;
+      min-width: 0;
+    }
+
+    .score-card.top-match {
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.08);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .score-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .score-meter-bg {
+      width: 100%;
+      height: 7px;
+      background: var(--surface-3);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .score-meter-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 4px;
+      transition: width 0.35s ease;
+    }
+
+    .score-detail {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    /* Diagnostic Matrix */
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      min-width: 320px;
+    }
+
+    .matrix-table th, .matrix-table td {
+      padding: 0.45rem 0.55rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .matrix-table th {
+      color: var(--text-muted);
+      font-weight: 600;
+      background: var(--surface-2);
+      white-space: nowrap;
+    }
+
+    .matrix-table tr:hover td {
+      background: var(--surface-2);
+    }
+
+    .highlight-match {
+      background: rgba(56, 189, 248, 0.12) !important;
+      font-weight: 600;
+      border-left: 3px solid var(--accent);
+    }
+
+    /* User Diagnostic Tool Inputs - Mobile 360px safe */
+    .input-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      width: 100%;
+      min-width: 0;
+    }
+
+    @media (max-width: 540px) {
+      .input-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .input-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: normal;
+    }
+
+    .input-group input, .input-group select {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.45rem 0.6rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .input-group input:focus, .input-group select:focus {
+      outline: 2px solid var(--accent);
+      border-color: transparent;
+    }
+
+    .diag-result {
+      background: var(--surface-2);
+      border-radius: 8px;
+      padding: 0.85rem;
+      border: 1px solid var(--border);
+      margin-top: 0.75rem;
+      min-width: 0;
+    }
+
+    .diag-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 0.925rem;
+      margin-bottom: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .action-steps {
+      margin-top: 0.5rem;
+      padding-left: 1.25rem;
+      font-size: 0.825rem;
+      color: var(--text-muted);
+    }
+    .action-steps li {
+      margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+
+    .disclaimer-banner {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid var(--lean-dark);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.775rem;
+      color: var(--lean);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      min-width: 0;
+    }
+
+    /* Print Worksheet styles */
+    .printable-sheet {
+      display: none;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        padding: 0;
+      }
+      .container {
+        max-width: 100%;
+      }
+      header .header-actions, .sim-controls, .btn, .preset-chips, #toast {
+        display: none !important;
+      }
+      .card {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+      }
+      .printable-sheet {
+        display: block !important;
+        margin-top: 1.5rem;
+        border: 1px solid #000;
+        padding: 1rem;
+      }
+      .sheet-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-top: 0.5rem;
+      }
+      .field-box {
+        border-bottom: 1px solid #444;
+        height: 28px;
+        margin-top: 0.25rem;
+      }
+    }
+
+    /* Toast / Notification */
+    #toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--surface-3);
+      border: 1px solid var(--accent);
+      color: var(--text);
+      padding: 0.65rem 1.1rem;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      font-size: 0.85rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: all 0.25s ease;
+      z-index: 1000;
+      max-width: calc(100vw - 3rem);
+    }
+    #toast.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    #toast a {
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    .pulse {
+      animation: pulseAnim 2s infinite ease-in-out;
+    }
+    @keyframes pulseAnim {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+
+    /* Dual-Bank Visualizer Styles */
+    .dual-bank-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+      gap: 1rem;
+      margin-top: 0.75rem;
+      width: 100%;
+    }
+    .bank-inputs-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 115px), 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .bank-input-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .bank-input-card label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .bank-input-card input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.35rem 0.5rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      width: 100%;
+    }
+    .bank-card-b1 {
+      border-left: 3px solid #38bdf8;
+    }
+    .bank-card-b2 {
+      border-left: 3px solid #f43f5e;
+    }
+    .plot-container {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-width: 0;
+    }
+    .plot-canvas-wrap {
+      width: 100%;
+      height: 220px;
+      position: relative;
+    }
+    .plot-canvas-wrap canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 6px;
+      background: #090d14;
+    }
+    .plot-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      align-items: center;
+      margin-top: 0.2rem;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .legend-color-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .engine-schematic-wrap {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-width: 0;
+    }
+    .divergence-summary-banner {
+      background: var(--surface-2);
+      border-radius: 8px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-size: 0.825rem;
+    }
+    .divergence-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+    .div-chip {
+      background: var(--surface-3);
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    /* DIY Physical Leak Test Assistant Styles */
+    .diy-assistant-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+      min-width: 0;
+    }
+    .diy-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.6rem;
+    }
+    .test-tab-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      width: 100%;
+    }
+    .test-tab-btn {
+      flex: 1 1 180px;
+      padding: 0.55rem 0.75rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+    .test-tab-btn.active, .test-tab-btn:hover {
+      background: var(--surface-3);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .safety-alert-box {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-left: 4px solid var(--danger);
+      border-radius: 6px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.785rem;
+      color: var(--text);
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+    }
+    .safety-alert-box strong {
+      color: var(--danger);
+    }
+    .stepper-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+      font-size: 0.825rem;
+      font-weight: 600;
+    }
+    .step-content-pane {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .step-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .step-card h3 {
+      font-size: 0.95rem;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .step-card p, .step-card li {
+      font-size: 0.82rem;
+      color: var(--text);
+      line-height: 1.45;
+    }
+    .step-card ul {
+      padding-left: 1.2rem;
+    }
+    .detector-workbench {
+      background: var(--surface-3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .detector-status-meter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.55rem 0.75rem;
+      background: var(--surface-2);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 0.825rem;
+    }
+    .flash-alert {
+      animation: alertPulse 0.8s infinite alternate;
+    }
+    @keyframes alertPulse {
+      0% { border-color: var(--rich); background: rgba(129, 140, 248, 0.15); }
+      100% { border-color: var(--normal); background: rgba(16, 185, 129, 0.25); }
+    }
+    .checkpoints-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .checkpoint-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .checkpoint-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.825rem;
+      font-weight: 700;
+    }
+    .checkpoint-badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      background: var(--surface-3);
+      color: var(--accent);
+    }
+    .toggle-sound-btn {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.35rem 0.65rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* Professional Diagnostic Dossier & Work-Order Styles */
+    .btn-accent-cta {
+      background: var(--accent);
+      color: #0b1120;
+      border: 1px solid transparent;
+      font-weight: 700;
+    }
+    .btn-accent-cta:hover {
+      background: var(--accent-hover);
+      color: #ffffff;
+      border-color: var(--accent-hover);
+    }
+    .dossier-card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+      min-width: 0;
+    }
+    .dossier-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+      gap: 0.75rem;
+      width: 100%;
+    }
+    .dossier-section-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--accent);
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 0.35rem;
+      margin-top: 0.35rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .baseline-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      min-width: 320px;
+    }
+    .baseline-table th, .baseline-table td {
+      padding: 0.5rem 0.6rem;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    .baseline-table th {
+      background: var(--surface-2);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .baseline-delta-ok {
+      color: var(--normal);
+      font-weight: 600;
+    }
+    .baseline-delta-warn {
+      color: var(--lean);
+      font-weight: 600;
+    }
+    .baseline-delta-crit {
+      color: var(--danger);
+      font-weight: 600;
+    }
+    .prob-ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 0.25rem;
+    }
+    .prob-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+    }
+    .prob-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .parts-checklist {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+      gap: 0.6rem;
+      margin-top: 0.35rem;
+    }
+    .part-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.55rem 0.75rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      font-size: 0.8rem;
+    }
+    .part-item input[type="checkbox"] {
+      margin-top: 0.2rem;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .dossier-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: flex-end;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Print styles specifically for Dossier & Work-Order */
+    @media print {
+      .printable-dossier-page {
+        display: block !important;
+        background: #fff !important;
+        color: #000 !important;
+        padding: 0.5in;
+        font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+        font-size: 11pt;
+        line-height: 1.4;
+      }
+      .printable-dossier-page .dossier-header-shop {
+        border-bottom: 2px solid #000;
+        padding-bottom: 8px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      .printable-dossier-page h2 {
+        font-size: 16pt;
+        margin: 0;
+      }
+      .printable-dossier-page .print-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border: 1px solid #777;
+        margin-bottom: 12px;
+      }
+      .printable-dossier-page .print-meta-cell {
+        padding: 4px 8px;
+        border: 1px solid #eee;
+        font-size: 9.5pt;
+      }
+      .printable-dossier-page table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 12px;
+      }
+      .printable-dossier-page th, .printable-dossier-page td {
+        border: 1px solid #777;
+        padding: 5px 8px;
+        font-size: 9.5pt;
+      }
+      .printable-dossier-page th {
+        background-color: #f2f2f2 !important;
+      }
+      .printable-dossier-page .sign-box {
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .printable-dossier-page .sign-line {
+        border-top: 1px solid #000;
+        padding-top: 4px;
+        font-size: 9pt;
+      }
+    }
+    .printable-dossier-page {
+      display: none;
+    }
+  </style>
+<title>OBD2 Fuel Trim &amp; Vacuum Leak Diagnostic Detective</title>
+<meta name="description" content="Fix P0171/P0174 lean codes with interactive fuel trim simulations. Runs 100% offline. Accurate DIY diagnostics for mechanics and car enthusiasts.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/obd2-fuel-trim-diagnostic-detective/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/obd2-fuel-trim-diagnostic-detective/">
+<meta property="og:title" content="OBD2 Fuel Trim &amp; Vacuum Leak Diagnostic Detective"><meta property="og:description" content="Fix P0171/P0174 lean codes with interactive fuel trim simulations. Runs 100% offline. Accurate DIY diagnostics for mechanics and car enthusiasts.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/obd2-fuel-trim-diagnostic-detective/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"OBD2 Fuel Trim & Vacuum Leak Diagnostic Detective","description":"Fix P0171/P0174 lean codes with interactive fuel trim simulations. Runs 100% offline. Accurate DIY diagnostics for mechanics and car enthusiasts.","url":"https://rttyy.github.io/free-tools/obd2-fuel-trim-diagnostic-detective/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"My LTFT and STFT values are off and don't make sense. Why?","acceptedAnswer":{"@type":"Answer","text":"Usually, this happens because fuel trims are additive. If your LTFT is +20% and STFT is -5%, your total trim is +15%. If the numbers are erratic, you may have a 'biased' O2 sensor or an intermittent vacuum leak that only opens when the engine moves under torque."}},{"@type":"Question","name":"Why won't my engine rotate?","acceptedAnswer":{"@type":"Answer","text":"If the engine physically won't turn, this is a mechanical failure rather than a tuning issue. Check for a seized starter, a dead battery (solenoid click), or 'hydrolock' where liquid has filled a cylinder. Fuel trim diagnostics require a running engine to provide data."}},{"@type":"Question","name":"What possible causes for the 'check engine' light can I check for myself?","acceptedAnswer":{"@type":"Answer","text":"The most common DIY checks include a loose gas cap, dirty Mass Airflow (MAF) sensors, or cracked vacuum lines. Using fuel trim data helps you narrow these down to the specific system before you start cleaning or replacing parts."}},{"@type":"Question","name":"Why should I buy the offline version if there is a free web page?","acceptedAnswer":{"@type":"Answer","text":"The offline version is a single HTML file that works without any internet connection, which is vital for many garages. It also unlocks scenario saving, the diagnostic dossier generator, and printable worksheets for professional or educational documentation."}}]}</script>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header Bar -->
+  <header>
+    <div class="header-title">
+      <h1>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="m14 14-4-4"></path>
+          <path d="M12 6v2"></path>
+          <path d="M6 12h2"></path>
+          <path d="M18 12h-2"></path>
+          <path d="M12 18v-2"></path>
+        </svg>
+        OBD2 Fuel Trim & Vacuum Leak Diagnostic Tool
+      </h1>
+      <p>Analyze live STFT/LTFT divergence to pinpoint vacuum leaks, MAF errors, and fuel delivery faults.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn" id="btnCopyReport" type="button" title="Copy diagnosis summary to clipboard">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        Copy Summary
+      </button>
+      <button class="btn" id="btnExportData" type="button" title="Export diagnostic log to CSV">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" y2="3"/></svg>
+        Export CSV
+      </button>
+      <button class="btn" id="btnPrintSheet" type="button" title="Print physical OBD2 Road Test Worksheet">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+        Print Worksheet
+      </button>
+      <button class="btn" id="btnReset" type="button" title="Reset simulator to normal idle defaults">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Simulator & Gauges Section -->
+  <div class="grid-2">
+    <!-- Visual Simulator & Engine Bay -->
+    <div class="card">
+      <div class="card-title">
+        <span>Engine Bay Simulation</span>
+        <span class="badge" id="simStatusBadge">Normal State</span>
+      </div>
+
+      <!-- Engine Bay Schematic SVG -->
+      <div class="engine-view-box">
+        <svg class="engine-svg" viewBox="0 0 460 160" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-label="Engine intake schematic">
+          <rect x="10" y="20" width="440" height="120" rx="8" fill="var(--surface-3)" opacity="0.3" />
+
+          <!-- Air filter box -->
+          <rect x="25" y="45" width="45" height="70" rx="4" fill="#475569" stroke="#64748b" stroke-width="2" />
+          <line x1="32" y1="45" x2="32" y2="115" stroke="#94a3b8" stroke-dasharray="3,3" />
+          <line x1="47" y1="45" x2="47" y2="115" stroke="#94a3b8" stroke-dasharray="3,3" />
+          <text x="47" y="130" fill="var(--text-muted)" font-size="9" text-anchor="middle">AIR FILTER</text>
+
+          <!-- Intake Pipe -->
+          <rect x="70" y="65" width="60" height="30" fill="#334155" />
+          
+          <!-- MAF Sensor -->
+          <rect x="85" y="55" width="30" height="15" rx="2" fill="#0284c7" />
+          <text x="100" y="66" fill="#ffffff" font-size="8" font-weight="bold" text-anchor="middle" id="svgMafLabel">MAF</text>
+          <circle id="svgMafGlow" cx="100" cy="80" r="4" fill="#38bdf8" />
+
+          <!-- Throttle Body -->
+          <rect x="130" y="60" width="25" height="40" fill="#475569" />
+          <line id="svgThrottlePlate" x1="137" y1="65" x2="148" y2="95" stroke="#f8fafc" stroke-width="3" stroke-linecap="round" />
+          <text x="142" y="115" fill="var(--text-muted)" font-size="8" text-anchor="middle">THROTTLE</text>
+
+          <!-- Intake Manifold -->
+          <path d="M 155 65 L 210 50 L 290 50 L 290 110 L 210 110 L 155 95 Z" fill="#1e293b" stroke="#475569" stroke-width="2" />
+          <text x="240" y="85" fill="#94a3b8" font-size="11" font-weight="bold" text-anchor="middle">INTAKE MANIFOLD</text>
+          
+          <!-- Vacuum Leak indicator spot -->
+          <g id="svgLeakGlow" style="display: none;">
+            <circle cx="210" cy="50" r="10" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="2,2" class="pulse" />
+            <path d="M 205 45 L 215 35 M 215 45 L 225 35" stroke="#ef4444" stroke-width="2" />
+            <text x="210" y="32" fill="#ef4444" font-size="8" font-weight="bold" text-anchor="middle">LEAK</text>
+          </g>
+
+          <!-- Engine Block / Cylinders -->
+          <rect x="295" y="40" width="80" height="85" rx="4" fill="#334155" stroke="#64748b" stroke-width="2" />
+          <text x="335" y="60" fill="#cbd5e1" font-size="9" font-weight="bold" text-anchor="middle">ENGINE</text>
+          <rect id="svgPiston" x="315" y="75" width="40" height="25" rx="2" fill="#64748b" />
+          <circle id="svgCombustion" cx="335" cy="70" r="6" fill="#f59e0b" opacity="0.8" />
+
+          <!-- Fuel Injector -->
+          <rect x="280" y="30" width="12" height="22" rx="2" fill="#10b981" />
+          <path id="svgFuelSpray" d="M 286 52 L 282 62 L 290 62 Z" fill="#34d399" />
+          <text x="286" y="24" fill="var(--text-muted)" font-size="8" text-anchor="middle">INJECTOR</text>
+
+          <!-- Exhaust & O2 Sensor -->
+          <path d="M 375 75 L 435 75" stroke="#64748b" stroke-width="14" stroke-linecap="round" />
+          <rect x="400" y="60" width="10" height="18" rx="2" fill="#a855f7" />
+          <text x="405" y="54" fill="#a855f7" font-size="8" font-weight="bold" text-anchor="middle">O2/AFR</text>
+        </svg>
+      </div>
+
+      <!-- Controls -->
+      <div class="sim-controls">
+        <div class="control-row">
+          <div class="control-header">
+            <label for="rpmRange">ENGINE SPEED</label>
+            <span class="rpm-display" id="rpmValue">750 RPM</span>
+          </div>
+          <div class="slider-wrap">
+            <input type="range" id="rpmRange" min="700" max="3200" step="50" value="750" aria-label="Engine RPM">
+          </div>
+          <div class="preset-chips">
+            <button class="chip-btn active" type="button" data-rpm="750">Idle (750 RPM)</button>
+            <button class="chip-btn" type="button" data-rpm="1500">Moderate (1500 RPM)</button>
+            <button class="chip-btn" type="button" data-rpm="2500">Test Cruising (2500 RPM)</button>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <label class="control-header" for="faultSelect">INJECTED FAULT / SCENARIO</label>
+          <select id="faultSelect" class="fault-select">
+            <option value="none">Healthy Engine (Balanced Stoichiometric 14.7:1)</option>
+            <option value="vacuum_leak">Intake Manifold / Vacuum Hose Leak (Unmetered Air)</option>
+            <option value="dirty_maf">Contaminated / Dirty MAF (Under-reports Airflow at Load)</option>
+            <option value="weak_fuel_pump">Weak Fuel Pump / Clogged Fuel Filter (Starvation at RPM)</option>
+            <option value="leaking_injector">Leaking Fuel Injector / Purge Valve Stuck Open (Rich Condition)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Gauges -->
+      <div class="gauges-container">
+        <!-- STFT Gauge -->
+        <div class="gauge-card">
+          <span class="gauge-title">Short Term (STFT)</span>
+          <svg class="gauge-svg" viewBox="0 0 120 75" aria-hidden="true">
+            <path d="M 15 65 A 45 45 0 0 1 105 65" fill="none" stroke="var(--surface-3)" stroke-width="8" stroke-linecap="round" />
+            <path id="stftArc" d="M 15 65 A 45 45 0 0 1 60 20" fill="none" stroke="var(--normal)" stroke-width="8" stroke-linecap="round" />
+            <line id="stftNeedle" x1="60" y1="65" x2="60" y2="25" stroke="var(--text)" stroke-width="2.5" stroke-linecap="round" transform="rotate(0, 60, 65)" />
+            <circle cx="60" cy="65" r="4" fill="var(--text)" />
+          </svg>
+          <div class="gauge-value" id="stftValue">0.0 %</div>
+        </div>
+
+        <!-- LTFT Gauge -->
+        <div class="gauge-card">
+          <span class="gauge-title">Long Term (LTFT)</span>
+          <svg class="gauge-svg" viewBox="0 0 120 75" aria-hidden="true">
+            <path d="M 15 65 A 45 45 0 0 1 105 65" fill="none" stroke="var(--surface-3)" stroke-width="8" stroke-linecap="round" />
+            <path id="ltftArc" d="M 15 65 A 45 45 0 0 1 60 20" fill="none" stroke="var(--normal)" stroke-width="8" stroke-linecap="round" />
+            <line id="ltftNeedle" x1="60" y1="65" x2="60" y2="25" stroke="var(--text)" stroke-width="2.5" stroke-linecap="round" transform="rotate(0, 60, 65)" />
+            <circle cx="60" cy="65" r="4" fill="var(--text)" />
+          </svg>
+          <div class="gauge-value" id="ltftValue">+1.0 %</div>
+        </div>
+
+        <!-- Total Fuel Trim -->
+        <div class="gauge-card">
+          <span class="gauge-title">Total Combined Trim</span>
+          <svg class="gauge-svg" viewBox="0 0 120 75" aria-hidden="true">
+            <path d="M 15 65 A 45 45 0 0 1 105 65" fill="none" stroke="var(--surface-3)" stroke-width="8" stroke-linecap="round" />
+            <path id="totArc" d="M 15 65 A 45 45 0 0 1 60 20" fill="none" stroke="var(--normal)" stroke-width="8" stroke-linecap="round" />
+            <line id="totNeedle" x1="60" y1="65" x2="60" y2="25" stroke="var(--text)" stroke-width="2.5" stroke-linecap="round" transform="rotate(0, 60, 65)" />
+            <circle cx="60" cy="65" r="4" fill="var(--text)" />
+          </svg>
+          <div class="gauge-value" id="totValue">+1.0 %</div>
+        </div>
+      </div>
+
+      <!-- Real-Time Evaluation Box -->
+      <div class="total-trim-summary" id="trimSummaryBox">
+        <span id="trimStateText">System Status: Balanced Stoichiometry (&plusmn;10% acceptable)</span>
+        <strong id="trimStateLabel" style="color: var(--normal);">HEALTHY</strong>
+      </div>
+    </div>
+
+    <!-- Live Detective / Diagnosis Matrix & User Scantool Input -->
+    <div class="card">
+      <div class="card-title">
+        <span>Differential Diagnosis Roadmap</span>
+        <span class="badge">Idle vs 2500 RPM Rule</span>
+      </div>
+
+      <p style="font-size: 0.825rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        Key Diagnostic Rule: <strong>Intake vacuum is highest at idle.</strong> Unmetered leaks dilute air heavily at idle, but become an insignificant fraction of total air flow at 2,500 RPM.
+      </p>
+
+      <!-- Matrix Comparison Table with Mobile Scroll Container -->
+      <div class="table-responsive">
+        <table class="matrix-table" aria-label="Fault Signature Comparison Table">
+          <thead>
+            <tr>
+              <th>Condition</th>
+              <th>Idle (750 RPM)</th>
+              <th>Cruise (2500 RPM)</th>
+              <th>Likely DTC</th>
+            </tr>
+          </thead>
+          <tbody id="matrixTableBody">
+            <tr id="rowVacuum">
+              <td><strong>Vacuum Leak</strong></td>
+              <td style="color: var(--lean); font-weight: 600;">High Lean (+15 to +30%)</td>
+              <td style="color: var(--normal);">Normalizes (&lt; +8%)</td>
+              <td>P0171 / P0174</td>
+            </tr>
+            <tr id="rowMaf">
+              <td><strong>Dirty / Under-reading MAF</strong></td>
+              <td style="color: var(--normal);">Near Normal or Slight Lean</td>
+              <td style="color: var(--lean); font-weight: 600;">Worse Lean (+15 to +25%)</td>
+              <td>P0171 / P0101</td>
+            </tr>
+            <tr id="rowFuel">
+              <td><strong>Weak Fuel Pump / Filter</strong></td>
+              <td style="color: var(--normal);">Normal (&plusmn;5%)</td>
+              <td style="color: var(--lean); font-weight: 600;">Spikes High (+20%+)</td>
+              <td>P0171 / P0087</td>
+            </tr>
+            <tr id="rowRich">
+              <td><strong>Leaking Injector / Purge</strong></td>
+              <td style="color: var(--rich); font-weight: 600;">Rich (-15 to -25%)</td>
+              <td style="color: var(--rich);">Stays Rich / Improves</td>
+              <td>P0172 / P0175</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Enter Physical Scanner Values -->
+      <div style="margin-top: 1.25rem; border-top: 1px solid var(--border); padding-top: 0.85rem;">
+        <span style="font-size: 0.85rem; font-weight: 700; display: block; margin-bottom: 0.5rem;">
+          Diagnostic Calculator: Test Your Own Vehicle
+        </span>
+
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="usrIdleTotal">Idle LTFT + STFT (%)</label>
+            <input type="number" id="usrIdleTotal" step="0.5" placeholder="e.g. 20.0" value="20.0">
+          </div>
+          <div class="input-group">
+            <label for="usrRpmTotal">2500 RPM LTFT + STFT (%)</label>
+            <input type="number" id="usrRpmTotal" step="0.5" placeholder="e.g. 4.0" value="4.0">
+          </div>
+        </div>
+
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="bankSelect">Affected Bank(s)</label>
+            <select id="bankSelect">
+              <option value="both">Both Banks (Bank 1 & 2)</option>
+              <option value="bank1">Bank 1 Only (e.g. P0171)</option>
+              <option value="bank2">Bank 2 Only (e.g. P0174)</option>
+              <option value="inline">Inline Engine (Single Bank)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="dtcCode">Primary Diagnostic Code</label>
+            <input type="text" id="dtcCode" placeholder="P0171, P0174..." value="P0171" maxlength="7">
+          </div>
+        </div>
+
+        <!-- Calculated Detective Verdict -->
+        <div class="diag-result" id="diagVerdictBox">
+          <div class="diag-header">
+            <span id="diagConfidenceBadge" style="color: var(--accent);">DETECTION:</span>
+            <span id="diagVerdictTitle">Probable Vacuum Leak</span>
+          </div>
+          <p id="diagExplanation" style="font-size: 0.825rem; color: var(--text-muted);">
+            Fuel trim elevated by +20% at idle, but normalizes down to +4% at 2500 RPM. This is the textbook signature of unmetered air entering post-MAF.
+          </p>
+          <ul class="action-steps" id="diagStepsList">
+            <li>Perform smoke test through brake booster or PCV port.</li>
+            <li>Inspect intake boot accordion folds for cracks and loose clamps.</li>
+            <li>Spray unlit propane or MAF-safe cleaner around intake manifold gaskets while watching STFT drop.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Safety & Engineering Estimate Notice -->
+  <div class="disclaimer-banner">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span><strong>Notice:</strong> Fuel trim diagnostic thresholds incorporate standard engineering safety margins. Estimate only - verify with a qualified professional before relying on it.</span>
+  </div>
+
+  <!-- Printable Worksheet Container (Shown upon Print) -->
+  <div class="printable-sheet">
+    <h2 style="font-size: 1.25rem; margin-bottom: 0.25rem;">OBD2 Fuel Trim Diagnostic Field Worksheet</h2>
+    <p style="font-size: 0.85rem; color: #555;">Document freeze-frame and live road test fuel trim measurements.</p>
+    
+    <div class="sheet-grid">
+      <div>
+        <strong>Vehicle Year / Make / Model:</strong>
+        <div class="field-box"></div>
+      </div>
+      <div>
+        <strong>VIN / Engine Code:</strong>
+        <div class="field-box"></div>
+      </div>
+      <div>
+        <strong>Odometer / Date:</strong>
+        <div class="field-box"></div>
+      </div>
+    </div>
+
+    <div style="margin-top: 1rem;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;" border="1">
+        <thead>
+          <tr style="background: #eee;">
+            <th style="padding: 6px;">Test Point</th>
+            <th style="padding: 6px;">Bank 1 STFT</th>
+            <th style="padding: 6px;">Bank 1 LTFT</th>
+            <th style="padding: 6px;">Bank 2 STFT</th>
+            <th style="padding: 6px;">Bank 2 LTFT</th>
+            <th style="padding: 6px;">Total Fuel Trim</th>
+            <th style="padding: 6px;">MAF (g/s)</th>
+            <th style="padding: 6px;">Fuel Rail (PSI)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 8px;"><strong>Idle (Closed Loop, ~750 RPM)</strong></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+          <tr>
+            <td style="padding: 8px;"><strong>Cruise (Park / Neutral, 2500 RPM)</strong></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+          <tr>
+            <td style="padding: 8px;"><strong>WOT Road Test (Under Load)</strong></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top: 1.25rem;">
+      <strong>Physical Inspection Checklist:</strong>
+      <ul style="margin-top: 0.5rem; font-size: 0.85rem; line-height: 1.8;">
+        <li>[ ] Visual check of PCV valve, grommet, and plastic vacuum lines</li>
+        <li>[ ] Air intake accordion tube checked for split seams</li>
+        <li>[ ] Smoke test smoke observed at intake plenum / injector O-rings</li>
+        <li>[ ] Fuel pressure held under wide-open acceleration test</li>
+        <li>[ ] MAF sensor element inspected for baked-on grime / oil</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Inline Toast Message for PRO and copy actions -->
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const PRO = false;
+const PRO_LINK = "https://ferrywave73.gumroad.com/l/jvcaku";
+
+/* Diagnostic State Management */
+let currentRpm = 750;
+let currentFault = 'none';
+
+// DOM Elements
+const rpmRange = document.getElementById('rpmRange');
+const rpmValue = document.getElementById('rpmValue');
+const faultSelect = document.getElementById('faultSelect');
+const simStatusBadge = document.getElementById('simStatusBadge');
+
+const stftValue = document.getElementById('stftValue');
+const ltftValue = document.getElementById('ltftValue');
+const totValue = document.getElementById('totValue');
+const stftNeedle = document.getElementById('stftNeedle');
+const ltftNeedle = document.getElementById('ltftNeedle');
+const totNeedle = document.getElementById('totNeedle');
+const stftArc = document.getElementById('stftArc');
+const ltftArc = document.getElementById('ltftArc');
+const totArc = document.getElementById('totArc');
+const trimSummaryBox = document.getElementById('trimSummaryBox');
+const trimStateText = document.getElementById('trimStateText');
+const trimStateLabel = document.getElementById('trimStateLabel');
+
+// SVG Elements
+const svgLeakGlow = document.getElementById('svgLeakGlow');
+const svgThrottlePlate = document.getElementById('svgThrottlePlate');
+const svgMafGlow = document.getElementById('svgMafGlow');
+const svgFuelSpray = document.getElementById('svgFuelSpray');
+
+// Diagnostic user test elements
+const usrIdleTotal = document.getElementById('usrIdleTotal');
+const usrRpmTotal = document.getElementById('usrRpmTotal');
+const bankSelect = document.getElementById('bankSelect');
+const dtcCode = document.getElementById('dtcCode');
+const diagVerdictTitle = document.getElementById('diagVerdictTitle');
+const diagExplanation = document.getElementById('diagExplanation');
+const diagStepsList = document.getElementById('diagStepsList');
+const diagConfidenceBadge = document.getElementById('diagConfidenceBadge');
+
+// Buttons
+const btnReset = document.getElementById('btnReset');
+const btnCopyReport = document.getElementById('btnCopyReport');
+const btnExportData = document.getElementById('btnExportData');
+const btnPrintSheet = document.getElementById('btnPrintSheet');
+const toastEl = document.getElementById('toast');
+let toastTimer = null;
+
+/**
+ * Toast Helper
+ */
+function showToast(html, duration = 3500) {
+  if (toastTimer) clearTimeout(toastTimer);
+  toastEl.innerHTML = html;
+  toastEl.classList.add('show');
+  toastTimer = setTimeout(() => {
+    toastEl.classList.remove('show');
+  }, duration);
+}
+
+/**
+ * PRO Gate Helper
+ */
+function handleProFeature(actionName, allowedCallback) {
+  if (PRO) {
+    allowedCallback();
+  } else {
+    showToast('Available in the full version <a href="' + PRO_LINK + '">Upgrade to Pro</a>');
+  }
+}
+
+/**
+ * Fuel Trim Simulation Math
+ * Calculates STFT & LTFT based on selected fault & RPM
+ */
+function calculateTrims(fault, rpm) {
+  const rpmFactor = Math.min(Math.max((rpm - 750) / (3000 - 750), 0), 1);
+  let stft = 0;
+  let ltft = 0;
+
+  switch (fault) {
+    case 'vacuum_leak':
+      const vacuumLeanTotal = 24 * (1 - Math.pow(rpmFactor, 0.7)) + 3;
+      ltft = vacuumLeanTotal * 0.75;
+      stft = (vacuumLeanTotal * 0.25) + (Math.sin(Date.now() / 400) * 1.2);
+      break;
+
+    case 'dirty_maf':
+      const mafLeanTotal = 4 + (20 * Math.pow(rpmFactor, 1.2));
+      ltft = mafLeanTotal * 0.7;
+      stft = (mafLeanTotal * 0.3) + (Math.cos(Date.now() / 350) * 1.5);
+      break;
+
+    case 'weak_fuel_pump':
+      const fuelStarveTotal = 1.5 + (22 * Math.pow(rpmFactor, 1.4));
+      ltft = fuelStarveTotal * 0.65;
+      stft = (fuelStarveTotal * 0.35) + (Math.sin(Date.now() / 300) * 2.0);
+      break;
+
+    case 'leaking_injector':
+      const richTotal = - (22 * (1 - (rpmFactor * 0.4)));
+      ltft = richTotal * 0.75;
+      stft = (richTotal * 0.25) + (Math.sin(Date.now() / 500) * 1.0);
+      break;
+
+    case 'none':
+    default:
+      ltft = 1.0;
+      stft = Math.sin(Date.now() / 600) * 2.5;
+      break;
+  }
+
+  return {
+    stft: parseFloat(stft.toFixed(1)),
+    ltft: parseFloat(ltft.toFixed(1)),
+    total: parseFloat((stft + ltft).toFixed(1))
+  };
+}
+
+/**
+ * Convert Trim percentage (-25% to +25%) to Gauge Angle (-90 to +90 deg)
+ */
+function trimToAngle(trim) {
+  const clamped = Math.max(-25, Math.min(25, trim));
+  return (clamped / 25) * 90;
+}
+
+/**
+ * Color picker for trim status
+ */
+function getTrimColor(trim) {
+  if (trim >= 12) return 'var(--lean)';
+  if (trim <= -12) return 'var(--rich)';
+  return 'var(--normal)';
+}
+
+/**
+ * Update Simulator UI & Animations
+ */
+function updateSimulation() {
+  const trims = calculateTrims(currentFault, currentRpm);
+
+  // Update readouts
+  rpmValue.textContent = `${currentRpm} RPM`;
+  stftValue.textContent = `${trims.stft > 0 ? '+' : ''}${trims.stft.toFixed(1)} %`;
+  ltftValue.textContent = `${trims.ltft > 0 ? '+' : ''}${trims.ltft.toFixed(1)} %`;
+  totValue.textContent = `${trims.total > 0 ? '+' : ''}${trims.total.toFixed(1)} %`;
+
+  // Update needle rotations
+  const stftDeg = trimToAngle(trims.stft);
+  const ltftDeg = trimToAngle(trims.ltft);
+  const totDeg = trimToAngle(trims.total);
+
+  stftNeedle.setAttribute('transform', `rotate(${stftDeg}, 60, 65)`);
+  ltftNeedle.setAttribute('transform', `rotate(${ltftDeg}, 60, 65)`);
+  totNeedle.setAttribute('transform', `rotate(${totDeg}, 60, 65)`);
+
+  // Needle color styling
+  stftValue.style.color = getTrimColor(trims.stft);
+  ltftValue.style.color = getTrimColor(trims.ltft);
+  totValue.style.color = getTrimColor(trims.total);
+  stftArc.setAttribute('stroke', getTrimColor(trims.stft));
+  ltftArc.setAttribute('stroke', getTrimColor(trims.ltft));
+  totArc.setAttribute('stroke', getTrimColor(trims.total));
+
+  // Dynamic status evaluation
+  if (trims.total >= 15) {
+    trimSummaryBox.style.borderLeftColor = 'var(--lean)';
+    trimStateLabel.style.color = 'var(--lean)';
+    trimStateLabel.textContent = 'LEAN (P0171/P0174 Risk)';
+    trimStateText.textContent = `Computer is adding +${trims.total.toFixed(1)}% fuel to counteract unmetered air or inadequate delivery.`;
+  } else if (trims.total <= -15) {
+    trimSummaryBox.style.borderLeftColor = 'var(--rich)';
+    trimStateLabel.style.color = 'var(--rich)';
+    trimStateLabel.textContent = 'RICH (P0172/P0175 Risk)';
+    trimStateText.textContent = `Computer is cutting fuel by ${Math.abs(trims.total).toFixed(1)}% to prevent over-fueling / excessive emissions.`;
+  } else {
+    trimSummaryBox.style.borderLeftColor = 'var(--normal)';
+    trimStateLabel.style.color = 'var(--normal)';
+    trimStateLabel.textContent = 'HEALTHY SYSTEM';
+    trimStateText.textContent = `Combined fuel trim is within normal manufacturer tolerance (\u00b110%).`;
+  }
+
+  // Update Animated SVG Elements
+  const throttleAngle = ((currentRpm - 700) / 2500) * 45;
+  svgThrottlePlate.setAttribute('transform', `rotate(${throttleAngle}, 142, 80)`);
+
+  if (currentFault === 'vacuum_leak') {
+    svgLeakGlow.style.display = 'block';
+  } else {
+    svgLeakGlow.style.display = 'none';
+  }
+
+  if (currentFault === 'dirty_maf') {
+    svgMafGlow.setAttribute('fill', '#f59e0b');
+  } else {
+    svgMafGlow.setAttribute('fill', '#38bdf8');
+  }
+
+  if (currentFault === 'weak_fuel_pump') {
+    svgFuelSpray.setAttribute('fill', '#ef4444');
+    svgFuelSpray.setAttribute('d', 'M 286 52 L 284 58 L 288 58 Z');
+  } else if (currentFault === 'leaking_injector') {
+    svgFuelSpray.setAttribute('fill', '#818cf8');
+    svgFuelSpray.setAttribute('d', 'M 286 52 L 280 66 L 292 66 Z');
+  } else {
+    svgFuelSpray.setAttribute('fill', '#34d399');
+    svgFuelSpray.setAttribute('d', 'M 286 52 L 282 62 L 290 62 Z');
+  }
+
+  const faultNames = {
+    none: 'Normal Operation',
+    vacuum_leak: 'Active Fault: Intake Vacuum Leak',
+    dirty_maf: 'Active Fault: Dirty MAF Sensor',
+    weak_fuel_pump: 'Active Fault: Fuel Starvation',
+    leaking_injector: 'Active Fault: Rich / Leaking Injector'
+  };
+  simStatusBadge.textContent = faultNames[currentFault];
+
+  document.querySelectorAll('#matrixTableBody tr').forEach(r => r.classList.remove('highlight-match'));
+  if (currentFault === 'vacuum_leak') document.getElementById('rowVacuum').classList.add('highlight-match');
+  if (currentFault === 'dirty_maf') document.getElementById('rowMaf').classList.add('highlight-match');
+  if (currentFault === 'weak_fuel_pump') document.getElementById('rowFuel').classList.add('highlight-match');
+  if (currentFault === 'leaking_injector') document.getElementById('rowRich').classList.add('highlight-match');
+}
+
+/**
+ * Diagnostic Calculator Engine: Evaluates user's entered scantool readings
+ */
+function evaluateUserDiagnosis() {
+  const idleRaw = usrIdleTotal.value.trim();
+  const rpmRaw = usrRpmTotal.value.trim();
+
+  if (idleRaw === '' || rpmRaw === '') {
+    diagVerdictTitle.textContent = "Awaiting Trim Inputs";
+    diagConfidenceBadge.style.color = "var(--text-muted)";
+    diagExplanation.textContent = "Please enter both Idle and 2,500 RPM combined trim percentages (e.g. +20.0 and +4.0).";
+    diagStepsList.innerHTML = "<li>Enter numeric percentages to calculate diagnosis.</li>";
+    return;
+  }
+
+  const idleVal = parseFloat(idleRaw);
+  const rpmVal = parseFloat(rpmRaw);
+  const bank = bankSelect.value;
+  const dtc = dtcCode.value.trim().toUpperCase() || 'P0171';
+
+  if (isNaN(idleVal) || isNaN(rpmVal)) {
+    diagVerdictTitle.textContent = "Invalid Number Format";
+    diagConfidenceBadge.style.color = "var(--danger)";
+    diagExplanation.textContent = "Input contains non-numeric characters. Please enter a valid decimal number.";
+    diagStepsList.innerHTML = "<li>Ensure only digits, minus or plus signs, and decimal points are entered.</li>";
+    return;
+  }
+
+  if (Math.abs(idleVal) > 100 || Math.abs(rpmVal) > 100) {
+    diagVerdictTitle.textContent = "Values Outside Realistic OBD2 Range";
+    diagConfidenceBadge.style.color = "var(--danger)";
+    diagExplanation.textContent = "OBD2 fuel trim authority generally maxes out between -35% and +35%. Values beyond \u00b1100% indicate sensor disconnect or non-standard PID scaling.";
+    diagStepsList.innerHTML = "<li>Verify scan tool PID units (% vs absolute voltage).</li><li>Inspect sensor harness connection.</li>";
+    return;
+  }
+
+  const delta = idleVal - rpmVal;
+  let title = "";
+  let explanation = "";
+  let steps = [];
+  let badgeColor = "var(--accent)";
+
+  // Vacuum Leak: High positive at idle, drops significantly (>=7%) at 2500 RPM
+  if (idleVal >= 12 && delta >= 7) {
+    title = "Signature: Intake Vacuum Leak";
+    badgeColor = "var(--lean)";
+    if (bank === 'bank1' || bank === 'bank2') {
+      explanation = `Trims are elevated at idle (+${idleVal.toFixed(1)}%) but normalize at 2,500 RPM (+${rpmVal.toFixed(1)}%) specifically on ${bank === 'bank1' ? 'Bank 1' : 'Bank 2'}. This strongly indicates an intake runner gasket leak, isolated injector O-ring fault, or bank-specific vacuum port rupture.`;
+    } else {
+      explanation = `Elevated idle trim (+${idleVal.toFixed(1)}%) normalizing (+${rpmVal.toFixed(1)}%) at 2,500 RPM is the classic signature of unmetered air. High idle vacuum pulls extra air past gaskets/hoses; at 2,500 RPM metered throttle air dwarfs the leak.`;
+    }
+    steps = [
+      "Perform an intake smoke test through the brake booster vacuum line or PCV hose.",
+      "Inspect intake manifold resonator & accordion air tube for tears or loose clamps.",
+      "Spray unlit propane or MAF-safe cleaner around manifold gaskets while watching STFT drop toward 0%.",
+      "Inspect PCV valve, oil filler cap O-ring, and dipstick tube seal."
+    ];
+  }
+  // Dirty MAF: Mild at idle, worsens at cruise / load
+  else if (rpmVal >= 12 && rpmVal > (idleVal + 5) && !(idleVal < 8 && rpmVal >= 14)) {
+    title = "Signature: Contaminated / Under-reading MAF Sensor";
+    badgeColor = "var(--lean)";
+    explanation = `Trims worsen under higher RPM and engine load (climbing from +${idleVal.toFixed(1)}% at idle to +${rpmVal.toFixed(1)}% at 2500 RPM). A fouled hot-wire MAF cannot shed heat quickly enough to measure higher airflow velocities accurately.`;
+    steps = [
+      "Check live MAF PID (grams/sec): typical warm idle rule of thumb is ~1 g/s per liter of engine displacement.",
+      "Carefully clean the MAF sensor wire with dedicated MAF Cleaner spray (never touch sensing wire).",
+      "Check air filter housing for improper seating or debris bypass.",
+      "Check intake coupler boot between MAF and throttle body for cracks under engine twist."
+    ];
+  }
+  // Fuel Delivery Starvation: Normal at idle, spikes lean at RPM
+  else if (idleVal < 8 && rpmVal >= 14) {
+    title = "Signature: Fuel Delivery Starvation (Pump / Filter / Pressure)";
+    badgeColor = "var(--danger)";
+    explanation = `Fuel delivery is sufficient at idle (+${idleVal.toFixed(1)}%) when demand is low, but starves at 2,500 RPM (+${rpmVal.toFixed(1)}%). The ECU must command maximum pulse width to compensate for low rail pressure or restricted flow.`;
+    steps = [
+      "Connect a mechanical fuel pressure gauge to the test schrader valve.",
+      "Check whether rail pressure holds steady or drops when revving and holding at 2,500 RPM.",
+      "Replace inline fuel filter (if equipped) and check fuel tank sock strainer.",
+      "Inspect fuel pump electrical connector for voltage drop under pump load."
+    ];
+  }
+  // Rich Condition: Negative trims
+  else if (idleVal <= -10 || rpmVal <= -10) {
+    title = "Signature: Rich Condition / Excess Fueling";
+    badgeColor = "var(--rich)";
+    explanation = `Negative trims (${idleVal.toFixed(1)}% idle / ${rpmVal.toFixed(1)}% RPM) demonstrate the ECM is subtracting fuel to balance rich combustion. Common causes include a leaking injector, stuck-open EVAP purge solenoid, or excessive rail pressure.`;
+    steps = [
+      "Clamp off EVAP vapor canister purge line to check if trims return toward zero.",
+      "Check fuel pressure regulator vacuum nipple for fuel leakage (blown diaphragm).",
+      "Inspect spark plugs to identify individual cylinder fuel wash (dripping injector).",
+      "Confirm engine coolant temperature sensor (ECT) reads true warm temperature (~90\u00b0C / 195\u00b0F)."
+    ];
+  }
+  // Balanced / Normal
+  else if (Math.abs(idleVal) <= 10 && Math.abs(rpmVal) <= 10) {
+    title = "Signature: Balanced / Normal Fuel Delivery";
+    badgeColor = "var(--normal)";
+    explanation = `Both Idle (${idleVal.toFixed(1)}%) and Cruise (${rpmVal.toFixed(1)}%) trims are within standard \u00b110% closed-loop control window. If code ${dtc} is present, it is likely an intermittent fault or pending freeze-frame event.`;
+    steps = [
+      "Review Freeze Frame data to note exact engine speed and load when the DTC tripped.",
+      "Check upstream O2 / Air-Fuel sensor switching rate and heater circuit.",
+      "Clear stored codes and perform a complete OBD2 drive cycle to verify readiness."
+    ];
+  }
+  // Borderline / Mixed Lean
+  else {
+    title = "Signature: Mixed Lean Trim Offset";
+    badgeColor = "var(--lean)";
+    explanation = `Trims are elevated across both ranges (+${idleVal.toFixed(1)}% idle, +${rpmVal.toFixed(1)}% cruise). This suggests a combined slight unmetered air leak or borderline weak fuel pressure.`;
+    steps = [
+      "Inspect exhaust manifold upstream of O2 sensor for hairline cracks (draws false air).",
+      "Perform smoke test and check fuel pressure under dynamic test drive.",
+      "Inspect crankcase ventilation hoses and oil dipstick seal."
+    ];
+  }
+
+  diagVerdictTitle.textContent = title;
+  diagExplanation.textContent = explanation;
+  diagConfidenceBadge.style.color = badgeColor;
+
+  diagStepsList.innerHTML = '';
+  steps.forEach(step => {
+    const li = document.createElement('li');
+    li.textContent = step;
+    diagStepsList.appendChild(li);
+  });
+}
+
+/**
+ * Event Listeners & Interactive Handlers
+ */
+rpmRange.addEventListener('input', (e) => {
+  currentRpm = parseInt(e.target.value, 10);
+  document.querySelectorAll('.chip-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.rpm, 10) === currentRpm);
+  });
+  updateSimulation();
+});
+
+document.querySelectorAll('.chip-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentRpm = parseInt(btn.dataset.rpm, 10);
+    rpmRange.value = currentRpm;
+    document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    updateSimulation();
+  });
+});
+
+faultSelect.addEventListener('change', (e) => {
+  currentFault = e.target.value;
+  updateSimulation();
+});
+
+[usrIdleTotal, usrRpmTotal, bankSelect, dtcCode].forEach(input => {
+  input.addEventListener('input', evaluateUserDiagnosis);
+  input.addEventListener('change', () => {
+    evaluateUserDiagnosis();
+    saveUserInputs();
+  });
+});
+
+// Storage handler (with strict try/catch)
+function saveUserInputs() {
+  try {
+    const data = {
+      idle: usrIdleTotal.value,
+      rpm: usrRpmTotal.value,
+      bank: bankSelect.value,
+      dtc: dtcCode.value
+    };
+    localStorage.setItem('obd2_fueltrim_tool_data', JSON.stringify(data));
+  } catch (err) {
+    // Gracefully handle blocked storage
+  }
+}
+
+function loadSavedInputs() {
+  try {
+    const raw = localStorage.getItem('obd2_fueltrim_tool_data');
+    if (raw) {
+      const data = JSON.parse(raw);
+      if (data.idle !== undefined) usrIdleTotal.value = data.idle;
+      if (data.rpm !== undefined) usrRpmTotal.value = data.rpm;
+      if (data.bank !== undefined) bankSelect.value = data.bank;
+      if (data.dtc !== undefined) dtcCode.value = data.dtc;
+    }
+  } catch (err) {
+    // Gracefully handle blocked storage
+  }
+}
+
+// Reset button
+btnReset.addEventListener('click', () => {
+  currentRpm = 750;
+  rpmRange.value = 750;
+  currentFault = 'none';
+  faultSelect.value = 'none';
+
+  document.querySelectorAll('.chip-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.rpm, 10) === 750);
+  });
+
+  usrIdleTotal.value = "20.0";
+  usrRpmTotal.value = "4.0";
+  bankSelect.value = "both";
+  dtcCode.value = "P0171";
+
+  updateSimulation();
+  evaluateUserDiagnosis();
+  saveUserInputs();
+  showToast("Simulator and calculator reset to default parameters.");
+});
+
+// Copy Summary
+btnCopyReport.addEventListener('click', () => {
+  const summary = `OBD2 FUEL TRIM DIAGNOSTIC REPORT
+Fault Code: ${dtcCode.value || 'P0171'} (${bankSelect.options[bankSelect.selectedIndex].text})
+- Idle Trim (STFT+LTFT): ${usrIdleTotal.value}%
+- 2500 RPM Trim: ${usrRpmTotal.value}%
+Finding: ${diagVerdictTitle.textContent}
+Explanation: ${diagExplanation.textContent}
+
+Safety Margin & Note:
+Estimate only - verify with a qualified professional before relying on it.`;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(summary).then(() => {
+      showToast("Diagnosis summary copied to clipboard!");
+    }).catch(() => {
+      fallbackCopy(summary);
+    });
+  } else {
+    fallbackCopy(summary);
+  }
+});
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showToast("Diagnosis summary copied to clipboard!");
+  } catch (e) {
+    showToast("Unable to copy to clipboard.");
+  }
+  document.body.removeChild(ta);
+}
+
+// Export CSV (Controlled by PRO toggle)
+btnExportData.addEventListener('click', () => {
+  handleProFeature('export_csv', () => {
+    const csvContent = "Diagnostic Code,Affected Bank,Idle Total Trim (%),Cruise 2500 RPM Trim (%),Detection Verdict,Date\n"
+      + `"${dtcCode.value}","${bankSelect.value}","${usrIdleTotal.value}","${usrRpmTotal.value}","${diagVerdictTitle.textContent}","${new Date().toISOString()}"\n`;
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `OBD2_Diagnostic_Log_${dtcCode.value || 'P0171'}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showToast("CSV Diagnostic log downloaded.");
+  });
+});
+
+// Print Worksheet (Controlled by PRO toggle)
+btnPrintSheet.addEventListener('click', () => {
+  handleProFeature('print_sheet', () => {
+    window.print();
+  });
+});
+
+// Needle animation tick for idle realism
+setInterval(() => {
+  if (currentFault === 'none' || currentFault === 'vacuum_leak') {
+    updateSimulation();
+  }
+}, 300);
+
+// Initialize tool
+loadSavedInputs();
+updateSimulation();
+evaluateUserDiagnosis();
+</script>
+
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The OBD2 Fuel Trim &amp; Vacuum Leak Diagnostic Detective helps you visualize and solve complex lean codes without the guesswork. This interactive tool allows you to input live data and compare engine bank behavior to pinpoint vacuum leaks, fuel delivery issues, or sensor bias instantly.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Input your current STFT and LTFT values at idle and 2500 RPM.</li><li>Observe the interactive bank simulation to see if values diverge or converge.</li><li>Follow the built-in test protocols for smoke, propane, or spray testing.</li><li>Generate a diagnostic dossier to save your findings or print a worksheet for the shop.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">My LTFT and STFT values are off and don&#39;t make sense. Why?</h4><p style="margin:0">Usually, this happens because fuel trims are additive. If your LTFT is +20% and STFT is -5%, your total trim is +15%. If the numbers are erratic, you may have a &#39;biased&#39; O2 sensor or an intermittent vacuum leak that only opens when the engine moves under torque.</p><h4 style="font-size:16px;margin:16px 0 4px">Why won&#39;t my engine rotate?</h4><p style="margin:0">If the engine physically won&#39;t turn, this is a mechanical failure rather than a tuning issue. Check for a seized starter, a dead battery (solenoid click), or &#39;hydrolock&#39; where liquid has filled a cylinder. Fuel trim diagnostics require a running engine to provide data.</p><h4 style="font-size:16px;margin:16px 0 4px">What possible causes for the &#39;check engine&#39; light can I check for myself?</h4><p style="margin:0">The most common DIY checks include a loose gas cap, dirty Mass Airflow (MAF) sensors, or cracked vacuum lines. Using fuel trim data helps you narrow these down to the specific system before you start cleaning or replacing parts.</p><h4 style="font-size:16px;margin:16px 0 4px">Why should I buy the offline version if there is a free web page?</h4><p style="margin:0">The offline version is a single HTML file that works without any internet connection, which is vital for many garages. It also unlocks scenario saving, the diagnostic dossier generator, and printable worksheets for professional or educational documentation.</p>
+<p style="margin:24px 0;padding:16px;border:1px solid rgba(128,128,128,.35);border-radius:12px"><strong>Want the full version?</strong> Exports, printing and saved scenarios are unlocked in the full offline pack (single file, quick-start guide and license):<a href="https://ferrywave73.gumroad.com/l/jvcaku" rel="noopener" style="font-weight:700;color:inherit">download it on Gumroad</a>.</p><p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">About · Offline pack</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"About · Offline pack"});</script>
+</body>
+</html>
