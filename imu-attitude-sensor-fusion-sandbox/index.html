@@ -868,7 +868,7 @@
  * Single-file, zero-dependency offline web tool.
  */
 const PRO = false;
-const PRO_LINK = "https://example.com/imu-fusion-pro";
+const PRO_LINK = "https://ferrywave73.gumroad.com/l/bnvifr";
 
 // Storage helper with try-catch
 const Storage = {
@@ -890,7 +890,7 @@ const Storage = {
 function showToast(msg, isProGate = false) {
   const el = document.getElementById('toast');
   if (isProGate) {
-    el.innerHTML = msg + ` <a href="$https://ferrywave73.gumroad.com/l/bnvifr" target="_blank" rel="noopener">Available in the full version</a>`;
+    el.innerHTML = msg + ` <a href="${PRO_LINK}" target="_blank" rel="noopener">Available in the full version</a>`;
   } else {
     el.textContent = msg;
   }
