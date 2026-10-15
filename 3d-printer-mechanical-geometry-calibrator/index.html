@@ -1,0 +1,2563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #0f141c;
+      --surface: #18202c;
+      --surface-elevated: #222d3d;
+      --border: #2e3c50;
+      --border-focus: #3b82f6;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.15);
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --code-bg: #090d14;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --radius: 8px;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --surface-elevated: #f1f5f9;
+        --border: #cbd5e1;
+        --border-focus: #2563eb;
+        --text: #0f172a;
+        --text-muted: #64748b;
+        --accent: #0284c7;
+        --accent-glow: rgba(2, 132, 199, 0.12);
+        --success: #059669;
+        --warning: #d97706;
+        --danger: #dc2626;
+        --code-bg: #f1f5f9;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1.25rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .title-group h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .title-group p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      background: var(--surface-elevated);
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
+
+    button, select, input {
+      font-family: inherit;
+      font-size: 0.875rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background: var(--surface-elevated);
+      border-color: var(--accent);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .preset-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius);
+    }
+
+    .preset-selector select {
+      background: transparent;
+      border: none;
+      color: var(--text);
+      outline: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .grid-tools {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 1024px) {
+      .grid-tools {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-header h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .form-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .input-unit {
+      position: relative;
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .input-unit input, .input-unit select {
+      width: 100%;
+      min-width: 0;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.4rem 2rem 0.4rem 0.5rem;
+      border-radius: var(--radius);
+      outline: none;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0.75rem;
+      }
+      .title-group h1 {
+        font-size: 1.25rem;
+      }
+      .header-actions {
+        width: 100%;
+        justify-content: stretch;
+      }
+      .preset-selector {
+        width: 100%;
+      }
+      .preset-selector select {
+        width: 100%;
+      }
+    }
+
+    .input-unit input:focus, .input-unit select:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 1px var(--border-focus);
+    }
+
+    .input-unit .unit {
+      position: absolute;
+      right: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .results-panel {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.875rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.25rem 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .result-row:last-child {
+      border-bottom: none;
+    }
+
+    .result-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .result-value {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--accent);
+    }
+
+    .result-value.good {
+      color: var(--success);
+    }
+
+    .result-value.warn {
+      color: var(--warning);
+    }
+
+    .result-value.danger {
+      color: var(--danger);
+    }
+
+    .code-snippet {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.5rem 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      color: #38bdf8;
+      overflow-x: auto;
+    }
+
+    .interpretation-box {
+      background: var(--surface-elevated);
+      border-left: 3px solid var(--accent);
+      padding: 0.6rem 0.85rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+
+    .interpretation-box h4 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.2rem;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .svg-viz {
+      width: 100%;
+      height: 120px;
+      background: var(--code-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .footer-bar {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--surface-elevated);
+      color: var(--text);
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-focus);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5);
+      font-size: 0.85rem;
+      z-index: 999;
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .pro-link-alert {
+      color: var(--warning);
+      font-weight: 500;
+    }
+    .pro-link-alert a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+        padding: 0;
+      }
+      .header-actions, .btn-sm, .footer-bar button {
+        display: none !important;
+      }
+      .card {
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+        box-shadow: none;
+      }
+      .code-snippet, .svg-viz {
+        background: #f8f8f8;
+        border-color: #ccc;
+      }
+    }
+    /* Manual Bed Mesh Visualizer CSS */
+    .mesh-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    @media (max-width: 900px) {
+      .mesh-layout { grid-template-columns: 1fr; }
+    }
+    .mesh-grid {
+      display: grid;
+      gap: 0.35rem;
+      margin: 0.5rem 0;
+    }
+    .mesh-cell-input {
+      position: relative;
+      min-width: 0;
+    }
+    .mesh-cell-input input {
+      width: 100%;
+      text-align: center;
+      padding: 0.4rem 0.2rem;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--surface-elevated);
+      color: var(--text);
+      font-family: var(--font-mono);
+    }
+    .mesh-cell-input.corner-cell input {
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+    .mesh-cell-label {
+      position: absolute;
+      top: 2px;
+      left: 4px;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      pointer-events: none;
+      font-weight: 600;
+    }
+    .tram-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .tram-card {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.5rem 0.65rem;
+    }
+    .tram-card h5 {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .tram-card .adj-val {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 0.15rem;
+    }
+    /* Belt Resonance & Ghosting Estimator CSS */
+    .belt-ripple-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.5rem;
+    }
+    /* Multi-Profile Comparator CSS */
+    .profile-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      background: var(--surface-elevated);
+      padding: 0.65rem 0.85rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+    .profile-table-wrap {
+      overflow-x: auto;
+      margin-top: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .profile-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      text-align: left;
+    }
+    .profile-table th, .profile-table td {
+      padding: 0.45rem 0.6rem;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .profile-table th {
+      background: var(--surface-elevated);
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .profile-table tr:last-child td { border-bottom: none; }
+    .profile-table td:last-child, .profile-table th:last-child { border-right: none; }
+    .profile-table .sec-hdr {
+      background: var(--code-bg);
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+    }
+    .profile-table td.active-col, .profile-table th.active-col {
+      background: var(--accent-glow);
+      font-weight: 700;
+      border-left: 2px solid var(--accent);
+      border-right: 2px solid var(--accent);
+    }
+    @media print {
+      body * { visibility: hidden !important; }
+      #feature-multi-profile, #feature-multi-profile * { visibility: visible !important; }
+      #feature-multi-profile {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+      }
+      .profile-toolbar { display: none !important; }
+    }
+    /* FEATURE-CSS */
+  </style>
+<title>3D Printer X and Y Axis Not Square Fix &amp; Geometry Tool</title>
+<meta name="description" content="Fix 3D printer X/Y axis skew, calculate Marlin M852 values, stop bed thermal warping, and tram print beds with our free geometry calculator and offline tool.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/3d-printer-mechanical-geometry-calibrator/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/3d-printer-mechanical-geometry-calibrator/">
+<meta property="og:title" content="3D Printer X and Y Axis Not Square Fix &amp; Geometry Tool"><meta property="og:description" content="Fix 3D printer X/Y axis skew, calculate Marlin M852 values, stop bed thermal warping, and tram print beds with our free geometry calculator and offline tool.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/3d-printer-mechanical-geometry-calibrator/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"3D Printer X and Y Axis Not Square Fix & Geometry Tool","description":"Fix 3D printer X/Y axis skew, calculate Marlin M852 values, stop bed thermal warping, and tram print beds with our free geometry calculator and offline tool.","url":"https://rttyy.github.io/free-tools/3d-printer-mechanical-geometry-calibrator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Anet A8 - X and Y axis not square - how to fix?","acceptedAnswer":{"@type":"Answer","text":"On the Anet A8 acrylic frame, skew is almost always caused by uneven spacing along the threaded M8 rods forming the lower H-frame. Loosen the M8 frame nuts and use digital calipers to measure the exact distance between the front and rear acrylic plates on both the left and right sides. Once both distances match perfectly, tighten the locking nuts sequentially against the acrylic. If slight racking persists due to the flexible frame material, you can apply Marlin M852 software skew compensation to correct the remaining deviation in firmware."}},{"@type":"Question","name":"How to re-program Prusa firmware to accept a taller Z axis?","acceptedAnswer":{"@type":"Answer","text":"To increase Z travel on stock Prusa firmware, you must recompile the Prusa-Firmware source code. Open the source in Arduino IDE or PlatformIO, locate `Configuration_prusa.h`, and edit the `Z_MAX_POS` value to reflect your new physical hardware limit. After compiling and flashing the new hex file, rerun the XYZ calibration wizard; if your custom frame is significantly taller, you may also need to adjust the Z-calibration search limits in `ultralcd.cpp` to prevent timeout errors."}},{"@type":"Question","name":"How to calculate linear Y rod length for a larger replacement bed?","acceptedAnswer":{"@type":"Answer","text":"The required linear rod length equals your desired bed travel plus the spacing between the outermost linear bearing edges, plus endstop and frame mounting margins. Your travel should match your new bed length plus roughly 10 to 20mm of nozzle over-travel. Add the distance from the front edge of the front Y bearing to the rear edge of the rear Y bearing on your carriage, then add an additional 25 to 30mm for rod ends seated in frame brackets."}},{"@type":"Question","name":"How thick does an aluminum print bed need to be?","acceptedAnswer":{"@type":"Answer","text":"For small beds up to 235x235mm, a 3mm to 4mm plate is adequate, though cast tooling plate performs significantly better than standard rolled sheet. For beds 300x300mm or larger, choose at least 6mm to 8mm cast aluminum tooling plate (such as MIC6 or ATP-5). Rolled aluminum contains internal mechanical stresses that cause severe center warping under heat cycles, whereas cast tooling plate is stress-relieved and precision-milled flat."}}]}</script>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="title-group">
+      <h1>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent);">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <line x1="3" y1="9" x2="21" y2="9"/>
+          <line x1="9" y1="21" x2="9" y2="9"/>
+          <path d="m14 14 5 5"/>
+        </svg>
+        3D Printer Geometry &amp; Squaring Tool
+      </h1>
+      <p>Precision orthogonal squaring, leadscrew compensation, travel geometry, and thermal clearances</p>
+    </div>
+
+    <div class="header-actions">
+      <div class="preset-selector">
+        <label for="scenarioPreset" style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">PRESET:</label>
+        <select id="scenarioPreset" aria-label="Load scenario preset">
+          <option value="0">Prusa MK3S+ Factory Baseline (Near Perfect)</option>
+          <option value="1">Anet A8 Acrylic Frame Racked Skew</option>
+          <option value="2">Ender-3 Tall Frame &amp; Cast Bed Mod</option>
+        </select>
+      </div>
+
+      <button class="btn" id="btnExportJson" title="Export current setup to JSON file">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export JSON
+      </button>
+
+      <button class="btn" id="btnExportCsv" title="Export parameters table to CSV">
+        Export CSV
+      </button>
+
+      <button class="btn" id="btnPrintReport" title="Print engineering calibration sheet">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print Sheet
+      </button>
+
+      <button class="btn btn-primary" id="btnResetAll" title="Reset to standard defaults">
+        Reset
+      </button>
+    </div>
+  </header>
+
+  <div id="proAlertBanner" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Main Tools Grid -->
+  <main class="grid-tools">
+
+    <!-- Tool 1: XY Orthogonal Skew -->
+    <section class="card" data-feature="xy-skew-calculator" id="feature-xy-skew">
+      <div class="card-header">
+        <div>
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 3 21 3 19 21 5 21"/></svg>
+            Orthogonal Skew Angle &amp; M852 Compensation
+          </h2>
+          <p class="card-desc">Measures mechanical parallelogram racking and calculates Marlin firmware factor or physical rod adjustment.</p>
+        </div>
+        <span class="badge" id="skewSeverityBadge">Normal</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nomX">Nominal X</label>
+          <div class="input-unit">
+            <input type="number" id="nomX" value="100.0" step="0.1" min="10">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="nomY">Nominal Y</label>
+          <div class="input-unit">
+            <input type="number" id="nomY" value="100.0" step="0.1" min="10">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="measX">Measured X (Calipers)</label>
+          <div class="input-unit">
+            <input type="number" id="measX" value="100.02" step="0.01" min="1">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="measY">Measured Y (Calipers)</label>
+          <div class="input-unit">
+            <input type="number" id="measY" value="99.98" step="0.01" min="1">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="diagAD" title="Diagonal 1: Bottom-Left to Top-Right (AD / AC)">Diagonal 1 (AD / BL-TR)</label>
+          <div class="input-unit">
+            <input type="number" id="diagAD" value="141.43" step="0.01" min="1">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="diagBD" title="Diagonal 2: Top-Left to Bottom-Right (BD)">Diagonal 2 (BD / TL-BR)</label>
+          <div class="input-unit">
+            <input type="number" id="diagBD" value="141.41" step="0.01" min="1">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label for="frameSpan">Frame Rod / Nut Adjustment Span</label>
+          <div class="input-unit">
+            <input type="number" id="frameSpan" value="250.0" step="1.0" min="50">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SVG Exaggerated Skew Visualizer -->
+      <svg class="svg-viz" id="skewSvgViz" viewBox="0 0 340 120" aria-label="Visual representation of axis skew angle"></svg>
+
+      <div class="results-panel">
+        <div class="result-row">
+          <span class="result-label">Axis Scale Error (X / Y):</span>
+          <span class="result-value" id="valScaleError">+0.02% / -0.02%</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Skew Factor tan(&theta;) / Marlin S:</span>
+          <span class="result-value" id="valSkewFactor">0.00014</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Skew Angle:</span>
+          <span class="result-value" id="valSkewAngle">0.008° (0.5')</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Mechanical Rod Adjustment Delta:</span>
+          <span class="result-value" id="valMechanicalAdj">0.04 mm</span>
+        </div>
+
+        <div class="code-snippet">
+          <span id="gcodeM852">M852 S0.00014</span>
+          <button class="btn btn-sm" onclick="copySnippet('gcodeM852')">Copy</button>
+        </div>
+      </div>
+
+      <div class="interpretation-box" id="skewInterpretation">
+        <h4>What this means / What to do next</h4>
+        <p id="skewTextAdvice">Axes are exceptionally square. Skew is well within 0.1° engineering threshold. No physical frame adjustment or firmware compensation is required.</p>
+      </div>
+    </section>
+
+    <!-- Tool 2: Z-Axis Mod & Leadscrew Calculator -->
+    <section class="card" data-feature="z-axis-mod-calculator" id="feature-z-mod">
+      <div class="card-header">
+        <div>
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/><polyline points="19 15 12 22 5 15"/><polyline points="5 9 12 2 19 9"/></svg>
+            Z-Axis Height &amp; Lead Screw Steps Recalculator
+          </h2>
+          <p class="card-desc">Calculates new firmware Z travel limits (M208 / Z_MAX_POS) and lead screw steps/mm (M92).</p>
+        </div>
+        <span class="badge" id="zVolBadge">+0% Vol</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="curZMax">Current Z Max Travel</label>
+          <div class="input-unit">
+            <input type="number" id="curZMax" value="210.0" step="1" min="10">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="newZMax">New Usable Z Travel</label>
+          <div class="input-unit">
+            <input type="number" id="newZMax" value="210.0" step="1" min="10">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="motorStep">Motor Step Angle</label>
+          <div class="input-unit">
+            <select id="motorStep">
+              <option value="1.8">1.8° (200 steps/rev)</option>
+              <option value="0.9">0.9° (400 steps/rev)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="microstepping">Microstepping</label>
+          <div class="input-unit">
+            <select id="microstepping">
+              <option value="16" selected>1/16 (16x)</option>
+              <option value="32">1/32 (32x)</option>
+              <option value="8">1/8 (8x)</option>
+              <option value="64">1/64 (64x)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="screwLead">Leadscrew Lead</label>
+          <div class="input-unit">
+            <select id="screwLead">
+              <option value="8.0" selected>8.0 mm (Tr8x8 4-start)</option>
+              <option value="4.0">4.0 mm (Tr8x4 2-start)</option>
+              <option value="2.0">2.0 mm (Tr8x2 1-start)</option>
+              <option value="1.0">1.0 mm (Tr8x1 fine)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="customLead">Custom Lead (opt)</label>
+          <div class="input-unit">
+            <input type="number" id="customLead" placeholder="Manual mm" step="0.1" min="0.1">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="results-panel">
+        <div class="result-row">
+          <span class="result-label">Recalculated Z Steps/mm:</span>
+          <span class="result-value" id="valZSteps">400.00</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Z Travel Delta &amp; Volume Gain:</span>
+          <span class="result-value" id="valZDelta">+0.0 mm (+0.0%)</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Marlin Configuration.h:</span>
+          <span class="result-value" id="valConfigH" style="font-size:0.85rem;">#define Z_MAX_POS 210</span>
+        </div>
+
+        <div class="code-snippet">
+          <span id="gcodeZString">M92 Z400.00 ; M208 Z210 S0 ; M500</span>
+          <button class="btn btn-sm" onclick="copySnippet('gcodeZString')">Copy</button>
+        </div>
+      </div>
+
+      <div class="interpretation-box" id="zInterpretation">
+        <h4>What this means / What to do next</h4>
+        <p id="zTextAdvice">No height modification active. If upgrading Z extrusions, send the M208 command via terminal (OctoPrint / Pronterface) and store with M500 to immediately unlock the extended print envelope without reflashing.</p>
+      </div>
+    </section>
+
+    <!-- Tool 3: Linear Rod & Belt Cut Length Calculator -->
+    <section class="card" data-feature="linear-rod-belt-calculator" id="feature-linear-rod">
+      <div class="card-header">
+        <div>
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            Frame Expansion Rod &amp; Belt Cut Length Calculator
+          </h2>
+          <p class="card-desc">Sizes exact precision linear ground rods and timing belt lengths when enlarging Y-beds or X-gantries.</p>
+        </div>
+        <span class="badge" id="travelEffBadge">63.6% Stroke</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="rodStroke">Target Printable Stroke</label>
+          <div class="input-unit">
+            <input type="number" id="rodStroke" value="210.0" step="5" min="20">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bearingSpan">Bearing Span / Wheelbase</label>
+          <div class="input-unit">
+            <input type="number" id="bearingSpan" value="120.0" step="1" min="10">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="endstopClearance">Endstop &amp; Softstop Margin</label>
+          <div class="input-unit">
+            <input type="number" id="endstopClearance" value="10.0" step="1" min="0">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="clampDepth">Clamp Socket Depth (Per End)</label>
+          <div class="input-unit">
+            <input type="number" id="clampDepth" value="10.0" step="1" min="0">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label for="pulleyTeeth">GT2 Timing Pulley Size</label>
+          <div class="input-unit">
+            <select id="pulleyTeeth">
+              <option value="16">16-Tooth GT2 (Pitch Dia 10.19 mm)</option>
+              <option value="20" selected>20-Tooth GT2 (Pitch Dia 12.73 mm)</option>
+              <option value="36">36-Tooth GT2 (Pitch Dia 22.92 mm)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="results-panel">
+        <div class="result-row">
+          <span class="result-label">Minimum Total Cut Rod Length:</span>
+          <span class="result-value" id="valRodLength">360.0 mm</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Open GT2 Belt Cut Length (incl. tension tail):</span>
+          <span class="result-value" id="valBeltLength">740.0 mm</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Structural Travel Efficiency:</span>
+          <span class="result-value" id="valTravelEff">58.3%</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Total Lost Span (Frame Overhead):</span>
+          <span class="result-value" id="valLostTravel">150.0 mm</span>
+        </div>
+      </div>
+
+      <div class="interpretation-box" id="rodInterpretation">
+        <h4>What this means / What to do next</h4>
+        <p id="rodTextAdvice">Order or cut hardened chrome steel ground rods (h6 tolerance) to exactly 360.0 mm. Leave at least 20 mm on each belt end for crimping into carriage slots.</p>
+      </div>
+    </section>
+
+    <!-- Tool 4: Heated Bed Thermal Expansion & Hole Clearance -->
+    <section class="card" data-feature="thermal-bed-expansion-calc" id="feature-thermal-bed">
+      <div class="card-header">
+        <div>
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/></svg>
+            Heated Bed Thermal Expansion &amp; Hole Clearance
+          </h2>
+          <p class="card-desc">Prevents bed taco-warping and bowing by sizing corner mounting hole clearances for thermal growth.</p>
+        </div>
+        <span class="badge" id="expansionBadge">Expansion OK</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="bedX">Bed Dimension X</label>
+          <div class="input-unit">
+            <input type="number" id="bedX" value="250.0" step="5" min="50">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bedY">Bed Dimension Y</label>
+          <div class="input-unit">
+            <input type="number" id="bedY" value="210.0" step="5" min="50">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bedMaterial">Plate Substrate Material</label>
+          <div class="input-unit">
+            <select id="bedMaterial">
+              <option value="23.1" selected>Rolled 6061 Aluminum (23.1 &mu;m/m&middot;&deg;C)</option>
+              <option value="23.6">Cast Mic-6 / ACP5010 (23.6 &mu;m/m&middot;&deg;C)</option>
+              <option value="3.3">Borosilicate Glass (3.3 &mu;m/m&middot;&deg;C)</option>
+              <option value="14.0">FR4 / Garolite Epoxy (14.0 &mu;m/m&middot;&deg;C)</option>
+              <option value="12.0">Carbon Fiber Composite (12.0 &mu;m/m&middot;&deg;C)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="ambientTemp">Ambient Temp</label>
+          <div class="input-unit">
+            <input type="number" id="ambientTemp" value="22.0" step="1">
+            <span class="unit">&deg;C</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="targetTemp">Target Operating Temp</label>
+          <div class="input-unit">
+            <input type="number" id="targetTemp" value="60.0" step="5">
+            <span class="unit">&deg;C</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="boltDiameter">Corner Bolt Diameter</label>
+          <div class="input-unit">
+            <select id="boltDiameter">
+              <option value="3.0" selected>M3 (3.0 mm shank)</option>
+              <option value="4.0">M4 (4.0 mm shank)</option>
+              <option value="5.0">M5 (5.0 mm shank)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="results-panel">
+        <div class="result-row">
+          <span class="result-label">Thermal Delta (&Delta;T):</span>
+          <span class="result-value" id="valDeltaT">+38.0 &deg;C</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Linear Expansion (&Delta;X &times; &Delta;Y):</span>
+          <span class="result-value" id="valDeltaXY">0.219 mm &times; 0.184 mm</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Diagonal Bed Growth:</span>
+          <span class="result-value" id="valDeltaDiag">0.287 mm</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Recommended Corner Hole Ream Dia:</span>
+          <span class="result-value" id="valMinHoleDia">3.60 mm (incl. 0.3mm margin)</span>
+        </div>
+      </div>
+
+      <div class="interpretation-box" id="thermalInterpretation">
+        <h4>What this means / What to do next</h4>
+        <p id="thermalTextAdvice">Moderate bed heating creates modest expansion. Ensure corner holes are reamed to at least 3.60 mm to avoid constraining the plate when hot, which leads to unpredictable first layer warping.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Manual Leveling Matrix & Tramming Screw Guide -->
+  <section class="card" data-feature="manual-bed-mesh-visualizer" id="feature-manual-mesh" style="margin-bottom:1.5rem;">
+    <div class="card-header">
+      <div>
+        <h2>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+          Manual Leveling Matrix &amp; Tramming Screw Guide
+        </h2>
+        <p class="card-desc">Interactive bed mesh topography, overall bed plane tilt, and exact thumb-screw adjustment fractions.</p>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <span class="badge" id="meshRangeBadge">Range: 0.35 mm</span>
+      </div>
+    </div>
+
+    <div class="mesh-layout">
+      <!-- Left Column: Controls & Matrix Inputs -->
+      <div style="display:flex; flex-direction:column; gap:0.75rem;">
+        <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
+          <div class="form-group">
+            <label for="meshGridSize">Matrix Size</label>
+            <div class="input-unit">
+              <select id="meshGridSize">
+                <option value="3" selected>3 &times; 3 (9 Points)</option>
+                <option value="4">4 &times; 4 (16 Points)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="meshScrewPitch">Screw Thread Pitch</label>
+            <div class="input-unit">
+              <select id="meshScrewPitch">
+                <option value="0.5" selected>M3 &times; 0.5 mm/turn</option>
+                <option value="0.7">M4 &times; 0.7 mm/turn</option>
+                <option value="0.8">M5 &times; 0.8 mm/turn</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="meshRefCorner">Tramming Datum</label>
+            <div class="input-unit">
+              <select id="meshRefCorner">
+                <option value="FL" selected>Front-Left (Fixed Ref)</option>
+                <option value="BL">Back-Left (Fixed Ref)</option>
+                <option value="FR">Front-Right (Fixed Ref)</option>
+                <option value="BR">Back-Right (Fixed Ref)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label style="font-size:0.75rem; font-weight:600; color:var(--text-muted); text-transform:uppercase;">
+              Measured Deviations (mm from nozzle / feeler drag)
+            </label>
+            <button class="btn btn-sm" id="btnMeshZero">Zero All</button>
+          </div>
+          <div id="meshInputsContainer" class="mesh-grid"></div>
+          <div style="font-size:0.7rem; color:var(--text-muted); display:flex; justify-content:space-between;">
+            <span>&uarr; Back (+Y)</span>
+            <span>Origin (0,0) at Front-Left &darr;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Visualizer & Screw Turn Outputs -->
+      <div style="display:flex; flex-direction:column; gap:0.75rem;">
+        <svg id="meshSvgMap" viewBox="0 0 340 180" class="svg-viz" style="height:180px;" aria-label="2D Bed Mesh Topographic Contour Heat Map"></svg>
+
+        <div class="results-panel">
+          <div class="result-row">
+            <span class="result-label">Overall Mesh Peak-to-Valley (Range):</span>
+            <span class="result-value" id="valMeshRange">0.35 mm</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Plane Tilt Slope (X / Y / Total):</span>
+            <span class="result-value" id="valPlaneTilt">X: +1.14 mm/m | Y: -0.82 mm/m (0.08°)</span>
+          </div>
+        </div>
+
+        <div class="tram-cards">
+          <div class="tram-card" id="cardTramFL">
+            <h5>Front-Left Screw</h5>
+            <div class="adj-val" id="adjFL">Reference (0.00 turns)</div>
+          </div>
+          <div class="tram-card" id="cardTramFR">
+            <h5>Front-Right Screw</h5>
+            <div class="adj-val" id="adjFR">Turn 0.50 turns counter-clockwise</div>
+          </div>
+          <div class="tram-card" id="cardTramBL">
+            <h5>Back-Left Screw</h5>
+            <div class="adj-val" id="adjBL">Turn 0.20 turns clockwise</div>
+          </div>
+          <div class="tram-card" id="cardTramBR">
+            <h5>Back-Right Screw</h5>
+            <div class="adj-val" id="adjBR">Turn 0.30 turns counter-clockwise</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="interpretation-box" id="meshInterpretation">
+      <h4>What this means / What to do next</h4>
+      <p id="meshAdviceText">Follow thumb-screw instructions above. Rotate screws until all four corners are within ±0.03 mm before relying on ABL mesh compensation.</p>
+    </div>
+  </section>
+
+  <!-- Tool 5: Belt Resonance & Input Shaper Frequency Estimator -->
+  <section class="card" data-feature="belt-tension-ghosting-estimator" id="feature-belt-tension" style="margin-bottom:1.5rem;">
+    <div class="card-header">
+      <div>
+        <h2>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="12" r="3"/><path d="M6 9h12M6 15h12"/><path d="m10 12 2-2 2 4 2-2"/></svg>
+          Belt Resonance &amp; Input Shaper Frequency Estimator
+        </h2>
+        <p class="card-desc">Measures acoustic belt tension in Newtons via plucked audio frequency and predicts surface ghosting/ringing wavelength.</p>
+      </div>
+      <span class="badge" id="beltTensionBadge">Optimal for Gates 2GT</span>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="beltSpan">Belt Span Between Pulleys</label>
+        <div class="input-unit">
+          <input type="number" id="beltSpan" value="150.0" step="5" min="20">
+          <span class="unit">mm</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="beltProfile">Belt Profile &amp; Width</label>
+        <div class="input-unit">
+          <select id="beltProfile">
+            <option value="0.022354" selected>GT2 6mm Standard (22.4 g/m)</option>
+            <option value="0.033531">GT2 9mm Heavy-Duty (33.5 g/m)</option>
+            <option value="0.037257">GT2 10mm Industrial (37.3 g/m)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="beltFreq">Plucked Audio Frequency</label>
+        <div class="input-unit">
+          <input type="number" id="beltFreq" value="65.0" step="0.5" min="10">
+          <span class="unit">Hz</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="beltPrintSpeed">Outer Perimeter Speed</label>
+        <div class="input-unit">
+          <input type="number" id="beltPrintSpeed" value="80.0" step="5" min="5">
+          <span class="unit">mm/s</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="beltTargetTension">Target Calibration Tension</label>
+        <div class="input-unit">
+          <input type="number" id="beltTargetTension" value="8.5" step="0.5" min="1">
+          <span class="unit">N</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="beltCore">Belt Reinforcement Core</label>
+        <div class="input-unit">
+          <select id="beltCore">
+            <option value="1.0" selected>Neoprene + Fiberglass (1.0x)</option>
+            <option value="1.22">Steel Wire Core (1.22x mass)</option>
+            <option value="0.95">Kevlar / Aramid Core (0.95x mass)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live SVG Waveform & Ghosting Simulator -->
+    <svg class="svg-viz" id="beltSvgViz" viewBox="0 0 340 100" aria-label="Visual representation of belt tension resonance and ghosting wavelength"></svg>
+
+    <div class="results-panel">
+      <div class="result-row">
+        <span class="result-label">Calculated Belt Tension:</span>
+        <span class="result-value" id="valBeltTension">8.5 N</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Tension State:</span>
+        <span class="result-value good" id="valBeltState">Ideal (Optimal for Gates 2GT)</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Predicted Ghosting / Ringing Pitch:</span>
+        <span class="result-value" id="valGhostingWave">1.23 mm (at 80 mm/s)</span>
+      </div>
+      <div class="result-row">
+        <span class="result-label">Target Frequency for Ideal Calibration:</span>
+        <span class="result-value" id="valTargetFreq">65.0 Hz (for 8.5 N)</span>
+      </div>
+
+      <div class="code-snippet">
+        <span id="gcodeKlipperShaper">[input_shaper] shaper_freq_x: 65.0 ; shaper_type: mzv</span>
+        <button class="btn btn-sm" onclick="copySnippet('gcodeKlipperShaper')">Copy</button>
+      </div>
+    </div>
+
+    <div class="interpretation-box" id="beltInterpretation">
+      <h4>What this means / What to do next</h4>
+      <p id="beltAdviceText">Tension is optimal at 8.5 N (target 7–10 N for Gates 2GT). Ringing echoes from directional acceleration changes will oscillate at 1.23 mm intervals at 80 mm/s. Enable Klipper input shaping with shaper_freq_x: 65.0 Hz to cancel ghosting.</p>
+    </div>
+  </section>
+
+  <!-- Multi-Printer Profile Comparator & Engineering Report Export -->
+  <section class="card" data-feature="multi-profile-export-manager" id="feature-multi-profile" style="margin-bottom:1.5rem;">
+    <div class="card-header">
+      <div>
+        <h2>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 14l2 2 4-4"/></svg>
+          Multi-Printer Profile Comparator &amp; Workshop Report
+        </h2>
+        <p class="card-desc">Compare up to 5 printer geometries side-by-side, export diagnostic compensation CSVs, and generate workshop QA inspection sheets.</p>
+      </div>
+      <span class="badge" id="profileCountBadge">5 Fleet Slots</span>
+    </div>
+
+    <div class="profile-toolbar">
+      <div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.5rem;">
+        <label for="slotSelect" style="font-size:0.75rem; font-weight:600; color:var(--text-muted);">SLOT:</label>
+        <select id="slotSelect" class="btn btn-sm" aria-label="Select machine slot">
+          <option value="0">Slot 1: Prusa MK3S+</option>
+          <option value="1">Slot 2: Anet A8</option>
+          <option value="2">Slot 3: Ender-3 Mod</option>
+          <option value="3">Slot 4: Voron 2.4 350</option>
+          <option value="4">Slot 5: Custom Lab</option>
+        </select>
+        <input type="text" id="slotNameInput" placeholder="Machine Name" aria-label="Active Slot Machine Name" style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:0.25rem 0.5rem; font-size:0.8rem; color:var(--text); width:130px;">
+        <button class="btn btn-sm" id="btnSaveToSlot" title="Overwrite current slot with live screen inputs">Sync Current to Slot</button>
+        <button class="btn btn-sm" id="btnLoadFromSlot" title="Load this slot into active calculator">Load into Tool</button>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.5rem;">
+        <button class="btn btn-sm btn-primary" id="btnExportDiagCsv" title="Export all machines RFC-4180 CSV">Export Diagnostic CSV</button>
+        <button class="btn btn-sm" id="btnPrintInspection" title="Print one-page workshop inspection sheet">Inspection Sheet (PDF)</button>
+      </div>
+    </div>
+
+    <div class="profile-table-wrap">
+      <table class="profile-table" id="comparatorTable">
+        <thead>
+          <tr id="comparatorHead"></tr>
+        </thead>
+        <tbody id="comparatorBody"></tbody>
+      </table>
+    </div>
+
+    <div class="interpretation-box" id="profileComparisonAdvice">
+      <h4>What this means / What to do next</h4>
+      <p id="profileAdviceText">Slot 1 (Prusa MK3S+) holds tightest orthogonality (&lt;0.01° skew). Slot 2 requires immediate mechanical rod shift. Ready to generate formatted workshop QA sheet or diagnostic CSV dump.</p>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+
+  <!-- Printable & Technical Reference Footer -->
+  <footer class="footer-bar">
+    <div>
+      <strong>3D Printer Geometry Diagnostics Engine v1.0</strong> &mdash;
+      <span>Estimate only - verify with a qualified professional before relying on it.</span>
+    </div>
+    <div style="display:flex; gap:0.5rem; align-items:center;">
+      <span id="savedIndicator" style="display:none; color:var(--success);">Saved locally &check;</span>
+      <button class="btn btn-sm" id="btnSaveScenario">Save Current Preset</button>
+    </div>
+  </footer>
+</div>
+
+<script>
+/**
+ * 3D Printer Geometry & Squaring Tool
+ * Master Diagnostic and Compensation Suite
+ */
+const PRO = false;
+const PRO_LINK = "https://ferrywave73.gumroad.com/l/jzdhms";
+
+// Preset database
+const PRESETS = [
+  {
+    name: "Prusa MK3S+ Factory Baseline (Near Perfect)",
+    values: {
+      nomX: 100.0, nomY: 100.0, measX: 100.02, measY: 99.98, diagAD: 141.43, diagBD: 141.41, frameSpan: 250.0,
+      curZMax: 210.0, newZMax: 210.0, motorStep: "1.8", microstepping: "16", screwLead: "8.0", customLead: "",
+      rodStroke: 210.0, bearingSpan: 120.0, endstopClearance: 10.0, clampDepth: 10.0, pulleyTeeth: "20",
+      bedX: 250.0, bedY: 210.0, bedMaterial: "23.1", ambientTemp: 22.0, targetTemp: 60.0, boltDiameter: "3.0",
+      beltSpan: 150.0, beltProfile: "0.022354", beltFreq: 65.0, beltPrintSpeed: 80.0, beltTargetTension: 8.5, beltCore: "1.0"
+    }
+  },
+  {
+    name: "Anet A8 Acrylic Frame Racked Skew",
+    values: {
+      nomX: 100.0, nomY: 100.0, measX: 100.15, measY: 99.85, diagAD: 142.35, diagBD: 140.50, frameSpan: 280.0,
+      curZMax: 240.0, newZMax: 240.0, motorStep: "1.8", microstepping: "16", screwLead: "8.0", customLead: "",
+      rodStroke: 220.0, bearingSpan: 130.0, endstopClearance: 12.0, clampDepth: 8.0, pulleyTeeth: "20",
+      bedX: 220.0, bedY: 220.0, bedMaterial: "23.1", ambientTemp: 20.0, targetTemp: 70.0, boltDiameter: "3.0",
+      beltSpan: 180.0, beltProfile: "0.022354", beltFreq: 48.0, beltPrintSpeed: 60.0, beltTargetTension: 7.5, beltCore: "1.0"
+    }
+  },
+  {
+    name: "Ender-3 Tall Frame & Cast Aluminum Bed Mod",
+    values: {
+      nomX: 100.0, nomY: 100.0, measX: 99.95, measY: 100.05, diagAD: 141.65, diagBD: 141.25, frameSpan: 270.0,
+      curZMax: 250.0, newZMax: 400.0, motorStep: "1.8", microstepping: "16", screwLead: "8.0", customLead: "",
+      rodStroke: 300.0, bearingSpan: 150.0, endstopClearance: 15.0, clampDepth: 15.0, pulleyTeeth: "20",
+      bedX: 310.0, bedY: 310.0, bedMaterial: "23.6", ambientTemp: 23.0, targetTemp: 105.0, boltDiameter: "4.0",
+      beltSpan: 240.0, beltProfile: "0.033531", beltFreq: 72.0, beltPrintSpeed: 120.0, beltTargetTension: 14.0, beltCore: "1.0"
+    }
+  }
+];
+
+// Helper to show non-blocking alerts/notifications
+function showToast(msg) {
+  const toast = document.getElementById("proAlertBanner");
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.style.display = "block";
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 4200);
+}
+
+function showProMsg() {
+  const toast = document.getElementById("proAlertBanner");
+  if (!toast) return;
+  toast.innerHTML = `<span class="pro-link-alert"><a href="${PRO_LINK}" target="_blank" rel="noopener">Available in the full version</a></span>`;
+  toast.style.display = "block";
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 4500);
+}
+
+// Global copy helper
+window.copySnippet = function(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const text = el.textContent || el.innerText;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast("Copied to clipboard: " + text);
+    }).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+};
+
+function fallbackCopy(text) {
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.left = "-9999px";
+  ta.style.top = "0";
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showToast("Copied to clipboard: " + text);
+  } catch (e) {
+    showToast("Unable to copy automatically.");
+  }
+  document.body.removeChild(ta);
+}
+
+// -------------------------------------------------------------
+// FEATURE 1: XY SKEW CALCULATOR
+// -------------------------------------------------------------
+function calculateXYSkew() {
+  const nomX = parseFloat(document.getElementById("nomX").value);
+  const nomY = parseFloat(document.getElementById("nomY").value);
+  const measX = parseFloat(document.getElementById("measX").value);
+  const measY = parseFloat(document.getElementById("measY").value);
+  const diagAD = parseFloat(document.getElementById("diagAD").value);
+  const diagBD = parseFloat(document.getElementById("diagBD").value);
+  const frameSpan = parseFloat(document.getElementById("frameSpan").value);
+
+  const scaleErrEl = document.getElementById("valScaleError");
+  const factorEl = document.getElementById("valSkewFactor");
+  const angleEl = document.getElementById("valSkewAngle");
+  const mechAdjEl = document.getElementById("valMechanicalAdj");
+  const gcodeEl = document.getElementById("gcodeM852");
+  const adviceEl = document.getElementById("skewTextAdvice");
+  const badgeEl = document.getElementById("skewSeverityBadge");
+
+  // Robust validation
+  if (isNaN(nomX) || isNaN(nomY) || isNaN(measX) || isNaN(measY) || isNaN(diagAD) || isNaN(diagBD) || isNaN(frameSpan) ||
+      nomX <= 0 || nomY <= 0 || measX <= 0 || measY <= 0 || diagAD <= 0 || diagBD <= 0 || frameSpan <= 0) {
+    if (scaleErrEl) scaleErrEl.textContent = "—";
+    factorEl.textContent = "Invalid inputs";
+    angleEl.textContent = "—";
+    mechAdjEl.textContent = "—";
+    gcodeEl.textContent = "; Check entered caliper dimensions";
+    adviceEl.textContent = "Please enter positive numeric measurements for all dimensions.";
+    badgeEl.textContent = "Error";
+    badgeEl.className = "badge";
+    drawSkewSvg(0);
+    return;
+  }
+
+  // Active calculation using nominal dimensions: axis scaling error
+  const errX = ((measX - nomX) / nomX) * 100;
+  const errY = ((measY - nomY) / nomY) * 100;
+  if (scaleErrEl) {
+    scaleErrEl.textContent = `${errX >= 0 ? '+' : ''}${errX.toFixed(2)}% / ${errY >= 0 ? '+' : ''}${errY.toFixed(2)}%`;
+  }
+
+  // Marlin firmware standard orthogonal skew formula:
+  // For a rectangle with side lengths X, Y and diagonals D1 (AD) and D2 (BD):
+  // sin(theta) = (D1^2 - D2^2) / (4 * X * Y)
+  const diffDiagSq = (diagAD * diagAD) - (diagBD * diagBD);
+  const denom = 4 * measX * measY;
+  let sinTheta = diffDiagSq / denom;
+
+  // Numerical safeguard for physical clamp
+  if (sinTheta > 0.999) sinTheta = 0.999;
+  if (sinTheta < -0.999) sinTheta = -0.999;
+
+  const thetaRad = Math.asin(sinTheta);
+  const tanTheta = Math.tan(thetaRad);
+  const thetaDeg = thetaRad * (180 / Math.PI);
+  const absDeg = Math.abs(thetaDeg);
+  const arcMin = (absDeg * 60).toFixed(1);
+
+  // Mechanical adjustment delta along the frame rod span
+  const rodShift = frameSpan * Math.tan(Math.abs(thetaRad));
+
+  // Determine direction
+  // If diagAD > diagBD, angle between +X and +Y is obtuse (>90 deg).
+  // The frame is pushed backwards on the right side.
+  const isObtuse = diagAD > diagBD;
+  const directionStr = isObtuse
+    ? `Shift right Y-axis threaded rod clamp forward by ${rodShift.toFixed(2)} mm relative to left rod.`
+    : `Shift right Y-axis threaded rod clamp rearward by ${rodShift.toFixed(2)} mm relative to left rod.`;
+
+  // Output formatting
+  factorEl.textContent = tanTheta.toFixed(5);
+  angleEl.textContent = `${absDeg.toFixed(3)}° (${arcMin} arcmin)`;
+  mechAdjEl.textContent = `${rodShift.toFixed(2)} mm (${isObtuse ? 'Forward on Right' : 'Rearward on Right'})`;
+  gcodeEl.textContent = `M852 S${tanTheta.toFixed(5)} ; Set Marlin XY skew compensation`;
+
+  // Visual severity and advice text
+  if (absDeg < 0.1) {
+    badgeEl.textContent = "Square (Excellent)";
+    badgeEl.className = "badge";
+    adviceEl.textContent = `Skew angle is only ${absDeg.toFixed(3)}° (${arcMin}'). This is negligible for FDM tolerances. No physical tuning or M852 compensation required.`;
+  } else if (absDeg < 0.4) {
+    badgeEl.textContent = "Minor Skew";
+    badgeEl.className = "badge";
+    adviceEl.textContent = `Noticeable skew (${absDeg.toFixed(3)}°). Mechanical fix: ${directionStr} Or add 'M852 S${tanTheta.toFixed(5)}' followed by M500 in firmware if your Marlin build has SKEW_CORRECTION enabled.`;
+  } else {
+    badgeEl.textContent = "Severe Racking";
+    badgeEl.className = "badge";
+    adviceEl.textContent = `High racking detected (${absDeg.toFixed(3)}° / ${arcMin} arcmin)! Print corners will be heavily out-of-square. Mechanical squaring required: ${directionStr}`;
+  }
+
+  drawSkewSvg(thetaRad);
+}
+
+function drawSkewSvg(thetaRad) {
+  const svg = document.getElementById("skewSvgViz");
+  if (!svg) return;
+
+  // Exaggerate skew by 6x for clear visual comprehension on screen
+  const factor = Math.tan(thetaRad) * 6;
+  const clampedFactor = Math.max(-0.5, Math.min(0.5, factor));
+
+  const cx = 170;
+  const cy = 60;
+  const w = 90;
+  const h = 70;
+
+  // Base corners of nominally square reference (dashed)
+  const refBL = `${cx - w/2},${cy + h/2}`;
+  const refBR = `${cx + w/2},${cy + h/2}`;
+  const refTR = `${cx + w/2},${cy - h/2}`;
+  const refTL = `${cx - w/2},${cy - h/2}`;
+
+  // Skewed corners (distort top edge by clampedFactor * h)
+  const shift = clampedFactor * h;
+  const skBL = `${cx - w/2},${cy + h/2}`;
+  const skBR = `${cx + w/2},${cy + h/2}`;
+  const skTR = `${cx + w/2 + shift},${cy - h/2}`;
+  const skTL = `${cx - w/2 + shift},${cy - h/2}`;
+
+  svg.innerHTML = `
+    <!-- Nominal Grid Reference -->
+    <polygon points="${refBL} ${refBR} ${refTR} ${refTL}" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <!-- Distorted Shape -->
+    <polygon points="${skBL} ${skBR} ${skTR} ${skTL}" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2"/>
+    <!-- Diagonal AD (BL to TR) -->
+    <line x1="${cx - w/2}" y1="${cy + h/2}" x2="${cx + w/2 + shift}" y2="${cy - h/2}" stroke="#34d399" stroke-width="1.5" stroke-dasharray="2 2"/>
+    <!-- Diagonal BD (TL to BR) -->
+    <line x1="${cx - w/2 + shift}" y1="${cy - h/2}" x2="${cx + w/2}" y2="${cy + h/2}" stroke="#f87171" stroke-width="1.5" stroke-dasharray="2 2"/>
+    <!-- Labels -->
+    <text x="14" y="24" fill="#94a3b8" font-size="11" font-family="monospace">D1 (AD Green) vs D2 (BD Red)</text>
+    <text x="14" y="105" fill="#94a3b8" font-size="10" font-family="sans-serif">Dashed: 90° Ideal | Solid: Current Axis State (Exaggerated 6x)</text>
+  `;
+}
+
+// -------------------------------------------------------------
+// FEATURE 2: Z-AXIS HEIGHT & LEAD SCREW STEPS
+// -------------------------------------------------------------
+function calculateZAxis() {
+  const curZMax = parseFloat(document.getElementById("curZMax").value);
+  const newZMax = parseFloat(document.getElementById("newZMax").value);
+  const motorStep = parseFloat(document.getElementById("motorStep").value);
+  const microstepping = parseFloat(document.getElementById("microstepping").value);
+  const screwLeadSelect = parseFloat(document.getElementById("screwLead").value);
+  const customLead = parseFloat(document.getElementById("customLead").value);
+
+  const stepsEl = document.getElementById("valZSteps");
+  const deltaEl = document.getElementById("valZDelta");
+  const configHEl = document.getElementById("valConfigH");
+  const gcodeZEl = document.getElementById("gcodeZString");
+  const adviceEl = document.getElementById("zTextAdvice");
+  const badgeEl = document.getElementById("zVolBadge");
+
+  if (isNaN(curZMax) || isNaN(newZMax) || curZMax <= 0 || newZMax <= 0 ||
+      isNaN(motorStep) || isNaN(microstepping) || (customLead && customLead <= 0)) {
+    stepsEl.textContent = "Invalid inputs";
+    deltaEl.textContent = "—";
+    configHEl.textContent = "—";
+    gcodeZEl.textContent = "; Invalid configuration";
+    badgeEl.textContent = "Error";
+    adviceEl.textContent = "Please enter valid positive numbers for Z travel limits and leadscrew pitch.";
+    return;
+  }
+
+  const effectiveLead = (!isNaN(customLead) && customLead > 0) ? customLead : screwLeadSelect;
+
+  // Formula:
+  // Steps per full rotation = 360 / motorStep (e.g. 360 / 1.8 = 200)
+  // Microsteps per rotation = StepsPerRev * microstepping (e.g. 200 * 16 = 3200)
+  // Steps per mm = MicrostepsPerRev / effectiveLead (e.g. 3200 / 8 = 400)
+  const fullStepsPerRev = 360.0 / motorStep;
+  const microstepsPerRev = fullStepsPerRev * microstepping;
+  const stepsPerMm = microstepsPerRev / effectiveLead;
+
+  const zDelta = newZMax - curZMax;
+  const pctGain = ((zDelta / curZMax) * 100);
+
+  stepsEl.textContent = stepsPerMm.toFixed(2) + " steps/mm";
+  deltaEl.textContent = `${zDelta >= 0 ? '+' : ''}${zDelta.toFixed(1)} mm (${pctGain >= 0 ? '+' : ''}${pctGain.toFixed(1)}%)`;
+  configHEl.textContent = `#define Z_MAX_POS ${Math.round(newZMax)}`;
+
+  const gcodeStr = `M92 Z${stepsPerMm.toFixed(2)} ; M208 Z${Math.round(newZMax)} S0 ; M500`;
+  gcodeZEl.textContent = gcodeStr;
+
+  badgeEl.textContent = `${pctGain >= 0 ? '+' : ''}${pctGain.toFixed(1)}% Volume`;
+
+  if (Math.abs(zDelta) < 0.5) {
+    adviceEl.textContent = `Stock travel retained. Lead screw calculation yields ${stepsPerMm.toFixed(2)} steps/mm. If you swapped leadscrew pitch, send 'M92 Z${stepsPerMm.toFixed(2)}' and save with 'M500'.`;
+  } else if (zDelta > 0) {
+    adviceEl.textContent = `Travel increased by +${zDelta.toFixed(1)} mm (+${pctGain.toFixed(1)}% print volume). To activate immediately without compiling Marlin, send 'M208 Z${Math.round(newZMax)} S0' then 'M500' via USB console. Ensure leadscrew is aligned to prevent Z-binding.`;
+  } else {
+    adviceEl.textContent = `Travel decreased by ${zDelta.toFixed(1)} mm. Ensure Z-endstop or BLTouch probe clearance prevents toolhead collisions on the frame crossbar.`;
+  }
+}
+
+// -------------------------------------------------------------
+// FEATURE 3: LINEAR ROD & BELT CUT CALCULATOR
+// -------------------------------------------------------------
+function calculateRodAndBelt() {
+  const stroke = parseFloat(document.getElementById("rodStroke").value);
+  const bearingSpan = parseFloat(document.getElementById("bearingSpan").value);
+  const clearance = parseFloat(document.getElementById("endstopClearance").value);
+  const clampDepth = parseFloat(document.getElementById("clampDepth").value);
+  const pulleyTeeth = parseInt(document.getElementById("pulleyTeeth").value, 10);
+
+  const rodLenEl = document.getElementById("valRodLength");
+  const beltLenEl = document.getElementById("valBeltLength");
+  const travelEffEl = document.getElementById("valTravelEff");
+  const lostTravelEl = document.getElementById("valLostTravel");
+  const badgeEl = document.getElementById("travelEffBadge");
+  const adviceEl = document.getElementById("rodTextAdvice");
+
+  if (isNaN(stroke) || isNaN(bearingSpan) || isNaN(clearance) || isNaN(clampDepth) || isNaN(pulleyTeeth) ||
+      stroke <= 0 || bearingSpan <= 0 || clearance < 0 || clampDepth < 0 || pulleyTeeth <= 0) {
+    rodLenEl.textContent = "Invalid inputs";
+    beltLenEl.textContent = "—";
+    travelEffEl.textContent = "—";
+    lostTravelEl.textContent = "—";
+    badgeEl.textContent = "Error";
+    adviceEl.textContent = "Please provide valid positive mechanical dimensions.";
+    return;
+  }
+
+  // Exact rod cut length:
+  // Stroke + Bearing Wheelbase + Margin/Overtravel + (2 * Socket Engagement Depth)
+  const minRodLength = stroke + bearingSpan + clearance + (2 * clampDepth);
+
+  // Belt path calculation:
+  // Open loop clamped to carriage: 2 * (Rod Length) + 20mm tension tail / wrap
+  const beltCutLength = (2 * minRodLength) + 20.0;
+
+  // Travel efficiency: usable stroke / total rod cut length
+  const travelEff = (stroke / minRodLength) * 100;
+  const lostSpan = minRodLength - stroke;
+
+  rodLenEl.textContent = minRodLength.toFixed(1) + " mm";
+  beltLenEl.textContent = beltCutLength.toFixed(1) + " mm";
+  travelEffEl.textContent = travelEff.toFixed(1) + "%";
+  lostTravelEl.textContent = lostSpan.toFixed(1) + " mm";
+
+  badgeEl.textContent = `${travelEff.toFixed(1)}% Eff`;
+
+  adviceEl.textContent = `Order/machine standard linear shafts (WCS or SUJ2 chrome h6) cut to ${minRodLength.toFixed(1)} mm. Total frame overhead is ${lostSpan.toFixed(1)} mm. For the ${pulleyTeeth}-tooth GT2 timing belt loop, order at least a ${Math.ceil(beltCutLength)} mm open belt run to retain a 20 mm tensioner tail on both ends.`;
+}
+
+// -------------------------------------------------------------
+// FEATURE 4: HEATED BED THERMAL EXPANSION & CLEARANCE
+// -------------------------------------------------------------
+function calculateBedExpansion() {
+  const bedX = parseFloat(document.getElementById("bedX").value);
+  const bedY = parseFloat(document.getElementById("bedY").value);
+  const cte = parseFloat(document.getElementById("bedMaterial").value); // micro-m / m / degC
+  const ambientT = parseFloat(document.getElementById("ambientTemp").value);
+  const targetT = parseFloat(document.getElementById("targetTemp").value);
+  const boltDia = parseFloat(document.getElementById("boltDiameter").value);
+
+  const deltaTEl = document.getElementById("valDeltaT");
+  const deltaXYEl = document.getElementById("valDeltaXY");
+  const deltaDiagEl = document.getElementById("valDeltaDiag");
+  const minHoleEl = document.getElementById("valMinHoleDia");
+  const adviceEl = document.getElementById("thermalTextAdvice");
+  const badgeEl = document.getElementById("expansionBadge");
+
+  if (isNaN(bedX) || isNaN(bedY) || isNaN(cte) || isNaN(ambientT) || isNaN(targetT) || isNaN(boltDia) ||
+      bedX <= 0 || bedY <= 0 || boltDia <= 0) {
+    deltaTEl.textContent = "Invalid inputs";
+    deltaXYEl.textContent = "—";
+    deltaDiagEl.textContent = "—";
+    minHoleEl.textContent = "—";
+    badgeEl.textContent = "Error";
+    badgeEl.className = "badge";
+    adviceEl.textContent = "Please enter valid dimensions and temperatures.";
+    return;
+  }
+
+  const deltaT = targetT - ambientT;
+  if (deltaT <= 0) {
+    deltaTEl.textContent = `${deltaT.toFixed(1)} °C`;
+    deltaXYEl.textContent = "0.000 mm × 0.000 mm";
+    deltaDiagEl.textContent = "0.000 mm";
+    minHoleEl.textContent = `${(boltDia + 0.2).toFixed(2)} mm (Standard)`;
+    adviceEl.textContent = "Operating temperature is at or below ambient. No thermal expansion occurs.";
+    badgeEl.textContent = "Cold Plate";
+    return;
+  }
+
+  // Linear expansion: deltaL = L * alpha * deltaT
+  // cte is in µm/m·°C = 1e-6 / °C
+  const alpha = cte * 1e-6;
+  const deltaX = bedX * alpha * deltaT;
+  const deltaY = bedY * alpha * deltaT;
+  const diag = Math.sqrt(bedX * bedX + bedY * bedY);
+  const deltaDiag = diag * alpha * deltaT;
+
+  // Minimum corner hole clearance to avoid thermal warping:
+  // Includes +0.30 mm safety clearance margin for CNC/hole center tolerances and thermal overshoot
+  const safetyMargin = 0.30;
+  const minReamHole = boltDia + deltaDiag + safetyMargin;
+  const recommendedDrill = Math.ceil(minReamHole * 10) / 10;
+
+  deltaTEl.textContent = `+${deltaT.toFixed(1)} °C`;
+  deltaXYEl.textContent = `${deltaX.toFixed(3)} mm × ${deltaY.toFixed(3)} mm`;
+  deltaDiagEl.textContent = `${deltaDiag.toFixed(3)} mm`;
+  minHoleEl.textContent = `${recommendedDrill.toFixed(2)} mm (incl. 0.3mm margin)`;
+
+  if (deltaDiag > 0.5) {
+    badgeEl.textContent = `High Growth (${deltaDiag.toFixed(2)}mm)`;
+    badgeEl.className = "badge";
+    adviceEl.textContent = `Warning: High thermal growth detected (${deltaDiag.toFixed(3)} mm on diagonal). Without reaming the corner mounting holes to at least ${recommendedDrill.toFixed(2)} mm, the constrained bed plate will buckle and bow upwards in the center (taco bed effect). Use Belleville washers or slotted corner holes.`;
+  } else {
+    badgeEl.textContent = "Normal Expansion";
+    badgeEl.className = "badge";
+    adviceEl.textContent = `Plate grows by ${deltaDiag.toFixed(3)} mm diagonally at ${targetT}°C. Ream corner mounting holes to at least ${recommendedDrill.toFixed(2)} mm to ensure thermal float and avoid first-layer tramming drift.`;
+  }
+}
+
+// -------------------------------------------------------------
+// GLOBAL CONTROLLER & DISPATCHER
+// -------------------------------------------------------------
+function calculateBeltTension() {
+  const spanEl = document.getElementById("beltSpan");
+  if (!spanEl) return;
+  const span = parseFloat(spanEl.value);
+  const profile = parseFloat(document.getElementById("beltProfile").value);
+  const coreFactor = parseFloat(document.getElementById("beltCore").value) || 1.0;
+  const freq = parseFloat(document.getElementById("beltFreq").value);
+  const speed = parseFloat(document.getElementById("beltPrintSpeed").value);
+  const targetT = parseFloat(document.getElementById("beltTargetTension").value);
+
+  const tensionEl = document.getElementById("valBeltTension");
+  const stateEl = document.getElementById("valBeltState");
+  const waveEl = document.getElementById("valGhostingWave");
+  const targetFreqEl = document.getElementById("valTargetFreq");
+  const badgeEl = document.getElementById("beltTensionBadge");
+  const adviceEl = document.getElementById("beltAdviceText");
+  const klipperEl = document.getElementById("gcodeKlipperShaper");
+
+  if (isNaN(span) || isNaN(freq) || isNaN(speed) || isNaN(profile) || span <= 0 || freq <= 0 || speed <= 0) {
+    if (tensionEl) tensionEl.textContent = "—";
+    if (stateEl) { stateEl.textContent = "Invalid inputs"; stateEl.className = "result-value"; }
+    if (waveEl) waveEl.textContent = "—";
+    if (targetFreqEl) targetFreqEl.textContent = "—";
+    if (badgeEl) { badgeEl.textContent = "Error"; badgeEl.className = "badge"; }
+    if (adviceEl) adviceEl.textContent = "Please provide valid positive numbers for span, frequency, and print speed.";
+    drawBeltSvg(0);
+    return;
+  }
+
+  const mu = profile * coreFactor;
+  const spanM = span / 1000;
+  const tension = 4 * mu * Math.pow(spanM, 2) * Math.pow(freq, 2);
+  const wavelength = speed / freq;
+  const targetFreq = (targetT > 0) ? (1 / (2 * spanM)) * Math.sqrt(targetT / mu) : 0;
+
+  const widthRatio = profile / 0.022354;
+  const minIdeal = 6.0 * widthRatio;
+  const maxIdeal = 11.0 * widthRatio;
+
+  let stateText = "", stateClass = "good", badgeText = "Optimal for Gates 2GT";
+  if (tension < minIdeal) {
+    stateText = "Too Loose (Backlash & skip risk)";
+    stateClass = "warn";
+    badgeText = "Too Loose";
+  } else if (tension > maxIdeal) {
+    stateText = "Over-tightened (Excess motor bearing stress)";
+    stateClass = "danger";
+    badgeText = "Over-tightened";
+  } else {
+    stateText = "Ideal (Optimal for Gates 2GT)";
+    stateClass = "good";
+    badgeText = "Optimal for Gates 2GT";
+  }
+
+  tensionEl.textContent = `${tension.toFixed(1)} N`;
+  stateEl.textContent = stateText;
+  stateEl.className = `result-value ${stateClass}`;
+  waveEl.textContent = `${wavelength.toFixed(2)} mm (at ${speed.toFixed(0)} mm/s)`;
+  if (targetFreqEl) targetFreqEl.textContent = targetFreq > 0 ? `${targetFreq.toFixed(1)} Hz (for ${targetT.toFixed(1)} N)` : "—";
+  if (badgeEl) badgeEl.textContent = badgeText;
+  if (klipperEl) klipperEl.textContent = `[input_shaper] shaper_freq_x: ${freq.toFixed(1)} ; shaper_type: mzv`;
+
+  if (tension < minIdeal) {
+    adviceEl.textContent = `Belt tension (${tension.toFixed(1)} N) is below recommended minimum (${minIdeal.toFixed(1)} N). Tighten until acoustic pitch at ${span.toFixed(0)} mm span reaches ~${targetFreq > 0 ? targetFreq.toFixed(1) : (freq * 1.2).toFixed(1)} Hz. Ringing ripples spaced ${wavelength.toFixed(2)} mm will blur fine details.`;
+  } else if (tension > maxIdeal) {
+    adviceEl.textContent = `Belt tension (${tension.toFixed(1)} N) is excessive (over ${maxIdeal.toFixed(1)} N). Slacken tensioner until acoustic pitch drops to ~${targetFreq > 0 ? targetFreq.toFixed(1) : (freq * 0.9).toFixed(1)} Hz to avoid premature stepper motor bearing wear.`;
+  } else {
+    adviceEl.textContent = `Tension is optimal at ${tension.toFixed(1)} N (target 7–10 N for Gates 2GT). Ringing echoes from directional acceleration changes oscillate at ${wavelength.toFixed(2)} mm intervals at ${speed.toFixed(0)} mm/s. Enable Klipper input shaping with shaper_freq_x: ${freq.toFixed(1)} Hz to cancel ghosting.`;
+  }
+
+  drawBeltSvg(wavelength);
+}
+
+function drawBeltSvg(wavelength) {
+  const svg = document.getElementById("beltSvgViz");
+  if (!svg) return;
+  const wlClamped = wavelength > 0 ? wavelength : 1.23;
+  let waveD = "M 42 45 ";
+  for (let x = 42; x <= 200; x += 4) {
+    const norm = (x - 42) / 158;
+    const env = Math.sin(norm * Math.PI);
+    const y = 45 + env * 12 * Math.sin(norm * Math.PI * 4);
+    waveD += `L ${x} ${y.toFixed(1)} `;
+  }
+  let ripples = "";
+  const step = Math.max(3.5, Math.min(18, wlClamped * 5));
+  for (let rx = 230; rx <= 315; rx += step) {
+    const alpha = Math.max(0.18, 0.9 - ((rx - 230) / 95));
+    ripples += `<line x1="${rx.toFixed(1)}" y1="20" x2="${rx.toFixed(1)}" y2="75" stroke="#38bdf8" stroke-width="2" stroke-opacity="${alpha.toFixed(2)}"/>`;
+  }
+
+  svg.innerHTML = `
+    <circle cx="42" cy="45" r="13" fill="none" stroke="#2563eb" stroke-width="2"/>
+    <circle cx="42" cy="45" r="3.5" fill="#94a3b8"/>
+    <circle cx="200" cy="45" r="13" fill="none" stroke="#2563eb" stroke-width="2"/>
+    <circle cx="200" cy="45" r="3.5" fill="#94a3b8"/>
+    <line x1="42" y1="32" x2="200" y2="32" stroke="#475569" stroke-width="2"/>
+    <path d="${waveD}" fill="none" stroke="#38bdf8" stroke-width="2"/>
+    <line x1="42" y1="58" x2="200" y2="58" stroke="#475569" stroke-width="2"/>
+    <text x="121" y="24" fill="#94a3b8" font-size="10" font-family="sans-serif" text-anchor="middle">Plucked Belt Vibration</text>
+    <rect x="220" y="14" width="105" height="68" rx="4" fill="rgba(15,23,42,0.6)" stroke="#334155"/>
+    ${ripples}
+    <text x="272" y="92" fill="#94a3b8" font-size="9.5" font-family="sans-serif" text-anchor="middle">Echo Pitch: ${wlClamped.toFixed(2)} mm</text>
+  `;
+}
+
+function recalculateAll() {
+  calculateXYSkew();
+  calculateZAxis();
+  calculateRodAndBelt();
+  calculateBedExpansion();
+  calculateBeltTension();
+}
+
+function loadPreset(index) {
+  const p = PRESETS[index];
+  if (!p) return;
+
+  const v = p.values;
+  document.getElementById("nomX").value = v.nomX;
+  document.getElementById("nomY").value = v.nomY;
+  document.getElementById("measX").value = v.measX;
+  document.getElementById("measY").value = v.measY;
+  document.getElementById("diagAD").value = v.diagAD;
+  document.getElementById("diagBD").value = v.diagBD;
+  document.getElementById("frameSpan").value = v.frameSpan;
+
+  document.getElementById("curZMax").value = v.curZMax;
+  document.getElementById("newZMax").value = v.newZMax;
+  document.getElementById("motorStep").value = v.motorStep;
+  document.getElementById("microstepping").value = v.microstepping;
+  document.getElementById("screwLead").value = v.screwLead;
+  document.getElementById("customLead").value = v.customLead || "";
+
+  document.getElementById("rodStroke").value = v.rodStroke;
+  document.getElementById("bearingSpan").value = v.bearingSpan;
+  document.getElementById("endstopClearance").value = v.endstopClearance;
+  document.getElementById("clampDepth").value = v.clampDepth;
+  document.getElementById("pulleyTeeth").value = v.pulleyTeeth;
+
+  document.getElementById("bedX").value = v.bedX;
+  document.getElementById("bedY").value = v.bedY;
+  document.getElementById("bedMaterial").value = v.bedMaterial;
+  document.getElementById("ambientTemp").value = v.ambientTemp;
+  document.getElementById("targetTemp").value = v.targetTemp;
+  document.getElementById("boltDiameter").value = v.boltDiameter;
+
+  if (v.beltSpan !== undefined && document.getElementById("beltSpan")) {
+    document.getElementById("beltSpan").value = v.beltSpan;
+    document.getElementById("beltProfile").value = v.beltProfile;
+    document.getElementById("beltFreq").value = v.beltFreq;
+    document.getElementById("beltPrintSpeed").value = v.beltPrintSpeed;
+    document.getElementById("beltTargetTension").value = v.beltTargetTension;
+    document.getElementById("beltCore").value = v.beltCore;
+  }
+
+  recalculateAll();
+}
+
+function collectState() {
+  return {
+    timestamp: new Date().toISOString(),
+    skew: {
+      nomX: parseFloat(document.getElementById("nomX").value),
+      nomY: parseFloat(document.getElementById("nomY").value),
+      measX: parseFloat(document.getElementById("measX").value),
+      measY: parseFloat(document.getElementById("measY").value),
+      diagAD: parseFloat(document.getElementById("diagAD").value),
+      diagBD: parseFloat(document.getElementById("diagBD").value),
+      frameSpan: parseFloat(document.getElementById("frameSpan").value),
+      scaleError: document.getElementById("valScaleError") ? document.getElementById("valScaleError").textContent : "",
+      skewFactor: document.getElementById("valSkewFactor").textContent,
+      skewAngle: document.getElementById("valSkewAngle").textContent,
+      mechAdjustment: document.getElementById("valMechanicalAdj").textContent
+    },
+    zAxis: {
+      curZMax: parseFloat(document.getElementById("curZMax").value),
+      newZMax: parseFloat(document.getElementById("newZMax").value),
+      motorStep: document.getElementById("motorStep").value,
+      microstepping: document.getElementById("microstepping").value,
+      screwLead: document.getElementById("screwLead").value,
+      customLead: document.getElementById("customLead").value,
+      stepsPerMm: document.getElementById("valZSteps").textContent,
+      gcode: document.getElementById("gcodeZString").textContent
+    },
+    linearTravel: {
+      stroke: parseFloat(document.getElementById("rodStroke").value),
+      bearingSpan: parseFloat(document.getElementById("bearingSpan").value),
+      endstopClearance: parseFloat(document.getElementById("endstopClearance").value),
+      clampDepth: parseFloat(document.getElementById("clampDepth").value),
+      pulleyTeeth: document.getElementById("pulleyTeeth").value,
+      cutRodLength: document.getElementById("valRodLength").textContent,
+      cutBeltLength: document.getElementById("valBeltLength").textContent
+    },
+    thermalBed: {
+      bedX: parseFloat(document.getElementById("bedX").value),
+      bedY: parseFloat(document.getElementById("bedY").value),
+      bedMaterial: document.getElementById("bedMaterial").value,
+      ambientTemp: parseFloat(document.getElementById("ambientTemp").value),
+      targetTemp: parseFloat(document.getElementById("targetTemp").value),
+      boltDiameter: document.getElementById("boltDiameter").value,
+      deltaDiag: document.getElementById("valDeltaDiag").textContent,
+      recommendedHole: document.getElementById("valMinHoleDia").textContent
+    }
+  };
+}
+
+// Setup input event listeners
+function bindListeners() {
+  const inputs = document.querySelectorAll("input, select");
+  inputs.forEach(input => {
+    input.addEventListener("input", recalculateAll);
+    input.addEventListener("change", recalculateAll);
+  });
+
+  document.getElementById("scenarioPreset").addEventListener("change", (e) => {
+    if (!PRO && parseInt(e.target.value, 10) !== 0) {
+      e.target.value = "0";
+      showProMsg();
+      return;
+    }
+    loadPreset(parseInt(e.target.value, 10));
+  });
+
+  // Reset button
+  document.getElementById("btnResetAll").addEventListener("click", () => {
+    document.getElementById("scenarioPreset").value = "0";
+    loadPreset(0);
+    showToast("Parameters reset to factory baseline.");
+  });
+
+  // Save Scenario to LocalStorage
+  document.getElementById("btnSaveScenario").addEventListener("click", () => {
+    if (!PRO) {
+      showProMsg();
+      return;
+    }
+    try {
+      const state = collectState();
+      localStorage.setItem("3dprinter_geometry_config", JSON.stringify(state));
+      const ind = document.getElementById("savedIndicator");
+      ind.style.display = "inline";
+      setTimeout(() => { ind.style.display = "none"; }, 3000);
+      showToast("Configuration successfully saved to local browser storage!");
+    } catch (e) {
+      showToast("Unable to save to localStorage: storage is blocked or full.");
+    }
+  });
+
+  // Export JSON
+  document.getElementById("btnExportJson").addEventListener("click", () => {
+    if (!PRO) {
+      showProMsg();
+      return;
+    }
+    const state = collectState();
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `3d-printer-geometry-calibration-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast("JSON configuration exported.");
+  });
+
+  // Export CSV
+  document.getElementById("btnExportCsv").addEventListener("click", () => {
+    if (!PRO) {
+      showProMsg();
+      return;
+    }
+    const s = collectState();
+    const rows = [
+      ["Metric", "Value", "Unit / Directive"],
+      ["Nominal X", s.skew.nomX, "mm"],
+      ["Nominal Y", s.skew.nomY, "mm"],
+      ["Measured X", s.skew.measX, "mm"],
+      ["Measured Y", s.skew.measY, "mm"],
+      ["Diagonal AD (BL-TR)", s.skew.diagAD, "mm"],
+      ["Diagonal BD (TL-BR)", s.skew.diagBD, "mm"],
+      ["Frame Span", s.skew.frameSpan, "mm"],
+      ["Skew Factor", s.skew.skewFactor, "tan(theta)"],
+      ["Skew Angle", s.skew.skewAngle, "degrees"],
+      ["Rod Adjustment", s.skew.mechAdjustment, "delta"],
+      ["Current Z Max", s.zAxis.curZMax, "mm"],
+      ["New Z Max", s.zAxis.newZMax, "mm"],
+      ["Calculated Z Steps", s.zAxis.stepsPerMm, "steps/mm"],
+      ["Target Stroke", s.linearTravel.stroke, "mm"],
+      ["Min Cut Rod Length", s.linearTravel.cutRodLength, "mm"],
+      ["Cut Belt Length", s.linearTravel.cutBeltLength, "mm"],
+      ["Bed Dimensions", `${s.thermalBed.bedX} x ${s.thermalBed.bedY}`, "mm"],
+      ["Bed Diagonal Growth", s.thermalBed.deltaDiag, "mm"],
+      ["Recommended Corner Ream", s.thermalBed.recommendedHole, "mm"]
+    ];
+    const csvContent = rows.map(r => r.map(c => `"${c}"`).join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `3d-printer-geometry-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast("CSV sheet exported.");
+  });
+
+  // Print sheet
+  document.getElementById("btnPrintReport").addEventListener("click", () => {
+    if (!PRO) {
+      showProMsg();
+      return;
+    }
+    window.print();
+  });
+}
+
+// Initial boot
+document.addEventListener("DOMContentLoaded", () => {
+  bindListeners();
+
+  // Try to restore previous session from localStorage safely
+  let restored = false;
+  try {
+    const saved = localStorage.getItem("3dprinter_geometry_config");
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data && data.skew && data.skew.nomX) {
+        document.getElementById("nomX").value = data.skew.nomX;
+        document.getElementById("nomY").value = data.skew.nomY;
+        document.getElementById("measX").value = data.skew.measX;
+        document.getElementById("measY").value = data.skew.measY;
+        document.getElementById("diagAD").value = data.skew.diagAD;
+        document.getElementById("diagBD").value = data.skew.diagBD;
+        document.getElementById("frameSpan").value = data.skew.frameSpan;
+        if (data.zAxis) {
+          document.getElementById("curZMax").value = data.zAxis.curZMax;
+          document.getElementById("newZMax").value = data.zAxis.newZMax;
+          if (data.zAxis.motorStep) document.getElementById("motorStep").value = data.zAxis.motorStep;
+          if (data.zAxis.microstepping) document.getElementById("microstepping").value = data.zAxis.microstepping;
+          if (data.zAxis.screwLead) document.getElementById("screwLead").value = data.zAxis.screwLead;
+          if (data.zAxis.customLead !== undefined) document.getElementById("customLead").value = data.zAxis.customLead;
+        }
+        if (data.linearTravel) {
+          document.getElementById("rodStroke").value = data.linearTravel.stroke;
+          document.getElementById("bearingSpan").value = data.linearTravel.bearingSpan;
+          if (data.linearTravel.endstopClearance !== undefined) document.getElementById("endstopClearance").value = data.linearTravel.endstopClearance;
+          if (data.linearTravel.clampDepth !== undefined) document.getElementById("clampDepth").value = data.linearTravel.clampDepth;
+          if (data.linearTravel.pulleyTeeth) document.getElementById("pulleyTeeth").value = data.linearTravel.pulleyTeeth;
+        }
+        if (data.thermalBed) {
+          document.getElementById("bedX").value = data.thermalBed.bedX;
+          document.getElementById("bedY").value = data.thermalBed.bedY;
+          if (data.thermalBed.bedMaterial) document.getElementById("bedMaterial").value = data.thermalBed.bedMaterial;
+          if (data.thermalBed.ambientTemp !== undefined) document.getElementById("ambientTemp").value = data.thermalBed.ambientTemp;
+          if (data.thermalBed.targetTemp !== undefined) document.getElementById("targetTemp").value = data.thermalBed.targetTemp;
+          if (data.thermalBed.boltDiameter) document.getElementById("boltDiameter").value = data.thermalBed.boltDiameter;
+        }
+        recalculateAll();
+        restored = true;
+      }
+    }
+  } catch (e) {
+    // Graceful fallback to factory baseline preset
+  }
+
+  if (!restored) {
+    loadPreset(0);
+  }
+});
+// -------------------------------------------------------------
+// FEATURE 5: MANUAL LEVELING MATRIX & TRAMMING SCREW GUIDE
+// -------------------------------------------------------------
+let meshGridDim = 3;
+// Acceptance check preset: Front-Left=0.00, Front-Right=+0.25, Back-Left=-0.10, Back-Right=+0.15
+let meshValues3 = [
+  [-0.10, 0.02, 0.15],  // Back row (Y=2): BL, BM, BR
+  [-0.05, 0.05, 0.20],  // Mid row  (Y=1): ML, MM, MR
+  [ 0.00, 0.12, 0.25]   // Front row(Y=0): FL, FM, FR
+];
+let meshValues4 = [
+  [-0.10, -0.02, 0.08, 0.15],
+  [-0.06,  0.01, 0.11, 0.18],
+  [-0.03,  0.04, 0.14, 0.22],
+  [ 0.00,  0.08, 0.17, 0.25]
+];
+
+function initMeshInputs() {
+  const container = document.getElementById("meshInputsContainer");
+  if (!container) return;
+  const n = meshGridDim;
+  container.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+  container.innerHTML = "";
+
+  const vals = n === 3 ? meshValues3 : meshValues4;
+
+  for (let r = 0; r < n; r++) {
+    for (let c = 0; c < n; c++) {
+      const isCorner = (r === 0 || r === n - 1) && (c === 0 || c === n - 1);
+      let label = "";
+      if (r === 0 && c === 0) label = "BL";
+      else if (r === 0 && c === n - 1) label = "BR";
+      else if (r === n - 1 && c === 0) label = "FL";
+      else if (r === n - 1 && c === n - 1) label = "FR";
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "mesh-cell-input" + (isCorner ? " corner-cell" : "");
+      if (label) {
+        const lbl = document.createElement("span");
+        lbl.className = "mesh-cell-label";
+        lbl.textContent = label;
+        wrapper.appendChild(lbl);
+      }
+      const inp = document.createElement("input");
+      inp.type = "number";
+      inp.step = "0.01";
+      inp.value = vals[r][c].toFixed(2);
+      inp.dataset.row = r;
+      inp.dataset.col = c;
+      inp.addEventListener("input", (e) => {
+        const nr = parseInt(e.target.dataset.row, 10);
+        const nc = parseInt(e.target.dataset.col, 10);
+        const v = parseFloat(e.target.value);
+        if (n === 3) meshValues3[nr][nc] = isNaN(v) ? 0 : v;
+        else meshValues4[nr][nc] = isNaN(v) ? 0 : v;
+        calculateMeshVisualizer();
+      });
+      wrapper.appendChild(inp);
+      container.appendChild(wrapper);
+    }
+  }
+}
+
+function calculateMeshVisualizer() {
+  const n = meshGridDim;
+  const vals = n === 3 ? meshValues3 : meshValues4;
+  const pitch = parseFloat(document.getElementById("meshScrewPitch").value) || 0.5;
+  const refCorner = document.getElementById("meshRefCorner").value;
+
+  // Corner lookup:
+  // r=0: Back, r=n-1: Front; c=0: Left, c=n-1: Right
+  const corners = {
+    BL: vals[0][0],
+    BR: vals[0][n - 1],
+    FL: vals[n - 1][0],
+    FR: vals[n - 1][n - 1]
+  };
+
+  const refVal = corners[refCorner] !== undefined ? corners[refCorner] : 0;
+
+  // Flatten for statistics
+  let minVal = Infinity, maxVal = -Infinity;
+  let sumZ = 0, count = 0;
+  for (let r = 0; r < n; r++) {
+    for (let c = 0; c < n; c++) {
+      const v = vals[r][c];
+      if (v < minVal) minVal = v;
+      if (v > maxVal) maxVal = v;
+      sumZ += v;
+      count++;
+    }
+  }
+  const range = maxVal - minVal;
+
+  document.getElementById("valMeshRange").textContent = `${range.toFixed(2)} mm (Min: ${minVal.toFixed(2)}, Max: +${maxVal.toFixed(2)})`;
+  document.getElementById("meshRangeBadge").textContent = `Range: ${range.toFixed(2)} mm`;
+
+  // Plane tilt calculation:
+  // Using 4 corners over nominal 200mm bed dimension:
+  // X tilt (Left to Right avg): ((FR - FL) + (BR - BL)) / 2
+  // Y tilt (Front to Back avg): ((BL - FL) + (BR - FR)) / 2
+  const deltaX = ((corners.FR - corners.FL) + (corners.BR - corners.BL)) / 2;
+  const deltaY = ((corners.BL - corners.FL) + (corners.BR - corners.FR)) / 2;
+  const nominalSpan = 200; // mm reference standard
+  const slopeX_m = (deltaX / nominalSpan) * 1000;
+  const slopeY_m = (deltaY / nominalSpan) * 1000;
+  const totalTiltAngle = Math.atan(Math.hypot(deltaX, deltaY) / nominalSpan) * (180 / Math.PI);
+
+  document.getElementById("valPlaneTilt").textContent =
+    `X: ${slopeX_m >= 0 ? '+' : ''}${slopeX_m.toFixed(2)} mm/m | Y: ${slopeY_m >= 0 ? '+' : ''}${slopeY_m.toFixed(2)} mm/m (${totalTiltAngle.toFixed(2)}°)`;
+
+  // Tramming Screw Adjustments
+  // Convention: diff = cornerDev - refVal.
+  // diff > 0 -> Bed is too high -> turn counter-clockwise
+  // diff < 0 -> Bed is too low -> turn clockwise
+  const screwNames = { FL: "Front-Left", FR: "Front-Right", BL: "Back-Left", BR: "Back-Right" };
+  ["FL", "FR", "BL", "BR"].forEach(cKey => {
+    const el = document.getElementById("adj" + cKey);
+    if (!el) return;
+    const diff = corners[cKey] - refVal;
+    const turns = Math.abs(diff) / pitch;
+    if (Math.abs(diff) < 0.005) {
+      el.textContent = "Reference (0.00 turns)";
+      el.style.color = "var(--success)";
+    } else if (diff > 0) {
+      el.textContent = `Turn ${screwNames[cKey]} screw ${turns.toFixed(2)} turns counter-clockwise`;
+      el.style.color = "var(--danger)";
+    } else {
+      el.textContent = `Turn ${screwNames[cKey]} screw ${turns.toFixed(2)} turns clockwise`;
+      el.style.color = "var(--warning)";
+    }
+  });
+
+  // Render SVG Heatmap
+  drawMeshHeatmap(vals, n, minVal, maxVal);
+
+  // Interpretation Advice
+  const adviceEl = document.getElementById("meshAdviceText");
+  if (range <= 0.08) {
+    adviceEl.textContent = `Bed is excellently trammed! Total variation is only ${range.toFixed(2)} mm. Any modern automatic bed leveling will handle this without visible layer banding.`;
+  } else if (range <= 0.25) {
+    adviceEl.textContent = `Moderate bed tilt (${range.toFixed(2)} mm span). Adjust the ${Math.abs(corners.FR - refVal) >= Math.abs(corners.BL - refVal) ? 'Front-Right' : 'Back-Left'} thumb-screw first per the rotation table above, then re-probe.`;
+  } else {
+    adviceEl.textContent = `Severe bed deviation detected (${range.toFixed(2)} mm range)! Do not print before tramming. Adjust high corners counter-clockwise to relieve spring tension. Check for gantry sagging on the right side.`;
+  }
+}
+
+function drawMeshHeatmap(vals, n, minVal, maxVal) {
+  const svg = document.getElementById("meshSvgMap");
+  if (!svg) return;
+
+  const w = 340;
+  const h = 180;
+  const pad = 24;
+  const plotW = w - pad * 2;
+  const plotH = h - pad * 2;
+  const cellW = plotW / n;
+  const cellH = plotH / n;
+
+  const colorScale = (val) => {
+    const span = (maxVal - minVal) || 0.001;
+    const t = Math.max(0, Math.min(1, (val - minVal) / span));
+    // Blue (0) -> Cyan (0.33) -> Green (0.5) -> Yellow (0.75) -> Red (1.0)
+    const r = Math.round(t < 0.5 ? 40 + t * 2 * 60 : 100 + (t - 0.5) * 2 * 148);
+    const g = Math.round(t < 0.5 ? 120 + t * 2 * 100 : 220 - (t - 0.5) * 2 * 140);
+    const b = Math.round(t < 0.5 ? 240 - t * 2 * 100 : 140 - (t - 0.5) * 2 * 80);
+    return `rgb(${r},${g},${b})`;
+  };
+
+  let html = `<rect width="${w}" height="${h}" fill="var(--code-bg)" rx="6"/>`;
+
+  for (let r = 0; r < n; r++) {
+    for (let c = 0; c < n; c++) {
+      const x = pad + c * cellW;
+      const y = pad + r * cellH;
+      const val = vals[r][c];
+      const fill = colorScale(val);
+      html += `
+        <rect x="${x + 2}" y="${y + 2}" width="${cellW - 4}" height="${cellH - 4}" rx="4" fill="${fill}" opacity="0.82" stroke="var(--border)" stroke-width="1"/>
+        <text x="${x + cellW / 2}" y="${y + cellH / 2 + 4}" font-size="${n === 3 ? '11' : '9.5'}" font-family="monospace" font-weight="700" fill="#0f172a" text-anchor="middle">${val >= 0 ? '+' : ''}${val.toFixed(2)}</text>
+      `;
+    }
+  }
+
+  // Corner labels
+  html += `
+    <text x="${pad}" y="${pad - 8}" fill="var(--text-muted)" font-size="9" font-family="sans-serif">Back-Left</text>
+    <text x="${pad + plotW}" y="${pad - 8}" fill="var(--text-muted)" font-size="9" font-family="sans-serif" text-anchor="end">Back-Right</text>
+    <text x="${pad}" y="${pad + plotH + 16}" fill="var(--text-muted)" font-size="9" font-family="sans-serif">Front-Left (0,0)</text>
+    <text x="${pad + plotW}" y="${pad + plotH + 16}" fill="var(--text-muted)" font-size="9" font-family="sans-serif" text-anchor="end">Front-Right</text>
+  `;
+
+  svg.innerHTML = html;
+}
+
+// Wire Mesh visualizer controls
+document.addEventListener("DOMContentLoaded", () => {
+  const sizeSelect = document.getElementById("meshGridSize");
+  if (sizeSelect) {
+    sizeSelect.addEventListener("change", (e) => {
+      meshGridDim = parseInt(e.target.value, 10);
+      initMeshInputs();
+      calculateMeshVisualizer();
+    });
+  }
+
+  const pitchSelect = document.getElementById("meshScrewPitch");
+  if (pitchSelect) pitchSelect.addEventListener("change", calculateMeshVisualizer);
+
+  const refSelect = document.getElementById("meshRefCorner");
+  if (refSelect) refSelect.addEventListener("change", calculateMeshVisualizer);
+
+  const btnZero = document.getElementById("btnMeshZero");
+  if (btnZero) {
+    btnZero.addEventListener("click", () => {
+      const n = meshGridDim;
+      const target = n === 3 ? meshValues3 : meshValues4;
+      for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+          target[r][c] = 0.00;
+        }
+      }
+      initMeshInputs();
+      calculateMeshVisualizer();
+    });
+  }
+
+  initMeshInputs();
+  calculateMeshVisualizer();
+});
+// -------------------------------------------------------------
+// FEATURE 6: MULTI-PRINTER PROFILE COMPARATOR & REPORT EXPORT
+// -------------------------------------------------------------
+let activeSlotIdx = 0;
+const defaultMachineProfiles = [
+  { name: "Prusa MK3S+", nomX: 100, nomY: 100, measX: 100.02, measY: 99.98, diagAD: 141.43, diagBD: 141.41, frameSpan: 250, curZMax: 210, newZMax: 210, motorStep: "1.8", microstepping: "16", screwLead: "8.0", rodStroke: 210, bearingSpan: 120, endstopClearance: 10, clampDepth: 10, pulleyTeeth: "20", bedX: 250, bedY: 210, bedMaterial: "23.1", ambientTemp: 22, targetTemp: 60, boltDiameter: "3.0", beltSpan: 150, beltProfile: "0.022354", beltFreq: 65, beltPrintSpeed: 80, beltCore: "1.0" },
+  { name: "Anet A8", nomX: 100, nomY: 100, measX: 100.15, measY: 99.85, diagAD: 142.35, diagBD: 140.50, frameSpan: 280, curZMax: 240, newZMax: 240, motorStep: "1.8", microstepping: "16", screwLead: "8.0", rodStroke: 220, bearingSpan: 130, endstopClearance: 12, clampDepth: 8, pulleyTeeth: "20", bedX: 220, bedY: 220, bedMaterial: "23.1", ambientTemp: 20, targetTemp: 70, boltDiameter: "3.0", beltSpan: 180, beltProfile: "0.022354", beltFreq: 48, beltPrintSpeed: 60, beltCore: "1.0" },
+  { name: "Ender-3 Mod", nomX: 100, nomY: 100, measX: 99.95, measY: 100.05, diagAD: 141.65, diagBD: 141.25, frameSpan: 270, curZMax: 250, newZMax: 400, motorStep: "1.8", microstepping: "16", screwLead: "8.0", rodStroke: 300, bearingSpan: 150, endstopClearance: 15, clampDepth: 15, pulleyTeeth: "20", bedX: 310, bedY: 310, bedMaterial: "23.6", ambientTemp: 23, targetTemp: 105, boltDiameter: "4.0", beltSpan: 240, beltProfile: "0.033531", beltFreq: 72, beltPrintSpeed: 120, beltCore: "1.0" },
+  { name: "Voron 2.4 350", nomX: 300, nomY: 300, measX: 300.08, measY: 299.92, diagAD: 424.35, diagBD: 424.20, frameSpan: 350, curZMax: 330, newZMax: 350, motorStep: "1.8", microstepping: "16", screwLead: "8.0", rodStroke: 350, bearingSpan: 160, endstopClearance: 15, clampDepth: 12, pulleyTeeth: "20", bedX: 350, bedY: 350, bedMaterial: "23.6", ambientTemp: 23, targetTemp: 110, boltDiameter: "4.0", beltSpan: 280, beltProfile: "0.033531", beltFreq: 68, beltPrintSpeed: 150, beltCore: "1.0" },
+  { name: "Custom Lab", nomX: 200, nomY: 200, measX: 199.90, measY: 200.10, diagAD: 282.85, diagBD: 282.84, frameSpan: 240, curZMax: 200, newZMax: 200, motorStep: "1.8", microstepping: "16", screwLead: "8.0", rodStroke: 200, bearingSpan: 110, endstopClearance: 10, clampDepth: 10, pulleyTeeth: "16", bedX: 235, bedY: 235, bedMaterial: "23.1", ambientTemp: 21, targetTemp: 60, boltDiameter: "3.0", beltSpan: 160, beltProfile: "0.022354", beltFreq: 60, beltPrintSpeed: 60, beltCore: "1.0" }
+];
+
+let machineProfiles = JSON.parse(JSON.stringify(defaultMachineProfiles));
+try {
+  const stored = localStorage.getItem("3dprinter_fleet_profiles");
+  if (stored) {
+    const parsed = JSON.parse(stored);
+    if (Array.isArray(parsed) && parsed.length === 5) machineProfiles = parsed;
+  }
+} catch (e) {}
+
+function calcProfileMetrics(p) {
+  const diffDiagSq = (p.diagAD * p.diagAD) - (p.diagBD * p.diagBD);
+  const sinTheta = Math.max(-0.999, Math.min(0.999, diffDiagSq / (4 * p.measX * p.measY)));
+  const thetaRad = Math.asin(sinTheta);
+  const tanTheta = Math.tan(thetaRad);
+  const skewAngle = (thetaRad * 180) / Math.PI;
+  const rodDelta = p.frameSpan * Math.tan(Math.abs(thetaRad));
+  const zSteps = ((360 / parseFloat(p.motorStep)) * parseFloat(p.microstepping)) / parseFloat(p.screwLead || 8);
+  const minRod = p.rodStroke + p.bearingSpan + p.endstopClearance + (2 * p.clampDepth);
+  const deltaT = Math.max(0, p.targetTemp - p.ambientTemp);
+  const diagBed = Math.hypot(p.bedX, p.bedY);
+  const deltaBedDiag = diagBed * (parseFloat(p.bedMaterial) * 1e-6) * deltaT;
+  const mu = parseFloat(p.beltProfile) * parseFloat(p.beltCore || 1.0);
+  const tension = 4 * mu * Math.pow(p.beltSpan / 1000, 2) * Math.pow(p.beltFreq, 2);
+  const ghostWave = p.beltPrintSpeed / p.beltFreq;
+
+  return {
+    tanTheta: tanTheta.toFixed(5),
+    skewAngle: `${Math.abs(skewAngle).toFixed(3)}°`,
+    rodDelta: `${rodDelta.toFixed(2)} mm`,
+    zSteps: `${zSteps.toFixed(1)} steps/mm`,
+    minRod: `${minRod.toFixed(1)} mm`,
+    deltaBedDiag: `${deltaBedDiag.toFixed(3)} mm`,
+    tension: `${tension.toFixed(1)} N`,
+    ghostWave: `${ghostWave.toFixed(2)} mm`,
+    gcodeM852: `M852 S${tanTheta.toFixed(5)}`,
+    gcodeZ: `M92 Z${zSteps.toFixed(1)} ; M208 Z${Math.round(p.newZMax)}`,
+    shaperFreq: `${parseFloat(p.beltFreq).toFixed(1)} Hz`
+  };
+}
+
+function renderComparator() {
+  const head = document.getElementById("comparatorHead");
+  const body = document.getElementById("comparatorBody");
+  if (!head || !body) return;
+
+  head.innerHTML = `<th>Diagnostic Metric</th>` +
+    machineProfiles.map((p, idx) => `<th class="${idx === activeSlotIdx ? 'active-col' : ''}">Slot ${idx + 1}: ${p.name}</th>`).join("");
+
+  const metrics = machineProfiles.map(calcProfileMetrics);
+
+  const rows = [
+    { cat: true, title: "1. Measured Caliper Inputs" },
+    { label: "Nominal X × Y", get: (p) => `${p.nomX} × ${p.nomY} mm` },
+    { label: "Measured X × Y", get: (p) => `${p.measX} × ${p.measY} mm` },
+    { label: "Diagonals (AD / BD)", get: (p) => `${p.diagAD} / ${p.diagBD} mm` },
+    { label: "Bed Temp Target", get: (p) => `${p.targetTemp} °C (amb: ${p.ambientTemp}°)` },
+    { label: "Plucked Belt Frequency", get: (p) => `${p.beltFreq} Hz (span: ${p.beltSpan}mm)` },
+    { cat: true, title: "2. Tolerances & Kinematic Solutions" },
+    { label: "Orthogonal Skew Angle", get: (_, m) => m.skewAngle },
+    { label: "Frame Mechanical Delta", get: (_, m) => m.rodDelta },
+    { label: "Lead Screw Z Steps", get: (_, m) => m.zSteps },
+    { label: "Min Ground Rod Cut Length", get: (_, m) => m.minRod },
+    { label: "Diagonal Bed Growth", get: (_, m) => m.deltaBedDiag },
+    { label: "Belt Tension", get: (_, m) => m.tension },
+    { label: "Ghosting Ripple Pitch", get: (_, m) => m.ghostWave },
+    { cat: true, title: "3. Firmware Compensation Commands" },
+    { label: "Marlin Orthogonal Skew", get: (_, m) => m.gcodeM852 },
+    { label: "Marlin Z Travel Limits", get: (_, m) => m.gcodeZ },
+    { label: "Klipper Input Shaper Freq", get: (_, m) => m.shaperFreq }
+  ];
+
+  body.innerHTML = rows.map(r => {
+    if (r.cat) {
+      return `<tr><td colspan="6" class="sec-hdr">${r.title}</td></tr>`;
+    }
+    const cells = machineProfiles.map((p, idx) => {
+      const isAct = idx === activeSlotIdx;
+      return `<td class="${isAct ? 'active-col' : ''}">${r.get(p, metrics[idx])}</td>`;
+    }).join("");
+    return `<tr><td><strong>${r.label}</strong></td>${cells}</tr>`;
+  }).join("");
+
+  const slotInput = document.getElementById("slotNameInput");
+  if (slotInput) slotInput.value = machineProfiles[activeSlotIdx].name;
+}
+
+function updateSlotDropdownLabels() {
+  const sel = document.getElementById("slotSelect");
+  if (!sel) return;
+  Array.from(sel.options).forEach((opt, idx) => {
+    opt.textContent = `Slot ${idx + 1}: ${machineProfiles[idx].name}`;
+  });
+}
+
+function exportDiagnosticCsv() {
+  if (!PRO) {
+    showProMsg();
+    return;
+  }
+  const metrics = machineProfiles.map(calcProfileMetrics);
+  const escapeCsv = (str) => {
+    const s = String(str ?? "");
+    return s.includes(",") || s.includes('"') || s.includes("\n") || s.includes("\r")
+      ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+
+  const headers = ["Category", "Parameter", "Unit", ...machineProfiles.map((p, idx) => `Slot_${idx + 1}_${p.name}`)];
+  const csvRows = [headers.map(escapeCsv).join(",")];
+
+  const exportItems = [
+    ["Measured Input", "Nominal X", "mm", p => p.nomX],
+    ["Measured Input", "Nominal Y", "mm", p => p.nomY],
+    ["Measured Input", "Measured X", "mm", p => p.measX],
+    ["Measured Input", "Measured Y", "mm", p => p.measY],
+    ["Measured Input", "Diagonal AD", "mm", p => p.diagAD],
+    ["Measured Input", "Diagonal BD", "mm", p => p.diagBD],
+    ["Measured Input", "Frame Span", "mm", p => p.frameSpan],
+    ["Measured Input", "Target Bed Temp", "degC", p => p.targetTemp],
+    ["Measured Input", "Plucked Frequency", "Hz", p => p.beltFreq],
+    ["Calculated Tolerance", "Skew Factor tan(theta)", "factor", (_, m) => m.tanTheta],
+    ["Calculated Tolerance", "Skew Angle", "degrees", (_, m) => m.skewAngle],
+    ["Calculated Tolerance", "Mechanical Rod Adjustment", "mm", (_, m) => m.rodDelta],
+    ["Calculated Tolerance", "Z Steps", "steps/mm", (_, m) => m.zSteps],
+    ["Calculated Tolerance", "Min Cut Rod Length", "mm", (_, m) => m.minRod],
+    ["Calculated Tolerance", "Thermal Bed Growth", "mm", (_, m) => m.deltaBedDiag],
+    ["Calculated Tolerance", "Belt Tension", "N", (_, m) => m.tension],
+    ["Calculated Tolerance", "Ghosting Wavelength", "mm", (_, m) => m.ghostWave],
+    ["Firmware Compensation", "Marlin M852 Skew Directive", "gcode", (_, m) => m.gcodeM852],
+    ["Firmware Compensation", "Marlin M92 Z Axis Directive", "gcode", (_, m) => m.gcodeZ],
+    ["Firmware Compensation", "Klipper Input Shaper Freq", "directive", (_, m) => m.shaperFreq]
+  ];
+
+  exportItems.forEach(([cat, param, unit, getter]) => {
+    const row = [cat, param, unit, ...machineProfiles.map((p, i) => getter(p, metrics[i]))];
+    csvRows.push(row.map(escapeCsv).join(","));
+  });
+
+  const csvBlob = new Blob([csvRows.join("\r\n")], { type: "text/csv;charset=utf-8;" });
+  const blobUrl = URL.createObjectURL(csvBlob);
+  const a = document.createElement("a");
+  a.href = blobUrl;
+  a.download = `3D-Printer-Diagnostics-Fleet-Report-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(blobUrl);
+  showToast("Diagnostic RFC-4180 CSV generated and downloaded!");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const slotSel = document.getElementById("slotSelect");
+  const slotInput = document.getElementById("slotNameInput");
+  const btnSaveSlot = document.getElementById("btnSaveToSlot");
+  const btnLoadSlot = document.getElementById("btnLoadFromSlot");
+  const btnCsv = document.getElementById("btnExportDiagCsv");
+  const btnPrint = document.getElementById("btnPrintInspection");
+
+  if (slotSel) {
+    slotSel.addEventListener("change", (e) => {
+      activeSlotIdx = parseInt(e.target.value, 10);
+      renderComparator();
+    });
+  }
+
+  if (slotInput) {
+    slotInput.addEventListener("input", (e) => {
+      machineProfiles[activeSlotIdx].name = e.target.value || `Machine ${activeSlotIdx + 1}`;
+      updateSlotDropdownLabels();
+      renderComparator();
+      try { localStorage.setItem("3dprinter_fleet_profiles", JSON.stringify(machineProfiles)); } catch (err) {}
+    });
+  }
+
+  if (btnSaveSlot) {
+    btnSaveSlot.addEventListener("click", () => {
+      if (!PRO) { showProMsg(); return; }
+      const p = machineProfiles[activeSlotIdx];
+      p.nomX = parseFloat(document.getElementById("nomX").value);
+      p.nomY = parseFloat(document.getElementById("nomY").value);
+      p.measX = parseFloat(document.getElementById("measX").value);
+      p.measY = parseFloat(document.getElementById("measY").value);
+      p.diagAD = parseFloat(document.getElementById("diagAD").value);
+      p.diagBD = parseFloat(document.getElementById("diagBD").value);
+      p.frameSpan = parseFloat(document.getElementById("frameSpan").value);
+      p.curZMax = parseFloat(document.getElementById("curZMax").value);
+      p.newZMax = parseFloat(document.getElementById("newZMax").value);
+      p.rodStroke = parseFloat(document.getElementById("rodStroke").value);
+      p.targetTemp = parseFloat(document.getElementById("targetTemp").value);
+      p.ambientTemp = parseFloat(document.getElementById("ambientTemp").value);
+      if (document.getElementById("beltFreq")) p.beltFreq = parseFloat(document.getElementById("beltFreq").value);
+      renderComparator();
+      try { localStorage.setItem("3dprinter_fleet_profiles", JSON.stringify(machineProfiles)); } catch (err) {}
+      showToast(`Slot ${activeSlotIdx + 1} (${p.name}) synchronized with live settings!`);
+    });
+  }
+
+  if (btnLoadSlot) {
+    btnLoadSlot.addEventListener("click", () => {
+      if (!PRO) { showProMsg(); return; }
+      const p = machineProfiles[activeSlotIdx];
+      document.getElementById("nomX").value = p.nomX;
+      document.getElementById("nomY").value = p.nomY;
+      document.getElementById("measX").value = p.measX;
+      document.getElementById("measY").value = p.measY;
+      document.getElementById("diagAD").value = p.diagAD;
+      document.getElementById("diagBD").value = p.diagBD;
+      document.getElementById("frameSpan").value = p.frameSpan;
+      document.getElementById("curZMax").value = p.curZMax;
+      document.getElementById("newZMax").value = p.newZMax;
+      document.getElementById("rodStroke").value = p.rodStroke;
+      document.getElementById("targetTemp").value = p.targetTemp;
+      document.getElementById("ambientTemp").value = p.ambientTemp;
+      if (document.getElementById("beltFreq")) document.getElementById("beltFreq").value = p.beltFreq;
+      recalculateAll();
+      showToast(`Loaded ${p.name} into active diagnostic tools.`);
+    });
+  }
+
+  if (btnCsv) btnCsv.addEventListener("click", exportDiagnosticCsv);
+  if (btnPrint) btnPrint.addEventListener("click", () => {
+    if (!PRO) { showProMsg(); return; }
+    window.print();
+  });
+
+  updateSlotDropdownLabels();
+  renderComparator();
+});
+// FEATURE-JS
+</script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This free browser-based geometry tool helps 3D printer builders and modders eliminate frame skew, bed warping, and mechanical misalignment without spreadsheets. Input digital caliper measurements to generate Marlin M852 correction g-code, compute thermal expansion hole clearances, and convert bed probe deltas into precise leveling screw adjustments.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Print an orthogonal calibration square or cross and measure the side lengths and diagonals using digital calipers.</li><li>Enter your measurements into the skew calculator to compute angular error and generate Marlin M852 or Klipper values.</li><li>Send the generated M852 g-code to your printer terminal and save it to EEPROM with M500.</li><li>Use the thermal clearance and tramming tabs to verify mounting hole tolerances and adjust bed leveling thumbwheels.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">Anet A8 - X and Y axis not square - how to fix?</h4><p style="margin:0">On the Anet A8 acrylic frame, skew is almost always caused by uneven spacing along the threaded M8 rods forming the lower H-frame. Loosen the M8 frame nuts and use digital calipers to measure the exact distance between the front and rear acrylic plates on both the left and right sides. Once both distances match perfectly, tighten the locking nuts sequentially against the acrylic. If slight racking persists due to the flexible frame material, you can apply Marlin M852 software skew compensation to correct the remaining deviation in firmware.</p><h4 style="font-size:16px;margin:16px 0 4px">How to re-program Prusa firmware to accept a taller Z axis?</h4><p style="margin:0">To increase Z travel on stock Prusa firmware, you must recompile the Prusa-Firmware source code. Open the source in Arduino IDE or PlatformIO, locate `Configuration_prusa.h`, and edit the `Z_MAX_POS` value to reflect your new physical hardware limit. After compiling and flashing the new hex file, rerun the XYZ calibration wizard; if your custom frame is significantly taller, you may also need to adjust the Z-calibration search limits in `ultralcd.cpp` to prevent timeout errors.</p><h4 style="font-size:16px;margin:16px 0 4px">How to calculate linear Y rod length for a larger replacement bed?</h4><p style="margin:0">The required linear rod length equals your desired bed travel plus the spacing between the outermost linear bearing edges, plus endstop and frame mounting margins. Your travel should match your new bed length plus roughly 10 to 20mm of nozzle over-travel. Add the distance from the front edge of the front Y bearing to the rear edge of the rear Y bearing on your carriage, then add an additional 25 to 30mm for rod ends seated in frame brackets.</p><h4 style="font-size:16px;margin:16px 0 4px">How thick does an aluminum print bed need to be?</h4><p style="margin:0">For small beds up to 235x235mm, a 3mm to 4mm plate is adequate, though cast tooling plate performs significantly better than standard rolled sheet. For beds 300x300mm or larger, choose at least 6mm to 8mm cast aluminum tooling plate (such as MIC6 or ATP-5). Rolled aluminum contains internal mechanical stresses that cause severe center warping under heat cycles, whereas cast tooling plate is stress-relieved and precision-milled flat.</p>
+<p style="margin:24px 0;padding:16px;border:1px solid rgba(128,128,128,.35);border-radius:12px"><strong>Want the full version?</strong> Exports, printing and saved scenarios are unlocked in the full offline pack (single file, quick-start guide and license):<a href="https://ferrywave73.gumroad.com/l/jzdhms" rel="noopener" style="font-weight:700;color:inherit">download it on Gumroad</a>.</p><p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">About · Offline pack</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"About · Offline pack"});</script>
+</body>
+</html>
