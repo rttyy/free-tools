@@ -1,0 +1,2824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --raw-color: #64748b;
+      --sma-color: #f59e0b;
+      --ema-color: #10b981;
+      --median-color: #ec4899;
+      --grid-color: rgba(255, 255, 255, 0.07);
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --card-bg: #ffffff;
+        --card-border: #e2e8f0;
+        --text: #0f172a;
+        --text-muted: #64748b;
+        --accent: #0284c7;
+        --accent-hover: #0369a1;
+        --raw-color: #94a3b8;
+        --sma-color: #d97706;
+        --ema-color: #059669;
+        --median-color: #db2777;
+        --grid-color: rgba(0, 0, 0, 0.06);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      padding: 16px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+<<<<<<< FIND
+    .title-group h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+=======
+    .title-group h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    button, select, input {
+      font-family: inherit;
+      font-size: 0.85rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--accent);
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+<<<<<<< FIND
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+=======
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      min-width: 0;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+<<<<<<< FIND
+    .grid-presets {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+=======
+    .grid-presets {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .preset-card {
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 10px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.02);
+      transition: all 0.15s ease;
+    }
+    .preset-card:hover, .preset-card.active {
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.06);
+    }
+    .preset-card h4 {
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      color: var(--accent);
+    }
+    .preset-card p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .field label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+    .field input, .field select {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 6px 8px;
+      color: var(--text);
+    }
+    .field input:focus, .field select:focus {
+      outline: 1px solid var(--accent);
+      border-color: var(--accent);
+    }
+    .unit {
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: normal;
+    }
+
+<<<<<<< FIND
+    /* Oscilloscope Bench */
+    .bench-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    @media (min-width: 1024px) {
+      .bench-layout {
+        grid-template-columns: 3fr 1fr;
+      }
+    }
+
+    .scope-wrapper {
+      position: relative;
+      background: #050811;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      min-height: 320px;
+      display: flex;
+      flex-direction: column;
+    }
+=======
+    /* Oscilloscope Bench */
+    .bench-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+      min-width: 0;
+    }
+    @media (min-width: 1024px) {
+      .bench-layout {
+        grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+      }
+    }
+
+    .scope-wrapper {
+      position: relative;
+      background: #050811;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      overflow: hidden;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      height: 360px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scope-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid #1e293b;
+      font-size: 0.75rem;
+    }
+    .trace-toggles {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .trace-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+    .color-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    .scope-svg-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+    svg.scope-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .scope-tooltip {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid #334155;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      pointer-events: none;
+      z-index: 10;
+      line-height: 1.4;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Bench Controls Sidebar */
+    .filter-tuners {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .tuner-box {
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.015);
+    }
+    .tuner-box.sma { border-left: 3px solid var(--sma-color); }
+    .tuner-box.ema { border-left: 3px solid var(--ema-color); }
+    .tuner-box.median { border-left: 3px solid var(--median-color); }
+
+    .tuner-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Metrics Table */
+    .table-container {
+      overflow-x: auto;
+    }
+    table.metrics-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    table.metrics-table th, table.metrics-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    table.metrics-table th {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    table.metrics-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .mono { font-family: var(--font-mono); }
+
+    /* Advisory Box */
+    .advisory-box {
+      background: rgba(56, 189, 248, 0.06);
+      border-left: 3px solid var(--accent);
+      padding: 12px 14px;
+      border-radius: 0 6px 6px 0;
+      margin-top: 14px;
+      font-size: 0.82rem;
+    }
+    .advisory-box h4 {
+      font-size: 0.85rem;
+      color: var(--accent);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Firmware Generator */
+    .code-container {
+      position: relative;
+      background: #050811;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 12px;
+      background: #0f172a;
+      border-bottom: 1px solid #1e293b;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .code-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .code-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      border-radius: 4px;
+    }
+    .code-tab.active {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.1);
+      font-weight: 600;
+    }
+    pre.code-block {
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      line-height: 1.45;
+      color: #e2e8f0;
+      overflow-x: auto;
+      max-height: 380px;
+    }
+
+    .safety-disclaimer {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 12px 0;
+      border-top: 1px solid var(--card-border);
+    }
+    .toast-msg {
+      font-size: 0.75rem;
+      color: #34d399;
+      margin-left: 8px;
+      transition: opacity 0.3s ease;
+    }
+
+    @media print {
+      body { background: #fff !important; color: #000 !important; padding: 0 !important; }
+      header .header-actions, #pro-notice, #err-fs, .toast-msg { display: none !important; }
+      .card { box-shadow: none !important; border: 1px solid #ccc !important; break-inside: avoid; }
+      .scope-wrapper { background: #fff !important; border: 1px solid #ccc !important; }
+      .code-container { border: 1px solid #ccc !important; }
+    }
+
+    .solver-summary {
+      margin-top: 12px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+    .solver-alert {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+    .solver-alert.warn {
+      background: rgba(239, 68, 68, 0.12);
+      border-left: 3px solid #ef4444;
+      color: #fca5a5;
+    }
+    .solver-alert.ok {
+      background: rgba(16, 185, 129, 0.12);
+      border-left: 3px solid #10b981;
+      color: #6ee7b7;
+    }
+
+    /* Frequency Response & Mains Notch Analyzer */
+    .bode-wrapper {
+      position: relative;
+      background: #050811;
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      overflow: hidden;
+      width: 100%;
+      height: 300px;
+    }
+    .bode-svg-wrap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+    .bode-readout {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: space-between;
+      align-items: center;
+      line-height: 1.4;
+    }
+    .notch-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      flex-wrap: wrap;
+      word-break: break-word;
+      max-width: 100%;
+    }
+    .notch-tag.notch { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid #0284c7; }
+    .notch-tag.good { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .notch-tag.pass { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+
+    /* Multi-Scenario Comparator CSS */
+    .snapshot-name-input {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text);
+      font-weight: 600;
+      width: 120px;
+      font-size: 0.8rem;
+    }
+    .snapshot-name-input:focus {
+      border-color: var(--accent);
+      background: rgba(0, 0, 0, 0.3);
+      outline: none;
+    }
+
+    /* Validation Testbench Exporter */
+    .export-pack-tabs {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .export-pack-tab {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 3px 8px;
+      cursor: pointer;
+      font-size: 0.73rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+    }
+    .export-pack-tab.active {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--card-border);
+      font-weight: 600;
+    }
+    /* FEATURE-CSS */
+  </style>
+<title>Arduino Sensor Noise Filter &amp; Moving Average Tuner</title>
+<meta name="description" content="Simulate Arduino and ESP32 sensor filters in real time. Optimize moving average algorithms, check RAM and cycle costs, and export zero-dependency C++ code.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/microcontroller-adc-filter-and-moving-average-lab/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/microcontroller-adc-filter-and-moving-average-lab/">
+<meta property="og:title" content="Arduino Sensor Noise Filter &amp; Moving Average Tuner"><meta property="og:description" content="Simulate Arduino and ESP32 sensor filters in real time. Optimize moving average algorithms, check RAM and cycle costs, and export zero-dependency C++ code.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/microcontroller-adc-filter-and-moving-average-lab/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Arduino Sensor Noise Filter & Moving Average Tuner","description":"Simulate Arduino and ESP32 sensor filters in real time. Optimize moving average algorithms, check RAM and cycle costs, and export zero-dependency C++ code.","url":"https://rttyy.github.io/free-tools/microcontroller-adc-filter-and-moving-average-lab/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is an efficient algorithm or data structure to calculate moving averages on an MCU?","acceptedAnswer":{"@type":"Answer","text":"For a standard simple moving average (SMA), use a circular ring buffer with a running sum. Instead of iterating through the entire window every cycle, subtract the oldest value falling out of the window, add the new reading, and divide the sum by the window length. For even lower memory and zero array overhead, use an Exponential Moving Average (EMA), which stores only a single filtered value in RAM and updates via a single multiply-accumulate operation."}},{"@type":"Question","name":"How do you read a varying voltage cleanly into an Arduino?","acceptedAnswer":{"@type":"Answer","text":"To read varying voltages accurately, first decouple the hardware line with a 100nF ceramic capacitor between the analog pin and GND close to the board. Second, ensure your input impedance is under 10k ohms to let the ADC sample-and-hold capacitor charge fully. In firmware, take a dummy read after switching ADC channels, discard it, and run subsequent samples through a software low-pass or moving average filter."}},{"@type":"Question","name":"What are the different (and fastest) ways to compute sines and cosines in Arduino?","acceptedAnswer":{"@type":"Answer","text":"The default `sin()` and `cos()` functions in the standard AVR library use double-precision floating-point software emulation, taking upwards of 120 microseconds on an 8-bit ATmega328P. The fastest approach is an integer lookup table (LUT) stored in flash memory (`PROGMEM`) combined with linear interpolation, taking under 2 microseconds. A secondary approach is a 16-bit fixed-point CORDIC routine or Taylor series approximation if RAM/flash is strictly constrained."}},{"@type":"Question","name":"What does the paid Gumroad version offer over the free web tool?","acceptedAnswer":{"@type":"Answer","text":"The free web tool is fully functional online. The $15 Gumroad download is a self-contained, single-file HTML/JS package that runs completely offline without network calls, accounts, or dependencies—ideal for field engineering, isolated lab benches, and long-term local archiving."}}]}</script>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="title-group">
+      <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        MCU Sensor Noise Filter & Moving Average Tuner
+        <span class="badge">v1.0</span>
+      </h1>
+      <p class="subtitle">Real-time side-by-side DSP bench: phase delay, RAM footprint & cycle benchmarks on AVR and ESP32</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn" id="btn-export-csv" title="Export waveform data as CSV">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export CSV
+      </button>
+      <button class="btn" id="btn-print" title="Print filter configuration report">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print
+      </button>
+      <button class="btn" id="btn-reset">Reset</button>
+    </div>
+  </header>
+
+  <div id="pro-notice" style="display:none; padding:8px 12px; background:rgba(234, 179, 8, 0.15); border:1px solid rgba(234, 179, 8, 0.4); border-radius:6px; font-size:0.82rem; color:var(--text); margin-bottom:8px;">
+    Available in the full version <a href="https://ferrywave73.gumroad.com/l/uuftjg" style="color:var(--accent); font-weight:600; text-decoration:underline; margin-left:6px;">Upgrade</a>
+  </div>
+
+  <!-- Presets Panel -->
+  <section class="card" data-feature="hardware-scenario-presets">
+    <div class="card-title">
+      <span>Hardware Scenarios & Real-World Presets</span>
+      <span class="unit">Select to pre-fill parameters</span>
+    </div>
+    <div class="grid-presets" id="presets-container">
+      <!-- Populated via script -->
+    </div>
+  </section>
+
+  <!-- Signal and Noise Generator -->
+  <section class="card" data-feature="signal-noise-generator">
+    <div class="card-title">
+      <span>1. Synthetic Sensor Waveform & Noise Generator</span>
+      <span class="unit">256-sample reproducible buffer</span>
+    </div>
+    <div class="controls-grid">
+      <div class="field">
+        <label>ADC Bit Depth <span class="unit" id="val-adc-res">10-bit (0–1023)</span></label>
+        <select id="input-adc-bits">
+          <option value="8">8-bit (0–255)</option>
+          <option value="10" selected>10-bit (0–1023) - Arduino Uno</option>
+          <option value="12">12-bit (0–4095) - ESP32 / STM32</option>
+          <option value="16">16-bit (0–65535) - ADS1115 / HX711</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Sampling Rate (Fs) <span class="unit" id="val-fs">200 Hz</span></label>
+        <input type="number" id="input-fs" min="1" max="2000" step="1" value="200">
+        <span class="input-error" id="err-fs" style="display:none; color:#ef4444; font-size:0.7rem; margin-top:2px;"></span>
+      </div>
+
+      <div class="field">
+        <label>Base Signal Type</label>
+        <select id="input-signal-type">
+          <option value="step">Step Transition (Transient)</option>
+          <option value="dc">DC Steady Level</option>
+          <option value="sine">Sine Wave / Slow Drift</option>
+        </select>
+      </div>
+
+      <div class="field" id="sine-freq-field">
+        <label>Signal Freq / Speed <span class="unit" id="val-sig-freq">0.5 Hz</span></label>
+        <input type="range" id="input-sig-freq" min="0.1" max="50" step="0.1" value="0.5">
+      </div>
+
+      <div class="field">
+        <label>Thermal Noise <span class="unit" id="val-thermal-noise">2.5% FS</span></label>
+        <input type="range" id="input-thermal-noise" min="0" max="20" step="0.5" value="2.5">
+      </div>
+
+      <div class="field">
+        <label>Mains Hum Ripple <span class="unit" id="val-mains-hum">1.0% FS</span></label>
+        <input type="range" id="input-mains-hum" min="0" max="20" step="0.5" value="1.0">
+      </div>
+
+      <div class="field">
+        <label>Mains Hum Frequency</label>
+        <select id="input-mains-freq">
+          <option value="60" selected>60 Hz (Americas, Japan 60)</option>
+          <option value="50">50 Hz (Europe, Asia, Oceania)</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Impulse Spike Probability <span class="unit" id="val-spike-prob">0.5%</span></label>
+        <input type="range" id="input-spike-prob" min="0" max="5" step="0.1" value="0.5">
+      </div>
+
+      <div class="field">
+        <label>Spike Magnitude <span class="unit" id="val-spike-mag">25% FS</span></label>
+        <input type="range" id="input-spike-mag" min="5" max="50" step="1" value="25">
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter Simulation Bench & Oscilloscope -->
+  <section class="card" data-feature="filter-simulation-bench">
+    <div class="card-title">
+      <span>2. Interactive Real-Time Multi-Filter Oscilloscope</span>
+      <span class="unit">Compare Raw, SMA, EMA & Running Median in real-time</span>
+    </div>
+
+    <div class="bench-layout">
+      <!-- Scope Display Area -->
+      <div class="scope-wrapper">
+        <div class="scope-toolbar">
+          <div class="trace-toggles">
+            <label class="trace-badge" style="color:var(--raw-color)">
+              <input type="checkbox" id="show-raw" checked>
+              <span class="color-dot" style="background:var(--raw-color)"></span> Raw ADC
+            </label>
+            <label class="trace-badge" style="color:var(--sma-color)">
+              <input type="checkbox" id="show-sma" checked>
+              <span class="color-dot" style="background:var(--sma-color)"></span> SMA (N=<span id="lbl-sma-n">6</span>)
+            </label>
+            <label class="trace-badge" style="color:var(--ema-color)">
+              <input type="checkbox" id="show-ema" checked>
+              <span class="color-dot" style="background:var(--ema-color)"></span> EMA (α=<span id="lbl-ema-alpha">0.25</span>)
+            </label>
+            <label class="trace-badge" style="color:var(--median-color)">
+              <input type="checkbox" id="show-median" checked>
+              <span class="color-dot" style="background:var(--median-color)"></span> Median (M=<span id="lbl-median-m">3</span>)
+            </label>
+          </div>
+          <div style="font-family:var(--font-mono); color:var(--text-muted);">
+            Time Window: <span id="lbl-time-span">1280.0 ms</span> (256 samples)
+          </div>
+        </div>
+
+        <div class="scope-svg-container" id="scope-container">
+          <div class="scope-tooltip" id="scope-tooltip" style="display:none;"></div>
+          <svg class="scope-canvas" id="scope-svg" viewBox="0 0 800 400" preserveAspectRatio="none">
+            <!-- Grid and traces rendered by JS -->
+          </svg>
+        </div>
+      </div>
+
+      <!-- Filter Parameter Controls -->
+      <div class="filter-tuners">
+        <div class="tuner-box sma">
+          <div class="tuner-title" style="color:var(--sma-color)">
+            <span>Simple Moving Average (SMA)</span>
+            <span class="mono" id="disp-sma-n">N = 6</span>
+          </div>
+          <div class="field">
+            <label>Window Size N (2–64) <span class="unit">Samples</span></label>
+            <input type="range" id="param-sma-n" min="2" max="64" step="1" value="6">
+          </div>
+          <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">
+            Circular ring buffer implementation with running accumulator.
+          </div>
+        </div>
+
+        <div class="tuner-box ema">
+          <div class="tuner-title" style="color:var(--ema-color)">
+            <span>Exponential Moving Average (EMA)</span>
+            <span class="mono" id="disp-ema-alpha">α = 0.250</span>
+          </div>
+          <div class="field">
+            <label>Smoothing Alpha (0.01–0.99)</label>
+            <input type="range" id="param-ema-alpha" min="0.01" max="0.99" step="0.01" value="0.25">
+          </div>
+          <div class="field" style="margin-top:6px;">
+            <label>Fast Shift Math: <span class="unit" id="disp-ema-shift">1/4 (>> 2)</span></label>
+          </div>
+        </div>
+
+        <div class="tuner-box median">
+          <div class="tuner-title" style="color:var(--median-color)">
+            <span>Running Median Filter</span>
+            <span class="mono" id="disp-median-m">M = 3</span>
+          </div>
+          <div class="field">
+            <label>Window Size M (Odd values)</label>
+            <select id="param-median-m">
+              <option value="3" selected>3 samples (Ultra fast, kills 1-spike)</option>
+              <option value="5">5 samples (Kills 2-sample bursts)</option>
+              <option value="7">7 samples (Kills 3-sample bursts)</option>
+              <option value="9">9 samples (Robust spike immunity)</option>
+              <option value="11">11 samples (Heavy spike suppression)</option>
+            </select>
+          </div>
+          <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">
+            Non-linear filter that ignores impulsive inductive kickbacks entirely.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Performance Latency & MCU Resource Benchmarker -->
+  <section class="card" data-feature="performance-latency-metrics">
+    <div class="card-title">
+      <span>3. Filter Metrics, Phase Lag & Embedded Resource Benchmarker</span>
+      <span class="unit">Exact byte allocations & cycle counts</span>
+    </div>
+
+    <div class="table-container">
+      <table class="metrics-table">
+        <thead>
+          <tr>
+            <th>Filter Algorithm</th>
+            <th>Noise RMS (Counts)</th>
+            <th>SNR Improvement</th>
+            <th>50% Group Delay</th>
+            <th>10–90% Rise Time</th>
+            <th>RAM Usage</th>
+            <th>ATmega328P (16MHz)</th>
+            <th>ESP32 (240MHz)</th>
+          </tr>
+        </thead>
+        <tbody id="metrics-tbody">
+          <!-- Populated by script -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="advisory-box" id="advisory-content">
+      <!-- Populated dynamically based on simulation -->
+    </div>
+  </section>
+
+  <!-- Embedded C++ Firmware Generator -->
+  <section class="card" data-feature="cpp-firmware-generator">
+    <div class="card-title">
+      <span>4. Production-Ready Embedded C++ Firmware Generator</span>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <span class="toast-msg" id="copy-status"></span>
+        <button class="btn btn-primary" id="btn-copy-code">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy C++ Code
+        </button>
+      </div>
+    </div>
+
+    <div class="controls-grid" style="margin-bottom: 12px;">
+      <div class="field">
+        <label>Arithmetic Mode</label>
+        <select id="code-math-mode">
+          <option value="fixed" selected>Integer / Fixed-Point Bit-Shift (Zero FPU overhead)</option>
+          <option value="float">Floating Point (float / double precision)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Selected Filter for Class</label>
+        <select id="code-filter-select">
+          <option value="ema" selected>Exponential Moving Average (EMA)</option>
+          <option value="sma">Simple Moving Average Ring Buffer (SMA)</option>
+          <option value="median">Running Median Filter (Insertion Sort)</option>
+          <option value="all">Complete Filter Suite (Header File)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>ADC Data Type</label>
+        <select id="code-type-select">
+          <option value="uint16_t" selected>uint16_t (Standard 10/12/16-bit ADC)</option>
+          <option value="int16_t">int16_t (Bipolar signed differential)</option>
+          <option value="uint32_t">uint32_t (High-resolution 24-bit ADC)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="code-container">
+      <div class="code-header">
+        <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--text-muted);" id="code-filename">sensor_filter.hpp</span>
+        <span style="font-size:0.7rem; color:var(--accent);">Zero Dependencies • Header Only</span>
+      </div>
+      <pre class="code-block" id="cpp-code-output"></pre>
+    </div>
+  </section>
+
+  <!-- Reverse Latency Solver & Target Tuner -->
+  <section class="card" data-feature="step-response-lag-analyzer">
+    <div class="card-title">
+      <span>5. Reverse Latency Solver & Target Tuner</span>
+      <span class="unit">Constrained latency budget &rarr; optimal filter parameters</span>
+    </div>
+    <div class="controls-grid">
+      <div class="field">
+        <label for="solver-latency-budget">Max Latency Budget <span class="unit">ms</span></label>
+        <input type="number" id="solver-latency-budget" min="1" max="1000" step="1" value="20">
+        <span class="input-error" id="solver-error" style="display:none; color:#ef4444; font-size:0.7rem; margin-top:2px;"></span>
+      </div>
+      <div class="field">
+        <label for="solver-target-noise">Target Max Noise RMS <span class="unit">ADC counts</span></label>
+        <input type="number" id="solver-target-noise" min="0.1" max="500" step="0.5" value="5.0">
+      </div>
+      <div class="field">
+        <label for="solver-safety-margin">Safety Margin</label>
+        <select id="solver-safety-margin">
+          <option value="10" selected>10% (Standard engineering margin)</option>
+          <option value="0">0% (Aggressive / Zero margin)</option>
+          <option value="20">20% (Conservative / High stability)</option>
+        </select>
+      </div>
+      <div class="field" style="justify-content: flex-end;">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary" id="btn-run-solver" style="justify-content:center;">
+          Apply Solved Parameters
+        </button>
+      </div>
+    </div>
+    <div class="solver-summary" id="solver-summary-text">
+      Solves: <strong>SMA N = 8</strong> (17.5 ms lag) • <strong>EMA α = 0.22</strong> (17.7 ms lag)
+    </div>
+    <div class="solver-alert warn" id="solver-alert-box">
+      <!-- Populated dynamically -->
+    </div>
+  </section>
+
+  <!-- Frequency Response & Mains Notch Analyzer -->
+  <section class="card" data-feature="frequency-bode-plot">
+    <div class="card-title">
+      <span>6. Frequency Response & Mains Notch Analyzer (Bode Plot)</span>
+      <span class="unit">0.1 Hz to Nyquist (Fs/2) • 50 Hz & 60 Hz Hum Rejection</span>
+    </div>
+    <div class="controls-grid" style="margin-bottom:12px;">
+      <div class="field">
+        <label for="bode-scale">Frequency Axis Scale</label>
+        <select id="bode-scale">
+          <option value="log" selected>Logarithmic (0.1 Hz → Fs/2)</option>
+          <option value="lin">Linear (0 Hz → Fs/2)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="bode-db-range">Magnitude Floor (dB)</label>
+        <select id="bode-db-range">
+          <option value="-60">-60 dB (1,000× suppression)</option>
+          <option value="-80" selected>-80 dB (10,000× suppression)</option>
+          <option value="-100">-100 dB (100,000× suppression)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="bode-mains-mode">Mains Hum Markers</label>
+        <select id="bode-mains-mode">
+          <option value="both" selected>Highlight Both 50 Hz & 60 Hz</option>
+          <option value="50">50 Hz Only (Europe / Asia)</option>
+          <option value="60">60 Hz Only (Americas)</option>
+        </select>
+      </div>
+    </div>
+    <div class="bode-wrapper">
+      <div class="bode-svg-wrap" id="bode-container">
+        <div class="scope-tooltip" id="bode-tooltip" style="display:none;"></div>
+        <svg class="scope-canvas" id="bode-svg" viewBox="0 0 800 300" preserveAspectRatio="none"></svg>
+      </div>
+    </div>
+    <div class="bode-readout" id="bode-readout-text">
+      <!-- Live notch and mains attenuation readout populated by JS -->
+    </div>
+  </section>
+
+  <!-- Multi-Scenario Snapshot Comparison Matrix -->
+  <section class="card" data-feature="multi-scenario-comparator">
+    <div class="card-title">
+      <span>7. Multi-Scenario Snapshot Comparison Matrix</span>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <span id="comparator-pro-msg" style="display:none; font-size:0.75rem; color:#eab308;">
+          Available in the full version <a href="https://ferrywave73.gumroad.com/l/uuftjg" class="comparator-pro-link" style="color:var(--accent); text-decoration:underline;">Upgrade</a>
+        </span>
+        <button class="btn btn-primary" id="btn-snapshot-current">+ Snapshot Current</button>
+        <button class="btn" id="btn-clear-snapshots">Clear Matrix</button>
+      </div>
+    </div>
+    <div id="comparator-content" style="display:flex; flex-direction:column; gap:12px;">
+      <div class="table-container">
+        <table class="metrics-table" id="comparator-table">
+          <thead>
+            <tr>
+              <th>Scenario / Label</th>
+              <th>Filter Config</th>
+              <th>RMS Noise</th>
+              <th>Group Delay</th>
+              <th>RAM</th>
+              <th>AVR Cycles</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="comparator-tbody">
+            <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:16px;">No snapshots saved. Click "+ Snapshot Current" to store up to 4 configurations.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="comparator-radar-wrap" style="position:relative; width:100%; height:200px; display:none; justify-content:center; align-items:center;">
+        <svg id="comparator-radar-svg" viewBox="0 0 400 200" style="width:100%; height:100%; max-width:500px;"></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Validation Testbench & Header File Exporter -->
+  <section class="card" data-feature="firmware-export-pack">
+    <div class="card-title">
+      <span>8. Validation Testbench & Header File Exporter</span>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <span id="export-pack-pro-msg" style="display:none; font-size:0.75rem; color:#eab308;">
+          Available in the full version <a href="https://ferrywave73.gumroad.com/l/uuftjg" class="export-pro-link" style="color:var(--accent); text-decoration:underline;">Upgrade</a>
+        </span>
+        <button class="btn btn-primary" id="btn-export-pack" title="Download ZIP with .h library, verification CSV and .ino sketch">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export Library (.h + CSV)
+        </button>
+      </div>
+    </div>
+    <div class="controls-grid" style="margin-bottom:12px;">
+      <div class="field">
+        <label for="export-target-harness">Target Environment</label>
+        <select id="export-target-harness">
+          <option value="arduino" selected>Arduino IDE (.ino + Serial Plotter)</option>
+          <option value="platformio">PlatformIO / Embedded C++</option>
+          <option value="python">Desktop Verification Harness</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="export-vector-len">Test Vectors Buffer</label>
+        <select id="export-vector-len">
+          <option value="64">64 Samples (Quick Unit Test)</option>
+          <option value="128">128 Samples (Medium)</option>
+          <option value="256" selected>256 Samples (Full Bench)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="export-include-assert">Self-Test Assertions in .ino</label>
+        <select id="export-include-assert">
+          <option value="yes" selected>Enabled (Validates against vectors on boot)</option>
+          <option value="no">Disabled (Direct ADC telemetry loop)</option>
+        </select>
+      </div>
+    </div>
+    <div class="code-container">
+      <div class="code-header">
+        <div class="export-pack-tabs" id="pack-tabs-bar">
+          <button class="export-pack-tab active" data-pack-tab="h">SensorFilters.h</button>
+          <button class="export-pack-tab" data-pack-tab="csv">test_vectors.csv</button>
+          <button class="export-pack-tab" data-pack-tab="ino">sensor_plotter.ino</button>
+        </div>
+        <span style="font-size:0.7rem; color:var(--text-muted);" id="export-pack-status">Package: 3 files</span>
+      </div>
+      <pre class="code-block" id="export-pack-preview" style="max-height:220px;"></pre>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+
+  <div class="safety-disclaimer">
+    Estimate only - verify with a qualified professional before relying on it. Clock cycles and latency are theoretical AVR/Xtensa compiler estimates.
+  </div>
+</div>
+
+<script>
+const PRO = false;
+const PRO_LINK = "https://ferrywave73.gumroad.com/l/uuftjg";
+
+// --- Seeded pseudo-random generator for reproducible noise traces ---
+let seed = 42;
+function pseudoRandom() {
+  seed = (seed * 1664525 + 1013904223) % 4294967296;
+  return seed / 4294967296;
+}
+
+function gaussianRandom() {
+  let u = 0, v = 0;
+  while(u === 0) u = pseudoRandom();
+  while(v === 0) v = pseudoRandom();
+  return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+}
+
+// --- App State ---
+const state = {
+  adcBits: 10,
+  fs: 200,
+  signalType: "step",
+  sigFreq: 0.5,
+  thermalNoisePct: 2.5,
+  mainsHumPct: 1.0,
+  mainsFreq: 60,
+  spikeProbPct: 0.5,
+  spikeMagPct: 25,
+  smaN: 6,
+  emaAlpha: 0.25,
+  medianM: 3,
+  traces: {
+    raw: true,
+    sma: true,
+    ema: true,
+    median: true
+  },
+  codeMathMode: "fixed",
+  codeFilter: "ema",
+  codeType: "uint16_t"
+};
+
+// --- Presets Data ---
+const presets = [
+  {
+    name: "Analog Joystick / RC Gimbal (Fast Response)",
+    desc: "Low phase delay (<25 ms) while dampening potentiometer wiper contact jitter.",
+    values: {
+      adcBits: 10,
+      fs: 200,
+      signalType: "step",
+      sigFreq: 1.0,
+      thermalNoisePct: 2.5,
+      mainsHumPct: 1.0,
+      mainsFreq: 60,
+      spikeProbPct: 0.5,
+      spikeMagPct: 20,
+      smaN: 6,
+      emaAlpha: 0.25,
+      medianM: 3
+    }
+  },
+  {
+    name: "HX711 / Load Cell Scale (Extreme Smoothing)",
+    desc: "High static weight stability and 50 Hz rejection over latency (1.5s delay acceptable).",
+    values: {
+      adcBits: 16,
+      fs: 10,
+      signalType: "dc",
+      sigFreq: 0.1,
+      thermalNoisePct: 8.0,
+      mainsHumPct: 6.0,
+      mainsFreq: 50,
+      spikeProbPct: 0.0,
+      spikeMagPct: 15,
+      smaN: 32,
+      emaAlpha: 0.05,
+      medianM: 7
+    }
+  },
+  {
+    name: "NTC Thermistor with Relay Noise (Spike Rejection)",
+    desc: "Rejects inductive relay kickback spikes where SMA and EMA fail completely.",
+    values: {
+      adcBits: 12,
+      fs: 20,
+      signalType: "sine",
+      sigFreq: 0.2,
+      thermalNoisePct: 1.5,
+      mainsHumPct: 3.0,
+      mainsFreq: 50,
+      spikeProbPct: 4.0,
+      spikeMagPct: 25,
+      smaN: 12,
+      emaAlpha: 0.125,
+      medianM: 9
+    }
+  }
+];
+
+// Helper to determine closest power of 2 shift for EMA
+function getClosestShift(alpha) {
+  let shift = Math.round(Math.log2(1 / Math.max(0.001, alpha)));
+  shift = Math.max(1, Math.min(8, shift));
+  return shift;
+}
+
+// Generate the 256 synthetic buffer samples
+function generateBuffers() {
+  seed = 12345; // Fixed seed for reproducible bench
+  const SAMPLES = 256;
+  const maxAdc = Math.pow(2, state.adcBits) - 1;
+  const timeStep = 1 / state.fs;
+
+  const raw = new Float64Array(SAMPLES);
+  const clean = new Float64Array(SAMPLES);
+  const time = new Float64Array(SAMPLES);
+
+  const baseline = maxAdc * 0.5;
+  const stepTarget = maxAdc * 0.83; // approx 850 on 10-bit
+
+  for (let i = 0; i < SAMPLES; i++) {
+    const t = i * timeStep;
+    time[i] = t;
+
+    // Clean base signal
+    let sig = baseline;
+    if (state.signalType === "step") {
+      sig = (i < 64) ? baseline : stepTarget;
+    } else if (state.signalType === "dc") {
+      sig = baseline;
+    } else if (state.signalType === "sine") {
+      const amp = maxAdc * 0.35;
+      sig = baseline + amp * Math.sin(2 * Math.PI * state.sigFreq * t);
+    }
+    clean[i] = sig;
+
+    // Thermal noise (Gaussian)
+    const thermalSigma = (state.thermalNoisePct / 100) * maxAdc;
+    const noiseThermal = gaussianRandom() * thermalSigma;
+
+    // Mains hum (sine)
+    const mainsAmp = (state.mainsHumPct / 100) * maxAdc;
+    const noiseMains = mainsAmp * Math.sin(2 * Math.PI * state.mainsFreq * t);
+
+    // Spikes (Impulses)
+    let spike = 0;
+    if (state.spikeProbPct > 0 && pseudoRandom() < (state.spikeProbPct / 100)) {
+      const spikeSign = pseudoRandom() > 0.5 ? 1 : -1;
+      spike = spikeSign * (state.spikeMagPct / 100) * maxAdc;
+    }
+
+    let noisy = sig + noiseThermal + noiseMains + spike;
+    // ADC quantization & clamping
+    noisy = Math.max(0, Math.min(maxAdc, Math.round(noisy)));
+    raw[i] = noisy;
+  }
+
+  // --- Filter 1: SMA (Ring Buffer) ---
+  const sma = new Float64Array(SAMPLES);
+  const N = Math.max(2, Math.min(64, state.smaN));
+  let runningSum = 0;
+  const ring = new Float64Array(N);
+  // Preload ring with raw[0]
+  for (let k = 0; k < N; k++) {
+    ring[k] = raw[0];
+    runningSum += raw[0];
+  }
+  let ringIdx = 0;
+  for (let i = 0; i < SAMPLES; i++) {
+    runningSum -= ring[ringIdx];
+    ring[ringIdx] = raw[i];
+    runningSum += raw[i];
+    ringIdx = (ringIdx + 1) % N;
+    sma[i] = runningSum / N;
+  }
+
+  // --- Filter 2: EMA ---
+  const ema = new Float64Array(SAMPLES);
+  const alpha = Math.max(0.001, Math.min(0.999, state.emaAlpha));
+  let emaVal = raw[0];
+  ema[0] = emaVal;
+  for (let i = 1; i < SAMPLES; i++) {
+    emaVal = alpha * raw[i] + (1 - alpha) * emaVal;
+    ema[i] = emaVal;
+  }
+
+  // --- Filter 3: Running Median ---
+  const median = new Float64Array(SAMPLES);
+  const M = state.medianM;
+  const halfM = Math.floor(M / 2);
+  const mBuffer = new Float64Array(M);
+  for (let i = 0; i < SAMPLES; i++) {
+    // Fill window with past M samples (clamping back at start)
+    for (let k = 0; k < M; k++) {
+      const sampleIdx = Math.max(0, i - (M - 1 - k));
+      mBuffer[k] = raw[sampleIdx];
+    }
+    // Small insertion sort
+    for (let j = 1; j < M; j++) {
+      let key = mBuffer[j];
+      let p = j - 1;
+      while (p >= 0 && mBuffer[p] > key) {
+        mBuffer[p + 1] = mBuffer[p];
+        p--;
+      }
+      mBuffer[p + 1] = key;
+    }
+    median[i] = mBuffer[halfM];
+  }
+
+  return { time, clean, raw, sma, ema, median, maxAdc, SAMPLES };
+}
+
+// Calculate RMS residual noise vs clean reference
+function calcMetrics(buffers) {
+  const { clean, raw, sma, ema, median, maxAdc, SAMPLES } = buffers;
+
+  function stats(series) {
+    let sumSq = 0;
+    for (let i = 0; i < SAMPLES; i++) {
+      const diff = series[i] - clean[i];
+      sumSq += diff * diff;
+    }
+    const rms = Math.sqrt(sumSq / SAMPLES);
+    return rms;
+  }
+
+  const rawRms = stats(raw);
+  const smaRms = stats(sma);
+  const emaRms = stats(ema);
+  const medianRms = stats(median);
+
+  function snrDb(rmsVal) {
+    if (!Number.isFinite(rmsVal) || rmsVal <= 0.0001) return "+99.9 dB";
+    if (!Number.isFinite(rawRms) || rawRms <= 0.0001) return "0.0 dB";
+    const deltaDb = 20 * Math.log10(rawRms / rmsVal);
+    const sign = deltaDb >= 0 ? "+" : "";
+    return `${sign}${deltaDb.toFixed(1)} dB`;
+  }
+
+  // Latency & Group Delay
+  const samplePeriodMs = (1 / state.fs) * 1000;
+
+  // Theoretical Group Delays
+  const smaDelayMs = ((state.smaN - 1) / 2) * samplePeriodMs;
+  const emaDelayMs = ((1 - state.emaAlpha) / state.emaAlpha) * samplePeriodMs;
+  const medianDelayMs = ((state.medianM - 1) / 2) * samplePeriodMs;
+
+  // 10-90% Rise Time estimation
+  const smaRiseMs = (0.8 * state.smaN) * samplePeriodMs;
+  const emaRiseMs = (2.197 / state.emaAlpha) * samplePeriodMs;
+  const medianRiseMs = (0.8 * state.medianM) * samplePeriodMs;
+
+  // MCU Resource footprints (for uint16_t ADC data)
+  // SMA: ring buffer (N*2), sum accumulator (4), head index (1 or 2)
+  const smaRam = (state.smaN * 2) + 6;
+  // EMA: state accumulator (4 bytes fixed-point or float)
+  const emaRam = 4;
+  // Median: circular sample buffer (M*2) + sort scratchpad (M*2) + index (1)
+  const medianRam = (state.medianM * 4) + 2;
+
+  // ATmega328P cycles (16MHz, 8-bit AVR, software 16/32-bit math):
+  // SMA: fetch old, subtract, add new, store, pointer wrap: ~42 cycles
+  const smaAvrCycles = 42;
+  // EMA: subtraction, bit shift or fixed multiply, add: ~19 cycles (or ~220 if float)
+  const emaAvrCycles = state.codeMathMode === "fixed" ? 19 : 210;
+  // Median: insertion sort of M items (M*(M-1)/2 swaps): ~25 + M*10 cycles
+  const medianAvrCycles = 25 + (state.medianM * 11);
+
+  // ESP32 cycles (240MHz, 32-bit dual core, FPU):
+  const smaEspCycles = 10;
+  const emaEspCycles = state.codeMathMode === "fixed" ? 7 : 9;
+  const medianEspCycles = 18 + (state.medianM * 3);
+
+  return {
+    rawRms, smaRms, emaRms, medianRms,
+    smaSnr: snrDb(smaRms),
+    emaSnr: snrDb(emaRms),
+    medianSnr: snrDb(medianRms),
+    smaDelayMs, emaDelayMs, medianDelayMs,
+    smaRiseMs, emaRiseMs, medianRiseMs,
+    smaRam, emaRam, medianRam,
+    smaAvrCycles, emaAvrCycles, medianAvrCycles,
+    smaEspCycles, emaEspCycles, medianEspCycles,
+    samplePeriodMs
+  };
+}
+
+// Render the SVG Oscilloscope
+let cachedBuffers = null;
+function renderScope(buffers) {
+  cachedBuffers = buffers;
+  const { time, raw, sma, ema, median, maxAdc, SAMPLES } = buffers;
+  const svg = document.getElementById("scope-svg");
+  const width = 800;
+  const height = 400;
+  const pad = { top: 20, right: 20, bottom: 30, left: 55 };
+  const plotW = width - pad.left - pad.right;
+  const plotH = height - pad.top - pad.bottom;
+
+  let out = "";
+
+  // Grid lines: 5 vertical divisions, 4 horizontal divisions
+  out += `<g stroke="var(--grid-color)" stroke-width="1">`;
+  for (let i = 0; i <= 5; i++) {
+    const x = pad.left + (plotW / 5) * i;
+    out += `<line x1="${x}" y1="${pad.top}" x2="${x}" y2="${height - pad.bottom}" />`;
+    const tVal = ((time[SAMPLES - 1] / 5) * i * 1000).toFixed(0);
+    out += `<text x="${x}" y="${height - pad.bottom + 18}" fill="var(--text-muted)" font-size="10" font-family="var(--font-mono)" text-anchor="middle">${tVal}ms</text>`;
+  }
+  for (let j = 0; j <= 4; j++) {
+    const y = pad.top + (plotH / 4) * j;
+    out += `<line x1="${pad.left}" y1="${y}" x2="${width - pad.right}" y2="${y}" stroke-dasharray="2,3" />`;
+    const adcVal = Math.round(maxAdc * (1 - j / 4));
+    out += `<text x="${pad.left - 8}" y="${y + 3}" fill="var(--text-muted)" font-size="10" font-family="var(--font-mono)" text-anchor="end">${adcVal}</text>`;
+  }
+  out += `</g>`;
+
+  // Axes bounding box
+  out += `<rect x="${pad.left}" y="${pad.top}" width="${plotW}" height="${plotH}" fill="none" stroke="#334155" stroke-width="1" />`;
+
+  // Path generator
+  function makePath(series) {
+    let p = "";
+    for (let i = 0; i < SAMPLES; i++) {
+      const x = pad.left + (i / (SAMPLES - 1)) * plotW;
+      const y = pad.top + (1 - (series[i] / maxAdc)) * plotH;
+      p += (i === 0 ? "M" : "L") + `${x.toFixed(1)},${y.toFixed(1)} `;
+    }
+    return p;
+  }
+
+  // Draw traces in logical z-order
+  if (state.traces.raw) {
+    out += `<path d="${makePath(raw)}" fill="none" stroke="var(--raw-color)" stroke-width="1.2" opacity="0.65" />`;
+  }
+  if (state.traces.sma) {
+    out += `<path d="${makePath(sma)}" fill="none" stroke="var(--sma-color)" stroke-width="2" />`;
+  }
+  if (state.traces.ema) {
+    out += `<path d="${makePath(ema)}" fill="none" stroke="var(--ema-color)" stroke-width="2.2" stroke-linecap="round" />`;
+  }
+  if (state.traces.median) {
+    out += `<path d="${makePath(median)}" fill="none" stroke="var(--median-color)" stroke-width="1.8" stroke-dasharray="4,2" />`;
+  }
+
+  // Hover target line
+  out += `<line id="hover-line" x1="0" y1="${pad.top}" x2="0" y2="${height - pad.bottom}" stroke="#ffffff" stroke-width="1" opacity="0" pointer-events="none"/>`;
+
+  svg.innerHTML = out;
+}
+
+// Scope Hover Tooltip Handler (supports pointer & touch)
+const scopeContainer = document.getElementById("scope-container");
+const scopeTooltip = document.getElementById("scope-tooltip");
+
+scopeContainer.addEventListener("pointermove", (e) => {
+  if (!cachedBuffers) return;
+  const rect = scopeContainer.getBoundingClientRect();
+  if (rect.width <= 0) return;
+  const mouseX = e.clientX - rect.left;
+  const widthRatio = mouseX / rect.width;
+
+  const padLeftFraction = 55 / 800;
+  const padRightFraction = 20 / 800;
+  const plotFraction = 1 - padLeftFraction - padRightFraction;
+
+  const relX = (widthRatio - padLeftFraction) / plotFraction;
+  if (relX < 0 || relX > 1) {
+    scopeTooltip.style.display = "none";
+    const hl = document.getElementById("hover-line");
+    if (hl) hl.setAttribute("opacity", "0");
+    return;
+  }
+
+  const sampleIdx = Math.min(255, Math.max(0, Math.round(relX * 255)));
+  const tMs = (cachedBuffers.time[sampleIdx] * 1000).toFixed(1);
+  const rawV = Math.round(cachedBuffers.raw[sampleIdx]);
+  const smaV = Math.round(cachedBuffers.sma[sampleIdx]);
+  const emaV = Math.round(cachedBuffers.ema[sampleIdx]);
+  const medV = Math.round(cachedBuffers.median[sampleIdx]);
+
+  scopeTooltip.innerHTML = `
+    <div style="font-weight:bold; color:var(--text); margin-bottom:2px;">Sample [${sampleIdx}] • ${tMs} ms</div>
+    <div style="color:var(--raw-color)">Raw: ${rawV}</div>
+    <div style="color:var(--sma-color)">SMA: ${smaV} (Δ: ${smaV - rawV})</div>
+    <div style="color:var(--ema-color)">EMA: ${emaV} (Δ: ${emaV - rawV})</div>
+    <div style="color:var(--median-color)">Med: ${medV} (Δ: ${medV - rawV})</div>
+  `;
+
+  // Position tooltip
+  let tipX = mouseX + 15;
+  if (tipX + 160 > rect.width) tipX = mouseX - 170;
+  scopeTooltip.style.left = `${tipX}px`;
+  scopeTooltip.style.top = `15px`;
+  scopeTooltip.style.display = "block";
+
+  // Update hover line
+  const svg = document.getElementById("scope-svg");
+  const hl = document.getElementById("hover-line");
+  if (hl) {
+    const svgX = 55 + relX * (800 - 55 - 20);
+    hl.setAttribute("x1", svgX);
+    hl.setAttribute("x2", svgX);
+    hl.setAttribute("opacity", "0.4");
+  }
+});
+
+scopeContainer.addEventListener("pointerleave", () => {
+  scopeTooltip.style.display = "none";
+  const hl = document.getElementById("hover-line");
+  if (hl) hl.setAttribute("opacity", "0");
+});
+
+// Update Metrics Table and Advisory Box
+function updateMetricsUI(buffers, m) {
+  const tbody = document.getElementById("metrics-tbody");
+  tbody.innerHTML = `
+    <tr>
+      <td style="color:var(--raw-color); font-weight:600;">Raw ADC Input</td>
+      <td class="mono">±${m.rawRms.toFixed(1)}</td>
+      <td class="mono">0.0 dB (Ref)</td>
+      <td class="mono">0.0 ms (0 smp)</td>
+      <td class="mono">Instant (0 ms)</td>
+      <td class="mono">0 bytes</td>
+      <td class="mono">—</td>
+      <td class="mono">—</td>
+    </tr>
+    <tr>
+      <td style="color:var(--sma-color); font-weight:600;">Simple Moving Avg (SMA)</td>
+      <td class="mono">±${m.smaRms.toFixed(1)}</td>
+      <td class="mono" style="color:var(--sma-color)">${m.smaSnr}</td>
+      <td class="mono">${m.smaDelayMs.toFixed(1)} ms (${((state.smaN - 1) / 2).toFixed(1)} smp)</td>
+      <td class="mono">${m.smaRiseMs.toFixed(1)} ms</td>
+      <td class="mono">${m.smaRam} bytes</td>
+      <td class="mono">~${m.smaAvrCycles} cyc (${(m.smaAvrCycles * 0.0625).toFixed(2)} µs)</td>
+      <td class="mono">~${m.smaEspCycles} cyc (&lt;0.05 µs)</td>
+    </tr>
+    <tr>
+      <td style="color:var(--ema-color); font-weight:600;">Exponential Avg (EMA)</td>
+      <td class="mono">±${m.emaRms.toFixed(1)}</td>
+      <td class="mono" style="color:var(--ema-color)">${m.emaSnr}</td>
+      <td class="mono">${m.emaDelayMs.toFixed(1)} ms (${((1 - state.emaAlpha) / state.emaAlpha).toFixed(1)} smp)</td>
+      <td class="mono">${m.emaRiseMs.toFixed(1)} ms</td>
+      <td class="mono">${m.emaRam} bytes</td>
+      <td class="mono">~${m.emaAvrCycles} cyc (${(m.emaAvrCycles * 0.0625).toFixed(2)} µs)</td>
+      <td class="mono">~${m.emaEspCycles} cyc (&lt;0.05 µs)</td>
+    </tr>
+    <tr>
+      <td style="color:var(--median-color); font-weight:600;">Running Median (M=${state.medianM})</td>
+      <td class="mono">±${m.medianRms.toFixed(1)}</td>
+      <td class="mono" style="color:var(--median-color)">${m.medianSnr}</td>
+      <td class="mono">${m.medianDelayMs.toFixed(1)} ms (${((state.medianM - 1) / 2).toFixed(1)} smp)</td>
+      <td class="mono">${m.medianRiseMs.toFixed(1)} ms</td>
+      <td class="mono">${m.medianRam} bytes</td>
+      <td class="mono">~${m.medianAvrCycles} cyc (${(m.medianAvrCycles * 0.0625).toFixed(2)} µs)</td>
+      <td class="mono">~${m.medianEspCycles} cyc (~0.1 µs)</td>
+    </tr>
+  `;
+
+  // Advisory logic ("What this means / What to do next")
+  const advisory = document.getElementById("advisory-content");
+  let recommendation = "";
+
+  if (state.spikeProbPct >= 1.5) {
+    recommendation = `
+      <h4>What this means</h4>
+      <p>Impulse noise spikes (${state.spikeProbPct}% rate) corrupt linear filters: the <strong>SMA</strong> broadens spikes into rectangular steps, while the <strong>EMA</strong> creates prolonged exponential discharge tails.</p>
+      <h4 style="margin-top:8px;">What to do next</h4>
+      <p>Deploy the <strong>Running Median Filter (M=${state.medianM})</strong> as a non-linear front-end pre-filter to reject impulse spikes cleanly without phase distortion, followed optionally by a light EMA (α=0.25) to smooth out Gaussian white noise.</p>
+    `;
+  } else if (m.emaDelayMs > 150 && state.signalType === "step") {
+    recommendation = `
+      <h4>What this means</h4>
+      <p>Excessive phase latency detected (${m.emaDelayMs.toFixed(0)} ms lag on EMA). In feedback control, robotics, or PID loops, delays above 50 ms threaten closed-loop stability, generating overshoot or mechanical oscillation.</p>
+      <h4 style="margin-top:8px;">What to do next</h4>
+      <p>Increase EMA alpha towards <strong>0.25–0.50</strong> or reduce SMA window N to <strong>4–8</strong> to keep phase delay under 30 ms while preserving sufficient noise attenuation.</p>
+    `;
+  } else if (state.adcBits >= 16 && state.signalType === "dc") {
+    recommendation = `
+      <h4>What this means</h4>
+      <p>High-resolution static DC measurement (e.g., load cell or RTD) where rejecting 50/60 Hz mains ripple and thermal drift is far more important than instantaneous step response.</p>
+      <h4 style="margin-top:8px;">What to do next</h4>
+      <p>Use the <strong>EMA with α=0.05</strong> or <strong>SMA N=32</strong> to achieve maximum noise suppression (${m.emaSnr}) while consuming only <strong>${m.emaRam} bytes of SRAM</strong>, keeping MCU execution overhead under 1 µs.</p>
+    `;
+  } else {
+    recommendation = `
+      <h4>What this means</h4>
+      <p>Balanced real-time filtering configuration achieving <strong>${m.emaSnr} noise reduction</strong> with a manageable <strong>${m.emaDelayMs.toFixed(1)} ms group delay</strong>.</p>
+      <h4 style="margin-top:8px;">What to do next</h4>
+      <p>Implement the bit-shift EMA in firmware: it uses only <strong>4 bytes of RAM</strong> and executes in ~<strong>${m.emaAvrCycles} AVR cycles</strong> (~${(m.emaAvrCycles * 0.0625).toFixed(2)} µs). If physical relay spikes appear during bench testing, increase the Median filter window to 5.</p>
+    `;
+  }
+  advisory.innerHTML = recommendation;
+}
+
+// Generate C++ Code Block
+function generateCppCode() {
+  const type = state.codeType;
+  const isFixed = state.codeMathMode === "fixed";
+  const filter = state.codeFilter;
+  const shift = getClosestShift(state.emaAlpha);
+  const alphaFloat = state.emaAlpha.toFixed(3);
+  const smaN = state.smaN;
+  const medianM = state.medianM;
+
+  let code = `/**
+ * Generated by MCU Sensor Noise Filter Tuner
+ * Target: Arduino (ATmega328P) / ESP-IDF (ESP32) / STM32
+ * Sampling Rate Fs: ${state.fs} Hz | Data Type: ${type}
+ * Estimate only - verify with a qualified professional before relying on it
+ */
+
+#ifndef SENSOR_FILTERS_HPP
+#define SENSOR_FILTERS_HPP
+
+#include <stdint.h>
+#include <stddef.h>
+
+`;
+
+  if (filter === "sma" || filter === "all") {
+    code += `// --- Simple Moving Average Ring Buffer (Window = ${smaN}) ---
+// Memory footprint: ${smaN * 2 + 6} bytes SRAM
+template <typename T = ${type}, size_t N = ${smaN}>
+class MovingAverageSMA {
+private:
+    T buffer[N];
+    size_t index = 0;
+    uint32_t runningSum = 0;
+    bool primed = false;
+
+public:
+    MovingAverageSMA() {
+        for (size_t i = 0; i < N; ++i) buffer[i] = 0;
+    }
+
+    T update(T raw) {
+        if (!primed) {
+            for (size_t i = 0; i < N; ++i) buffer[i] = raw;
+            runningSum = (uint32_t)raw * N;
+            primed = true;
+            return raw;
+        }
+        runningSum -= buffer[index];
+        buffer[index] = raw;
+        runningSum += raw;
+        index = (index + 1) % N;
+        return (T)(runningSum / N);
+    }
+
+    void reset() {
+        primed = false;
+        index = 0;
+        runningSum = 0;
+    }
+};
+
+`;
+  }
+
+  if (filter === "ema" || filter === "all") {
+    if (isFixed) {
+      code += `// --- Fast Exponential Moving Average (EMA / Leaky Integrator) ---
+// Fixed-point bit-shift arithmetic (Zero FPU cycles, ~19 clock cycles on AVR)
+// Shift = ${shift} corresponds to alpha ≈ ${(1 / Math.pow(2, shift)).toFixed(4)}
+template <typename T = ${type}, uint8_t SHIFT = ${shift}>
+class MovingAverageEMA {
+private:
+    uint32_t accumulator = 0;
+    bool primed = false;
+
+public:
+    MovingAverageEMA() {}
+
+    T update(T raw) {
+        if (!primed) {
+            accumulator = (uint32_t)raw << SHIFT;
+            primed = true;
+            return raw;
+        }
+        // acc = acc + raw - (acc >> SHIFT)
+        accumulator += raw;
+        accumulator -= (accumulator >> SHIFT);
+        return (T)(accumulator >> SHIFT);
+    }
+
+    void reset() { primed = false; accumulator = 0; }
+};
+
+`;
+    } else {
+      code += `// --- Exponential Moving Average (EMA Float) ---
+// Float calculation (Alpha = ${alphaFloat})
+template <typename T = ${type}>
+class MovingAverageEMA_Float {
+private:
+    float state = 0.0f;
+    float alpha = ${alphaFloat}f;
+    bool primed = false;
+
+public:
+    explicit MovingAverageEMA_Float(float a = ${alphaFloat}f) : alpha(a) {}
+
+    T update(T raw) {
+        if (!primed) {
+            state = (float)raw;
+            primed = true;
+            return raw;
+        }
+        state = (alpha * (float)raw) + ((1.0f - alpha) * state);
+        return (T)(state + 0.5f);
+    }
+
+    void reset() { primed = false; }
+};
+
+`;
+    }
+  }
+
+  if (filter === "median" || filter === "all") {
+    code += `// --- Running Median Filter (Window = ${medianM}) ---
+// Rejects impulse spikes and relay switching spikes without lag smearing
+template <typename T = ${type}, size_t M = ${medianM}>
+class RunningMedian {
+private:
+    T buffer[M];
+    size_t index = 0;
+    bool primed = false;
+
+public:
+    RunningMedian() {
+        for (size_t i = 0; i < M; ++i) buffer[i] = 0;
+    }
+
+    T update(T raw) {
+        if (!primed) {
+            for (size_t i = 0; i < M; ++i) buffer[i] = raw;
+            primed = true;
+            return raw;
+        }
+        buffer[index] = raw;
+        index = (index + 1) % M;
+
+        // Insertion sort onto scratchpad
+        T sorted[M];
+        for (size_t i = 0; i < M; ++i) sorted[i] = buffer[i];
+
+        for (size_t i = 1; i < M; ++i) {
+            T key = sorted[i];
+            int p = (int)i - 1;
+            while (p >= 0 && sorted[p] > key) {
+                sorted[p + 1] = sorted[p];
+                p--;
+            }
+            sorted[p + 1] = key;
+        }
+        return sorted[M / 2];
+    }
+
+    void reset() {
+        primed = false;
+        index = 0;
+    }
+};
+
+`;
+  }
+
+  code += `// --- Example Arduino / ESP32 Usage ---
+/*
+${isFixed && filter === "ema" ? "MovingAverageEMA<uint16_t, " + shift + "> filter;" : ""}
+${!isFixed && filter === "ema" ? "MovingAverageEMA_Float<uint16_t> filter(" + alphaFloat + "f);" : ""}
+${filter === "sma" ? "MovingAverageSMA<uint16_t, " + smaN + "> filter;" : ""}
+${filter === "median" ? "RunningMedian<uint16_t, " + medianM + "> filter;" : ""}
+
+void setup() {
+    Serial.begin(115200);
+}
+
+void loop() {
+    // Read ADC at ${state.fs} Hz (${(1000 / state.fs).toFixed(1)} ms interval)
+    static unsigned long lastSample = 0;
+    if (millis() - lastSample >= ${(1000 / state.fs).toFixed(0)}) {
+        lastSample = millis();
+        uint16_t rawAdc = analogRead(A0);
+        uint16_t filtered = filter.update(rawAdc);
+        Serial.print(rawAdc);
+        Serial.print(",");
+        Serial.println(filtered);
+    }
+}
+*/
+
+#endif // SENSOR_FILTERS_HPP
+`;
+
+  document.getElementById("cpp-code-output").textContent = code;
+}
+
+// Full pipeline update
+function updateAll() {
+  // Sync label text
+  document.getElementById("val-adc-res").textContent = `${state.adcBits}-bit (0–${Math.pow(2, state.adcBits) - 1})`;
+  document.getElementById("val-fs").textContent = `${state.fs} Hz`;
+  document.getElementById("val-sig-freq").textContent = `${state.sigFreq} Hz`;
+  document.getElementById("val-thermal-noise").textContent = `${state.thermalNoisePct.toFixed(1)}% FS`;
+  document.getElementById("val-mains-hum").textContent = `${state.mainsHumPct.toFixed(1)}% FS`;
+  document.getElementById("val-spike-prob").textContent = `${state.spikeProbPct.toFixed(1)}%`;
+  document.getElementById("val-spike-mag").textContent = `${state.spikeMagPct}% FS`;
+
+  document.getElementById("lbl-sma-n").textContent = state.smaN;
+  document.getElementById("disp-sma-n").textContent = `N = ${state.smaN}`;
+  document.getElementById("lbl-ema-alpha").textContent = state.emaAlpha.toFixed(2);
+  document.getElementById("disp-ema-alpha").textContent = `α = ${state.emaAlpha.toFixed(3)}`;
+
+  const shift = getClosestShift(state.emaAlpha);
+  document.getElementById("disp-ema-shift").textContent = `1/${Math.pow(2, shift)} (>> ${shift})`;
+
+  document.getElementById("lbl-median-m").textContent = state.medianM;
+  document.getElementById("disp-median-m").textContent = `M = ${state.medianM}`;
+
+  const totalTimeMs = (256 * (1 / state.fs) * 1000).toFixed(1);
+  document.getElementById("lbl-time-span").textContent = `${totalTimeMs} ms`;
+
+  // Sine frequency control visibility
+  const sineField = document.getElementById("sine-freq-field");
+  sineField.style.display = (state.signalType === "sine") ? "flex" : "none";
+
+  // Compute buffers, render scope, update table & advisory, generate code
+  const buffers = generateBuffers();
+  renderScope(buffers);
+  const metrics = calcMetrics(buffers);
+  updateMetricsUI(buffers, metrics);
+  generateCppCode();
+}
+
+// Sync all form controls to state object
+function applyStateToUI() {
+  document.getElementById("input-adc-bits").value = state.adcBits;
+  document.getElementById("input-fs").value = state.fs;
+  document.getElementById("input-signal-type").value = state.signalType;
+  document.getElementById("input-sig-freq").value = state.sigFreq;
+  document.getElementById("input-thermal-noise").value = state.thermalNoisePct;
+  document.getElementById("input-mains-hum").value = state.mainsHumPct;
+  document.getElementById("input-mains-freq").value = state.mainsFreq;
+  document.getElementById("input-spike-prob").value = state.spikeProbPct;
+  document.getElementById("input-spike-mag").value = state.spikeMagPct;
+  document.getElementById("param-sma-n").value = state.smaN;
+  document.getElementById("param-ema-alpha").value = state.emaAlpha;
+  document.getElementById("param-median-m").value = state.medianM;
+  if (state.codeMathMode) document.getElementById("code-math-mode").value = state.codeMathMode;
+  if (state.codeFilter) document.getElementById("code-filter-select").value = state.codeFilter;
+  if (state.codeType) document.getElementById("code-type-select").value = state.codeType;
+  if (state.traces) {
+    document.getElementById("show-raw").checked = !!state.traces.raw;
+    document.getElementById("show-sma").checked = !!state.traces.sma;
+    document.getElementById("show-ema").checked = !!state.traces.ema;
+    document.getElementById("show-median").checked = !!state.traces.median;
+  }
+}
+
+// Preset Loader
+function loadPreset(idx) {
+  if (!PRO && idx !== 0) {
+    showProNotice();
+    return;
+  }
+  const p = presets[idx];
+  if (!p) return;
+  Object.assign(state, p.values);
+
+  applyStateToUI();
+  const fsErr = document.getElementById("err-fs");
+  if (fsErr) fsErr.style.display = "none";
+
+  document.querySelectorAll(".preset-card").forEach((card, i) => {
+    card.classList.toggle("active", i === idx);
+  });
+
+  updateAll();
+}
+
+// Build Preset Cards
+function initPresets() {
+  const container = document.getElementById("presets-container");
+  container.innerHTML = "";
+  presets.forEach((p, idx) => {
+    const card = document.createElement("div");
+    card.className = `preset-card ${idx === 0 ? "active" : ""}`;
+    card.innerHTML = `
+      <h4>${p.name}</h4>
+      <p>${p.desc}</p>
+    `;
+    card.addEventListener("click", () => loadPreset(idx));
+    container.appendChild(card);
+  });
+}
+
+// Export CSV
+function exportCSV() {
+  if (!PRO) {
+    showProNotice();
+    return;
+  }
+  if (!cachedBuffers) return;
+
+  const { time, raw, sma, ema, median, clean, SAMPLES } = cachedBuffers;
+  let csv = "Index,Time_ms,Raw_ADC,SMA,EMA,Median,Clean_Ref\n";
+  for (let i = 0; i < SAMPLES; i++) {
+    csv += `${i},${(time[i] * 1000).toFixed(3)},${raw[i].toFixed(1)},${sma[i].toFixed(2)},${ema[i].toFixed(2)},${median[i].toFixed(1)},${clean[i].toFixed(2)}\n`;
+  }
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `mcu_filter_bench_${Date.now()}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+let proNoticeTimer = null;
+function showProNotice() {
+  const notice = document.getElementById("pro-notice");
+  if (!notice) return;
+  notice.style.display = "block";
+  clearTimeout(proNoticeTimer);
+  proNoticeTimer = setTimeout(() => { notice.style.display = "none"; }, 5000);
+}
+
+// Event Bindings
+function bindEvents() {
+  // Signal inputs
+  document.getElementById("input-adc-bits").addEventListener("change", (e) => {
+    state.adcBits = parseInt(e.target.value, 10);
+    updateAll();
+  });
+  const fsInput = document.getElementById("input-fs");
+  const fsErr = document.getElementById("err-fs");
+  fsInput.addEventListener("input", (e) => {
+    const rawVal = e.target.value.trim();
+    if (rawVal === "" || isNaN(rawVal)) {
+      fsErr.textContent = "Sampling rate cannot be empty or non-numeric.";
+      fsErr.style.display = "block";
+      return;
+    }
+    const val = Number(rawVal);
+    if (!Number.isFinite(val) || val <= 0) {
+      fsErr.textContent = "Sampling rate must be greater than 0 Hz.";
+      fsErr.style.display = "block";
+      return;
+    }
+    if (val > 5000) {
+      fsErr.textContent = "Sampling rate cannot exceed 5000 Hz.";
+      fsErr.style.display = "block";
+      return;
+    }
+    fsErr.style.display = "none";
+    state.fs = Math.round(val);
+    updateAll();
+  });
+  document.getElementById("input-signal-type").addEventListener("change", (e) => {
+    state.signalType = e.target.value;
+    updateAll();
+  });
+  document.getElementById("input-sig-freq").addEventListener("input", (e) => {
+    state.sigFreq = parseFloat(e.target.value);
+    updateAll();
+  });
+  document.getElementById("input-thermal-noise").addEventListener("input", (e) => {
+    state.thermalNoisePct = parseFloat(e.target.value);
+    updateAll();
+  });
+  document.getElementById("input-mains-hum").addEventListener("input", (e) => {
+    state.mainsHumPct = parseFloat(e.target.value);
+    updateAll();
+  });
+  document.getElementById("input-mains-freq").addEventListener("change", (e) => {
+    state.mainsFreq = parseInt(e.target.value, 10);
+    updateAll();
+  });
+  document.getElementById("input-spike-prob").addEventListener("input", (e) => {
+    state.spikeProbPct = parseFloat(e.target.value);
+    updateAll();
+  });
+  document.getElementById("input-spike-mag").addEventListener("input", (e) => {
+    state.spikeMagPct = parseFloat(e.target.value);
+    updateAll();
+  });
+
+  // Filter params
+  document.getElementById("param-sma-n").addEventListener("input", (e) => {
+    state.smaN = parseInt(e.target.value, 10);
+    updateAll();
+  });
+  document.getElementById("param-ema-alpha").addEventListener("input", (e) => {
+    state.emaAlpha = parseFloat(e.target.value);
+    updateAll();
+  });
+  document.getElementById("param-median-m").addEventListener("change", (e) => {
+    state.medianM = parseInt(e.target.value, 10);
+    updateAll();
+  });
+
+  // Trace toggles
+  document.getElementById("show-raw").addEventListener("change", (e) => {
+    state.traces.raw = e.target.checked;
+    renderScope(cachedBuffers);
+  });
+  document.getElementById("show-sma").addEventListener("change", (e) => {
+    state.traces.sma = e.target.checked;
+    renderScope(cachedBuffers);
+  });
+  document.getElementById("show-ema").addEventListener("change", (e) => {
+    state.traces.ema = e.target.checked;
+    renderScope(cachedBuffers);
+  });
+  document.getElementById("show-median").addEventListener("change", (e) => {
+    state.traces.median = e.target.checked;
+    renderScope(cachedBuffers);
+  });
+
+  // Code Gen options
+  document.getElementById("code-math-mode").addEventListener("change", (e) => {
+    state.codeMathMode = e.target.value;
+    updateAll();
+  });
+  document.getElementById("code-filter-select").addEventListener("change", (e) => {
+    state.codeFilter = e.target.value;
+    generateCppCode();
+  });
+  document.getElementById("code-type-select").addEventListener("change", (e) => {
+    state.codeType = e.target.value;
+    generateCppCode();
+  });
+
+  // Copy code
+  document.getElementById("btn-copy-code").addEventListener("click", () => {
+    const text = document.getElementById("cpp-code-output").textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        showCopyFeedback();
+      }).catch(() => fallbackCopy(text));
+    } else {
+      fallbackCopy(text);
+    }
+  });
+
+  function fallbackCopy(text) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      showCopyFeedback();
+    } catch(err) {}
+    document.body.removeChild(ta);
+  }
+
+  function showCopyFeedback() {
+    const status = document.getElementById("copy-status");
+    status.textContent = "✓ Copied to clipboard!";
+    setTimeout(() => { status.textContent = ""; }, 2500);
+  }
+
+  // Header Export, Print and Reset
+  document.getElementById("btn-export-csv").addEventListener("click", exportCSV);
+  document.getElementById("btn-print").addEventListener("click", () => {
+    if (!PRO) {
+      showProNotice();
+      return;
+    }
+    window.print();
+  });
+  document.getElementById("btn-reset").addEventListener("click", () => {
+    try {
+      localStorage.removeItem("mcu_filter_state");
+    } catch(e) {}
+    loadPreset(0);
+  });
+}
+
+// Storage persistence
+function initStorage() {
+  try {
+    const saved = localStorage.getItem("mcu_filter_state");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      Object.assign(state, parsed);
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+window.addEventListener("beforeunload", () => {
+  try {
+    localStorage.setItem("mcu_filter_state", JSON.stringify(state));
+  } catch(e) {}
+});
+
+// App init
+window.addEventListener("DOMContentLoaded", () => {
+  initPresets();
+  const hadSaved = initStorage();
+  bindEvents();
+  if (hadSaved) {
+    applyStateToUI();
+    updateAll();
+  } else {
+    loadPreset(0);
+  }
+  initLatencySolver();
+});
+
+// --- Reverse Latency Solver & Target Tuner Implementation ---
+function runLatencySolver(apply = false) {
+  const budgetInput = document.getElementById("solver-latency-budget");
+  const targetNoiseInput = document.getElementById("solver-target-noise");
+  const marginSelect = document.getElementById("solver-safety-margin");
+  const errorEl = document.getElementById("solver-error");
+
+  const budgetMs = parseFloat(budgetInput.value);
+  const targetRms = parseFloat(targetNoiseInput.value) || 0;
+  const marginPct = parseFloat(marginSelect.value) || 0;
+
+  if (isNaN(budgetMs) || budgetMs <= 0) {
+    if (errorEl) {
+      errorEl.textContent = "Budget must be > 0 ms.";
+      errorEl.style.display = "block";
+    }
+    return;
+  }
+  if (errorEl) errorEl.style.display = "none";
+
+  const effLatency = budgetMs * (1 - marginPct / 100);
+  const samplePeriodMs = (1 / state.fs) * 1000;
+
+  // SMA N = floor(2 * effLatency * Fs / 1000 + 1)
+  let solvedSmaN = Math.floor(2 * effLatency * state.fs / 1000 + 1);
+  solvedSmaN = Math.max(2, Math.min(64, solvedSmaN));
+
+  // EMA alpha = 1 / (1 + effLatency * Fs / 1000)
+  let solvedEmaAlpha = 1 / (1 + (effLatency * state.fs / 1000));
+  solvedEmaAlpha = Math.max(0.01, Math.min(0.99, Math.round(solvedEmaAlpha * 100) / 100));
+
+  state.smaN = solvedSmaN;
+  state.emaAlpha = solvedEmaAlpha;
+  document.getElementById("param-sma-n").value = state.smaN;
+  document.getElementById("param-ema-alpha").value = state.emaAlpha;
+
+  updateAll();
+
+  // Evaluate against user's target noise threshold
+  const metrics = calcMetrics(cachedBuffers || generateBuffers());
+  const actualRms = Math.min(metrics.smaRms, metrics.emaRms);
+  const alertEl = document.getElementById("solver-alert-box");
+  const summaryEl = document.getElementById("solver-summary-text");
+
+  const smaDelay = ((solvedSmaN - 1) / 2) * samplePeriodMs;
+  const emaDelay = ((1 - solvedEmaAlpha) / solvedEmaAlpha) * samplePeriodMs;
+
+  summaryEl.innerHTML = `Solves: <strong>SMA N = ${solvedSmaN}</strong> (${smaDelay.toFixed(1)} ms lag) • <strong>EMA α = ${solvedEmaAlpha.toFixed(2)}</strong> (${emaDelay.toFixed(1)} ms lag)`;
+
+  if (actualRms > targetRms) {
+    alertEl.className = "solver-alert warn";
+    alertEl.innerHTML = `⚠️ <strong>Noise Warning:</strong> Achieved best noise is ±${actualRms.toFixed(1)} counts, which exceeds your target limit of ≤${targetRms.toFixed(1)} counts. The ${budgetMs} ms budget restricts filtering depth. Increase latency budget or insert an analog RC low-pass filter on the sensor pin.`;
+  } else {
+    alertEl.className = "solver-alert ok";
+    alertEl.innerHTML = `✓ <strong>Target Met:</strong> Filtered noise is ±${actualRms.toFixed(1)} counts, within your budget limit of ≤${targetRms.toFixed(1)} counts with ${marginPct}% margin.`;
+  }
+}
+
+function initLatencySolver() {
+  const btn = document.getElementById("btn-run-solver");
+  const budgetInput = document.getElementById("solver-latency-budget");
+  const targetNoiseInput = document.getElementById("solver-target-noise");
+  const marginSelect = document.getElementById("solver-safety-margin");
+
+  if (btn) btn.addEventListener("click", runLatencySolver);
+  if (budgetInput) budgetInput.addEventListener("input", runLatencySolver);
+  if (targetNoiseInput) targetNoiseInput.addEventListener("input", runLatencySolver);
+  if (marginSelect) marginSelect.addEventListener("change", runLatencySolver);
+
+  runLatencySolver();
+}
+
+// --- Frequency Response & Mains Notch Analyzer (Bode Plot) ---
+function calcFilterDb(freq, fs, smaN, emaAlpha, medianM) {
+  if (freq <= 0) return { smaDb: 0, emaDb: 0, medDb: 0 };
+  const nyquist = fs / 2;
+  const f = Math.min(freq, nyquist);
+
+  // 1. SMA Magnitude: |sin(pi * f * N / Fs) / (N * sin(pi * f / Fs))|
+  const x = (Math.PI * f) / fs;
+  const sinX = Math.sin(x);
+  let smaMag;
+  if (Math.abs(sinX) < 1e-12) {
+    smaMag = 1.0;
+  } else {
+    const num = Math.sin(x * smaN);
+    smaMag = Math.abs(num / (smaN * sinX));
+  }
+  const smaDb = smaMag < 1e-5 ? -Infinity : 20 * Math.log10(smaMag);
+
+  // 2. EMA Magnitude: alpha / sqrt(1 + (1-alpha)^2 - 2*(1-alpha)*cos(2*pi*f/Fs))
+  const w = 2 * Math.PI * f / fs;
+  const oneMinusA = 1 - emaAlpha;
+  const denomSq = 1 + oneMinusA * oneMinusA - 2 * oneMinusA * Math.cos(w);
+  const emaMag = denomSq <= 0 ? 1 : emaAlpha / Math.sqrt(denomSq);
+  const emaDb = emaMag < 1e-5 ? -Infinity : 20 * Math.log10(emaMag);
+
+  // 3. Running Median Linearized Sinusoid Attenuation Approximation
+  const medX = (Math.PI * f) / fs;
+  const sinMedX = Math.sin(medX);
+  let medMag;
+  if (Math.abs(sinMedX) < 1e-12) {
+    medMag = 1.0;
+  } else {
+    const medNum = Math.abs(Math.sin(medX * medianM) / (medianM * sinMedX));
+    medMag = Math.pow(medNum, 0.75);
+  }
+  const medDb = medMag < 1e-5 ? -Infinity : 20 * Math.log10(medMag);
+
+  return { smaDb, emaDb, medDb };
+}
+
+function renderBodePlot() {
+  const svg = document.getElementById("bode-svg");
+  if (!svg) return;
+  const scaleType = document.getElementById("bode-scale").value;
+  const minDb = parseFloat(document.getElementById("bode-db-range").value) || -80;
+  const mainsMode = document.getElementById("bode-mains-mode").value;
+
+  const fs = Math.max(1, state.fs);
+  const nyquist = fs / 2;
+  const fMin = 0.1;
+  const fMax = Math.max(fMin * 2, nyquist);
+
+  const W = 800, H = 300;
+  const pad = { top: 20, right: 30, bottom: 35, left: 55 };
+  const pW = W - pad.left - pad.right;
+  const pH = H - pad.top - pad.bottom;
+
+  function freqToX(f) {
+    const clamped = Math.max(fMin, Math.min(fMax, f));
+    if (scaleType === "lin") {
+      return pad.left + ((clamped - fMin) / (fMax - fMin)) * pW;
+    }
+    return pad.left + (Math.log10(clamped / fMin) / Math.log10(fMax / fMin)) * pW;
+  }
+
+  function dbToY(db) {
+    const clamped = Math.max(minDb, Math.min(0, db));
+    return pad.top + (-clamped / -minDb) * pH;
+  }
+
+  let out = "";
+
+  // Grid Lines: Horizontal dB lines (0, -20, -40, -60, etc.)
+  const dbSteps = Math.round(-minDb / 20);
+  out += `<g stroke="var(--grid-color)" stroke-width="1">`;
+  for (let d = 0; d <= dbSteps; d++) {
+    const dbVal = -(d * 20);
+    if (dbVal < minDb) continue;
+    const y = dbToY(dbVal);
+    out += `<line x1="${pad.left}" y1="${y}" x2="${W - pad.right}" y2="${y}" stroke-dasharray="2,3" />`;
+    out += `<text x="${pad.left - 8}" y="${y + 3}" fill="var(--text-muted)" font-size="10" font-family="var(--font-mono)" text-anchor="end">${dbVal} dB</text>`;
+  }
+
+  // Grid Lines: Frequency verticals
+  const freqTicks = scaleType === "lin"
+    ? [0.1, nyquist * 0.25, nyquist * 0.5, nyquist * 0.75, nyquist]
+    : [0.1, 1, 10, 50, 100, 200, 500, 1000].filter(f => f >= fMin && f <= fMax);
+
+  freqTicks.forEach(f => {
+    const x = freqToX(f);
+    out += `<line x1="${x}" y1="${pad.top}" x2="${x}" y2="${H - pad.bottom}" />`;
+    const lbl = f >= 1000 ? `${(f / 1000).toFixed(1)}k` : `${f >= 1 ? Math.round(f) : f}Hz`;
+    out += `<text x="${x}" y="${H - pad.bottom + 18}" fill="var(--text-muted)" font-size="10" font-family="var(--font-mono)" text-anchor="middle">${lbl}</text>`;
+  });
+  out += `</g>`;
+
+  // Bounding rect
+  out += `<rect x="${pad.left}" y="${pad.top}" width="${pW}" height="${pH}" fill="none" stroke="#334155" stroke-width="1" />`;
+
+  // Draw 50 Hz and 60 Hz Mains Markers
+  const show50 = (mainsMode === "both" || mainsMode === "50") && 50 <= fMax;
+  const show60 = (mainsMode === "both" || mainsMode === "60") && 60 <= fMax;
+
+  if (show50) {
+    const x50 = freqToX(50);
+    out += `<line x1="${x50}" y1="${pad.top}" x2="${x50}" y2="${H - pad.bottom}" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.85" />`;
+    out += `<text x="${x50}" y="${pad.top + 14}" fill="#38bdf8" font-size="10" font-family="var(--font-mono)" font-weight="bold" text-anchor="middle">50Hz</text>`;
+  }
+  if (show60) {
+    const x60 = freqToX(60);
+    out += `<line x1="${x60}" y1="${pad.top}" x2="${x60}" y2="${H - pad.bottom}" stroke="#c084fc" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.85" />`;
+    out += `<text x="${x60}" y="${pad.top + 26}" fill="#c084fc" font-size="10" font-family="var(--font-mono)" font-weight="bold" text-anchor="middle">60Hz</text>`;
+  }
+
+  // Sample points across width
+  const STEPS = 300;
+  let smaPath = "", emaPath = "", medPath = "";
+  let notches = [];
+
+  for (let i = 0; i <= STEPS; i++) {
+    let f;
+    if (scaleType === "lin") {
+      f = fMin + (i / STEPS) * (fMax - fMin);
+    } else {
+      f = fMin * Math.pow(fMax / fMin, i / STEPS);
+    }
+    const { smaDb, emaDb, medDb } = calcFilterDb(f, fs, state.smaN, state.emaAlpha, state.medianM);
+    const x = freqToX(f);
+
+    const ySma = dbToY(smaDb);
+    const yEma = dbToY(emaDb);
+    const yMed = dbToY(medDb);
+
+    smaPath += (i === 0 ? "M" : "L") + `${x.toFixed(1)},${ySma.toFixed(1)} `;
+    emaPath += (i === 0 ? "M" : "L") + `${x.toFixed(1)},${yEma.toFixed(1)} `;
+    medPath += (i === 0 ? "M" : "L") + `${x.toFixed(1)},${yMed.toFixed(1)} `;
+  }
+
+  // Check exact SMA transmission zero nulls (k * Fs / N)
+  for (let k = 1; k < state.smaN; k++) {
+    const notchF = (k * fs) / state.smaN;
+    if (notchF > fMin && notchF <= nyquist) {
+      notches.push(notchF);
+    }
+  }
+
+  // Draw Traces
+  out += `<path d="${smaPath}" fill="none" stroke="var(--sma-color)" stroke-width="2.2" />`;
+  out += `<path d="${emaPath}" fill="none" stroke="var(--ema-color)" stroke-width="2.2" />`;
+  out += `<path d="${medPath}" fill="none" stroke="var(--median-color)" stroke-width="1.8" stroke-dasharray="4,2" />`;
+
+  // Draw Transmission Zero Notch rings on SMA
+  notches.forEach(nf => {
+    const nx = freqToX(nf);
+    const ny = dbToY(minDb);
+    out += `<circle cx="${nx.toFixed(1)}" cy="${ny.toFixed(1)}" r="4.5" fill="none" stroke="var(--sma-color)" stroke-width="2" />`;
+    out += `<circle cx="${nx.toFixed(1)}" cy="${ny.toFixed(1)}" r="1.5" fill="#fff" />`;
+  });
+
+  // Crosshair
+  out += `<line id="bode-crosshair" x1="0" y1="${pad.top}" x2="0" y2="${H - pad.bottom}" stroke="#ffffff" stroke-width="1" opacity="0" pointer-events="none" />`;
+
+  svg.innerHTML = out;
+
+  // Update live notch and attenuation readout
+  updateBodeReadout(fs, minDb);
+}
+
+function updateBodeReadout(fs, minDb) {
+  const readout = document.getElementById("bode-readout-text");
+  if (!readout) return;
+
+  function formatMains(f) {
+    if (f > fs / 2) {
+      return `<span class="notch-tag pass">${f} Hz: &gt; Nyquist (${(fs/2).toFixed(0)} Hz)</span>`;
+    }
+    const res = calcFilterDb(f, fs, state.smaN, state.emaAlpha, state.medianM);
+    const isSmaZero = Math.abs(Math.sin((Math.PI * f * state.smaN) / fs)) < 1e-4;
+    const smaStr = isSmaZero ? "<b>-∞ dB (Transmission Zero 🎯)</b>" : `${res.smaDb.toFixed(1)} dB`;
+    const emaStr = `${res.emaDb.toFixed(1)} dB`;
+    const badgeCls = isSmaZero ? "notch-tag notch" : (res.smaDb <= -20 ? "notch-tag good" : "notch-tag pass");
+
+    return `<span class="${badgeCls}">${f} Hz Hum: SMA ${smaStr} • EMA ${emaStr}</span>`;
+  }
+
+  const f50Html = formatMains(50);
+  const f60Html = formatMains(60);
+  const notchZeroFreq = (fs / state.smaN).toFixed(1);
+
+  readout.innerHTML = `
+    <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+      ${f50Html}
+      ${f60Html}
+    </div>
+    <div style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">
+      1st SMA Notch Zero: <strong>${notchZeroFreq} Hz</strong> (Fs / N)
+    </div>
+  `;
+}
+
+// Bode Plot Tooltip and Cursor Tracking
+const bodeWrap = document.getElementById("bode-container");
+const bodeTip = document.getElementById("bode-tooltip");
+
+if (bodeWrap && bodeTip) {
+  bodeWrap.addEventListener("pointermove", (e) => {
+    const rect = bodeWrap.getBoundingClientRect();
+    if (rect.width <= 0) return;
+    const mouseX = e.clientX - rect.left;
+    const scaleType = document.getElementById("bode-scale").value;
+    const fs = Math.max(1, state.fs);
+    const nyquist = fs / 2;
+    const fMin = 0.1, fMax = Math.max(fMin * 2, nyquist);
+
+    const padLeftFrac = 55 / 800;
+    const padRightFrac = 30 / 800;
+    const plotFrac = 1 - padLeftFrac - padRightFrac;
+    const relX = (mouseX / rect.width - padLeftFrac) / plotFrac;
+
+    if (relX < 0 || relX > 1) {
+      bodeTip.style.display = "none";
+      const ch = document.getElementById("bode-crosshair");
+      if (ch) ch.setAttribute("opacity", "0");
+      return;
+    }
+
+    let f;
+    if (scaleType === "lin") {
+      f = fMin + relX * (fMax - fMin);
+    } else {
+      f = fMin * Math.pow(fMax / fMin, relX);
+    }
+
+    const { smaDb, emaDb, medDb } = calcFilterDb(f, fs, state.smaN, state.emaAlpha, state.medianM);
+    const smaStr = !Number.isFinite(smaDb) || smaDb < -75 ? "-∞ dB (Zero)" : `${smaDb.toFixed(1)} dB`;
+    const emaStr = `${emaDb.toFixed(1)} dB`;
+    const medStr = `${medDb.toFixed(1)} dB`;
+
+    bodeTip.innerHTML = `
+      <div style="font-weight:bold; color:var(--text); margin-bottom:2px;">f = ${f.toFixed(2)} Hz</div>
+      <div style="color:var(--sma-color)">SMA: ${smaStr}</div>
+      <div style="color:var(--ema-color)">EMA: ${emaStr}</div>
+      <div style="color:var(--median-color)">Median: ${medStr}</div>
+    `;
+
+    let tipX = mouseX + 15;
+    if (tipX + 150 > rect.width) tipX = mouseX - 160;
+    bodeTip.style.left = `${tipX}px`;
+    bodeTip.style.top = `15px`;
+    bodeTip.style.display = "block";
+
+    const ch = document.getElementById("bode-crosshair");
+    if (ch) {
+      const svgX = 55 + relX * (800 - 55 - 30);
+      ch.setAttribute("x1", svgX);
+      ch.setAttribute("x2", svgX);
+      ch.setAttribute("opacity", "0.4");
+    }
+  });
+
+  bodeWrap.addEventListener("pointerleave", () => {
+    bodeTip.style.display = "none";
+    const ch = document.getElementById("bode-crosshair");
+    if (ch) ch.setAttribute("opacity", "0");
+  });
+}
+
+// Hook into updateAll pipeline and initialize controls
+const _origUpdateAll = updateAll;
+updateAll = function() {
+  _origUpdateAll();
+  renderBodePlot();
+};
+
+document.getElementById("bode-scale").addEventListener("change", renderBodePlot);
+document.getElementById("bode-db-range").addEventListener("change", renderBodePlot);
+document.getElementById("bode-mains-mode").addEventListener("change", renderBodePlot);
+
+// Initial Bode Render
+renderBodePlot();
+
+// --- Multi-Scenario Snapshot Comparison Matrix ---
+let snapshots = [];
+
+function saveSnapshot() {
+  const msg = document.getElementById("comparator-pro-msg");
+  if (!PRO) {
+    if (msg) {
+      msg.querySelector("a").href = PRO_LINK;
+      msg.style.display = "inline-block";
+      setTimeout(() => { msg.style.display = "none"; }, 5000);
+    }
+    return;
+  }
+
+  if (snapshots.length >= 4) {
+    snapshots.shift();
+  }
+
+  const buffers = cachedBuffers || generateBuffers();
+  const metrics = calcMetrics(buffers);
+
+  const defaultNames = ['Low Latency', 'Anti-Spike', 'Aggressive Smoothing', 'Custom Bench'];
+  const name = defaultNames[snapshots.length] || `Scenario ${snapshots.length + 1}`;
+
+  snapshots.push({
+    id: Date.now(),
+    name: name,
+    state: JSON.parse(JSON.stringify(state)),
+    metrics: {
+      emaRms: metrics.emaRms,
+      emaDelayMs: metrics.emaDelayMs,
+      emaRam: metrics.emaRam,
+      emaAvrCycles: metrics.emaAvrCycles
+    }
+  });
+
+  renderSnapshots();
+}
+
+function deleteSnapshot(id) {
+  snapshots = snapshots.filter(s => s.id !== id);
+  renderSnapshots();
+}
+
+function restoreSnapshot(id) {
+  const snap = snapshots.find(s => s.id === id);
+  if (!snap) return;
+  Object.assign(state, JSON.parse(JSON.stringify(snap.state)));
+  applyStateToUI();
+  updateAll();
+}
+
+function renderSnapshots() {
+  const tbody = document.getElementById("comparator-tbody");
+  const radarWrap = document.getElementById("comparator-radar-wrap");
+  if (!tbody) return;
+
+  if (snapshots.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:16px;">No snapshots saved. Click "+ Snapshot Current" to store up to 4 configurations.</td></tr>`;
+    if (radarWrap) radarWrap.style.display = "none";
+    return;
+  }
+
+  if (radarWrap) radarWrap.style.display = "flex";
+
+  const colors = ["#38bdf8", "#f59e0b", "#10b981", "#ec4899"];
+
+  let rows = "";
+  snapshots.forEach((s, idx) => {
+    const st = s.state;
+    const m = s.metrics;
+    const color = colors[idx % colors.length];
+
+    rows += `<tr>
+      <td>
+        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${color}; margin-right:6px;"></span>
+        <input class="snapshot-name-input" value="${s.name}" onchange="snapshots[${idx}].name=this.value; renderSnapshotsRadar();">
+      </td>
+      <td class="mono" style="font-size:0.75rem;">SMA:${st.smaN} | EMA:${st.emaAlpha.toFixed(2)} | Med:${st.medianM}</td>
+      <td class="mono">±${m.emaRms.toFixed(1)}</td>
+      <td class="mono">${m.emaDelayMs.toFixed(1)} ms</td>
+      <td class="mono">${m.emaRam} B</td>
+      <td class="mono">${m.emaAvrCycles} cyc</td>
+      <td>
+        <button class="btn" style="padding:2px 6px; font-size:0.7rem;" onclick="restoreSnapshot(${s.id})">Load</button>
+        <button class="btn" style="padding:2px 6px; font-size:0.7rem; color:#ef4444;" onclick="deleteSnapshot(${s.id})">&times;</button>
+      </td>
+    </tr>`;
+  });
+
+  tbody.innerHTML = rows;
+  renderSnapshotsRadar();
+}
+
+function renderSnapshotsRadar() {
+  const svg = document.getElementById("comparator-radar-svg");
+  if (!svg || snapshots.length === 0) return;
+
+  const colors = ["#38bdf8", "#f59e0b", "#10b981", "#ec4899"];
+  const cx = 200, cy = 100, r = 70;
+  const axes = ["Noise RMS", "Lag (ms)", "RAM (B)", "AVR Cyc"];
+  const numAxes = axes.length;
+
+  let out = "";
+
+  [0.33, 0.66, 1.0].forEach(level => {
+    let webPts = [];
+    for (let i = 0; i < numAxes; i++) {
+      const angle = (Math.PI * 2 / numAxes) * i - Math.PI / 2;
+      webPts.push(`${cx + r * level * Math.cos(angle)},${cy + r * level * Math.sin(angle)}`);
+    }
+    out += `<polygon points="${webPts.join(" ")}" fill="none" stroke="var(--grid-color)" stroke-width="1"/>`;
+  });
+
+  for (let i = 0; i < numAxes; i++) {
+    const angle = (Math.PI * 2 / numAxes) * i - Math.PI / 2;
+    const ax = cx + r * Math.cos(angle);
+    const ay = cy + r * Math.sin(angle);
+    out += `<line x1="${cx}" y1="${cy}" x2="${ax}" y2="${ay}" stroke="var(--grid-color)" stroke-width="1"/>`;
+    
+    const lx = cx + (r + 18) * Math.cos(angle);
+    const ly = cy + (r + 12) * Math.sin(angle);
+    out += `<text x="${lx}" y="${ly}" fill="var(--text-muted)" font-size="9" font-family="var(--font-mono)" text-anchor="middle" dominant-baseline="middle">${axes[i]}</text>`;
+  }
+
+  let maxVals = [1, 1, 1, 1];
+  snapshots.forEach(s => {
+    maxVals[0] = Math.max(maxVals[0], s.metrics.emaRms);
+    maxVals[1] = Math.max(maxVals[1], s.metrics.emaDelayMs);
+    maxVals[2] = Math.max(maxVals[2], s.metrics.emaRam);
+    maxVals[3] = Math.max(maxVals[3], s.metrics.emaAvrCycles);
+  });
+
+  snapshots.forEach((s, idx) => {
+    const color = colors[idx % colors.length];
+    const vals = [
+      s.metrics.emaRms / maxVals[0],
+      s.metrics.emaDelayMs / maxVals[1],
+      s.metrics.emaRam / maxVals[2],
+      s.metrics.emaAvrCycles / maxVals[3]
+    ];
+
+    let polyPts = [];
+    for (let i = 0; i < numAxes; i++) {
+      const angle = (Math.PI * 2 / numAxes) * i - Math.PI / 2;
+      const dist = r * Math.max(0.1, vals[i]);
+      polyPts.push(`${cx + dist * Math.cos(angle)},${cy + dist * Math.sin(angle)}`);
+    }
+    out += `<polygon points="${polyPts.join(" ")}" fill="${color}" fill-opacity="0.2" stroke="${color}" stroke-width="2"/>`;
+  });
+
+  svg.innerHTML = out;
+}
+
+function initComparator() {
+  const btnSnap = document.getElementById("btn-snapshot-current");
+  const btnClear = document.getElementById("btn-clear-snapshots");
+  if (btnSnap) btnSnap.addEventListener("click", saveSnapshot);
+  if (btnClear) btnClear.addEventListener("click", () => { snapshots = []; renderSnapshots(); });
+}
+
+initComparator();
+
+// --- Validation Testbench & Header File Exporter Implementation ---
+let activePackTab = "h";
+
+function createZipArchive(files) {
+  const enc = new TextEncoder();
+  const entries = files.map(f => {
+    const data = enc.encode(f.content);
+    const nameBytes = enc.encode(f.name);
+    let crc = -1;
+    for (let i = 0; i < data.length; i++) {
+      crc ^= data[i];
+      for (let j = 0; j < 8; j++) crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0);
+    }
+    return { nameBytes, data, crc: (crc ^ -1) >>> 0, size: data.length };
+  });
+
+  let totalSize = 0;
+  entries.forEach(e => { e.offset = totalSize; totalSize += 30 + e.nameBytes.length + e.size; });
+  const cdOffset = totalSize;
+  let cdSize = 0;
+  entries.forEach(e => { cdSize += 46 + e.nameBytes.length; });
+  totalSize += cdSize + 22;
+
+  const buf = new ArrayBuffer(totalSize);
+  const view = new DataView(buf);
+  const u8 = new Uint8Array(buf);
+  let pos = 0;
+
+  entries.forEach(e => {
+    view.setUint32(pos, 0x04034b50, true); pos += 4;
+    view.setUint16(pos, 20, true); pos += 2;
+    view.setUint16(pos, 0, true); pos += 2;
+    view.setUint16(pos, 0, true); pos += 2;
+    view.setUint16(pos, 0, true); pos += 2;
+    view.setUint16(pos, 0, true); pos += 2;
+    view.setUint32(pos, e.crc, true); pos += 4;
+    view.setUint32(pos, e.size, true); pos += 4;
+    view.setUint32(pos, e.size, true); pos += 4;
+    view.setUint16(pos, e.nameBytes.length, true); pos += 2;
+    view.setUint16(pos, 0, true); pos += 2;
+    u8.set(e.nameBytes, pos); pos += e.nameBytes.length;
+    u8.set(e.data, pos); pos += e.size;
+  });
+
+  entries.forEach(e => {
+    view.setUint32(pos, 0x02014b50, true); pos += 4;
+    view.setUint16(pos, 20, true); pos += 2;
+    view.setUint16(pos, 20, true); pos += 2;
+    view.setUint16(pos, 0, true); pos += 2;
+    view.setUint16(pos, 0, true); pos += 2;
+    view.setUint16(pos, 0, true); pos += 2;
+    view.setUint16(pos, 0, true); pos += 2;
+    view.setUint32(pos, e.crc, true); pos += 4;
+    view.setUint32(pos, e.size, true); pos += 4;
+    view.setUint32(pos, e.size, true); pos += 4;
+    view.setUint16(pos, e.nameBytes.length, true); pos += 2;
+    view.setUint16(pos, 0, true); pos += 6;
+    view.setUint32(pos, 0, true); pos += 4;
+    view.setUint32(pos, e.offset, true); pos += 4;
+    u8.set(e.nameBytes, pos); pos += e.nameBytes.length;
+  });
+
+  view.setUint32(pos, 0x06054b50, true); pos += 4;
+  view.setUint16(pos, 0, true); pos += 4;
+  view.setUint16(pos, entries.length, true); pos += 2;
+  view.setUint16(pos, entries.length, true); pos += 2;
+  view.setUint32(pos, cdSize, true); pos += 4;
+  view.setUint32(pos, cdOffset, true); pos += 4;
+  view.setUint16(pos, 0, true);
+
+  return new Blob([buf], { type: "application/zip" });
+}
+
+function getTestbenchPackage() {
+  const target = document.getElementById("export-target-harness").value;
+  const count = parseInt(document.getElementById("export-vector-len").value, 10) || 256;
+  const withAssert = document.getElementById("export-include-assert").value === "yes";
+  const buffers = cachedBuffers || generateBuffers();
+  const shift = getClosestShift(state.emaAlpha);
+
+  const headerContent = document.getElementById("cpp-code-output").textContent;
+
+  let csvContent = "sample_idx,time_ms,raw_adc,sma_expected,ema_expected,median_expected\n";
+  for (let i = 0; i < Math.min(count, buffers.SAMPLES); i++) {
+    csvContent += `${i},${(buffers.time[i] * 1000).toFixed(2)},${buffers.raw[i].toFixed(0)},${buffers.sma[i].toFixed(2)},${buffers.ema[i].toFixed(2)},${buffers.median[i].toFixed(0)}\n`;
+  }
+
+  const firstRaw = buffers.raw[0].toFixed(0);
+  const firstSma = buffers.sma[0].toFixed(0);
+  const firstEma = buffers.ema[0].toFixed(0);
+
+  let inoContent = `// Auto-generated Arduino testbench for Serial Plotter
+// Target: ${target.toUpperCase()} | Fs: ${state.fs} Hz
+#include "SensorFilters.h"
+
+MovingAverageSMA<uint16_t, ${state.smaN}> smaFilter;
+MovingAverageEMA<uint16_t, ${shift}> emaFilter;
+RunningMedian<uint16_t, ${state.medianM}> medFilter;
+
+${withAssert ? `void runValidationTest() {
+  // Verifies first vector from test_vectors.csv
+  uint16_t testRaw = ${firstRaw};
+  uint16_t outSma = smaFilter.update(testRaw);
+  uint16_t outEma = emaFilter.update(testRaw);
+  if (outSma == ${firstSma} && outEma == ${firstEma}) {
+    Serial.println(F("[PASS] Vector math matches desktop model."));
+  } else {
+    Serial.println(F("[FAIL] Verification mismatch against test_vectors.csv!"));
+  }
+}` : ""}
+
+void setup() {
+  Serial.begin(115200);
+  while(!Serial);
+  ${withAssert ? "runValidationTest();" : ""}
+  Serial.println(F("Raw,SMA,EMA,Median"));
+}
+
+void loop() {
+  static unsigned long lastT = 0;
+  if (millis() - lastT >= ${(1000 / state.fs).toFixed(0)}) {
+    lastT = millis();
+    uint16_t raw = analogRead(A0);
+    Serial.print(raw); Serial.print(F(","));
+    Serial.print(smaFilter.update(raw)); Serial.print(F(","));
+    Serial.print(emaFilter.update(raw)); Serial.print(F(","));
+    Serial.println(medFilter.update(raw));
+  }
+}
+`;
+
+  return { headerContent, csvContent, inoContent, count, target, withAssert };
+}
+
+function updateTestbenchPreview() {
+  const pack = getTestbenchPackage();
+  const pre = document.getElementById("export-pack-preview");
+  const status = document.getElementById("export-pack-status");
+  if (!pre) return;
+
+  if (activePackTab === "h") {
+    pre.textContent = pack.headerContent;
+    if (status) status.textContent = `SensorFilters.h • ${pack.target}`;
+  } else if (activePackTab === "csv") {
+    pre.textContent = pack.csvContent;
+    if (status) status.textContent = `test_vectors.csv • ${pack.count} vectors`;
+  } else {
+    pre.textContent = pack.inoContent;
+    if (status) status.textContent = `sensor_plotter.ino • ${pack.withAssert ? "Assert active" : "Plotter only"}`;
+  }
+}
+
+function initTestbenchFeature() {
+  const tabs = document.querySelectorAll(".export-pack-tab");
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      activePackTab = tab.getAttribute("data-pack-tab");
+      updateTestbenchPreview();
+    });
+  });
+
+  document.getElementById("export-target-harness").addEventListener("change", updateTestbenchPreview);
+  document.getElementById("export-vector-len").addEventListener("change", updateTestbenchPreview);
+  document.getElementById("export-include-assert").addEventListener("change", updateTestbenchPreview);
+
+  document.getElementById("btn-export-pack").addEventListener("click", () => {
+    const proMsg = document.getElementById("export-pack-pro-msg");
+    if (!PRO) {
+      if (proMsg) {
+        proMsg.querySelector("a").href = PRO_LINK;
+        proMsg.style.display = "inline-flex";
+        setTimeout(() => { proMsg.style.display = "none"; }, 5000);
+      }
+      return;
+    }
+
+    const p = getTestbenchPackage();
+    const zipBlob = createZipArchive([
+      { name: "SensorFilters.h", content: p.headerContent },
+      { name: "test_vectors.csv", content: p.csvContent },
+      { name: "sensor_plotter.ino", content: p.inoContent }
+    ]);
+
+    const url = URL.createObjectURL(zipBlob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `firmware_testbench_pack_${Date.now()}.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+}
+
+const _priorUpdateAll = updateAll;
+updateAll = function() {
+  _priorUpdateAll();
+  updateTestbenchPreview();
+};
+
+initTestbenchFeature();
+updateTestbenchPreview();
+
+// FEATURE-JS
+</script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>Clean up noisy analog sensor readings without blindly guessing filter coefficients. This real-time simulator models moving average and low-pass filters directly against simulated ADC noise, displaying phase lag, rise time, and memory overhead side-by-side. Designed for Arduino tinkerers, robotics hobbyists, and embedded engineers.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your microcontroller architecture (e.g., ATmega328P or ESP32) and enter your sampling rate.</li><li>Adjust the target noise reduction slider or input your maximum allowable latency budget in milliseconds.</li><li>Compare simulated filter outputs side-by-side to review signal delay, overshoot, and RAM consumption.</li><li>Copy the generated, zero-dependency C++ class or Arduino testbench directly into your firmware sketch.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What is an efficient algorithm or data structure to calculate moving averages on an MCU?</h4><p style="margin:0">For a standard simple moving average (SMA), use a circular ring buffer with a running sum. Instead of iterating through the entire window every cycle, subtract the oldest value falling out of the window, add the new reading, and divide the sum by the window length. For even lower memory and zero array overhead, use an Exponential Moving Average (EMA), which stores only a single filtered value in RAM and updates via a single multiply-accumulate operation.</p><h4 style="font-size:16px;margin:16px 0 4px">How do you read a varying voltage cleanly into an Arduino?</h4><p style="margin:0">To read varying voltages accurately, first decouple the hardware line with a 100nF ceramic capacitor between the analog pin and GND close to the board. Second, ensure your input impedance is under 10k ohms to let the ADC sample-and-hold capacitor charge fully. In firmware, take a dummy read after switching ADC channels, discard it, and run subsequent samples through a software low-pass or moving average filter.</p><h4 style="font-size:16px;margin:16px 0 4px">What are the different (and fastest) ways to compute sines and cosines in Arduino?</h4><p style="margin:0">The default `sin()` and `cos()` functions in the standard AVR library use double-precision floating-point software emulation, taking upwards of 120 microseconds on an 8-bit ATmega328P. The fastest approach is an integer lookup table (LUT) stored in flash memory (`PROGMEM`) combined with linear interpolation, taking under 2 microseconds. A secondary approach is a 16-bit fixed-point CORDIC routine or Taylor series approximation if RAM/flash is strictly constrained.</p><h4 style="font-size:16px;margin:16px 0 4px">What does the paid Gumroad version offer over the free web tool?</h4><p style="margin:0">The free web tool is fully functional online. The $15 Gumroad download is a self-contained, single-file HTML/JS package that runs completely offline without network calls, accounts, or dependencies—ideal for field engineering, isolated lab benches, and long-term local archiving.</p>
+<p style="margin:24px 0;padding:16px;border:1px solid rgba(128,128,128,.35);border-radius:12px"><strong>Want the full version?</strong> Exports, printing and saved scenarios are unlocked in the full offline pack (single file, quick-start guide and license):<a href="https://ferrywave73.gumroad.com/l/uuftjg" rel="noopener" style="font-weight:700;color:inherit">download it on Gumroad</a>.</p><p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">About · Offline pack</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"About · Offline pack"});</script>
+</body>
+</html>
