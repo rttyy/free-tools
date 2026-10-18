@@ -1,0 +1,2477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --surface: #131b2e;
+      --surface-raised: #1b253d;
+      --surface-border: #263554;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --accent-soft: rgba(59, 130, 246, 0.15);
+      --success: #10b981;
+      --success-soft: rgba(16, 185, 129, 0.15);
+      --warning: #f59e0b;
+      --warning-soft: rgba(245, 158, 11, 0.15);
+      --danger: #ef4444;
+      --danger-soft: rgba(239, 68, 68, 0.15);
+      --purple: #8b5cf6;
+      --purple-soft: rgba(139, 92, 246, 0.15);
+      --radius: 8px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --surface-raised: #f1f5f9;
+        --surface-border: #cbd5e1;
+        --text: #0f172a;
+        --text-muted: #64748b;
+        --accent: #2563eb;
+        --accent-hover: #1d4ed8;
+        --accent-soft: rgba(37, 99, 235, 0.1);
+        --success: #059669;
+        --success-soft: rgba(5, 150, 105, 0.1);
+        --warning: #d97706;
+        --warning-soft: rgba(217, 119, 6, 0.1);
+        --danger: #dc2626;
+        --danger-soft: rgba(220, 38, 38, 0.1);
+        --purple: #7c3aed;
+        --purple-soft: rgba(124, 58, 237, 0.1);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--surface-border);
+      margin-bottom: 1.5rem;
+    }
+
+    .title-group h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .title-group p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--surface-border);
+      background: var(--surface-raised);
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+    }
+
+    button:hover {
+      background: var(--surface-border);
+    }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    button.primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .btn-danger {
+      color: var(--danger);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: var(--danger-soft);
+    }
+
+    .preset-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+    }
+
+    .preset-bar span {
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.25rem;
+    }
+
+    .main-grid > section {
+      min-width: 0;
+    }
+
+    @media (min-width: 1024px) {
+      .main-grid {
+        grid-template-columns: 520px minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      min-width: 0;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-group-inline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      background: var(--surface-raised);
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 0.45rem 0.6rem;
+      font-size: 0.9rem;
+      font-family: inherit;
+      width: 100%;
+    }
+
+    input:focus,
+    select:focus {
+      outline: 2px solid var(--accent);
+      border-color: transparent;
+    }
+
+    .category-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+      font-size: 0.82rem;
+    }
+
+    .category-table th {
+      text-align: left;
+      padding: 0.4rem 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .category-table td {
+      padding: 0.4rem 0.3rem;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .category-table input[type="text"] {
+      min-width: 100px;
+    }
+
+    .category-table input[type="number"] {
+      width: 60px;
+      text-align: center;
+    }
+
+    .deck-pool-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0.85rem;
+      background: var(--surface-raised);
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      margin-top: 0.85rem;
+      font-size: 0.82rem;
+    }
+
+    .deck-pool-status.warning {
+      border-color: var(--warning);
+      background: var(--warning-soft);
+    }
+
+    .deck-pool-status.danger {
+      border-color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .tag {
+      font-size: 0.72rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .tag-blue { background: var(--accent-soft); color: var(--accent); }
+    .tag-green { background: var(--success-soft); color: var(--success); }
+    .tag-orange { background: var(--warning-soft); color: var(--warning); }
+    .tag-purple { background: var(--purple-soft); color: var(--purple); }
+
+    /* Results Dashboard */
+    .metric-hero {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .metric-hero {
+        grid-template-columns: 1.4fr 1fr;
+      }
+    }
+
+    .hero-stat {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+      border: 1px solid var(--accent-soft);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-stat .stat-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .hero-stat .stat-value {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.1;
+      margin: 0.35rem 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hero-stat .stat-sub {
+      font-size: 0.85rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .breakdown-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      padding: 0.4rem 0.6rem;
+      background: var(--surface-raised);
+      border-radius: 6px;
+    }
+
+    .stat-row-value {
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bar-container {
+      height: 8px;
+      width: 100%;
+      background: var(--surface-border);
+      border-radius: 999px;
+      overflow: hidden;
+      display: flex;
+      margin-top: 0.6rem;
+    }
+
+    .bar-segment {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    /* Mulligan Sequence Table */
+    .mulligan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .mulligan-card {
+      background: var(--surface-raised);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 0.85rem;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .mulligan-card.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .mulligan-step {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .mulligan-rate {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0.25rem 0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .mulligan-cards-drawn {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Advisory & Guidance */
+    .advisory-box {
+      border-left: 4px solid var(--accent);
+      background: var(--surface-raised);
+      padding: 1rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .advisory-title {
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .advisory-body {
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .advisory-pill {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Live Drawer & Monte Carlo */
+    .hand-preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin: 0.85rem 0;
+      min-height: 48px;
+      align-items: center;
+    }
+
+    .card-token {
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: var(--surface-raised);
+      border: 1px solid var(--surface-border);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      animation: popIn 0.15s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .pro-inline-notice {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: var(--warning);
+      margin-left: 0.5rem;
+    }
+
+    .pro-inline-notice a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .notice-footnote {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .header-actions, .preset-bar, button { display: none !important; }
+      .card { border: 1px solid #ccc; break-inside: avoid; }
+    }
+    /* Turn Progression Curve */
+    .turn-curve-card {
+      margin-bottom: 1.25rem;
+    }
+    .turn-curve-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .turn-pills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(75px, 1fr));
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+    .turn-pill {
+      background: var(--surface-raised);
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      padding: 0.4rem 0.3rem;
+      text-align: center;
+    }
+    .turn-pill-name { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+    .turn-pill-val { font-size: 0.95rem; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+    .turn-pill-cards { font-size: 0.7rem; color: var(--text-muted); }
+    .turn-svg-wrap {
+      background: var(--surface-raised);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 0.5rem;
+    }
+    /* Monte Carlo Opening Hand Dealer */
+    .mc-stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .mc-stat-item {
+      background: var(--surface-raised);
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      padding: 0.4rem 0.6rem;
+      text-align: center;
+    }
+    .mc-stat-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      display: block;
+    }
+    .mc-stat-val {
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .mc-cards-tray {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+      min-height: 70px;
+    }
+    .mc-tray-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 1.2rem;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      border: 1px dashed var(--surface-border);
+      border-radius: 6px;
+    }
+    .mc-card-tile {
+      background: var(--surface-raised);
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      animation: popIn 0.15s ease-out;
+    }
+    .mc-card-tile-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .mc-card-tile-name {
+      font-size: 0.82rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .mc-verdict-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .mc-verdict-keep { background: var(--success); color: #fff; }
+    .mc-verdict-mulligan { background: var(--danger); color: #fff; }
+    .mc-verdict-none { background: var(--surface-raised); color: var(--text-muted); border: 1px solid var(--surface-border); }
+    .mc-breakdown-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+    }
+    /* Deck Tuning Sensitivity Matrix */
+    .matrix-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 3px;
+      font-size: 0.78rem;
+      text-align: center;
+      min-width: 480px;
+    }
+    .matrix-table th {
+      padding: 0.4rem 0.5rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--surface-raised);
+      border-radius: 4px;
+      font-size: 0.72rem;
+      white-space: nowrap;
+    }
+    .matrix-table td {
+      padding: 0.45rem 0.35rem;
+      border-radius: 4px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      transition: background-color 0.15s ease;
+    }
+    .matrix-cell-center {
+      outline: 2px solid var(--accent);
+      outline-offset: -1px;
+    }
+    /* Deck Scenario Comparison & JSON Profile Backup */
+    .scenario-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    .scenario-table th, .scenario-table td {
+      padding: 0.5rem 0.6rem;
+      border-bottom: 1px solid var(--surface-border);
+      text-align: left;
+      vertical-align: middle;
+    }
+    .scenario-table th {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: var(--surface-raised);
+    }
+    /* FEATURE-CSS */
+  </style>
+<title>Multi-Card Hypergeometric Opening Hand Calculator</title>
+<meta name="description" content="Calculate exact multi-card hypergeometric opening hand probabilities and mulligan odds for MTG, Lorcana, and Pokémon. Free browser tool.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/multivariate-card-game-opening-hand-simulator/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/multivariate-card-game-opening-hand-simulator/">
+<meta property="og:title" content="Multi-Card Hypergeometric Opening Hand Calculator"><meta property="og:description" content="Calculate exact multi-card hypergeometric opening hand probabilities and mulligan odds for MTG, Lorcana, and Pokémon. Free browser tool.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/multivariate-card-game-opening-hand-simulator/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Multi-Card Hypergeometric Opening Hand Calculator","description":"Calculate exact multi-card hypergeometric opening hand probabilities and mulligan odds for MTG, Lorcana, and Pokémon. Free browser tool.","url":"https://rttyy.github.io/free-tools/multivariate-card-game-opening-hand-simulator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do you calculate the likelihood of drawing certain cards in your opening hand?","acceptedAnswer":{"@type":"Answer","text":"To calculate the probability of drawing specific cards, use the hypergeometric distribution formula: C(k, x) * C(N - k, n - x) / C(N, n), where N is deck size, k is total target cards in deck, n is hand size, and x is the target number drawn. When tracking multiple distinct card groups simultaneously (such as lands and specific spells), you use the multivariate hypergeometric distribution to account for dependent sampling without replacement."}},{"@type":"Question","name":"How long will an MTG draft take with varying number of players (approximately)?","acceptedAnswer":{"@type":"Answer","text":"A standard 8-player Magic: The Gathering booster draft typically takes between 2.5 and 3.5 hours. Drafting and deck building take roughly 45 to 60 minutes, followed by three 50-minute Swiss rounds. Smaller drafts (4 to 6 players) or casual formats take about 1.5 to 2 hours, while larger pods run longer due to round coordination."}},{"@type":"Question","name":"Why do I need a multivariate calculator instead of a standard hypergeometric calculator?","acceptedAnswer":{"@type":"Answer","text":"Standard calculators only compute the probability of drawing one specific card type in isolation. In actual gameplay, a keepable hand depends on combinations (for example, 2-4 lands AND at least one castable spell). Because drawing a card from one group removes it from the deck and shifts the remaining odds, calculating joint probabilities requires multivariate formulas to produce mathematically accurate results."}},{"@type":"Question","name":"What is the difference between the free web tool and the $12 offline pack?","acceptedAnswer":{"@type":"Answer","text":"The free web tool provides full access to the multivariate engine, mulligan calculations, and CSV exports online. The $12 paid pack contains a standalone, self-contained offline build that runs entirely locally without an internet connection, ideal for convention centers, local game stores, or tournament venues with weak cell reception."}}]}</script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-group">
+        <h1>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="16" height="15" rx="2" ry="2"></rect>
+            <path d="M18 10V5a2 2 0 0 0-2-2H8"></path>
+          </svg>
+          Multi-Card Hypergeometric Opening Hand & Mulligan Simulator
+        </h1>
+        <p>Exact joint multivariate probability distribution & mulligan progression solver</p>
+      </div>
+      <div class="header-actions">
+        <button id="btn-copy" title="Copy primary metrics">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Copy Results
+        </button>
+        <button id="btn-export-csv" title="Download CSV summary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Export CSV
+        </button>
+        <button id="btn-print" title="Print-ready evaluation sheet">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg>
+          Print
+        </button>
+        <span id="pro-feedback" style="display:none;" class="pro-inline-notice"></span>
+      </div>
+    </header>
+
+    <div class="preset-bar">
+      <span>Presets:</span>
+      <button class="btn-sm" id="preset-mtg-burn">MTG Modern Burn (60 Cards)</button>
+      <button class="btn-sm" id="preset-edh-ramp">Commander / EDH Ramp (99 Cards)</button>
+      <button class="btn-sm" id="preset-pokemon">Pokémon TCG Setup (60 Cards)</button>
+      <button class="btn-sm" id="btn-reset" style="margin-left:auto;">Reset to Default</button>
+    </div>
+
+    <!-- Turn Progression Feature -->
+    <div class="card turn-curve-card" id="turn-draw-curve" data-feature="turn-draw-curve">
+      <div class="turn-curve-header">
+        <div style="font-weight:600; font-size:1rem; display:flex; align-items:center; gap:0.5rem;">
+          <span>Turn-by-Turn Cumulative Draw Progression</span>
+          <span class="tag tag-blue" id="turn-curve-status">Turn 1–7</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <label for="turn-curve-mode" style="font-size:0.75rem; margin:0;">Play / Draw:</label>
+          <select id="turn-curve-mode" style="width:auto; padding:0.25rem 0.6rem; font-size:0.82rem;">
+            <option value="play">On the Play</option>
+            <option value="draw">On the Draw</option>
+          </select>
+        </div>
+      </div>
+      <div class="turn-svg-wrap">
+        <svg id="turn-curve-svg" viewBox="0 0 560 210" style="width:100%; height:auto; display:block; overflow:visible;">
+        </svg>
+      </div>
+      <div class="turn-pills-grid" id="turn-pills-row"></div>
+    </div>
+    <!-- Interactive Monte Carlo Opening Hand Dealer -->
+    <div class="card" id="monte-carlo-dealer" data-feature="monte-carlo-dealer">
+      <div class="card-title">
+        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+          <span>Interactive Monte Carlo Opening Hand Dealer</span>
+          <span id="mc-hand-verdict" class="mc-verdict-badge mc-verdict-none">No Hand Dealt</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+          <label for="mc-draw-count" style="font-size:0.75rem; margin:0;">Draws (1–100):</label>
+          <input type="number" id="mc-draw-count" min="1" max="100" value="1" style="width:58px; padding:0.25rem 0.4rem; font-size:0.85rem;">
+          <button class="primary btn-sm" id="btn-mc-deal">Deal Hand</button>
+          <button class="btn-sm" id="btn-mc-reset" title="Reset dealer stats">Reset</button>
+        </div>
+      </div>
+
+      <div class="mc-stats-bar">
+        <div class="mc-stat-item">
+          <span class="mc-stat-label">Last Dealt Hand</span>
+          <span class="mc-stat-val" id="mc-stat-last">—</span>
+        </div>
+        <div class="mc-stat-item">
+          <span class="mc-stat-label">Session Keeps</span>
+          <span class="mc-stat-val" id="mc-stat-session">0 / 0</span>
+        </div>
+        <div class="mc-stat-item">
+          <span class="mc-stat-label">Empirical Rate</span>
+          <span class="mc-stat-val" id="mc-stat-empirical">0.0%</span>
+        </div>
+        <div class="mc-stat-item">
+          <span class="mc-stat-label">Theoretical Exact</span>
+          <span class="mc-stat-val" id="mc-stat-theoretical">—</span>
+        </div>
+        <div class="mc-stat-item">
+          <span class="mc-stat-label">Delta (Emp. - Theo.)</span>
+          <span class="mc-stat-val" id="mc-stat-delta">—</span>
+        </div>
+      </div>
+
+      <div class="mc-cards-tray" id="mc-cards-tray">
+        <div class="mc-tray-empty">Click "Deal Hand" to simulate an opening hand draw.</div>
+      </div>
+
+      <div class="mc-breakdown-row" id="mc-breakdown-row"></div>
+    </div>
+    <!-- Deck Tuning Sensitivity Matrix & CSV Exporter -->
+    <div class="card" id="mulligan-matrix-export" data-feature="mulligan-matrix-export">
+      <div class="card-title">
+        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+          <span>Deck Tuning Sensitivity Matrix</span>
+          <span class="tag tag-purple" id="matrix-status-tag">5&times;5 Grid</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+          <button class="primary btn-sm" id="btn-export-matrix-csv" title="Download sensitivity matrix as CSV">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export CSV
+          </button>
+          <span id="matrix-pro-notice" class="pro-inline-notice" style="display:none;"></span>
+        </div>
+      </div>
+      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem;">
+        Keep probability sensitivity shifting <strong id="matrix-cat1-label" style="color:var(--text);">Primary</strong> (&plusmn;2 cards, rows) vs <strong id="matrix-cat2-label" style="color:var(--text);">Secondary</strong> (&plusmn;2 cards, cols). Outlined cell indicates current deck configuration.
+      </p>
+      <div style="overflow-x:auto;">
+        <table class="matrix-table" id="matrix-table">
+          <tbody id="matrix-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Deck Scenario Comparison & JSON Profile Backup -->
+    <div class="card" id="scenario-manager" data-feature="scenario-manager">
+      <div class="card-title">
+        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+          <span>Deck Scenario Comparison &amp; JSON Profiles</span>
+          <span class="tag tag-blue" id="scenario-count-tag">0 / 5 Saved</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+          <input type="text" id="scenario-name-input" placeholder="Scenario name..." style="width:140px; padding:0.25rem 0.5rem; font-size:0.8rem;">
+          <button class="primary btn-sm" id="btn-save-scenario">Save Current</button>
+          <button class="btn-sm" id="btn-load-sample-scenarios">Load sample</button>
+          <button class="btn-sm" id="btn-export-scenarios-json" title="Export scenarios to JSON">Export JSON</button>
+          <label class="btn-sm" style="cursor:pointer; display:inline-flex; align-items:center; margin:0;" title="Import scenarios from JSON">
+            Import JSON <input type="file" id="input-import-scenarios-json" accept=".json" style="display:none;">
+          </label>
+          <span id="scenario-pro-notice" class="pro-inline-notice" style="display:none;"></span>
+        </div>
+      </div>
+      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem;">
+        Side-by-side comparison of keep rates, drought starvation risk, and flood ratios across up to 5 named deck configurations.
+      </p>
+      <div style="overflow-x:auto;">
+        <table class="scenario-table" id="scenario-compare-table">
+          <thead>
+            <tr>
+              <th>Scenario Name</th>
+              <th>Deck / Hand</th>
+              <th>Primary Resource</th>
+              <th>Keep Rate</th>
+              <th>Drought Ratio</th>
+              <th>Flood Ratio</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="scenario-tbody">
+            <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:1rem;">No saved scenarios. Save the current configuration or click "Load sample".</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- FEATURES -->
+
+    <div class="main-grid">
+      <!-- Left Column: Inputs & Pool Configuration -->
+      <section>
+        <div class="card" data-feature="deck-pool-builder">
+          <div class="card-title">
+            <span>Deck & Category Architecture</span>
+            <span class="tag tag-blue" id="lbl-hand-ratio">Hand Size: 7</span>
+          </div>
+
+          <div class="form-group-inline">
+            <div class="form-field">
+              <label for="deck-size">Total Deck Size (cards)</label>
+              <input type="number" id="deck-size" min="10" max="200" value="60">
+            </div>
+            <div class="form-field">
+              <label for="hand-size">Hand Size Drawn (cards)</label>
+              <input type="number" id="hand-size" min="1" max="15" value="7">
+            </div>
+            <div class="form-field">
+              <label for="mulligan-rule">Mulligan Rule</label>
+              <select id="mulligan-rule">
+                <option value="london">London (Draw 7, Bottom m)</option>
+                <option value="classical">Classical / Vancouver (Draw 7 - m)</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="free-mulligan">Free Mulligan</label>
+              <select id="free-mulligan">
+                <option value="no">No (Standard 1v1)</option>
+                <option value="yes">1 Free (Commander / EDH)</option>
+              </select>
+            </div>
+          </div>
+
+          <label style="display:block; margin-bottom: 0.35rem;">Card Category Constraints</label>
+          <div style="overflow-x: auto;">
+            <table class="category-table" id="category-table">
+              <thead>
+                <tr>
+                  <th>Category Name</th>
+                  <th>In Deck</th>
+                  <th>Min Hand</th>
+                  <th>Max Hand</th>
+                  <th style="width:36px;"></th>
+                </tr>
+              </thead>
+              <tbody id="category-tbody">
+                <!-- Injected via JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+            <button type="button" class="btn-sm" id="btn-add-category">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add Category
+            </button>
+          </div>
+
+          <div class="deck-pool-status" id="deck-pool-status">
+            <span>Unassigned Pool: <strong id="unassigned-count">24 cards</strong></span>
+            <span class="tag tag-green" id="unassigned-badge">Deck Balanced</span>
+          </div>
+        </div>
+
+        <!-- Live Sample Hand Generator -->
+        <div class="card">
+          <div class="card-title">
+            <span>Sample Hand Draw Inspector</span>
+            <div>
+              <button class="btn-sm" id="btn-draw-sample">Draw Sample Hand</button>
+              <button class="btn-sm" id="btn-run-sim" title="Run 10,000 Monte Carlo draws">Verify 10k Draws</button>
+            </div>
+          </div>
+          <div class="hand-preview" id="sample-hand-container">
+            <!-- Sample cards show here -->
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem;">
+            <span id="sample-hand-eval">Click "Draw Sample Hand" to test an opening pull</span>
+            <span id="monte-carlo-result" style="color:var(--text-muted); font-variant-numeric: tabular-nums;"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Probability Engines & Guidance -->
+      <section>
+        <!-- Exact Hypergeometric Results Card -->
+        <div class="card" data-feature="joint-hypergeometric-engine">
+          <div class="card-title">
+            <span>Exact Multivariate Hypergeometric Solver</span>
+            <span class="tag tag-purple">Joint Constraint Probability</span>
+          </div>
+
+          <div class="metric-hero">
+            <div class="hero-stat">
+              <span class="stat-label">Initial Hand Keep Probability</span>
+              <span class="stat-value" id="res-initial-prob">58.74%</span>
+              <span class="stat-sub" id="res-odds-ratio">1 in 1.70 hands</span>
+            </div>
+
+            <div class="breakdown-box">
+              <div class="stat-row">
+                <span>Total Success</span>
+                <span class="stat-row-value" style="color:var(--success);" id="breakdown-success">58.74%</span>
+              </div>
+              <div class="stat-row">
+                <span id="label-drought">Resource Drought (Screw)</span>
+                <span class="stat-row-value" style="color:var(--danger);" id="breakdown-drought">15.20%</span>
+              </div>
+              <div class="stat-row">
+                <span id="label-flood">Resource Flood</span>
+                <span class="stat-row-value" style="color:var(--warning);" id="breakdown-flood">8.15%</span>
+              </div>
+              <div class="stat-row">
+                <span>Missing Key Piece / Other</span>
+                <span class="stat-row-value" style="color:var(--text-muted);" id="breakdown-other">17.91%</span>
+              </div>
+
+              <div class="bar-container" title="Composition breakdown">
+                <div class="bar-segment" id="bar-success" style="width: 58.74%; background: var(--success);"></div>
+                <div class="bar-segment" id="bar-drought" style="width: 15.20%; background: var(--danger);"></div>
+                <div class="bar-segment" id="bar-flood" style="width: 8.15%; background: var(--warning);"></div>
+                <div class="bar-segment" id="bar-other" style="width: 17.91%; background: var(--surface-border);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Hand Health & Adjustment Advisory -->
+        <div class="card" data-feature="interpretation-guidance">
+          <div class="card-title">
+            <span>What This Means / What to Do Next</span>
+            <span class="tag" id="health-tag">Analyzing</span>
+          </div>
+
+          <div class="advisory-box" id="advisory-box">
+            <div class="advisory-title" id="advisory-title">Evaluating Deck Balance...</div>
+            <div class="advisory-body" id="advisory-text">Loading deck parameters...</div>
+            <div class="advisory-pill" id="advisory-action" style="background:var(--accent-soft); color:var(--accent);">
+              Suggestion loading...
+            </div>
+          </div>
+        </div>
+
+        <!-- Mulligan Sequence Evaluator -->
+        <div class="card" data-feature="mulligan-evaluator">
+          <div class="card-title">
+            <span>Cumulative Mulligan Sequence Progression</span>
+            <span class="tag tag-blue" id="lbl-mulligan-rule-tag">London Rule</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem;">
+            Probability of finding at least one valid opening hand across sequential redraws:
+          </p>
+
+          <div class="mulligan-grid" id="mulligan-grid">
+            <div class="mulligan-card active">
+              <div class="mulligan-step">Hand 1 (Initial)</div>
+              <div class="mulligan-rate" id="mul-hand-1">58.74%</div>
+              <div class="mulligan-cards-drawn" id="mul-sub-1">7 cards drawn</div>
+            </div>
+            <div class="mulligan-card">
+              <div class="mulligan-step">By Hand 2</div>
+              <div class="mulligan-rate" id="mul-hand-2">82.98%</div>
+              <div class="mulligan-cards-drawn" id="mul-sub-2">Mulligan to 6</div>
+            </div>
+            <div class="mulligan-card">
+              <div class="mulligan-step">By Hand 3</div>
+              <div class="mulligan-rate" id="mul-hand-3">92.98%</div>
+              <div class="mulligan-cards-drawn" id="mul-sub-3">Mulligan to 5</div>
+            </div>
+            <div class="mulligan-card">
+              <div class="mulligan-step">By Hand 4</div>
+              <div class="mulligan-rate" id="mul-hand-4">97.10%</div>
+              <div class="mulligan-cards-drawn" id="mul-sub-4">Mulligan to 4</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="notice-footnote">
+      Estimate only - verify with deck construction playtests before tournament registration.
+    </div>
+  </div>
+
+  <script>
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/blxmnh";
+
+    // Mathematical utility: Exact Combinations C(n, k)
+    // Precompute factorials up to 300 using logarithmic arithmetic to prevent 64-bit float overflows
+    const LOG_FACT = new Float64Array(301);
+    for (let i = 1; i <= 300; i++) {
+      LOG_FACT[i] = LOG_FACT[i - 1] + Math.log(i);
+    }
+
+    function logComb(n, k) {
+      if (k < 0 || k > n || n < 0) return -Infinity;
+      if (k === 0 || k === n) return 0;
+      return LOG_FACT[n] - LOG_FACT[k] - LOG_FACT[n - k];
+    }
+
+    function comb(n, k) {
+      if (k < 0 || k > n || n < 0) return 0;
+      if (k === 0 || k === n) return 1;
+      return Math.round(Math.exp(logComb(n, k)));
+    }
+
+    // State definition
+    let deckState = {
+      deckSize: 60,
+      handSize: 7,
+      mulliganRule: 'london', // 'london' or 'classical'
+      freeMulligan: 'no',     // 'no' or 'yes'
+      categories: [
+        { id: 1, name: 'Lands', count: 20, min: 2, max: 3 },
+        { id: 2, name: '1-Drop Creatures/Spells', count: 16, min: 1, max: 4 },
+        { id: 3, name: 'Burn Spells', count: 24, min: 1, max: 5 }
+      ]
+    };
+
+    let nextCategoryId = 4;
+
+    // Presets
+    const PRESETS = {
+      mtgBurn: {
+        deckSize: 60,
+        handSize: 7,
+        mulliganRule: 'london',
+        freeMulligan: 'no',
+        categories: [
+          { id: 1, name: 'Lands', count: 20, min: 2, max: 3 },
+          { id: 2, name: '1-Drop Creatures/Spells', count: 16, min: 1, max: 4 },
+          { id: 3, name: 'Burn Spells', count: 24, min: 1, max: 5 }
+        ]
+      },
+      edhRamp: {
+        deckSize: 99,
+        handSize: 7,
+        mulliganRule: 'london',
+        freeMulligan: 'yes',
+        categories: [
+          { id: 1, name: 'Lands', count: 37, min: 3, max: 5 },
+          { id: 2, name: 'Ramp/Rocks (<=2 CMC)', count: 12, min: 1, max: 3 },
+          { id: 3, name: 'Card Advantage', count: 10, min: 0, max: 2 },
+          { id: 4, name: 'Remaining Deck', count: 40, min: 0, max: 7 }
+        ]
+      },
+      pokemon: {
+        deckSize: 60,
+        handSize: 7,
+        mulliganRule: 'classical',
+        freeMulligan: 'no',
+        categories: [
+          { id: 1, name: 'Basic Pokémon', count: 12, min: 1, max: 7 },
+          { id: 2, name: 'Ball Search/Supporters', count: 14, min: 1, max: 4 },
+          { id: 3, name: 'Energy', count: 10, min: 1, max: 3 },
+          { id: 4, name: 'Other Cards', count: 24, min: 0, max: 7 }
+        ]
+      }
+    };
+
+    // DOM Elements
+    const deckSizeInput = document.getElementById('deck-size');
+    const handSizeInput = document.getElementById('hand-size');
+    const mulliganRuleSelect = document.getElementById('mulligan-rule');
+    const freeMulliganSelect = document.getElementById('free-mulligan');
+    const categoryTbody = document.getElementById('category-tbody');
+    const unassignedCountEl = document.getElementById('unassigned-count');
+    const unassignedBadgeEl = document.getElementById('unassigned-badge');
+    const deckPoolStatusEl = document.getElementById('deck-pool-status');
+    const lblHandRatio = document.getElementById('lbl-hand-ratio');
+
+    const resInitialProb = document.getElementById('res-initial-prob');
+    const resOddsRatio = document.getElementById('res-odds-ratio');
+    const breakdownSuccess = document.getElementById('breakdown-success');
+    const breakdownDrought = document.getElementById('breakdown-drought');
+    const breakdownFlood = document.getElementById('breakdown-flood');
+    const breakdownOther = document.getElementById('breakdown-other');
+    const labelDrought = document.getElementById('label-drought');
+    const labelFlood = document.getElementById('label-flood');
+
+    const barSuccess = document.getElementById('bar-success');
+    const barDrought = document.getElementById('bar-drought');
+    const barFlood = document.getElementById('bar-flood');
+    const barOther = document.getElementById('bar-other');
+
+    const healthTag = document.getElementById('health-tag');
+    const advisoryTitle = document.getElementById('advisory-title');
+    const advisoryText = document.getElementById('advisory-text');
+    const advisoryAction = document.getElementById('advisory-action');
+
+    const lblMulliganRuleTag = document.getElementById('lbl-mulligan-rule-tag');
+    const mulHand1 = document.getElementById('mul-hand-1');
+    const mulHand2 = document.getElementById('mul-hand-2');
+    const mulHand3 = document.getElementById('mul-hand-3');
+    const mulHand4 = document.getElementById('mul-hand-4');
+    const mulSub1 = document.getElementById('mul-sub-1');
+    const mulSub2 = document.getElementById('mul-sub-2');
+    const mulSub3 = document.getElementById('mul-sub-3');
+    const mulSub4 = document.getElementById('mul-sub-4');
+
+    const sampleHandContainer = document.getElementById('sample-hand-container');
+    const sampleHandEval = document.getElementById('sample-hand-eval');
+    const monteCarloResult = document.getElementById('monte-carlo-result');
+
+    function updateNextCategoryId() {
+      const maxId = deckState.categories.reduce((m, c) => Math.max(m, c.id || 0), 0);
+      nextCategoryId = maxId + 1;
+    }
+
+    // Storage loader
+    function loadSavedState() {
+      try {
+        const saved = localStorage.getItem('multi_hypergeometric_deck');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && Array.isArray(parsed.categories) && parsed.categories.length > 0) {
+            deckState = parsed;
+          }
+        }
+      } catch (e) {
+        // Storage access blocked or unavailable
+      }
+      updateNextCategoryId();
+    }
+
+    function persistState() {
+      try {
+        localStorage.setItem('multi_hypergeometric_deck', JSON.stringify(deckState));
+      } catch (e) {
+        // Ignore storage errors
+      }
+    }
+
+    // Render table
+    function renderCategoryTable() {
+      categoryTbody.innerHTML = '';
+      deckState.categories.forEach((cat, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <input type="text" value="${escapeHtml(cat.name)}" data-id="${cat.id}" data-field="name" aria-label="Category Name">
+          </td>
+          <td>
+            <input type="number" min="0" max="${deckState.deckSize}" value="${cat.count}" data-id="${cat.id}" data-field="count" aria-label="Deck Count">
+          </td>
+          <td>
+            <input type="number" min="0" max="${deckState.handSize}" value="${cat.min}" data-id="${cat.id}" data-field="min" aria-label="Min Hand">
+          </td>
+          <td>
+            <input type="number" min="0" max="${deckState.handSize}" value="${cat.max}" data-id="${cat.id}" data-field="max" aria-label="Max Hand">
+          </td>
+          <td style="text-align: center;">
+            ${deckState.categories.length > 1 ? `
+              <button type="button" class="btn-sm btn-danger btn-del" data-id="${cat.id}" title="Remove category">&times;</button>
+            ` : ''}
+          </td>
+        `;
+        categoryTbody.appendChild(tr);
+      });
+
+      // Update basic inputs
+      deckSizeInput.value = deckState.deckSize;
+      handSizeInput.value = deckState.handSize;
+      mulliganRuleSelect.value = deckState.mulliganRule;
+      freeMulliganSelect.value = deckState.freeMulligan;
+      lblHandRatio.textContent = `Hand Size: ${deckState.handSize}`;
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Multivariate Hypergeometric Solver
+    // Computes joint probability of satisfying all category min/max constraints on a draw of `hSize` cards
+    function calculateJointProbability(deckSize, hSize, categories) {
+      if (deckSize <= 0 || hSize <= 0 || hSize > deckSize) return 0;
+
+      // Extract category counts and limits
+      const assignedSum = categories.reduce((sum, c) => sum + Math.max(0, c.count), 0);
+      const unassigned = Math.max(0, deckSize - assignedSum);
+
+      const K = categories.map(c => Math.max(0, c.count));
+      const minReq = categories.map(c => Math.max(0, c.min));
+      const maxReq = categories.map(c => Math.max(0, c.max));
+
+      const logTotalCombinations = logComb(deckSize, hSize);
+      let totalValidProbability = 0;
+
+      const m = categories.length;
+      const currentK = new Int32Array(m);
+
+      // Recursive DFS over category hand counts
+      function search(catIndex, currentDrawn) {
+        if (catIndex === m) {
+          const remainingDrawn = hSize - currentDrawn;
+          if (remainingDrawn >= 0 && remainingDrawn <= unassigned) {
+            let logNumerator = logComb(unassigned, remainingDrawn);
+            for (let i = 0; i < m; i++) {
+              logNumerator += logComb(K[i], currentK[i]);
+            }
+            const p = Math.exp(logNumerator - logTotalCombinations);
+            totalValidProbability += p;
+          }
+          return;
+        }
+
+        const catMin = Math.max(0, minReq[catIndex]);
+        const catMax = Math.min(K[catIndex], maxReq[catIndex], hSize - currentDrawn);
+
+        for (let k = catMin; k <= catMax; k++) {
+          currentK[catIndex] = k;
+          search(catIndex + 1, currentDrawn + k);
+        }
+      }
+
+      search(0, 0);
+      return Math.min(1, Math.max(0, totalValidProbability));
+    }
+
+    // Marginal evaluation for resource drought/flood breakdown
+    function calculateMarginal(deckSize, hSize, countInDeck, minVal, maxVal) {
+      if (deckSize <= 0 || hSize <= 0 || hSize > deckSize) return { under: 0, inRange: 0, over: 0 };
+      const logTotal = logComb(deckSize, hSize);
+      const remainingDeck = deckSize - countInDeck;
+
+      let pUnder = 0;
+      let pInRange = 0;
+      let pOver = 0;
+
+      for (let k = 0; k <= hSize; k++) {
+        if (k > countInDeck || (hSize - k) > remainingDeck) continue;
+        const p = Math.exp(logComb(countInDeck, k) + logComb(remainingDeck, hSize - k) - logTotal);
+        if (k < minVal) {
+          pUnder += p;
+        } else if (k > maxVal) {
+          pOver += p;
+        } else {
+          pInRange += p;
+        }
+      }
+
+      return { under: pUnder, inRange: pInRange, over: pOver };
+    }
+
+    // Master update and solve cycle
+    function updateAll() {
+      const rawDeck = parseInt(deckSizeInput.value, 10);
+      const rawHand = parseInt(handSizeInput.value, 10);
+      deckState.mulliganRule = mulliganRuleSelect.value;
+      deckState.freeMulligan = freeMulliganSelect.value;
+
+      if (isNaN(rawDeck) || rawDeck <= 0 || isNaN(rawHand) || rawHand <= 0) {
+        unassignedCountEl.textContent = '0 cards';
+        unassignedBadgeEl.className = 'tag tag-orange';
+        unassignedBadgeEl.textContent = 'Input Required';
+        resInitialProb.textContent = '—';
+        resOddsRatio.textContent = 'Enter positive deck and hand sizes';
+        breakdownSuccess.textContent = '—';
+        breakdownDrought.textContent = '—';
+        breakdownFlood.textContent = '—';
+        breakdownOther.textContent = '—';
+        barSuccess.style.width = '0%';
+        barDrought.style.width = '0%';
+        barFlood.style.width = '0%';
+        barOther.style.width = '0%';
+        mulHand1.textContent = '—';
+        mulHand2.textContent = '—';
+        mulHand3.textContent = '—';
+        mulHand4.textContent = '—';
+        healthTag.className = 'tag tag-orange';
+        healthTag.textContent = 'Invalid Input';
+        advisoryTitle.innerHTML = '<span style="color:var(--warning);">Input Values Required</span>';
+        advisoryText.innerHTML = 'Deck size and hand size must be valid positive numbers.';
+        advisoryAction.textContent = 'Adjustment: Provide a positive deck size (e.g. 60) and hand size (e.g. 7).';
+        return;
+      }
+
+      deckState.deckSize = Math.max(1, Math.min(250, rawDeck));
+      deckState.handSize = Math.max(1, Math.min(deckState.deckSize, rawHand));
+      lblHandRatio.textContent = `Hand Size: ${deckState.handSize}`;
+
+      // Update pool calculations
+      const assignedSum = deckState.categories.reduce((acc, c) => acc + (parseInt(c.count, 10) || 0), 0);
+      const unassigned = deckState.deckSize - assignedSum;
+
+      unassignedCountEl.textContent = `${unassigned} cards`;
+      if (unassigned < 0) {
+        deckPoolStatusEl.className = 'deck-pool-status danger';
+        unassignedBadgeEl.className = 'tag tag-orange';
+        unassignedBadgeEl.textContent = `Overallocated by ${Math.abs(unassigned)} cards`;
+      } else if (unassigned === 0) {
+        deckPoolStatusEl.className = 'deck-pool-status';
+        unassignedBadgeEl.className = 'tag tag-green';
+        unassignedBadgeEl.textContent = 'Exact 100% Deck Allocation';
+      } else {
+        deckPoolStatusEl.className = 'deck-pool-status';
+        unassignedBadgeEl.className = 'tag tag-blue';
+        unassignedBadgeEl.textContent = `${unassigned} Unassigned Cards`;
+      }
+
+      // Check for zero-card or invalid state
+      if (assignedSum > deckState.deckSize) {
+        resInitialProb.textContent = '0.00%';
+        resOddsRatio.textContent = `Categories exceed deck (${assignedSum}/${deckState.deckSize})`;
+        breakdownSuccess.textContent = '0.00%';
+        breakdownDrought.textContent = '0.00%';
+        breakdownFlood.textContent = '0.00%';
+        breakdownOther.textContent = '100.00%';
+        barSuccess.style.width = '0%';
+        barDrought.style.width = '0%';
+        barFlood.style.width = '0%';
+        barOther.style.width = '100%';
+        mulHand1.textContent = '0.00%';
+        mulHand2.textContent = '0.00%';
+        mulHand3.textContent = '0.00%';
+        mulHand4.textContent = '0.00%';
+        healthTag.className = 'tag tag-orange';
+        healthTag.textContent = 'Overallocated';
+        advisoryTitle.innerHTML = '<span style="color:var(--danger);">Categories Exceed Deck Size</span>';
+        advisoryText.innerHTML = `Category card counts total <strong>${assignedSum}</strong>, which exceeds deck size <strong>${deckState.deckSize}</strong>.`;
+        advisoryAction.style.background = 'var(--danger-soft)';
+        advisoryAction.style.color = 'var(--danger)';
+        advisoryAction.textContent = `Adjustment: Reduce category counts by ${assignedSum - deckState.deckSize} cards.`;
+        return;
+      }
+
+      // 1. EXACT INITIAL HAND PROBABILITY
+      const initialProb = calculateJointProbability(deckState.deckSize, deckState.handSize, deckState.categories);
+      const initialPct = (initialProb * 100).toFixed(2);
+      resInitialProb.textContent = `${initialPct}%`;
+
+      if (initialProb > 0.0001) {
+        const ratio = (1 / initialProb).toFixed(2);
+        resOddsRatio.textContent = `1 in ${ratio} hands drawn`;
+      } else {
+        resOddsRatio.textContent = 'Virtually impossible hand configuration';
+      }
+
+      breakdownSuccess.textContent = `${initialPct}%`;
+
+      // 2. RESOURCE DROUGHT VS FLOOD BREAKDOWN
+      // We look at Category 1 as the primary resource (typically Lands, Energy, or Basics)
+      const primaryCat = deckState.categories[0] || { name: 'Category 1', count: 0, min: 0, max: 7 };
+      labelDrought.textContent = `${primaryCat.name} Drought (< ${primaryCat.min})`;
+      labelFlood.textContent = `${primaryCat.name} Flood (> ${primaryCat.max})`;
+
+      const marginals = calculateMarginal(deckState.deckSize, deckState.handSize, primaryCat.count, primaryCat.min, primaryCat.max);
+      const droughtPct = (marginals.under * 100).toFixed(2);
+      const floodPct = (marginals.over * 100).toFixed(2);
+
+      // Remaining failure probability attributable to other card dependencies
+      const totalFailProb = Math.max(0, 1 - initialProb);
+      const droughtProb = Math.min(marginals.under, totalFailProb);
+      const floodProb = Math.min(marginals.over, Math.max(0, totalFailProb - droughtProb));
+      const otherFailProb = Math.max(0, totalFailProb - (droughtProb + floodProb));
+
+      breakdownDrought.textContent = `${(droughtProb * 100).toFixed(2)}%`;
+      breakdownFlood.textContent = `${(floodProb * 100).toFixed(2)}%`;
+      breakdownOther.textContent = `${(otherFailProb * 100).toFixed(2)}%`;
+
+      barSuccess.style.width = `${(initialProb * 100).toFixed(2)}%`;
+      barDrought.style.width = `${(droughtProb * 100).toFixed(2)}%`;
+      barFlood.style.width = `${(floodProb * 100).toFixed(2)}%`;
+      barOther.style.width = `${(otherFailProb * 100).toFixed(2)}%`;
+
+      // 3. MULLIGAN EVALUATION
+      evaluateMulliganProgression(initialProb);
+
+      // 4. HAND HEALTH & ADJUSTMENT ADVISORY
+      evaluateDeckAdvisory(primaryCat, initialProb, marginals.under, marginals.over);
+
+      persistState();
+    }
+
+    // Evaluates sequential keeps under London vs Classical rules
+    function evaluateMulliganProgression(pHand1) {
+      const isLondon = deckState.mulliganRule === 'london';
+      const isFree = deckState.freeMulligan === 'yes';
+
+      lblMulliganRuleTag.textContent = isLondon ? 'London Mulligan' : 'Classical/Vancouver Mulligan';
+
+      // For each mulligan step (Hand 1 = step 0, Hand 2 = step 1, Hand 3 = step 2, Hand 4 = step 3)
+      // Determine effective hand size drawn
+      const steps = [
+        { label: 'Hand 1 (Initial)', step: 0 },
+        { label: 'By Hand 2', step: 1 },
+        { label: 'By Hand 3', step: 2 },
+        { label: 'By Hand 4', step: 3 }
+      ];
+
+      // Array of individual keep chances per hand
+      let pKeeps = [];
+
+      for (let i = 0; i < 4; i++) {
+        let penalty = i;
+        if (isFree && penalty > 0) {
+          penalty -= 1; // 1 free mulligan
+        }
+
+        if (isLondon) {
+          // Under London rule: player draws full hand size (n), then returns `penalty` cards to library
+          // If required minimums exceed kept hand size (n - penalty), keep probability is 0
+          const minSum = deckState.categories.reduce((s, c) => s + Math.max(0, c.min), 0);
+          const effectiveKeptCards = deckState.handSize - penalty;
+          if (effectiveKeptCards < minSum) {
+            pKeeps.push(0);
+          } else {
+            // Player draws full hand and can bottom irrelevant non-required cards
+            pKeeps.push(pHand1);
+          }
+        } else {
+          // Classical: player draws n - penalty cards
+          const effectiveDrawn = Math.max(1, deckState.handSize - penalty);
+          const probClassical = calculateJointProbability(deckState.deckSize, effectiveDrawn, deckState.categories);
+          pKeeps.push(probClassical);
+        }
+      }
+
+      // Cumulative probability of keeping by hand k = 1 - prod(1 - P_i)
+      let cumFail = 1.0;
+      const cumProb = [];
+      for (let i = 0; i < 4; i++) {
+        cumFail *= (1 - pKeeps[i]);
+        cumProb.push(1 - cumFail);
+      }
+
+      mulHand1.textContent = `${(cumProb[0] * 100).toFixed(2)}%`;
+      mulHand2.textContent = `${(cumProb[1] * 100).toFixed(2)}%`;
+      mulHand3.textContent = `${(cumProb[2] * 100).toFixed(2)}%`;
+      mulHand4.textContent = `${(cumProb[3] * 100).toFixed(2)}%`;
+
+      if (isLondon) {
+        mulSub1.textContent = `${deckState.handSize} cards (keep ${deckState.handSize})`;
+        mulSub2.textContent = isFree ? `Free mulligan (keep ${deckState.handSize})` : `Bottom 1 (keep ${deckState.handSize - 1})`;
+        mulSub3.textContent = isFree ? `Bottom 1 (keep ${deckState.handSize - 1})` : `Bottom 2 (keep ${deckState.handSize - 2})`;
+        mulSub4.textContent = isFree ? `Bottom 2 (keep ${deckState.handSize - 2})` : `Bottom 3 (keep ${deckState.handSize - 3})`;
+      } else {
+        mulSub1.textContent = `Draw ${deckState.handSize} cards`;
+        mulSub2.textContent = isFree ? `Draw ${deckState.handSize} cards (Free)` : `Draw ${deckState.handSize - 1} cards`;
+        mulSub3.textContent = isFree ? `Draw ${deckState.handSize - 1} cards` : `Draw ${deckState.handSize - 2} cards`;
+        mulSub4.textContent = isFree ? `Draw ${deckState.handSize - 2} cards` : `Draw ${deckState.handSize - 3} cards`;
+      }
+    }
+
+    // Hand Health & Deck Adjustment Advisory
+    function evaluateDeckAdvisory(primaryCat, initialProb, droughtProb, floodProb) {
+      const avgLands = ((deckState.handSize * primaryCat.count) / deckState.deckSize).toFixed(2);
+      const isTargetHealthy = initialProb >= 0.70;
+
+      if (isTargetHealthy) {
+        healthTag.className = 'tag tag-green';
+        healthTag.textContent = 'Tournament Viable (70%+)';
+        advisoryTitle.innerHTML = `<span style="color:var(--success);">Optimal Hand Distribution</span>`;
+        advisoryText.innerHTML = `Your opening hand has an expected average of <strong>${avgLands} ${escapeHtml(primaryCat.name)}</strong>. The joint failure risk is low (${((1 - initialProb)*100).toFixed(1)}%). By Hand 2 under your mulligan rule, you reach over <strong>${mulHand2.textContent}</strong> consistency.`;
+        advisoryAction.style.background = 'var(--success-soft)';
+        advisoryAction.style.color = 'var(--success)';
+        advisoryAction.textContent = 'Keep curve locked: Deck meets competitive keep thresholds.';
+        return;
+      }
+
+      // Failure diagnosis
+      if (droughtProb >= 0.20 && droughtProb > floodProb) {
+        healthTag.className = 'tag tag-orange';
+        healthTag.textContent = 'High Drought Risk';
+        advisoryTitle.innerHTML = `<span style="color:var(--warning);">Severe ${escapeHtml(primaryCat.name)} Starvation</span>`;
+
+        // Calculate delta for adding cards
+        const testCount = primaryCat.count + 3;
+        const tempCats = deckState.categories.map((c, i) => i === 0 ? { ...c, count: testCount } : c);
+        const testProb = calculateJointProbability(deckState.deckSize, deckState.handSize, tempCats);
+        const delta = ((testProb - initialProb) * 100).toFixed(1);
+
+        advisoryText.innerHTML = `You are seeing less than ${primaryCat.min} ${escapeHtml(primaryCat.name)} in <strong>${(droughtProb * 100).toFixed(1)}%</strong> of hands (average expected: ${avgLands}). This is your primary failure mode.`;
+        advisoryAction.style.background = 'var(--warning-soft)';
+        advisoryAction.style.color = 'var(--warning)';
+        advisoryAction.textContent = `Adjustment: Adding +3 ${escapeHtml(primaryCat.name)} boosts keep probability by +${delta}% (from ${(initialProb * 100).toFixed(1)}% to ${(testProb * 100).toFixed(1)}%).`;
+      } else if (floodProb >= 0.18 && floodProb > droughtProb) {
+        healthTag.className = 'tag tag-orange';
+        healthTag.textContent = 'High Flood Risk';
+        advisoryTitle.innerHTML = `<span style="color:var(--warning);">${escapeHtml(primaryCat.name)} Flooding</span>`;
+
+        const testCount = Math.max(0, primaryCat.count - 2);
+        const tempCats = deckState.categories.map((c, i) => i === 0 ? { ...c, count: testCount } : c);
+        const testProb = calculateJointProbability(deckState.deckSize, deckState.handSize, tempCats);
+        const delta = ((testProb - initialProb) * 100).toFixed(1);
+
+        advisoryText.innerHTML = `You exceed your maximum limit of ${primaryCat.max} ${escapeHtml(primaryCat.name)} in <strong>${(floodProb * 100).toFixed(1)}%</strong> of opening hands (expected average: ${avgLands}).`;
+        advisoryAction.style.background = 'var(--warning-soft)';
+        advisoryAction.style.color = 'var(--warning)';
+        advisoryAction.textContent = `Adjustment: Cutting 2 ${escapeHtml(primaryCat.name)} reduces clutter and changes keep rate by ${delta >= 0 ? '+' : ''}${delta}%.`;
+      } else {
+        healthTag.className = 'tag tag-purple';
+        healthTag.textContent = 'Composite Bottleneck';
+        advisoryTitle.innerHTML = `<span>Multi-Category Friction</span>`;
+        advisoryText.innerHTML = `Your primary resource (${escapeHtml(primaryCat.name)}) is balanced (avg ${avgLands}), but the combination of secondary category criteria (1-drops, combo pieces, or ramp) fails to assemble together in <strong>${((1 - initialProb)*100).toFixed(1)}%</strong> of openers.`;
+        advisoryAction.style.background = 'var(--purple-soft)';
+        advisoryAction.style.color = 'var(--purple)';
+        advisoryAction.textContent = 'Adjustment: Relax minimum requirements or increase counts of your key secondary cards by 2-4 slots.';
+      }
+    }
+
+    // Sample Hand Draw Simulator
+    function drawSampleHand() {
+      if (deckState.deckSize < deckState.handSize || deckState.deckSize <= 0) {
+        sampleHandContainer.innerHTML = '<span style="color:var(--danger); font-size:0.85rem;">Deck size must be at least hand size.</span>';
+        sampleHandEval.textContent = 'Cannot draw from invalid deck.';
+        return;
+      }
+      // Build virtual deck array
+      const deck = [];
+      deckState.categories.forEach(cat => {
+        for (let i = 0; i < cat.count; i++) {
+          deck.push({ name: cat.name, catId: cat.id });
+        }
+      });
+
+      const assignedSum = deck.length;
+      const unassigned = Math.max(0, deckState.deckSize - assignedSum);
+      for (let i = 0; i < unassigned; i++) {
+        deck.push({ name: 'Unassigned/Other', catId: -1 });
+      }
+
+      // Shuffle using Fisher-Yates
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = deck[i];
+        deck[i] = deck[j];
+        deck[j] = temp;
+      }
+
+      const drawnHand = deck.slice(0, deckState.handSize);
+
+      // Render tokens
+      sampleHandContainer.innerHTML = '';
+      const counts = {};
+      drawnHand.forEach(card => {
+        counts[card.name] = (counts[card.name] || 0) + 1;
+        const pill = document.createElement('span');
+        pill.className = 'card-token';
+        pill.textContent = card.name;
+        if (card.catId === 1) pill.style.borderLeft = '3px solid var(--accent)';
+        else if (card.catId === 2) pill.style.borderLeft = '3px solid var(--success)';
+        else if (card.catId === 3) pill.style.borderLeft = '3px solid var(--warning)';
+        else pill.style.borderLeft = '3px solid var(--purple)';
+        sampleHandContainer.appendChild(pill);
+      });
+
+      // Evaluate keep validity
+      let valid = true;
+      let failureReason = '';
+      deckState.categories.forEach(cat => {
+        const count = counts[cat.name] || 0;
+        if (count < cat.min) {
+          valid = false;
+          failureReason = `Needs >= ${cat.min} ${cat.name} (got ${count})`;
+        } else if (count > cat.max) {
+          valid = false;
+          failureReason = `Exceeds max ${cat.max} ${cat.name} (got ${count})`;
+        }
+      });
+
+      if (valid) {
+        sampleHandEval.innerHTML = `<strong style="color:var(--success);">KEEPABLE HAND</strong> &mdash; Satisfies all category thresholds`;
+      } else {
+        sampleHandEval.innerHTML = `<strong style="color:var(--danger);">MULLIGAN RECOMMENDED</strong> &mdash; ${escapeHtml(failureReason)}`;
+      }
+    }
+
+    // Monte Carlo 10,000 Draws Verification
+    function runMonteCarlo() {
+      const N = deckState.deckSize;
+      const n = deckState.handSize;
+      const cats = deckState.categories;
+      const sumCards = cats.reduce((s, c) => s + (parseInt(c.count, 10) || 0), 0);
+
+      if (N < n || sumCards > N || N <= 0 || n <= 0) {
+        monteCarloResult.textContent = 'Simulation halted: Invalid deck/category configuration.';
+        return;
+      }
+
+      monteCarloResult.textContent = 'Simulating 10,000 hands...';
+      setTimeout(() => {
+
+        // Build flat deck indices
+        const deckArr = [];
+        cats.forEach((cat, idx) => {
+          for (let i = 0; i < cat.count; i++) deckArr.push(idx);
+        });
+        const unassignedCount = Math.max(0, N - deckArr.length);
+        for (let i = 0; i < unassignedCount; i++) deckArr.push(-1);
+
+        const totalDraws = 10000;
+        let successCount = 0;
+        const catCounts = new Int32Array(cats.length);
+
+        for (let sim = 0; sim < totalDraws; sim++) {
+          // Partial Fisher-Yates for n cards
+          catCounts.fill(0);
+          for (let i = 0; i < n; i++) {
+            const r = i + Math.floor(Math.random() * (deckArr.length - i));
+            const card = deckArr[r];
+            deckArr[r] = deckArr[i];
+            deckArr[i] = card;
+
+            if (card !== -1) {
+              catCounts[card]++;
+            }
+          }
+
+          let ok = true;
+          for (let c = 0; c < cats.length; c++) {
+            if (catCounts[c] < cats[c].min || catCounts[c] > cats[c].max) {
+              ok = false;
+              break;
+            }
+          }
+          if (ok) successCount++;
+        }
+
+        const simPct = ((successCount / totalDraws) * 100).toFixed(2);
+        monteCarloResult.innerHTML = `Monte Carlo empirical: <strong>${simPct}%</strong> (10k hands, &plusmn;0.3%)`;
+      }, 20);
+    }
+
+    // Handle Pro actions
+    function handleProAction(e) {
+      if (!PRO) {
+        e.preventDefault();
+        const feedback = document.getElementById('pro-feedback');
+        feedback.innerHTML = `Available in the full version &mdash; <a href="${PRO_LINK}">Upgrade</a>`;
+        feedback.style.display = 'inline-flex';
+        setTimeout(() => { feedback.style.display = 'none'; }, 6000);
+        return false;
+      }
+      return true;
+    }
+
+    // Copy results to clipboard
+    document.getElementById('btn-copy').addEventListener('click', (e) => {
+      const summary = `Multi-Card Hypergeometric Opening Hand Results:
+Deck: ${deckState.deckSize} cards | Hand: ${deckState.handSize} cards | Rule: ${deckState.mulliganRule.toUpperCase()}
+Initial Hand Keep Rate: ${resInitialProb.textContent} (${resOddsRatio.textContent})
+Resource Drought Risk: ${breakdownDrought.textContent}
+Resource Flood Risk: ${breakdownFlood.textContent}
+Cumulative Keep by Hand 2: ${mulHand2.textContent}
+Cumulative Keep by Hand 3: ${mulHand3.textContent}`;
+
+      navigator.clipboard.writeText(summary).then(() => {
+        const btn = document.getElementById('btn-copy');
+        const orig = btn.innerHTML;
+        btn.innerHTML = `<span style="color:var(--success);">Copied!</span>`;
+        setTimeout(() => { btn.innerHTML = orig; }, 1800);
+      }).catch(() => {
+        alert("Copied to clipboard:\n\n" + summary);
+      });
+    });
+
+    // CSV Export
+    document.getElementById('btn-export-csv').addEventListener('click', (e) => {
+      if (!handleProAction(e)) return;
+
+      let csv = 'Category Name,Count In Deck,Min In Hand,Max In Hand\n';
+      deckState.categories.forEach(c => {
+        csv += `"${c.name.replace(/"/g, '""')}",${c.count},${c.min},${c.max}\n`;
+      });
+      csv += `\nDeck Size,${deckState.deckSize}\nHand Size,${deckState.handSize}\n`;
+      csv += `Mulligan Rule,${deckState.mulliganRule}\nFree Mulligan,${deckState.freeMulligan}\n`;
+      csv += `Initial Hand Keep %,${resInitialProb.textContent}\n`;
+      csv += `By Hand 2 Cumulative %,${mulHand2.textContent}\n`;
+      csv += `By Hand 3 Cumulative %,${mulHand3.textContent}\n`;
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `hypergeometric_hand_sim_${Date.now()}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+
+    // Print
+    document.getElementById('btn-print').addEventListener('click', (e) => {
+      if (!handleProAction(e)) return;
+      window.print();
+    });
+
+    // Presets Handlers
+    document.getElementById('preset-mtg-burn').addEventListener('click', () => {
+      deckState = JSON.parse(JSON.stringify(PRESETS.mtgBurn));
+      updateNextCategoryId();
+      renderCategoryTable();
+      updateAll();
+      drawSampleHand();
+    });
+
+    document.getElementById('preset-edh-ramp').addEventListener('click', () => {
+      deckState = JSON.parse(JSON.stringify(PRESETS.edhRamp));
+      updateNextCategoryId();
+      renderCategoryTable();
+      updateAll();
+      drawSampleHand();
+    });
+
+    document.getElementById('preset-pokemon').addEventListener('click', () => {
+      deckState = JSON.parse(JSON.stringify(PRESETS.pokemon));
+      updateNextCategoryId();
+      renderCategoryTable();
+      updateAll();
+      drawSampleHand();
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      deckState = JSON.parse(JSON.stringify(PRESETS.mtgBurn));
+      updateNextCategoryId();
+      renderCategoryTable();
+      updateAll();
+      drawSampleHand();
+    });
+
+    // Category Table Interactions
+    categoryTbody.addEventListener('input', (e) => {
+      const target = e.target;
+      const catId = parseInt(target.getAttribute('data-id'), 10);
+      const field = target.getAttribute('data-field');
+      const cat = deckState.categories.find(c => c.id === catId);
+      if (!cat) return;
+
+      if (field === 'name') {
+        cat.name = target.value;
+      } else {
+        const val = parseInt(target.value, 10);
+        cat[field] = isNaN(val) ? 0 : Math.max(0, val);
+      }
+      updateAll();
+    });
+
+    categoryTbody.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-del');
+      if (!btn) return;
+      const catId = parseInt(btn.getAttribute('data-id'), 10);
+      if (deckState.categories.length <= 1) return;
+      deckState.categories = deckState.categories.filter(c => c.id !== catId);
+      renderCategoryTable();
+      updateAll();
+    });
+
+    document.getElementById('btn-add-category').addEventListener('click', () => {
+      deckState.categories.push({
+        id: nextCategoryId++,
+        name: `Category ${deckState.categories.length + 1}`,
+        count: 4,
+        min: 1,
+        max: 4
+      });
+      renderCategoryTable();
+      updateAll();
+    });
+
+    // Top inputs event binding
+    deckSizeInput.addEventListener('input', updateAll);
+    handSizeInput.addEventListener('input', () => {
+      lblHandRatio.textContent = `Hand Size: ${handSizeInput.value}`;
+      updateAll();
+    });
+    mulliganRuleSelect.addEventListener('change', updateAll);
+    freeMulliganSelect.addEventListener('change', updateAll);
+
+    document.getElementById('btn-draw-sample').addEventListener('click', drawSampleHand);
+    document.getElementById('btn-run-sim').addEventListener('click', runMonteCarlo);
+
+    // Initial load
+    loadSavedState();
+    renderCategoryTable();
+    updateAll();
+    drawSampleHand();
+
+    // Turn-by-Turn Cumulative Draw Progression (turn-draw-curve)
+    const turnCurveModeSelect = document.getElementById('turn-curve-mode');
+    const turnCurveSvg = document.getElementById('turn-curve-svg');
+    const turnPillsRow = document.getElementById('turn-pills-row');
+
+    function renderTurnCurve() {
+      if (!turnCurveSvg || !turnPillsRow) return;
+      const isDraw = turnCurveModeSelect ? turnCurveModeSelect.value === 'draw' : false;
+      const N = deckState.deckSize;
+      const h = deckState.handSize;
+      const assignedSum = deckState.categories.reduce((s, c) => s + (parseInt(c.count, 10) || 0), 0);
+
+      if (N <= 0 || h <= 0 || assignedSum > N) {
+        turnCurveSvg.innerHTML = `<text x="280" y="105" text-anchor="middle" fill="var(--text-muted)" font-size="12">Adjust deck settings to render turn curve</text>`;
+        turnPillsRow.innerHTML = '';
+        return;
+      }
+
+      const turns = [];
+      for (let t = 1; t <= 7; t++) {
+        const extraDraws = isDraw ? t : (t - 1);
+        const cardsDrawn = Math.min(N, h + extraDraws);
+        const prob = calculateJointProbability(N, cardsDrawn, deckState.categories);
+        turns.push({ turn: t, cards: cardsDrawn, prob });
+      }
+
+      const padL = 45, padR = 25, padT = 20, padB = 30;
+      const plotW = 560 - padL - padR;
+      const plotH = 210 - padT - padB;
+
+      let gridSvg = '';
+      [0, 0.25, 0.5, 0.75, 1.0].forEach(val => {
+        const y = padT + (1 - val) * plotH;
+        gridSvg += `<line x1="${padL}" y1="${y}" x2="${padL + plotW}" y2="${y}" stroke="var(--surface-border)" stroke-dasharray="3 3"/>`;
+        gridSvg += `<text x="${padL - 8}" y="${y + 4}" text-anchor="end" fill="var(--text-muted)" font-size="10">${Math.round(val * 100)}%</text>`;
+      });
+
+      const pts = turns.map((d, i) => {
+        const x = padL + (i / 6) * plotW;
+        const y = padT + (1 - d.prob) * plotH;
+        return { x, y, ...d };
+      });
+
+      const polyPoints = pts.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+      const areaD = `M ${pts[0].x.toFixed(1)},${(padT + plotH)} L ${pts.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' L ')} L ${pts[pts.length - 1].x.toFixed(1)},${(padT + plotH)} Z`;
+
+      let dotsSvg = '';
+      pts.forEach(p => {
+        dotsSvg += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>`;
+        dotsSvg += `<text x="${p.x.toFixed(1)}" y="${(p.y - 8).toFixed(1)}" text-anchor="middle" fill="var(--text)" font-size="10" font-weight="600">${(p.prob * 100).toFixed(1)}%</text>`;
+        dotsSvg += `<text x="${p.x.toFixed(1)}" y="${padT + plotH + 18}" text-anchor="middle" fill="var(--text-muted)" font-size="10" font-weight="600">T${p.turn}</text>`;
+      });
+
+      turnCurveSvg.innerHTML = `
+        ${gridSvg}
+        <path d="${areaD}" fill="var(--accent-soft)" />
+        <polyline fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="${polyPoints}" />
+        ${dotsSvg}
+      `;
+
+      turnPillsRow.innerHTML = turns.map(d => `
+        <div class="turn-pill" id="turn-pill-${d.turn}">
+          <div class="turn-pill-name">Turn ${d.turn}</div>
+          <div class="turn-pill-val" id="turn-${d.turn}-prob">${(d.prob * 100).toFixed(1)}%</div>
+          <div class="turn-pill-cards" id="turn-${d.turn}-cards">${d.cards} cards</div>
+        </div>
+      `).join('');
+    }
+
+    if (turnCurveModeSelect) {
+      turnCurveModeSelect.addEventListener('change', renderTurnCurve);
+    }
+
+    const prevUpdateAll = updateAll;
+    updateAll = function() {
+      prevUpdateAll();
+      renderTurnCurve();
+    };
+    renderTurnCurve();
+    // Interactive Monte Carlo Opening Hand Dealer (monte-carlo-dealer)
+    const mcDrawCountInput = document.getElementById('mc-draw-count');
+    const btnMcDeal = document.getElementById('btn-mc-deal');
+    const btnMcReset = document.getElementById('btn-mc-reset');
+    const mcHandVerdict = document.getElementById('mc-hand-verdict');
+    const mcStatLast = document.getElementById('mc-stat-last');
+    const mcStatSession = document.getElementById('mc-stat-session');
+    const mcStatEmpirical = document.getElementById('mc-stat-empirical');
+    const mcStatTheoretical = document.getElementById('mc-stat-theoretical');
+    const mcStatDelta = document.getElementById('mc-stat-delta');
+    const mcCardsTray = document.getElementById('mc-cards-tray');
+    const mcBreakdownRow = document.getElementById('mc-breakdown-row');
+
+    let mcTotalDealt = 0;
+    let mcTotalKept = 0;
+
+    const MC_TAG_CLASSES = ['tag-blue', 'tag-green', 'tag-orange', 'tag-purple'];
+    const MC_COLOR_VARS = ['var(--accent)', 'var(--success)', 'var(--warning)', 'var(--purple)'];
+
+    function updateDealerTheoretical() {
+      if (!mcStatTheoretical) return;
+      const assignedSum = deckState.categories.reduce((s, c) => s + (parseInt(c.count, 10) || 0), 0);
+      if (deckState.deckSize <= 0 || deckState.handSize <= 0 || assignedSum > deckState.deckSize) {
+        mcStatTheoretical.textContent = '—';
+        mcStatDelta.textContent = '—';
+        return;
+      }
+      const pExact = calculateJointProbability(deckState.deckSize, deckState.handSize, deckState.categories);
+      const theoPct = (pExact * 100).toFixed(1);
+      mcStatTheoretical.textContent = `${theoPct}%`;
+
+      if (mcTotalDealt > 0) {
+        const empPct = (mcTotalKept / mcTotalDealt) * 100;
+        const delta = empPct - (pExact * 100);
+        mcStatDelta.textContent = `${delta >= 0 ? '+' : ''}${delta.toFixed(1)}%`;
+      }
+    }
+
+    function dealMonteCarloHands() {
+      const N = deckState.deckSize;
+      const h = deckState.handSize;
+      const cats = deckState.categories;
+      const assignedSum = cats.reduce((s, c) => s + (parseInt(c.count, 10) || 0), 0);
+
+      if (N < h || N <= 0 || h <= 0 || assignedSum > N) {
+        mcCardsTray.innerHTML = `<div class="mc-tray-empty" style="color:var(--danger);">Cannot deal: Deck configuration is invalid or overallocated.</div>`;
+        return;
+      }
+
+      let drawCycles = parseInt(mcDrawCountInput ? mcDrawCountInput.value : '1', 10);
+      if (isNaN(drawCycles) || drawCycles < 1) drawCycles = 1;
+      if (drawCycles > 100) drawCycles = 100;
+
+      // Construct deck array for Fisher-Yates
+      const deckTemplate = [];
+      cats.forEach((cat, idx) => {
+        for (let i = 0; i < cat.count; i++) {
+          deckTemplate.push({ name: cat.name, catIdx: idx });
+        }
+      });
+      const unassignedCount = Math.max(0, N - deckTemplate.length);
+      for (let i = 0; i < unassignedCount; i++) {
+        deckTemplate.push({ name: 'Unassigned', catIdx: -1 });
+      }
+
+      let lastDrawnHand = null;
+      let lastHandVerdictKeep = false;
+      let lastHandCounts = {};
+
+      for (let cycle = 0; cycle < drawCycles; cycle++) {
+        const deck = deckTemplate.slice();
+        // Fisher-Yates partial shuffle for handSize cards
+        for (let i = 0; i < h; i++) {
+          const j = i + Math.floor(Math.random() * (deck.length - i));
+          const temp = deck[i];
+          deck[i] = deck[j];
+          deck[j] = temp;
+        }
+
+        const hand = deck.slice(0, h);
+        const counts = {};
+        hand.forEach(c => {
+          counts[c.name] = (counts[c.name] || 0) + 1;
+        });
+
+        let isKeep = true;
+        for (let c = 0; c < cats.length; c++) {
+          const cat = cats[c];
+          const cnt = counts[cat.name] || 0;
+          if (cnt < cat.min || cnt > cat.max) {
+            isKeep = false;
+            break;
+          }
+        }
+
+        mcTotalDealt++;
+        if (isKeep) mcTotalKept++;
+
+        lastDrawnHand = hand;
+        lastHandVerdictKeep = isKeep;
+        lastHandCounts = counts;
+      }
+
+      // Render exactly h card tiles for the most recent dealt hand
+      mcCardsTray.innerHTML = '';
+      lastDrawnHand.forEach((card, idx) => {
+        const isCat = card.catIdx >= 0;
+        const tagClass = isCat ? MC_TAG_CLASSES[card.catIdx % MC_TAG_CLASSES.length] : 'tag-orange';
+        const colorBorder = isCat ? MC_COLOR_VARS[card.catIdx % MC_COLOR_VARS.length] : 'var(--surface-border)';
+
+        const tile = document.createElement('div');
+        tile.className = 'mc-card-tile';
+        tile.style.borderLeft = `3px solid ${colorBorder}`;
+        tile.innerHTML = `
+          <div class="mc-card-tile-top">
+            <span>Card ${idx + 1}</span>
+            <span class="tag ${tagClass}">${escapeHtml(card.name)}</span>
+          </div>
+          <div class="mc-card-tile-name" title="${escapeHtml(card.name)}">${escapeHtml(card.name)}</div>
+        `;
+        mcCardsTray.appendChild(tile);
+      });
+
+      // Update KEEP / MULLIGAN badge
+      if (lastHandVerdictKeep) {
+        mcHandVerdict.textContent = 'KEEP';
+        mcHandVerdict.className = 'mc-verdict-badge mc-verdict-keep';
+        mcStatLast.textContent = 'KEEP';
+        mcStatLast.style.color = 'var(--success)';
+      } else {
+        mcHandVerdict.textContent = 'MULLIGAN';
+        mcHandVerdict.className = 'mc-verdict-badge mc-verdict-mulligan';
+        mcStatLast.textContent = 'MULLIGAN';
+        mcStatLast.style.color = 'var(--danger)';
+      }
+
+      // Render category breakdown chips for the hand
+      mcBreakdownRow.innerHTML = cats.map((cat, idx) => {
+        const actual = lastHandCounts[cat.name] || 0;
+        const ok = actual >= cat.min && actual <= cat.max;
+        const color = ok ? 'var(--success)' : 'var(--danger)';
+        return `
+          <span class="tag" style="background:var(--surface-raised); border:1px solid var(--surface-border);">
+            ${escapeHtml(cat.name)}: <strong style="color:${color};">${actual}</strong> (req ${cat.min}-${cat.max})
+          </span>
+        `;
+      }).join('');
+
+      // Update session statistics
+      const empRate = (mcTotalKept / mcTotalDealt) * 100;
+      mcStatSession.textContent = `${mcTotalKept} / ${mcTotalDealt}`;
+      mcStatEmpirical.textContent = `${empRate.toFixed(1)}%`;
+      updateDealerTheoretical();
+    }
+
+    function resetMonteCarloDealer() {
+      mcTotalDealt = 0;
+      mcTotalKept = 0;
+      mcHandVerdict.textContent = 'No Hand Dealt';
+      mcHandVerdict.className = 'mc-verdict-badge mc-verdict-none';
+      mcStatLast.textContent = '—';
+      mcStatLast.style.color = 'inherit';
+      mcStatSession.textContent = '0 / 0';
+      mcStatEmpirical.textContent = '0.0%';
+      mcStatDelta.textContent = '—';
+      mcCardsTray.innerHTML = `<div class="mc-tray-empty">Click "Deal Hand" to simulate an opening hand draw.</div>`;
+      mcBreakdownRow.innerHTML = '';
+      updateDealerTheoretical();
+    }
+
+    if (btnMcDeal) btnMcDeal.addEventListener('click', dealMonteCarloHands);
+    if (btnMcReset) btnMcReset.addEventListener('click', resetMonteCarloDealer);
+
+    const prevUpdateAllForDealer = updateAll;
+    updateAll = function() {
+      prevUpdateAllForDealer();
+      updateDealerTheoretical();
+    };
+    updateDealerTheoretical();
+    // Deck Tuning Sensitivity Matrix & CSV Exporter (mulligan-matrix-export)
+    const matrixTableBody = document.getElementById('matrix-tbody');
+    const matrixCat1Label = document.getElementById('matrix-cat1-label');
+    const matrixCat2Label = document.getElementById('matrix-cat2-label');
+    const btnExportMatrixCsv = document.getElementById('btn-export-matrix-csv');
+    const matrixProNotice = document.getElementById('matrix-pro-notice');
+
+    let lastMatrixData = null;
+
+    function renderSensitivityMatrix() {
+      if (!matrixTableBody) return;
+      const cats = deckState.categories;
+      const cat1 = cats[0] || { name: 'Category 1', count: 0, min: 0, max: deckState.handSize };
+      const cat2 = cats.length > 1 ? cats[1] : { name: 'Category 2', count: 0, min: 0, max: deckState.handSize };
+
+      if (matrixCat1Label) matrixCat1Label.textContent = cat1.name;
+      if (matrixCat2Label) matrixCat2Label.textContent = cat2.name;
+
+      const deltas = [-2, -1, 0, 1, 2];
+      const grid = [];
+
+      for (let r = 0; r < deltas.length; r++) {
+        const d1 = deltas[r];
+        const c1 = Math.max(0, cat1.count + d1);
+        const row = [];
+
+        for (let c = 0; c < deltas.length; c++) {
+          const d2 = deltas[c];
+          const c2 = Math.max(0, cat2.count + d2);
+
+          const testCats = cats.map((item, idx) => {
+            if (idx === 0) return { ...item, count: c1 };
+            if (idx === 1) return { ...item, count: c2 };
+            return { ...item };
+          });
+
+          const assignedSum = testCats.reduce((s, it) => s + (parseInt(it.count, 10) || 0), 0);
+          let prob = 0;
+          if (assignedSum <= deckState.deckSize) {
+            prob = calculateJointProbability(deckState.deckSize, deckState.handSize, testCats);
+          }
+          row.push({ d1, d2, c1, c2, prob });
+        }
+        grid.push(row);
+      }
+
+      lastMatrixData = { cat1, cat2, deltas, grid };
+
+      // Build HTML
+      let html = '<tr>';
+      html += `<th>${escapeHtml(cat1.name)} &darr; \\ ${escapeHtml(cat2.name)} &rarr;</th>`;
+      deltas.forEach(d => {
+        const countVal = Math.max(0, cat2.count + d);
+        html += `<th>${countVal} (${d >= 0 ? '+' : ''}${d})</th>`;
+      });
+      html += '</tr>';
+
+      grid.forEach(row => {
+        const first = row[0];
+        html += `<tr><th>${first.c1} (${first.d1 >= 0 ? '+' : ''}${first.d1})</th>`;
+        row.forEach(cell => {
+          const isCenter = (cell.d1 === 0 && cell.d2 === 0);
+          const pct = (cell.prob * 100);
+          let bg, fg;
+          if (pct >= 70) {
+            bg = 'var(--success-soft)';
+            fg = 'var(--success)';
+          } else if (pct >= 50) {
+            bg = 'var(--accent-soft)';
+            fg = 'var(--accent)';
+          } else if (pct >= 30) {
+            bg = 'var(--warning-soft)';
+            fg = 'var(--warning)';
+          } else {
+            bg = 'var(--danger-soft)';
+            fg = 'var(--danger)';
+          }
+
+          html += `
+            <td class="${isCenter ? 'matrix-cell-center' : ''}" style="background:${bg}; color:${fg};" title="${escapeHtml(cat1.name)}: ${cell.c1}, ${escapeHtml(cat2.name)}: ${cell.c2}">
+              ${pct.toFixed(1)}%
+            </td>
+          `;
+        });
+        html += '</tr>';
+      });
+
+      matrixTableBody.innerHTML = html;
+    }
+
+    if (btnExportMatrixCsv) {
+      btnExportMatrixCsv.addEventListener('click', (e) => {
+        if (!PRO) {
+          e.preventDefault();
+          if (matrixProNotice) {
+            matrixProNotice.innerHTML = `Available in the full version &mdash; <a href="${PRO_LINK}">Upgrade</a>`;
+            matrixProNotice.style.display = 'inline-flex';
+            setTimeout(() => { matrixProNotice.style.display = 'none'; }, 6000);
+          }
+          return;
+        }
+
+        if (!lastMatrixData) return;
+        const { cat1, cat2, deltas, grid } = lastMatrixData;
+
+        let csv = `"${cat1.name.replace(/"/g, '""')} (Rows) \\ ${cat2.name.replace(/"/g, '""')} (Cols)",`;
+        csv += deltas.map(d => `"${cat2.name.replace(/"/g, '""')} ${Math.max(0, cat2.count + d)} (${d >= 0 ? '+' : ''}${d})"`).join(',') + '\n';
+
+        grid.forEach(row => {
+          const first = row[0];
+          csv += `"${cat1.name.replace(/"/g, '""')} ${first.c1} (${first.d1 >= 0 ? '+' : ''}${first.d1})",`;
+          csv += row.map(cell => (cell.prob * 100).toFixed(2) + '%').join(',') + '\n';
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `deck_tuning_sensitivity_matrix_${Date.now()}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    const prevUpdateAllForMatrix = updateAll;
+    updateAll = function() {
+      prevUpdateAllForMatrix();
+      renderSensitivityMatrix();
+    };
+    renderSensitivityMatrix();
+    // Deck Scenario Comparison & JSON Profile Backup (scenario-manager)
+    const SAMPLE_SCENARIOS_JSON = JSON.stringify([
+      {
+        name: "Aggro Sligh (18 Lands)",
+        deckSize: 60,
+        handSize: 7,
+        mulliganRule: "london",
+        freeMulligan: "no",
+        categories: [
+          { id: 1, name: "Lands", count: 18, min: 2, max: 3 },
+          { id: 2, name: "1-Drops", count: 18, min: 1, max: 4 },
+          { id: 3, name: "Burn Spells", count: 24, min: 1, max: 5 }
+        ]
+      },
+      {
+        name: "Midrange Rock (24 Lands)",
+        deckSize: 60,
+        handSize: 7,
+        mulliganRule: "london",
+        freeMulligan: "no",
+        categories: [
+          { id: 1, name: "Lands", count: 24, min: 2, max: 4 },
+          { id: 2, name: "Early Threats", count: 18, min: 1, max: 4 },
+          { id: 3, name: "Interaction", count: 18, min: 1, max: 4 }
+        ]
+      },
+      {
+        name: "Control Shell (27 Lands)",
+        deckSize: 60,
+        handSize: 7,
+        mulliganRule: "london",
+        freeMulligan: "no",
+        categories: [
+          { id: 1, name: "Lands", count: 27, min: 3, max: 5 },
+          { id: 2, name: "Removal/Counters", count: 16, min: 1, max: 3 },
+          { id: 3, name: "Card Draw", count: 10, min: 1, max: 3 },
+          { id: 4, name: "Finishers", count: 7, min: 0, max: 2 }
+        ]
+      }
+    ]);
+
+    let savedScenarios = [];
+    const scenarioNameInput = document.getElementById('scenario-name-input');
+    const scenarioCountTag = document.getElementById('scenario-count-tag');
+    const scenarioTbody = document.getElementById('scenario-tbody');
+    const scenarioProNotice = document.getElementById('scenario-pro-notice');
+    const btnSaveScenario = document.getElementById('btn-save-scenario');
+    const btnLoadSampleScenarios = document.getElementById('btn-load-sample-scenarios');
+    const btnExportScenariosJson = document.getElementById('btn-export-scenarios-json');
+    const inputImportScenariosJson = document.getElementById('input-import-scenarios-json');
+
+    function showScenarioProNotice() {
+      if (!scenarioProNotice) return;
+      scenarioProNotice.innerHTML = `Available in the full version &mdash; <a href="${PRO_LINK}">Upgrade</a>`;
+      scenarioProNotice.style.display = 'inline-flex';
+      setTimeout(() => { scenarioProNotice.style.display = 'none'; }, 6000);
+    }
+
+    function loadSavedScenariosFromStorage() {
+      try {
+        const raw = localStorage.getItem('hypergeometric_scenarios');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) savedScenarios = parsed.slice(0, 5);
+        }
+      } catch (e) {
+        // Fallback to in-memory array if localStorage blocked
+      }
+    }
+
+    function persistSavedScenarios() {
+      try {
+        localStorage.setItem('hypergeometric_scenarios', JSON.stringify(savedScenarios));
+      } catch (e) {}
+    }
+
+    function renderScenarioTable() {
+      if (!scenarioTbody) return;
+      if (scenarioCountTag) scenarioCountTag.textContent = `${savedScenarios.length} / 5 Saved`;
+
+      if (savedScenarios.length === 0) {
+        scenarioTbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:1rem;">No saved scenarios. Save the current configuration or click "Load sample".</td></tr>`;
+        return;
+      }
+
+      scenarioTbody.innerHTML = savedScenarios.map((sc, idx) => {
+        const pKeep = calculateJointProbability(sc.deckSize, sc.handSize, sc.categories);
+        const primaryCat = sc.categories[0] || { name: 'None', count: 0, min: 0, max: 7 };
+        const marg = calculateMarginal(sc.deckSize, sc.handSize, primaryCat.count, primaryCat.min, primaryCat.max);
+        const keepPct = (pKeep * 100).toFixed(1);
+        const droughtPct = (marg.under * 100).toFixed(1);
+        const floodPct = (marg.over * 100).toFixed(1);
+
+        return `
+          <tr>
+            <td><strong>${escapeHtml(sc.name)}</strong></td>
+            <td>${sc.deckSize}c / ${sc.handSize}h</td>
+            <td>${escapeHtml(primaryCat.name)} (${primaryCat.count})</td>
+            <td><span class="tag tag-green">${keepPct}%</span></td>
+            <td><span class="tag tag-orange">${droughtPct}%</span></td>
+            <td><span class="tag tag-purple">${floodPct}%</span></td>
+            <td style="text-align:right; white-space:nowrap;">
+              <button class="btn-sm" onclick="loadScenarioByIndex(${idx})" title="Load into active builder">Load</button>
+              <button class="btn-sm btn-danger" onclick="deleteScenarioByIndex(${idx})" title="Delete scenario">&times;</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    window.loadScenarioByIndex = function(idx) {
+      const sc = savedScenarios[idx];
+      if (!sc) return;
+      deckState = JSON.parse(JSON.stringify(sc));
+      updateNextCategoryId();
+      renderCategoryTable();
+      updateAll();
+    };
+
+    window.deleteScenarioByIndex = function(idx) {
+      savedScenarios.splice(idx, 1);
+      persistSavedScenarios();
+      renderScenarioTable();
+    };
+
+    if (btnSaveScenario) {
+      btnSaveScenario.addEventListener('click', () => {
+        if (!PRO && savedScenarios.length >= 1) {
+          showScenarioProNotice();
+          return;
+        }
+        if (savedScenarios.length >= 5) {
+          alert("Maximum 5 scenarios allowed. Remove one to save a new configuration.");
+          return;
+        }
+        const name = (scenarioNameInput && scenarioNameInput.value.trim()) || `Scenario ${savedScenarios.length + 1}`;
+        const newScenario = {
+          name,
+          deckSize: deckState.deckSize,
+          handSize: deckState.handSize,
+          mulliganRule: deckState.mulliganRule,
+          freeMulligan: deckState.freeMulligan,
+          categories: JSON.parse(JSON.stringify(deckState.categories))
+        };
+        savedScenarios.push(newScenario);
+        if (scenarioNameInput) scenarioNameInput.value = '';
+        persistSavedScenarios();
+        renderScenarioTable();
+      });
+    }
+
+    if (btnLoadSampleScenarios) {
+      btnLoadSampleScenarios.addEventListener('click', () => {
+        try {
+          const parsed = JSON.parse(SAMPLE_SCENARIOS_JSON);
+          if (Array.isArray(parsed)) {
+            savedScenarios = parsed.slice(0, 5);
+            persistSavedScenarios();
+            renderScenarioTable();
+          }
+        } catch (err) {
+          console.error("Failed to load sample scenarios:", err);
+        }
+      });
+    }
+
+    if (btnExportScenariosJson) {
+      btnExportScenariosJson.addEventListener('click', () => {
+        if (!PRO) {
+          showScenarioProNotice();
+          return;
+        }
+        const jsonStr = JSON.stringify(savedScenarios, null, 2);
+        const blob = new Blob([jsonStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `deck_scenarios_${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    if (inputImportScenariosJson) {
+      inputImportScenariosJson.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const data = JSON.parse(event.target.result);
+            if (Array.isArray(data)) {
+              savedScenarios = data.slice(0, 5);
+              persistSavedScenarios();
+              renderScenarioTable();
+            }
+          } catch (err) {
+            alert("Invalid JSON scenario file.");
+          }
+        };
+        reader.readAsText(file);
+        e.target.value = '';
+      });
+    }
+
+    loadSavedScenariosFromStorage();
+    renderScenarioTable();
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This free tool calculates exact joint hypergeometric opening hand probabilities across multiple card categories for competitive TCG deck builders. Instead of testing one card at a time, you can define joint requirements—like hitting land thresholds alongside specific curve plays. It runs client-side in any modern browser without accounts or tracking.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Set your total deck size and opening hand size (e.g., 60 and 7).</li><li>Add distinct card categories (such as Lands, 1-Drops, or Combo Pieces) with their respective deck counts.</li><li>Specify your target success range for each category (e.g., minimum 2 lands, maximum 4 lands, minimum 1 play).</li><li>Review the exact joint success probability, mulligan progression curves, and export results to CSV if needed.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">How do you calculate the likelihood of drawing certain cards in your opening hand?</h4><p style="margin:0">To calculate the probability of drawing specific cards, use the hypergeometric distribution formula: C(k, x) * C(N - k, n - x) / C(N, n), where N is deck size, k is total target cards in deck, n is hand size, and x is the target number drawn. When tracking multiple distinct card groups simultaneously (such as lands and specific spells), you use the multivariate hypergeometric distribution to account for dependent sampling without replacement.</p><h4 style="font-size:16px;margin:16px 0 4px">How long will an MTG draft take with varying number of players (approximately)?</h4><p style="margin:0">A standard 8-player Magic: The Gathering booster draft typically takes between 2.5 and 3.5 hours. Drafting and deck building take roughly 45 to 60 minutes, followed by three 50-minute Swiss rounds. Smaller drafts (4 to 6 players) or casual formats take about 1.5 to 2 hours, while larger pods run longer due to round coordination.</p><h4 style="font-size:16px;margin:16px 0 4px">Why do I need a multivariate calculator instead of a standard hypergeometric calculator?</h4><p style="margin:0">Standard calculators only compute the probability of drawing one specific card type in isolation. In actual gameplay, a keepable hand depends on combinations (for example, 2-4 lands AND at least one castable spell). Because drawing a card from one group removes it from the deck and shifts the remaining odds, calculating joint probabilities requires multivariate formulas to produce mathematically accurate results.</p><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free web tool and the $12 offline pack?</h4><p style="margin:0">The free web tool provides full access to the multivariate engine, mulligan calculations, and CSV exports online. The $12 paid pack contains a standalone, self-contained offline build that runs entirely locally without an internet connection, ideal for convention centers, local game stores, or tournament venues with weak cell reception.</p>
+<p style="margin:24px 0;padding:16px;border:1px solid rgba(128,128,128,.35);border-radius:12px"><strong>Want the full version?</strong> Exports, printing and saved scenarios are unlocked in the full offline pack (single file, quick-start guide and license):<a href="https://ferrywave73.gumroad.com/l/blxmnh" rel="noopener" style="font-weight:700;color:inherit">download it on Gumroad</a>.</p><p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">About · Offline pack</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"About · Offline pack"});</script>
+</body>
+</html>
