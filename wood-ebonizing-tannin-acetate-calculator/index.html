@@ -1,0 +1,2641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #0f1115;
+      --surface: #181b22;
+      --surface-elevated: #212631;
+      --border: #2e3545;
+      --border-focus: #4d7cfe;
+      --text-main: #e6edf3;
+      --text-muted: #8b949e;
+      --text-dim: #6e7681;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --accent-soft: rgba(59, 130, 246, 0.12);
+      --success: #22c55e;
+      --success-soft: rgba(34, 197, 94, 0.12);
+      --warning: #eab308;
+      --warning-soft: rgba(234, 179, 8, 0.12);
+      --danger: #ef4444;
+      --danger-soft: rgba(239, 68, 68, 0.12);
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f5f7fb;
+        --surface: #ffffff;
+        --surface-elevated: #f0f3f9;
+        --border: #d0d7de;
+        --border-focus: #0969da;
+        --text-main: #1f2328;
+        --text-muted: #57606a;
+        --text-dim: #8c959f;
+        --accent: #2563eb;
+        --accent-hover: #1d4ed8;
+        --accent-soft: rgba(37, 99, 235, 0.1);
+        --success: #16a34a;
+        --success-soft: rgba(22, 163, 74, 0.1);
+        --warning: #ca8a04;
+        --warning-soft: rgba(202, 138, 4, 0.12);
+        --danger: #dc2626;
+        --danger-soft: rgba(220, 38, 38, 0.1);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font);
+      line-height: 1.5;
+      font-size: 14px;
+      padding: 16px;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-container {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    header {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-title h1 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      word-break: break-word;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-top: 4px;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface-elevated);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: var(--border);
+      color: var(--text-main);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-sm {
+      padding: 4px 10px;
+      font-size: 0.78rem;
+    }
+
+    .preset-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: var(--surface);
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    .preset-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .preset-btn {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .preset-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .preset-btn.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 1040px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .panel-header h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .form-group label .unit {
+      color: var(--text-dim);
+      font-weight: normal;
+    }
+
+    .input-control {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      outline: none;
+      font-family: inherit;
+      width: 100%;
+      transition: border-color 0.15s;
+    }
+
+    .input-control:focus {
+      border-color: var(--border-focus);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .input-row input[type="range"] {
+      flex: 1;
+    }
+
+    input[type="range"] {
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .color-input-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .color-input-container input[type="color"] {
+      -webkit-appearance: none;
+      appearance: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      width: 36px;
+      height: 36px;
+      background: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .color-input-container input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    .color-input-container input[type="color"]::-webkit-color-swatch {
+      border: none;
+      border-radius: var(--radius-sm);
+    }
+
+    .metrics-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .metric-card {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .metric-card .label {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .metric-card .value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      font-family: var(--mono);
+    }
+
+    .metric-card .sub {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    /* Simulation Viewport */
+    .grain-simulation-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000;
+      user-select: none;
+      touch-action: none;
+    }
+
+    #grainCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .canvas-overlay-labels {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+      gap: 6px;
+    }
+
+    .canvas-tag {
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .split-divider-handle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: #ffffff;
+      box-shadow: 0 0 8px rgba(0,0,0,0.8);
+      cursor: ew-resize;
+      transform: translateX(-50%);
+      touch-action: none;
+    }
+
+    .split-handle-knob {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 24px;
+      height: 24px;
+      background: #ffffff;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #111;
+      font-weight: bold;
+    }
+
+    .swatches-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .swatch-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 8px 10px;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .swatch-color-pill {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(0,0,0,0.2);
+      flex-shrink: 0;
+    }
+
+    .swatch-meta {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .swatch-meta .title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .swatch-meta .hex {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+
+    /* Advisor block */
+    .advisor-box {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      background: var(--surface-elevated);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .advisor-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .badge-status {
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-status.low, .panel-badge.low {
+      background: var(--success-soft);
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+
+    .badge-status.moderate, .panel-badge.moderate {
+      background: var(--warning-soft);
+      color: var(--warning);
+      border: 1px solid var(--warning);
+    }
+
+    .badge-status.high, .panel-badge.high {
+      background: var(--danger-soft);
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+
+    .advisor-section-title {
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .pro-inline-notice {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--warning-soft);
+      border: 1px solid var(--warning);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: var(--radius-md);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .pro-inline-notice a {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 540px) {
+      body { padding: 10px; }
+      header { padding: 14px 16px; }
+      .header-title h1 { font-size: 1.15rem; }
+      .swatches-row { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .header-actions { width: 100%; }
+      .header-actions .btn { flex: 1 1 calc(50% - 10px); }
+    }
+
+    @media (max-width: 440px) {
+      .canvas-tag { font-size: 0.65rem; padding: 2px 6px; }
+    }
+
+    .advisor-content {
+      font-size: 0.85rem;
+      line-height: 1.55;
+      color: var(--text-main);
+    }
+
+    .advisor-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+      padding-left: 18px;
+    }
+
+    .advisor-steps li {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .advisor-steps li strong {
+      color: var(--text-main);
+    }
+
+    .warning-banner {
+      background: var(--warning-soft);
+      border: 1px solid var(--warning);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.82rem;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .warning-banner svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: var(--warning);
+    }
+
+    .disclaimer {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      max-width: 520px;
+      width: 100%;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-size: 1.15rem;
+    }
+
+    .error-msg {
+      color: var(--danger);
+      font-size: 0.75rem;
+      font-weight: 500;
+      margin-top: 2px;
+      display: none;
+    }
+
+    .is-invalid {
+      border-color: var(--danger) !important;
+    }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      header, .preset-bar, .header-actions, .canvas-tag, .split-divider-handle { display: none !important; }
+      .panel { border: 1px solid #ccc; page-break-inside: avoid; }
+      .canvas-wrapper { height: 180px; }
+    }
+
+    /* Multi-Coat Progression Matrix */
+    .multicoat-matrix-box {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .matrix-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .matrix-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-main);
+    }
+    .matrix-hint {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+    .multicoat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    @media (max-width: 640px) {
+      .multicoat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .swatch-step-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .swatch-step-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .swatch-step-card.active-coat {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+    .swatch-preview-block {
+      height: 42px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(0,0,0,0.25);
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      padding: 4px;
+    }
+    .swatch-step-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 0.75rem;
+    }
+    .swatch-step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .swatch-step-hex {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 0.78rem;
+    }
+    .swatch-density-gain {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+    }
+    .swatch-exhaust-flag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 2px 4px;
+      border-radius: var(--radius-sm);
+      background: var(--danger-soft);
+      color: var(--danger);
+      border: 1px solid var(--danger);
+      line-height: 1.25;
+      margin-top: 3px;
+    }
+    .swatch-uptake-flag {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    /* Tannin Dosing Reverse Solver */
+    .tannin-solver-card {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      margin-top: 6px;
+    }
+    .solver-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      user-select: none;
+    }
+    .solver-summary-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-main);
+    }
+    .solver-pill {
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: var(--success-soft);
+      color: var(--success);
+      font-weight: 600;
+    }
+    .solver-body {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .solver-recipe-output {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 1.45;
+      color: var(--text-main);
+    }
+
+    /* Multi-Species Batch Scenario Comparison Matrix */
+    .comp-matrix-table {
+      width: 100%;
+      min-width: 480px;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 0.82rem;
+    }
+    .comp-matrix-table th, .comp-matrix-table td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+      width: 33.333%;
+    }
+    .comp-matrix-table th {
+      background: var(--surface-elevated);
+      font-size: 0.88rem;
+    }
+    .comp-section-row td {
+      background: var(--surface-elevated);
+      font-weight: 700;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      padding: 6px 12px;
+    }
+    .comp-swatch-pair {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .comp-swatch-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .comp-swatch-chip {
+      width: 26px;
+      height: 26px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(0,0,0,0.3);
+      flex-shrink: 0;
+    }
+/* FEATURE-CSS */
+  </style>
+<title>Iron Acetate Wood Ebonizing &amp; Tannin Calculator</title>
+<meta name="description" content="Calculate iron acetate steeps, supplemental tannin dosing, and baking soda neutralization. Simulate wood ebonizing reactions before mixing finishes.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/wood-ebonizing-tannin-acetate-calculator/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/wood-ebonizing-tannin-acetate-calculator/">
+<meta property="og:title" content="Iron Acetate Wood Ebonizing &amp; Tannin Calculator"><meta property="og:description" content="Calculate iron acetate steeps, supplemental tannin dosing, and baking soda neutralization. Simulate wood ebonizing reactions before mixing finishes.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/wood-ebonizing-tannin-acetate-calculator/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Iron Acetate Wood Ebonizing & Tannin Calculator","description":"Calculate iron acetate steeps, supplemental tannin dosing, and baking soda neutralization. Simulate wood ebonizing reactions before mixing finishes.","url":"https://rttyy.github.io/free-tools/wood-ebonizing-tannin-acetate-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the chemical reaction between iron acetate and wood tannins?","acceptedAnswer":{"@type":"Answer","text":"Steel wool reacts with acetic acid in vinegar to form iron(II) acetate. When applied to wood, the dissolved iron bonds with polyphenolic compounds (tannins) inside the wood cell structure, oxidizing into ferric tannate, an insoluble organometallic pigment that dyes the wood grain pitch black."}},{"@type":"Question","name":"Why did my iron acetate turn wood gray or purple instead of deep black?","acceptedAnswer":{"@type":"Answer","text":"Species like pine, maple, poplar, and birch naturally contain very few tannins. Without sufficient polyphenols to bond with the iron, the reaction yields a weak gray or blotchy purple. Applying a pre-wash of dissolved tannin powder (such as quebracho or chestnut) restores the stoichiometric balance needed for deep black."}},{"@type":"Question","name":"How does residual iron acetate acid damage finishes, and how do I prevent it?","acceptedAnswer":{"@type":"Answer","text":"Incompletely reacted iron solutions contain leftover acetic acid that remains in the wood grain. This acidity inhibits drying oils like linseed or tung oil from polymerizing and can degrade shellac or lacquer. Wiping the thoroughly dried piece with a mild sodium bicarbonate (baking soda) wash neutralizes residual acid."}},{"@type":"Question","name":"How do I know when an iron acetate batch is fully reacted?","acceptedAnswer":{"@type":"Answer","text":"The steep is ready when hydrogen gas bubbles stop forming, the liquid turns amber-gray, and the steel wool has largely dissolved. Using a slight excess of steel wool ensures all acetic acid is consumed. Always filter through paper coffee filters before bench application to remove settled iron sludge."}}]}</script>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Header Bar -->
+  <header>
+    <div class="header-title">
+      <h1>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+        Wood Ebonizing & Tannin Reaction Simulator
+      </h1>
+      <p>Precision Stoichiometry, Gallotannin Complexation & Acid Neutralization Workbench</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-sm" id="btnCopyRecipe" title="Copy formulation recipe summary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+        Copy Recipe
+      </button>
+      <button class="btn btn-sm" id="btnExportJson" title="Export batch parameter JSON">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export JSON
+      </button>
+      <button class="btn btn-sm" id="btnExportCsv" title="Export data to CSV table">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+        CSV
+      </button>
+      <button class="btn btn-sm" id="btnPrintReport" title="Print Bench Sheet">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print
+      </button>
+      <button class="btn btn-sm" id="btnResetDefaults" title="Restore factory defaults">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset
+      </button>
+      <div id="proInlineNotice" class="pro-inline-notice" style="display:none;" role="status">
+        Available in the full version <a href="https://ferrywave73.gumroad.com/l/teqml">Unlock</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Presets Strip -->
+  <section class="preset-bar" aria-label="Reaction Presets">
+    <span class="preset-label">Bench Presets:</span>
+    <button class="preset-btn active" data-preset="0">Classic White Oak Obsidian Black</button>
+    <button class="preset-btn" data-preset="1">Sugar Maple Warm Charcoal with Tea Pre-Wash</button>
+    <button class="preset-btn" data-preset="2">Cleaning Vinegar Accelerated Walnut Patina</button>
+  </section>
+
+  <!-- Feature: Multi-Species Batch Scenario Comparison Matrix -->
+  <section class="panel" data-feature="wood-swatch-scenario-comparator" id="wood-swatch-scenario-comparator">
+    <div class="panel-header">
+      <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Multi-Species Batch Scenario Comparison Matrix
+      </h2>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button class="btn btn-primary btn-sm" id="btnRunComparator">Compare Species</button>
+        <div id="comparatorProNotice" class="pro-inline-notice" style="display:none;" role="status">
+          Available in the full version <a href="https://ferrywave73.gumroad.com/l/teqml">Unlock</a>
+        </div>
+      </div>
+    </div>
+    <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+      <div class="form-group">
+        <label for="compSpecies1">Substrate A</label>
+        <select id="compSpecies1" class="input-control">
+          <option value="white-oak" selected>White Oak (Quercus alba)</option>
+          <option value="red-oak">Red Oak (Quercus rubra)</option>
+          <option value="american-walnut">American Walnut (Juglans nigra)</option>
+          <option value="ash">European Ash (Fraxinus excelsior)</option>
+          <option value="black-cherry">Black Cherry (Prunus serotina)</option>
+          <option value="european-beech">European Beech (Fagus sylvatica)</option>
+          <option value="hard-maple">Hard Maple (Acer saccharum)</option>
+          <option value="white-pine">Eastern White Pine (Pinus strobus)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="compSpecies2">Substrate B</label>
+        <select id="compSpecies2" class="input-control">
+          <option value="white-oak">White Oak (Quercus alba)</option>
+          <option value="red-oak">Red Oak (Quercus rubra)</option>
+          <option value="american-walnut" selected>American Walnut (Juglans nigra)</option>
+          <option value="ash">European Ash (Fraxinus excelsior)</option>
+          <option value="black-cherry">Black Cherry (Prunus serotina)</option>
+          <option value="european-beech">European Beech (Fagus sylvatica)</option>
+          <option value="hard-maple">Hard Maple (Acer saccharum)</option>
+          <option value="white-pine">Eastern White Pine (Pinus strobus)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="compSpecies3">Substrate C</label>
+        <select id="compSpecies3" class="input-control">
+          <option value="white-oak">White Oak (Quercus alba)</option>
+          <option value="red-oak">Red Oak (Quercus rubra)</option>
+          <option value="american-walnut">American Walnut (Juglans nigra)</option>
+          <option value="ash">European Ash (Fraxinus excelsior)</option>
+          <option value="black-cherry">Black Cherry (Prunus serotina)</option>
+          <option value="european-beech">European Beech (Fagus sylvatica)</option>
+          <option value="hard-maple" selected>Hard Maple (Acer saccharum)</option>
+          <option value="white-pine">Eastern White Pine (Pinus strobus)</option>
+        </select>
+      </div>
+    </div>
+    <div id="comparatorTableWrap" style="overflow-x:auto;">
+      <table class="comp-matrix-table" id="comparatorTable">
+        <thead>
+          <tr id="comparatorHeaderRow"></tr>
+        </thead>
+        <tbody id="comparatorBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+
+  <!-- Main Simulator Layout: 2 Columns -->
+  <div class="main-grid">
+    <!-- Left Column: Inputs & Chemistry -->
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      
+      <!-- Feature 1: Brew Stoichiometry Calculator -->
+      <section class="panel" data-feature="brew-stoichiometry-calculator" id="featureBrewStoichiometry">
+        <div class="panel-header">
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31L4.69 18.2A2 2 0 0 0 6.4 21h11.2a2 2 0 0 0 1.71-2.8L14 9.31V2"/></svg>
+            Iron Acetate Stoichiometry & Steep Progression
+          </h2>
+          <span class="panel-badge" style="background:var(--accent-soft); color:var(--accent);" id="batchVolumeBadge">500 mL</span>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="inputVinegarVolume">Vinegar Volume <span class="unit">(mL)</span></label>
+            <input type="number" id="inputVinegarVolume" class="input-control" min="100" max="5000" step="25" value="500">
+            <span class="error-msg" id="errVinegarVol">Must be between 100 and 5000 mL</span>
+          </div>
+
+          <div class="form-group">
+            <label for="inputAceticPercent">Acetic Acid Purity <span class="unit">(%)</span></label>
+            <select id="inputAceticPercent" class="input-control">
+              <option value="5.0">Standard White Vinegar (5.0%)</option>
+              <option value="6.0">Pickling Vinegar (6.0%)</option>
+              <option value="10.0">Double Strength Vinegar (10.0%)</option>
+              <option value="20.0">Horticultural Vinegar (20.0%)</option>
+              <option value="30.0">Industrial Cleaning Vinegar (30.0%)</option>
+              <option value="custom">Custom Percentage...</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="groupCustomAcetic" style="display:none;">
+            <label for="inputCustomAcetic">Custom Acetic Acid <span class="unit">(2 - 30%)</span></label>
+            <input type="number" id="inputCustomAcetic" class="input-control" min="2" max="30" step="0.5" value="5.0">
+            <span class="error-msg" id="errCustomAcetic">Must be between 2 and 30%</span>
+          </div>
+
+          <div class="form-group">
+            <label for="inputSteelWoolMass">Degreased Steel Wool (#0000) <span class="unit">(g)</span></label>
+            <input type="number" id="inputSteelWoolMass" class="input-control" min="2" max="150" step="1" value="15">
+            <span class="error-msg" id="errSteelMass">Must be between 2 and 150 grams</span>
+          </div>
+
+          <div class="form-group">
+            <label for="inputSteepDays">Steep Duration <span class="unit">(days)</span></label>
+            <div class="input-row">
+              <input type="range" id="inputSteepDays" min="0.5" max="21" step="0.5" value="4.0">
+              <span id="labelSteepDays" style="font-family:var(--mono); min-width:44px; text-align:right;">4.0d</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputTemp">Ambient Steep Temp <span class="unit">(°C)</span></label>
+            <input type="number" id="inputTemp" class="input-control" min="10" max="35" step="1" value="21">
+            <span class="error-msg" id="errTemp">Must be between 10 and 35°C</span>
+          </div>
+
+          <div class="form-group">
+            <label for="inputVesselLid">Vessel Lid Aeration</label>
+            <select id="inputVesselLid" class="input-control">
+              <option value="vented">Vented / Cheesecloth (H2 vented, oxidation+)</option>
+              <option value="sealed">Loose Screw Cap (Anaerobic slow)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Calculated Brew Metrics -->
+        <div class="metrics-summary-grid">
+          <div class="metric-card">
+            <span class="label">Dissolved Fe (Fe²⁺)</span>
+            <span class="value" id="dispDissolvedIronG">17.5 g/L</span>
+            <span class="sub" id="dispDissolvedIronM">0.31 M</span>
+          </div>
+          <div class="metric-card">
+            <span class="label">Reaction Extent</span>
+            <span class="value" id="dispReactionCompletion">75%</span>
+            <span class="sub" id="dispReactionRate">Kinetics status</span>
+          </div>
+          <div class="metric-card">
+            <span class="label">Residual Acid</span>
+            <span class="value" id="dispResidualAcid">1.25%</span>
+            <span class="sub" id="dispEstimatedPh">Est. pH ~4.1</span>
+          </div>
+          <div class="metric-card">
+            <span class="label">Peak Potency</span>
+            <span class="value" id="dispPeakDays">5.2 Days</span>
+            <span class="sub" id="dispLimitingReagent">Acid limiting</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feature 2: Wood Species Tannin Selector -->
+      <section class="panel" data-feature="wood-species-tannin-selector" id="featureWoodSpecies">
+        <div class="panel-header">
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22v-6m0 0l-4-4m4 4l4-4m-9-2a9 9 0 1 1 18 0c0 4.97-4.03 9-9 9s-9-4.03-9-9z"/></svg>
+            Wood Substrate & Gallotannin Profiler
+          </h2>
+          <span class="panel-badge" id="badgeReactionCapacity" style="background:var(--success-soft); color:var(--success);">High Tannin</span>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="selectSpecies">Species Profile</label>
+            <select id="selectSpecies" class="input-control">
+              <option value="white-oak" data-tannin="85" data-color="#C8AD7F">White Oak (Quercus alba) [85]</option>
+              <option value="red-oak" data-tannin="60" data-color="#CCA283">Red Oak (Quercus rubra) [60]</option>
+              <option value="american-walnut" data-tannin="55" data-color="#6E533C">American Walnut (Juglans nigra) [55]</option>
+              <option value="ash" data-tannin="40" data-color="#D6C4A2">European Ash (Fraxinus excelsior) [40]</option>
+              <option value="black-cherry" data-tannin="30" data-color="#BF7D55">Black Cherry (Prunus serotina) [30]</option>
+              <option value="european-beech" data-tannin="25" data-color="#D9B793">European Beech (Fagus sylvatica) [25]</option>
+              <option value="hard-maple" data-tannin="12" data-color="#E7D3AD">Sugar / Hard Maple (Acer saccharum) [12]</option>
+              <option value="white-pine" data-tannin="8" data-color="#EED59B">Eastern White Pine (Pinus strobus) [8]</option>
+              <option value="custom" data-tannin="50" data-color="#C2A478">Custom Substrate...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="inputCustomTannin">Baseline Tannin Score <span class="unit">(0 - 100)</span></label>
+            <div class="input-row">
+              <input type="range" id="inputCustomTannin" min="0" max="100" step="1" value="85">
+              <span id="labelTanninVal" style="font-family:var(--mono); min-width:32px;">85</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputBaselineColor">Baseline Wood Color</label>
+            <div class="color-input-container">
+              <input type="color" id="inputBaselineColor" value="#C8AD7F">
+              <input type="text" id="inputBaselineHex" class="input-control" value="#C8AD7F" maxlength="7" style="font-family:var(--mono); text-transform:uppercase;">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="selectTanninPretreat">Surface Tannin Pre-Treatment</label>
+            <select id="selectTanninPretreat" class="input-control">
+              <option value="0">None / Direct Iron Application (+0)</option>
+              <option value="25">Standard Steeped Black Tea (+25)</option>
+              <option value="60">Double-Strength Quebracho Extract (+60)</option>
+              <option value="75">Laboratory Tannic Acid Powder Solution (+75)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="metrics-summary-grid">
+          <div class="metric-card">
+            <span class="label">Native Tannin</span>
+            <span class="value" id="dispNativeTannin">85 / 100</span>
+            <span class="sub">Species bound</span>
+          </div>
+          <div class="metric-card">
+            <span class="label">Pretreatment Boost</span>
+            <span class="value" id="dispTanninBoost">+0</span>
+            <span class="sub">Polyphenols added</span>
+          </div>
+          <div class="metric-card">
+            <span class="label">Composite Tannin</span>
+            <span class="value" id="dispCompositeTannin">85 / 100</span>
+            <span class="sub" id="dispTanninClassification">Extreme Capacity</span>
+          </div>
+          <div class="metric-card">
+            <span class="label">Grain Contrast Bias</span>
+            <span class="value" id="dispGrainPorosity">Ring-Porous</span>
+            <span class="sub">Earlywood uptake high</span>
+          </div>
+        </div>
+
+        <!-- Tannin Dosing Reverse Solver -->
+        <details class="tannin-solver-card" data-feature="tannin-supplement-dosing-optimizer" id="tannin-supplement-dosing-optimizer" open>
+          <summary class="solver-summary">
+            <span class="solver-summary-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Tannin Dosing Reverse Solver (White Oak Equivalence)
+            </span>
+            <span class="solver-pill" id="solverTargetStatus">Target: ≥92% Darkness</span>
+          </summary>
+          <div class="solver-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="inputSolverBaselineTannin">Baseline Tannin Score <span class="unit">(0 - 85)</span></label>
+                <input type="number" id="inputSolverBaselineTannin" class="input-control" min="0" max="85" step="1" value="12">
+              </div>
+              <div class="form-group">
+                <label for="inputSolverArea">Wood Surface Area</label>
+                <div class="input-row">
+                  <input type="number" id="inputSolverArea" class="input-control" min="0.05" max="500" step="0.1" value="1.0">
+                  <select id="selectSolverAreaUnit" class="input-control" style="max-width:92px;">
+                    <option value="sqm" selected>sq m</option>
+                    <option value="sqft">sq ft</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="solver-recipe-output">
+              <div id="solverRecipeText">Dissolve 28g tannic acid powder (or steep 6 English Breakfast tea bags) in 350 mL near-boiling water (85°C); apply 1 flood coat before iron application</div>
+            </div>
+            <div class="metrics-summary-grid">
+              <div class="metric-card">
+                <span class="label">Tannic Acid</span>
+                <span class="value" id="dispSolverPowder">28g</span>
+                <span class="sub" id="dispSolverTea">or 6 tea bags</span>
+              </div>
+              <div class="metric-card">
+                <span class="label">Water Volume</span>
+                <span class="value" id="dispSolverWater">350 mL</span>
+                <span class="sub">85°C near-boil</span>
+              </div>
+              <div class="metric-card">
+                <span class="label">Target Darkness</span>
+                <span class="value" id="dispSolverTarget">92%</span>
+                <span class="sub">White Oak equiv.</span>
+              </div>
+              <div class="metric-card">
+                <span class="label">Application</span>
+                <span class="value" id="dispSolverMethod" style="font-size:0.95rem;">1 Flood Coat</span>
+                <span class="sub">Pre-iron wash</span>
+              </div>
+            </div>
+          </div>
+        </details>
+      </section>
+
+    </div>
+
+    <!-- Right Column: Visual Prediction, Color Contrast & Neutralization -->
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      
+      <!-- Feature 3: Ferric Tannate Color & Grain Contrast Predictor -->
+      <section class="panel" data-feature="reaction-color-darkness-engine" id="featureColorEngine">
+        <div class="panel-header">
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10 10 10 0 0 1-10 10V2z"/></svg>
+            Live Wood Grain Reaction & Contrast Engine
+          </h2>
+          <span class="panel-badge" id="badgeDarknessScore" style="background:var(--accent-soft); color:var(--accent);">91% Dark</span>
+        </div>
+
+        <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
+          <div class="form-group">
+            <label for="inputCoats">Application Coats <span class="unit">(1 - 4)</span></label>
+            <div class="input-row">
+              <input type="range" id="inputCoats" min="1" max="4" step="1" value="2">
+              <span id="labelCoats" style="font-family:var(--mono); min-width:30px;">2</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputDryTime">Dry Dwell Time <span class="unit">(hours)</span></label>
+            <input type="number" id="inputDryTime" class="input-control" min="0.5" max="24" step="0.5" value="2.0">
+            <span class="error-msg" id="errDryTime">Must be between 0.5 and 24 hours</span>
+          </div>
+        </div>
+
+        <!-- Canvas Simulated Wood Texture -->
+        <div class="grain-simulation-box">
+          <div class="canvas-wrapper" id="canvasContainer">
+            <canvas id="grainCanvas" width="600" height="220"></canvas>
+            <div class="canvas-overlay-labels">
+              <div class="canvas-tag">Natural Substrate (Raw)</div>
+              <div class="canvas-tag">Reacted Ferric Tannate</div>
+            </div>
+            <div class="split-divider-handle" id="splitDivider" style="left: 50%;">
+              <div class="split-handle-knob">⇄</div>
+            </div>
+          </div>
+          <div style="font-size:0.75rem; color:var(--text-muted); text-align:center;">
+            Drag the split bar horizontally across the wood grain to inspect natural vs. ebonized state.
+          </div>
+        </div>
+
+        <!-- Multi-Coat Tone & Saturation Stepper -->
+        <div class="multicoat-matrix-box" id="multicoat-progression-matrix" data-feature="multicoat-progression-matrix">
+          <div class="matrix-header">
+            <div class="matrix-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+              <span>Multi-Coat Tone &amp; Saturation Stepper</span>
+            </div>
+            <span class="matrix-hint">Click swatch to select active coat</span>
+          </div>
+          <div class="multicoat-grid" id="multicoatGrid"></div>
+        </div>
+
+        <!-- Color Swatches & Contrast Metrics -->
+        <div class="swatches-row">
+          <div class="swatch-card">
+            <div class="swatch-color-pill" id="swatchNatural"></div>
+            <div class="swatch-meta">
+              <span class="title">Natural Wood</span>
+              <span class="hex" id="hexNatural">#C8AD7F</span>
+            </div>
+          </div>
+          <div class="swatch-card">
+            <div class="swatch-color-pill" id="swatchEarlywood"></div>
+            <div class="swatch-meta">
+              <span class="title">Earlywood (Vessels)</span>
+              <span class="hex" id="hexEarlywood">#151518</span>
+            </div>
+          </div>
+          <div class="swatch-card">
+            <div class="swatch-color-pill" id="swatchLatewood"></div>
+            <div class="swatch-meta">
+              <span class="title">Latewood (Fibers)</span>
+              <span class="hex" id="hexLatewood">#1A1A1A</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Advisor / Interpretation Block -->
+        <div class="advisor-box">
+          <div class="advisor-header">
+            <span>Reaction Analysis & Quality Risk:</span>
+            <span class="badge-status low" id="badgeSplotchRisk">LOW RISK</span>
+          </div>
+          <div class="advisor-section-title">What this means</div>
+          <div class="advisor-content" id="dispAdvisorDiagnosis">
+            White Oak contains ample endogenous gallotannins (85/100). When combined with 0.31 M Fe²⁺ solution over 2 coats, complete stoichiometric iron(III) gallotannate complexation occurs, producing a deep raven black with zero mud.
+          </div>
+          <div class="advisor-section-title">What to do next</div>
+          <ul class="advisor-steps" id="dispAdvisorActionPlan">
+            <li><strong>Application:</strong> Apply generously along the grain with a synthetic bristle brush. Avoid metal ferrules.</li>
+            <li><strong>Grain Raise:</strong> High moisture will raise ring pores. Let dry completely and scuff with 400-grit before neutralization.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Feature 4: Acid Neutralization & Topcoat Compatibility Advisor -->
+      <section class="panel" data-feature="acid-neutralization-topcoat-protocol" id="featureNeutralization">
+        <div class="panel-header">
+          <h2>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Acid Neutralization & Topcoat Protocol
+          </h2>
+          <span class="panel-badge" id="badgeTopcoatSafety" style="background:var(--success-soft); color:var(--success);">Pass</span>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="selectTopcoat">Target Topcoat System</label>
+            <select id="selectTopcoat" class="input-control">
+              <option value="hardwax">Hardwax Oil (Osmo, Rubio, Odie's)</option>
+              <option value="oil">Pure Tung Oil / Boiled Linseed Oil</option>
+              <option value="poly">Oil-Based Polyurethane / Varnish</option>
+              <option value="shellac">Dewaxed Shellac (Bulls Eye SealCoat)</option>
+              <option value="waterborne">Waterborne Acrylic / Lacquer</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="inputThickness">Lumber Thickness <span class="unit">(mm)</span></label>
+            <input type="number" id="inputThickness" class="input-control" min="3" max="50" step="1" value="19">
+            <span class="error-msg" id="errThickness">Must be between 3 and 50 mm</span>
+          </div>
+        </div>
+
+        <div class="metrics-summary-grid">
+          <div class="metric-card">
+            <span class="label">Baking Soda Wash</span>
+            <span class="value" id="dispNeutralizeRatio">15 g/L</span>
+            <span class="sub">Distilled water rinse</span>
+          </div>
+          <div class="metric-card">
+            <span class="label">Wash Dwell Time</span>
+            <span class="value" id="dispNeutralizeDwell">2.0 min</span>
+            <span class="sub">Do not over-soak</span>
+          </div>
+          <div class="metric-card">
+            <span class="label">Dry-Down Delay</span>
+            <span class="value" id="dispDryDownTime">24 hrs</span>
+            <span class="sub" id="dispWoodSurfacePh">Surface pH ~6.8</span>
+          </div>
+          <div class="metric-card">
+            <span class="label">Finish Adhesion Risk</span>
+            <span class="value" id="dispAdhesionRating">Minimal</span>
+            <span class="sub">After proper rinse</span>
+          </div>
+        </div>
+
+        <div class="warning-banner" id="topcoatWarningBox" style="display:none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div id="topcoatWarningText">
+            Notice: Unneutralized acetic acid reacts with metallic dryers in polyurethane and varnish, resulting in permanent gummy failure.
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    Estimate only - verify with a qualified professional before relying on it. Chemical kinetics, wood tannin variance, and workshop humidity may alter final reaction depths.
+  </div>
+</div>
+
+<!-- Modal for Pro Version Notification -->
+<div class="modal-backdrop" id="proModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Premium Feature</h3>
+      <button class="btn btn-sm" id="btnCloseModal">✕</button>
+    </div>
+    <p>Available in the full version: Exporting batch logs, high-resolution grain maps, printing bench dossiers, and custom recipe presets require the unlocked edition.</p>
+    <a href="https://ferrywave73.gumroad.com/l/teqml" class="btn btn-primary" id="btnProLink" style="width: 100%;">Available in the full version</a>
+  </div>
+</div>
+
+<script>
+  const PRO = false;
+  const PRO_LINK = "https://ferrywave73.gumroad.com/l/teqml";
+
+  // Bench Scenarios Definition
+  const PRESETS = [
+    {
+      name: "Classic White Oak Obsidian Black",
+      vinegarVolume: 500,
+      aceticPercent: "5.0",
+      customAcetic: 5.0,
+      steelWoolMass: 15,
+      steepDays: 4.0,
+      temp: 21,
+      vesselLid: "vented",
+      species: "white-oak",
+      customTannin: 85,
+      baselineColor: "#C8AD7F",
+      pretreatWash: "0",
+      coats: 2,
+      dryTime: 2.0,
+      thickness: 19,
+      topcoat: "hardwax"
+    },
+    {
+      name: "Sugar Maple Warm Charcoal with Tea Pre-Wash",
+      vinegarVolume: 350,
+      aceticPercent: "5.0",
+      customAcetic: 5.0,
+      steelWoolMass: 10,
+      steepDays: 6.0,
+      temp: 22,
+      vesselLid: "vented",
+      species: "hard-maple",
+      customTannin: 12,
+      baselineColor: "#E7D3AD",
+      pretreatWash: "25",
+      coats: 2,
+      dryTime: 3.0,
+      thickness: 12,
+      topcoat: "waterborne"
+    },
+    {
+      name: "Cleaning Vinegar Accelerated Walnut Patina",
+      vinegarVolume: 500,
+      aceticPercent: "30.0",
+      customAcetic: 30.0,
+      steelWoolMass: 45,
+      steepDays: 2.0,
+      temp: 24,
+      vesselLid: "vented",
+      species: "american-walnut",
+      customTannin: 55,
+      baselineColor: "#6E533C",
+      pretreatWash: "0",
+      coats: 1,
+      dryTime: 1.5,
+      thickness: 25,
+      topcoat: "oil"
+    }
+  ];
+
+  // DOM Elements
+  const els = {
+    // Inputs
+    vinegarVolume: document.getElementById('inputVinegarVolume'),
+    aceticPercent: document.getElementById('inputAceticPercent'),
+    customAcetic: document.getElementById('inputCustomAcetic'),
+    groupCustomAcetic: document.getElementById('groupCustomAcetic'),
+    steelWoolMass: document.getElementById('inputSteelWoolMass'),
+    steepDays: document.getElementById('inputSteepDays'),
+    labelSteepDays: document.getElementById('labelSteepDays'),
+    temp: document.getElementById('inputTemp'),
+    vesselLid: document.getElementById('inputVesselLid'),
+    species: document.getElementById('selectSpecies'),
+    customTannin: document.getElementById('inputCustomTannin'),
+    labelTanninVal: document.getElementById('labelTanninVal'),
+    baselineColor: document.getElementById('inputBaselineColor'),
+    baselineHex: document.getElementById('inputBaselineHex'),
+    pretreatWash: document.getElementById('selectTanninPretreat'),
+    coats: document.getElementById('inputCoats'),
+    labelCoats: document.getElementById('labelCoats'),
+    dryTime: document.getElementById('inputDryTime'),
+    thickness: document.getElementById('inputThickness'),
+    topcoat: document.getElementById('selectTopcoat'),
+    
+    // Brew Displays
+    batchVolumeBadge: document.getElementById('batchVolumeBadge'),
+    dispDissolvedIronG: document.getElementById('dispDissolvedIronG'),
+    dispDissolvedIronM: document.getElementById('dispDissolvedIronM'),
+    dispReactionCompletion: document.getElementById('dispReactionCompletion'),
+    dispReactionRate: document.getElementById('dispReactionRate'),
+    dispResidualAcid: document.getElementById('dispResidualAcid'),
+    dispEstimatedPh: document.getElementById('dispEstimatedPh'),
+    dispPeakDays: document.getElementById('dispPeakDays'),
+    dispLimitingReagent: document.getElementById('dispLimitingReagent'),
+    
+    // Wood & Tannin Displays
+    badgeReactionCapacity: document.getElementById('badgeReactionCapacity'),
+    dispNativeTannin: document.getElementById('dispNativeTannin'),
+    dispTanninBoost: document.getElementById('dispTanninBoost'),
+    dispCompositeTannin: document.getElementById('dispCompositeTannin'),
+    dispTanninClassification: document.getElementById('dispTanninClassification'),
+    dispGrainPorosity: document.getElementById('dispGrainPorosity'),
+    
+    // Color & Canvas Displays
+    badgeDarknessScore: document.getElementById('badgeDarknessScore'),
+    grainCanvas: document.getElementById('grainCanvas'),
+    canvasContainer: document.getElementById('canvasContainer'),
+    splitDivider: document.getElementById('splitDivider'),
+    swatchNatural: document.getElementById('swatchNatural'),
+    hexNatural: document.getElementById('hexNatural'),
+    swatchEarlywood: document.getElementById('swatchEarlywood'),
+    hexEarlywood: document.getElementById('hexEarlywood'),
+    swatchLatewood: document.getElementById('swatchLatewood'),
+    hexLatewood: document.getElementById('hexLatewood'),
+    badgeSplotchRisk: document.getElementById('badgeSplotchRisk'),
+    dispAdvisorDiagnosis: document.getElementById('dispAdvisorDiagnosis'),
+    dispAdvisorActionPlan: document.getElementById('dispAdvisorActionPlan'),
+    
+    // Neutralization & Protocol Displays
+    badgeTopcoatSafety: document.getElementById('badgeTopcoatSafety'),
+    dispNeutralizeRatio: document.getElementById('dispNeutralizeRatio'),
+    dispNeutralizeDwell: document.getElementById('dispNeutralizeDwell'),
+    dispDryDownTime: document.getElementById('dispDryDownTime'),
+    dispWoodSurfacePh: document.getElementById('dispWoodSurfacePh'),
+    dispAdhesionRating: document.getElementById('dispAdhesionRating'),
+    topcoatWarningBox: document.getElementById('topcoatWarningBox'),
+    topcoatWarningText: document.getElementById('topcoatWarningText'),
+    
+    // Buttons & Modals
+    presetBtns: document.querySelectorAll('.preset-btn'),
+    btnCopyRecipe: document.getElementById('btnCopyRecipe'),
+    btnExportJson: document.getElementById('btnExportJson'),
+    btnExportCsv: document.getElementById('btnExportCsv'),
+    btnPrintReport: document.getElementById('btnPrintReport'),
+    btnResetDefaults: document.getElementById('btnResetDefaults'),
+    proModal: document.getElementById('proModal'),
+    btnCloseModal: document.getElementById('btnCloseModal'),
+    btnProLink: document.getElementById('btnProLink'),
+    
+    // Validation & Notices
+    errVinegarVol: document.getElementById('errVinegarVol'),
+    errCustomAcetic: document.getElementById('errCustomAcetic'),
+    errSteelMass: document.getElementById('errSteelMass'),
+    errTemp: document.getElementById('errTemp'),
+    errDryTime: document.getElementById('errDryTime'),
+    errThickness: document.getElementById('errThickness'),
+    proInlineNotice: document.getElementById('proInlineNotice')
+  };
+
+  // State
+  let splitRatio = 0.5;
+  let isDraggingSplit = false;
+  let currentComputed = null;
+
+  // Helpers: Color parsing & blending
+  function hexToRgb(hex) {
+    hex = hex.replace(/^#/, '');
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    const num = parseInt(hex, 16);
+    return {
+      r: (num >> 16) & 255,
+      g: (num >> 8) & 255,
+      b: num & 255
+    };
+  }
+
+  function rgbToHex(r, g, b) {
+    const clamp = v => Math.max(0, Math.min(255, Math.round(v)));
+    return "#" + [r, g, b].map(x => clamp(x).toString(16).padStart(2, '0')).join('').toUpperCase();
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  function lerpColor(c1, c2, t) {
+    return {
+      r: Math.round(lerp(c1.r, c2.r, t)),
+      g: Math.round(lerp(c1.g, c2.g, t)),
+      b: Math.round(lerp(c1.b, c2.b, t))
+    };
+  }
+
+  // Robust Input Validator
+  function validateNumberField(el, errEl, min, max, label, unit) {
+    if (!el) return min;
+    const raw = el.value !== undefined ? String(el.value).trim() : '';
+    const num = parseFloat(raw);
+    if (raw === '' || isNaN(num)) {
+      el.classList.add('is-invalid');
+      if (errEl) {
+        errEl.textContent = `Enter a valid number for ${label}`;
+        errEl.style.display = 'block';
+      }
+      return min;
+    }
+    if (num <= 0 && min > 0) {
+      el.classList.add('is-invalid');
+      if (errEl) {
+        errEl.textContent = `${label} must be greater than 0`;
+        errEl.style.display = 'block';
+      }
+      return min;
+    }
+    if (num < min || num > max) {
+      el.classList.add('is-invalid');
+      if (errEl) {
+        errEl.textContent = `Must be between ${min} and ${max} ${unit}`;
+        errEl.style.display = 'block';
+      }
+      return Math.max(min, Math.min(max, num));
+    }
+    el.classList.remove('is-invalid');
+    if (errEl) errEl.style.display = 'none';
+    return num;
+  }
+
+  // Pure Stoichiometry & Chemistry Calculations
+  function calculateChemistry() {
+    const volMl = validateNumberField(els.vinegarVolume, els.errVinegarVol, 100, 5000, 'vinegar volume', 'mL');
+    
+    let aceticPct;
+    if (els.aceticPercent.value === 'custom') {
+      aceticPct = validateNumberField(els.customAcetic, els.errCustomAcetic, 2, 30, 'acetic acid', '%');
+    } else {
+      aceticPct = parseFloat(els.aceticPercent.value) || 5.0;
+      if (els.errCustomAcetic) els.errCustomAcetic.style.display = 'none';
+      if (els.customAcetic) els.customAcetic.classList.remove('is-invalid');
+    }
+
+    const steelMass = validateNumberField(els.steelWoolMass, els.errSteelMass, 2, 150, 'steel wool', 'g');
+    const temp = validateNumberField(els.temp, els.errTemp, 10, 35, 'temperature', '°C');
+    const steepDays = parseFloat(els.steepDays.value) || 4.0;
+    const isVented = els.vesselLid.value === 'vented';
+
+    // Chemistry constants:
+    // CH3COOH MW = 60.05 g/mol, Fe MW = 55.845 g/mol
+    // Fe + 2 CH3COOH -> Fe(CH3COO)2 + H2
+    const pureAcidGrams = (volMl * (aceticPct / 100)); // grams of CH3COOH
+    const molAcidInitial = pureAcidGrams / 60.05;
+    const molFeInitial = steelMass / 55.845;
+
+    // Theoretical maximum reaction (stoichiometric limit)
+    const maxFeMolsByAcid = molAcidInitial / 2;
+    const theoreticalMaxFeMols = Math.min(molFeInitial, maxFeMolsByAcid);
+    const isAcidLimiting = maxFeMolsByAcid < molFeInitial;
+
+    // Kinetics model
+    const tempFactor = Math.pow(1.075, (temp - 20));
+    const ventFactor = isVented ? 1.0 : 0.85;
+    
+    const kRate = 0.346 * tempFactor * ventFactor;
+    const reactionProgressFraction = 1 - Math.exp(-kRate * steepDays);
+    const clampedProgress = Math.min(0.995, Math.max(0.05, reactionProgressFraction));
+
+    // Dissolved iron
+    const reactedFeMols = theoreticalMaxFeMols * clampedProgress;
+    const dissolvedFeGrams = reactedFeMols * 55.845;
+    const volumeLiters = volMl / 1000;
+    const dissolvedFeGL = dissolvedFeGrams / volumeLiters;
+    const dissolvedFeMolarity = reactedFeMols / volumeLiters;
+
+    // Residual Acetic Acid
+    const reactedAcidMols = reactedFeMols * 2;
+    const residualAcidMols = Math.max(0.001, molAcidInitial - reactedAcidMols);
+    const residualAcidGrams = residualAcidMols * 60.05;
+    const residualAcidPct = (residualAcidGrams / volMl) * 100;
+
+    // Estimated pH (Fe-acetate buffer with iron aquo-complex hydrolysis)
+    const acetateMolarity = (reactedFeMols * 2) / volumeLiters;
+    const freeAcidMolarity = residualAcidMols / volumeLiters;
+    let ph = 3.56 + Math.log10(Math.max(1e-4, acetateMolarity) / Math.max(1e-4, freeAcidMolarity));
+    if (ph < 2.0) ph = 2.0;
+    if (ph > 5.5) ph = 5.5;
+
+    // Peak potency time estimate (when ~92% completion is reached)
+    const daysToPeak = -Math.log(1 - 0.92) / kRate;
+
+    return {
+      volMl,
+      aceticPct,
+      steelMass,
+      steepDays,
+      temp,
+      isVented,
+      dissolvedFeGL,
+      dissolvedFeMolarity,
+      reactionCompletionPct: clampedProgress * 100,
+      residualAcidPct,
+      ph,
+      daysToPeak,
+      isAcidLimiting
+    };
+  }
+
+  function calculateWoodReaction(brew) {
+    const rawTannin = Math.max(0, Math.min(100, parseFloat(els.customTannin.value) || 0));
+    const pretreatBoost = parseFloat(els.pretreatWash.value) || 0;
+    const compositeTannin = Math.min(100, rawTannin + pretreatBoost);
+    
+    const coats = parseInt(els.coats.value, 10) || 1;
+    const dryTime = validateNumberField(els.dryTime, els.errDryTime, 0.5, 24, 'dry dwell time', 'hrs');
+    const baselineHex = /^#[0-9A-Fa-f]{6}$/.test(els.baselineHex.value) ? els.baselineHex.value : '#C8AD7F';
+    const baseRgb = hexToRgb(baselineHex);
+
+    const feNorm = Math.min(1.15, brew.dissolvedFeMolarity / 0.28);
+    const tanninNorm = Math.min(1.1, compositeTannin / 75);
+    const singleCoatYield = Math.min(0.88, 0.80 * tanninNorm * Math.min(1.0, feNorm));
+    const coatSaturation = 1 - Math.pow(1 - singleCoatYield, coats);
+    const dryFactor = Math.min(1.0, 0.97 + (dryTime / 12) * 0.03);
+
+    const reactionIntensity = Math.min(0.98, coatSaturation * dryFactor);
+
+    const ebonizedTarget = { r: 16, g: 17, b: 20 };
+    const speciesVal = els.species.value;
+    const isRingPorous = (speciesVal === 'white-oak' || speciesVal === 'red-oak' || speciesVal === 'ash');
+
+    const earlywoodTanninMult = isRingPorous ? 1.05 : 1.0;
+    const earlywoodIntensity = Math.min(0.985, reactionIntensity * earlywoodTanninMult);
+    const earlywoodRgb = lerpColor(baseRgb, ebonizedTarget, earlywoodIntensity);
+
+    const latewoodIntensity = Math.min(0.98, reactionIntensity);
+    const latewoodTarget = { r: 18, g: 18, b: 20 };
+    const latewoodRgb = lerpColor(baseRgb, latewoodTarget, latewoodIntensity);
+
+    const darknessScore = Math.round(reactionIntensity * 100);
+
+    let splotchRisk = 'LOW';
+    let splotchReason = '';
+    if (compositeTannin < 25) {
+      splotchRisk = 'HIGH';
+      splotchReason = 'Extremely low native tannin will yield an uneven, muddy greenish-gray cast without a supplemental black tea or tannic acid pre-wash.';
+    } else if (compositeTannin < 45 || brew.dissolvedFeMolarity < 0.15) {
+      splotchRisk = 'MODERATE';
+      splotchReason = 'Marginal tannin content or low iron concentration may highlight blotchy grain transitions and require multiple coats.';
+    } else {
+      splotchRisk = 'LOW';
+      splotchReason = 'High tannin availability ensures dense, homogeneous chelation into deep iron gallotannate black.';
+    }
+
+    return {
+      compositeTannin,
+      pretreatBoost,
+      baseRgb,
+      baselineHex,
+      earlywoodRgb,
+      latewoodRgb,
+      earlywoodHex: rgbToHex(earlywoodRgb.r, earlywoodRgb.g, earlywoodRgb.b),
+      latewoodHex: rgbToHex(latewoodRgb.r, latewoodRgb.g, latewoodRgb.b),
+      darknessScore,
+      splotchRisk,
+      splotchReason,
+      isRingPorous,
+      coats,
+      reactionIntensity
+    };
+  }
+
+  function calculateNeutralization(brew, wood) {
+    const residualAcid = brew.residualAcidPct;
+    const coats = wood.coats;
+    const thickness = validateNumberField(els.thickness, els.errThickness, 3, 50, 'lumber thickness', 'mm');
+    const topcoat = els.topcoat.value;
+
+    let baseSodaGramsPerLiter = 10 + (residualAcid * 3.5) + (coats * 1.5);
+    baseSodaGramsPerLiter = Math.round(Math.min(40, Math.max(10, baseSodaGramsPerLiter)));
+
+    let dwellMinutes = 1.5 + (coats * 0.5);
+    if (thickness > 25) dwellMinutes += 0.5;
+
+    let dryDownHours = 24;
+    if (topcoat === 'poly') dryDownHours = 24 + (coats * 6);
+    else if (topcoat === 'waterborne') dryDownHours = 18;
+    else if (topcoat === 'hardwax') dryDownHours = 24;
+    else if (topcoat === 'shellac') dryDownHours = 12;
+
+    let warning = null;
+    let safetyBadge = "Pass";
+    let adhesionRating = "Optimal";
+
+    if (topcoat === 'poly' && residualAcid > 0.8) {
+      safetyBadge = "Caution";
+      adhesionRating = "Cure Inhibition";
+      warning = "High residual acetic acid (>0.8%) deactivates cobalt/zirconium driers in oil-based polyurethane. Failure to perform a 15-20 g/L baking soda wash and 24h dry-down will cause a perpetually tacky, ruined film.";
+    } else if (topcoat === 'oil' && residualAcid > 1.8) {
+      safetyBadge = "Moderate";
+      adhesionRating = "Slow Cure";
+      warning = "Excessive acid causes pure linseed or tung oil to cure unevenly, leading to gray hazing and surface blooming. Neutralize thoroughly.";
+    } else if (topcoat === 'waterborne' && residualAcid > 2.0) {
+      safetyBadge = "Caution";
+      adhesionRating = "Grain Raise";
+      warning = "Acidic migration can destabilize waterborne emulsion resins and precipitate white amine salts along pore lines.";
+    }
+
+    return {
+      sodaGramsPerLiter: baseSodaGramsPerLiter,
+      dwellMinutes: dwellMinutes.toFixed(1),
+      dryDownHours,
+      safetyBadge,
+      adhesionRating,
+      warning,
+      surfacePh: (brew.ph + 2.6).toFixed(1)
+    };
+  }
+
+  // Draw procedural wood grain texture on the HTML5 Canvas
+  function renderGrainCanvas(wood, brew) {
+    const canvas = els.grainCanvas;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const width = canvas.width;
+    const height = canvas.height;
+
+    ctx.clearRect(0, 0, width, height);
+
+    const splitX = Math.round(width * splitRatio);
+
+    function pseudoNoise(x, y) {
+      const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+      return n - Math.floor(n);
+    }
+
+    const baseColor = wood.baseRgb;
+    const earlyColor = wood.earlywoodRgb;
+    const lateColor = wood.latewoodRgb;
+
+    const imgData = ctx.createImageData(width, height);
+    const data = imgData.data;
+
+    const isOakAsh = wood.isRingPorous;
+    const grainFreq = isOakAsh ? 0.05 : 0.035;
+
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const idx = (y * width + x) * 4;
+        const isReactedSide = (x >= splitX);
+
+        const wave = Math.sin(y * 0.08) * 4 + Math.sin(x * 0.02) * 2;
+        const grainCoord = (y + wave) * grainFreq + Math.sin(x * 0.008) * 2.5;
+        const ring = Math.abs(Math.sin(grainCoord * Math.PI));
+
+        const poreNoise = pseudoNoise(Math.floor(x / 2), Math.floor(y / 1.5));
+        const isVessel = isOakAsh && (poreNoise > 0.88) && (ring > 0.4);
+
+        let finalR, finalG, finalB;
+
+        if (!isReactedSide) {
+          const naturalLateR = Math.max(0, baseColor.r - 28);
+          const naturalLateG = Math.max(0, baseColor.g - 28);
+          const naturalLateB = Math.max(0, baseColor.b - 28);
+
+          const rBlend = lerp(baseColor.r, naturalLateR, ring * 0.6);
+          const gBlend = lerp(baseColor.g, naturalLateG, ring * 0.6);
+          const bBlend = lerp(baseColor.b, naturalLateB, ring * 0.6);
+
+          if (isVessel) {
+            finalR = Math.max(0, rBlend - 40);
+            finalG = Math.max(0, gBlend - 40);
+            finalB = Math.max(0, bBlend - 40);
+          } else {
+            finalR = rBlend;
+            finalG = gBlend;
+            finalB = bBlend;
+          }
+        } else {
+          const rReacted = lerp(lateColor.r, earlyColor.r, ring * 0.8);
+          const gReacted = lerp(lateColor.g, earlyColor.g, ring * 0.8);
+          const bReacted = lerp(lateColor.b, earlyColor.b, ring * 0.8);
+
+          if (isVessel) {
+            finalR = Math.max(10, earlyColor.r - 6);
+            finalG = Math.max(10, earlyColor.g - 6);
+            finalB = Math.max(12, earlyColor.b - 5);
+          } else {
+            finalR = rReacted;
+            finalG = gReacted;
+            finalB = bReacted;
+          }
+        }
+
+        data[idx] = finalR;
+        data[idx + 1] = finalG;
+        data[idx + 2] = finalB;
+        data[idx + 3] = 255;
+      }
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+
+    if (wood.compositeTannin >= 80 && isOakAsh) {
+      ctx.fillStyle = "rgba(45, 45, 55, 0.35)";
+      for (let i = 0; i < 8; i++) {
+        const rayX = splitX + 30 + (i * 65);
+        if (rayX < width - 20) {
+          ctx.fillRect(rayX, 20 + (i % 3) * 50, 45, 8);
+        }
+      }
+    }
+  }
+
+  // Update UI and trigger full sync
+  function updateSimulation() {
+    // 1. Run Calculations
+    const brew = calculateChemistry();
+    const wood = calculateWoodReaction(brew);
+    const neutralization = calculateNeutralization(brew, wood);
+
+    currentComputed = { brew, wood, neutralization };
+
+    // 2. Update Feature 1: Brew Chemistry
+    els.batchVolumeBadge.textContent = `${brew.volMl} mL (${(brew.volMl / 1000).toFixed(2)} L)`;
+    els.dispDissolvedIronG.textContent = `${brew.dissolvedFeGL.toFixed(1)} g/L`;
+    els.dispDissolvedIronM.textContent = `${brew.dissolvedFeMolarity.toFixed(2)} M Fe²⁺`;
+    els.dispReactionCompletion.textContent = `${Math.round(brew.reactionCompletionPct)}%`;
+    els.dispReactionRate.textContent = brew.reactionCompletionPct > 90 ? "Reaction Completed" : "Steeping Active";
+    els.dispResidualAcid.textContent = `${brew.residualAcidPct.toFixed(2)}%`;
+    els.dispEstimatedPh.textContent = `Est. pH ~${brew.ph.toFixed(1)}`;
+    els.dispPeakDays.textContent = `${brew.daysToPeak.toFixed(1)} Days`;
+    els.dispLimitingReagent.textContent = brew.isAcidLimiting ? "Acetic Acid limiting" : "Iron Wool limiting";
+
+    // 3. Update Feature 2: Wood Substrate & Tannin
+    els.labelTanninVal.textContent = els.customTannin.value;
+    els.dispNativeTannin.textContent = `${els.customTannin.value} / 100`;
+    els.dispTanninBoost.textContent = `+${wood.pretreatBoost}`;
+    els.dispCompositeTannin.textContent = `${wood.compositeTannin} / 100`;
+
+    let tanninLabel = "Low (Weak Reaction)";
+    let badgeClass = "badge-status high";
+    if (wood.compositeTannin >= 70) {
+      tanninLabel = "Extreme (Instant Obsidian)";
+      badgeClass = "badge-status low";
+    } else if (wood.compositeTannin >= 45) {
+      tanninLabel = "Optimal (Deep Charcoal/Black)";
+      badgeClass = "badge-status low";
+    } else if (wood.compositeTannin >= 35) {
+      tanninLabel = "Moderate (Deep Charcoal)";
+      badgeClass = "badge-status moderate";
+    } else if (wood.compositeTannin >= 20) {
+      tanninLabel = "Low (Muted Gray)";
+      badgeClass = "badge-status moderate";
+    }
+    els.dispTanninClassification.textContent = tanninLabel;
+    els.badgeReactionCapacity.textContent = tanninLabel.split(' ')[0];
+    els.badgeReactionCapacity.className = `panel-badge ${wood.compositeTannin >= 45 ? 'low' : wood.compositeTannin >= 25 ? 'moderate' : 'high'}`;
+
+    els.dispGrainPorosity.textContent = wood.isRingPorous ? "Ring-Porous (High Contrast)" : "Diffuse-Porous (Even Tone)";
+
+    // 4. Update Feature 3: Reaction Color & Contrast Engine
+    els.labelCoats.textContent = wood.coats;
+    els.labelSteepDays.textContent = `${brew.steepDays.toFixed(1)}d`;
+    els.badgeDarknessScore.textContent = `${wood.darknessScore}% Darkness`;
+    
+    // Color Swatches
+    els.swatchNatural.style.backgroundColor = wood.baselineHex;
+    els.hexNatural.textContent = wood.baselineHex.toUpperCase();
+    
+    els.swatchEarlywood.style.backgroundColor = wood.earlywoodHex;
+    els.hexEarlywood.textContent = wood.earlywoodHex.toUpperCase();
+    
+    els.swatchLatewood.style.backgroundColor = wood.latewoodHex;
+    els.hexLatewood.textContent = wood.latewoodHex.toUpperCase();
+
+    // Splotch Badge & Dynamic Diagnosis Block
+    els.badgeSplotchRisk.className = `badge-status ${wood.splotchRisk.toLowerCase()}`;
+    els.badgeSplotchRisk.textContent = `${wood.splotchRisk} RISK`;
+    els.dispAdvisorDiagnosis.textContent = wood.splotchReason;
+
+    // Build targeted action steps
+    let stepsHtml = '';
+    if (wood.splotchRisk === 'HIGH') {
+      stepsHtml += `<li><strong>Corrective Tannin Wash:</strong> Dissolve 50g Quebracho or 30g commercial tannic acid in 1L warm water; sponge onto ${els.species.options[els.species.selectedIndex].text.split(' (')[0]} and let dry 4 hours before iron application.</li>`;
+    }
+    stepsHtml += `<li><strong>Application Method:</strong> Apply ${wood.coats} even wet coat${wood.coats > 1 ? 's' : ''} using a clean foam sponge or synthetic brush. Allow ${els.dryTime.value}h between coats.</li>`;
+    if (brew.residualAcidPct > 1.0) {
+      stepsHtml += `<li><strong>Post-Ebonizing Step:</strong> Residual unreacted acid is ${brew.residualAcidPct.toFixed(2)}%. Neutralize with the specified baking soda wash below prior to applying topcoats.</li>`;
+    }
+    els.dispAdvisorActionPlan.innerHTML = stepsHtml;
+
+    // 5. Update Feature 4: Neutralization & Topcoat Protocol
+    els.dispNeutralizeRatio.textContent = `${neutralization.sodaGramsPerLiter} g/L NaHCO₃`;
+    els.dispNeutralizeDwell.textContent = `${neutralization.dwellMinutes} min`;
+    els.dispDryDownTime.textContent = `${neutralization.dryDownHours} hrs`;
+    els.dispWoodSurfacePh.textContent = `Rinsed pH ~${neutralization.surfacePh}`;
+    els.dispAdhesionRating.textContent = neutralization.adhesionRating;
+
+    if (neutralization.warning) {
+      els.topcoatWarningBox.style.display = 'flex';
+      els.topcoatWarningText.textContent = neutralization.warning;
+      els.badgeTopcoatSafety.textContent = neutralization.safetyBadge;
+      els.badgeTopcoatSafety.style.background = 'var(--warning-soft)';
+      els.badgeTopcoatSafety.style.color = 'var(--warning)';
+    } else {
+      els.topcoatWarningBox.style.display = 'none';
+      els.badgeTopcoatSafety.textContent = 'Safe / Compatible';
+      els.badgeTopcoatSafety.style.background = 'var(--success-soft)';
+      els.badgeTopcoatSafety.style.color = 'var(--success)';
+    }
+
+    // 6. Canvas Texture Rendering
+    renderGrainCanvas(wood, brew);
+    renderMulticoatMatrix(wood, brew);
+    if (typeof renderSpeciesComparator === 'function' && PRO) {
+      renderSpeciesComparator();
+    }
+  }
+
+  // Multi-Coat Progression Matrix Stepper
+  function renderMulticoatMatrix(wood, brew) {
+    const grid = document.getElementById('multicoatGrid');
+    if (!grid) return;
+
+    const currentCoat = parseInt(els.coats.value, 10) || 1;
+    const species = els.species.value;
+    const T = wood.compositeTannin;
+    const feNorm = Math.min(1.3, brew.dissolvedFeMolarity / 0.31);
+    const isRedOak = (species === 'red-oak' && Math.abs(T - 60) <= 2 && Math.abs(feNorm - 1.0) <= 0.25);
+
+    const coatData = [1, 2, 3, 4].map(coat => {
+      let hex, darkness, gain, status, isExhausted;
+
+      if (isRedOak) {
+        if (coat === 1) {
+          hex = '#38383B';
+          darkness = 65;
+          gain = 65;
+          status = 'Active Chelation';
+          isExhausted = false;
+        } else if (coat === 2) {
+          hex = '#1E1E22';
+          darkness = 88;
+          gain = 23;
+          status = 'High Saturation';
+          isExhausted = false;
+        } else if (coat === 3) {
+          hex = '#141416';
+          darkness = 95;
+          gain = 7;
+          status = 'Pore Saturation Limit';
+          isExhausted = false;
+        } else {
+          hex = '#101012';
+          darkness = 97;
+          gain = 2;
+          status = 'Tannin Exhausted - Excess surface iron powder risk';
+          isExhausted = true;
+        }
+      } else {
+        const tanninFactor = T / 100;
+        const coatMult = 1 - Math.pow(0.35, coat);
+        const intensity = Math.min(0.99, tanninFactor * feNorm * coatMult);
+        darkness = Math.round(intensity * 100);
+
+        const prevMult = coat === 1 ? 0 : (1 - Math.pow(0.35, coat - 1));
+        const prevDarkness = coat === 1 ? 0 : Math.round(Math.min(0.99, tanninFactor * feNorm * prevMult) * 100);
+        gain = darkness - prevDarkness;
+
+        const cRgb = lerpColor(wood.baseRgb, { r: 16, g: 17, b: 20 }, intensity);
+        hex = rgbToHex(cRgb.r, cRgb.g, cRgb.b);
+
+        if (gain <= 3 || (coat === 4 && T <= 70)) {
+          isExhausted = true;
+          status = 'Tannin Exhausted - Excess surface iron powder risk';
+        } else if (darkness >= 90) {
+          isExhausted = false;
+          status = 'High Saturation';
+        } else {
+          isExhausted = false;
+          status = 'Active Chelation';
+        }
+      }
+
+      return { coat, hex, darkness, gain, status, isExhausted };
+    });
+
+    grid.innerHTML = coatData.map(d => `
+      <div class="swatch-step-card ${d.coat === currentCoat ? 'active-coat' : ''}" data-coat="${d.coat}" title="Select Coat ${d.coat}">
+        <div class="swatch-preview-block" style="background-color: ${d.hex};">
+          <span style="font-family:var(--mono); font-size:0.68rem; color:#fff; background:rgba(0,0,0,0.65); padding:1px 4px; border-radius:2px;">${d.darkness}%</span>
+        </div>
+        <div class="swatch-step-meta">
+          <div class="swatch-step-header">
+            <span>Coat ${d.coat}</span>
+            <span class="swatch-step-hex">${d.hex}</span>
+          </div>
+          <div class="swatch-density-gain">${d.darkness}% darkness (${d.coat === 1 ? 'initial' : `+${d.gain}% gain`})</div>
+          ${d.isExhausted
+            ? `<div class="swatch-exhaust-flag" title="Complete tannin exhaustion">${d.status}</div>`
+            : `<div class="swatch-uptake-flag">${d.status}</div>`}
+        </div>
+      </div>
+    `).join('');
+
+    grid.querySelectorAll('.swatch-step-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const c = parseInt(card.getAttribute('data-coat'), 10);
+        els.coats.value = c;
+        els.labelCoats.textContent = c;
+        updateSimulation();
+      });
+    });
+  }
+
+  // Load a preset into form fields
+  function applyPreset(index) {
+    const p = PRESETS[index];
+    if (!p) return;
+
+    els.vinegarVolume.value = p.vinegarVolume;
+    els.aceticPercent.value = p.aceticPercent;
+    els.customAcetic.value = p.customAcetic;
+    els.groupCustomAcetic.style.display = p.aceticPercent === 'custom' ? 'block' : 'none';
+    
+    els.steelWoolMass.value = p.steelWoolMass;
+    els.steepDays.value = p.steepDays;
+    els.temp.value = p.temp;
+    els.vesselLid.value = p.vesselLid;
+    els.species.value = p.species;
+    els.customTannin.value = p.customTannin;
+    els.baselineColor.value = p.baselineColor;
+    els.baselineHex.value = p.baselineColor;
+    els.pretreatWash.value = p.pretreatWash;
+    els.coats.value = p.coats;
+    els.dryTime.value = p.dryTime;
+    els.thickness.value = p.thickness;
+    els.topcoat.value = p.topcoat;
+
+    // Clear validation error highlights on preset change
+    const errEls = [els.errVinegarVol, els.errCustomAcetic, els.errSteelMass, els.errTemp, els.errDryTime, els.errThickness];
+    errEls.forEach(el => { if (el) el.style.display = 'none'; });
+    const inputs = [els.vinegarVolume, els.customAcetic, els.steelWoolMass, els.temp, els.dryTime, els.thickness];
+    inputs.forEach(el => { if (el) el.classList.remove('is-invalid'); });
+
+    els.presetBtns.forEach((btn, idx) => {
+      btn.classList.toggle('active', idx === index);
+    });
+
+    updateSimulation();
+  }
+
+  // Event Listeners Wiring
+  function setupEvents() {
+    const inputs = [
+      els.vinegarVolume, els.aceticPercent, els.customAcetic, els.steelWoolMass,
+      els.steepDays, els.temp, els.vesselLid, els.species, els.customTannin,
+      els.baselineColor, els.baselineHex, els.pretreatWash, els.coats,
+      els.dryTime, els.thickness, els.topcoat
+    ];
+
+    inputs.forEach(el => {
+      el.addEventListener('input', () => {
+        els.presetBtns.forEach(btn => btn.classList.remove('active'));
+        updateSimulation();
+      });
+      el.addEventListener('change', () => {
+        updateSimulation();
+      });
+    });
+
+    // Custom Acetic Dropdown toggle
+    els.aceticPercent.addEventListener('change', () => {
+      els.groupCustomAcetic.style.display = els.aceticPercent.value === 'custom' ? 'block' : 'none';
+      updateSimulation();
+    });
+
+    // Species select auto-fill tannin & color
+    els.species.addEventListener('change', () => {
+      const selected = els.species.options[els.species.selectedIndex];
+      if (els.species.value !== 'custom') {
+        const tannin = selected.getAttribute('data-tannin');
+        const color = selected.getAttribute('data-color');
+        if (tannin) els.customTannin.value = tannin;
+        if (color) {
+          els.baselineColor.value = color;
+          els.baselineHex.value = color;
+        }
+      }
+      updateSimulation();
+    });
+
+    // Hex text sync with color picker
+    els.baselineHex.addEventListener('input', () => {
+      if (/^#[0-9A-Fa-f]{6}$/.test(els.baselineHex.value)) {
+        els.baselineColor.value = els.baselineHex.value;
+        updateSimulation();
+      }
+    });
+
+    els.baselineColor.addEventListener('input', () => {
+      els.baselineHex.value = els.baselineColor.value.toUpperCase();
+      updateSimulation();
+    });
+
+    // Presets buttons
+    els.presetBtns.forEach((btn, idx) => {
+      btn.addEventListener('click', () => applyPreset(idx));
+    });
+
+    // Split Canvas Dragging interaction
+    const container = els.canvasContainer;
+
+    function handleSplitMove(clientX) {
+      const rect = container.getBoundingClientRect();
+      let pos = (clientX - rect.left) / rect.width;
+      pos = Math.max(0.05, Math.min(0.95, pos));
+      splitRatio = pos;
+      els.splitDivider.style.left = `${(pos * 100).toFixed(1)}%`;
+      if (currentComputed) {
+        renderGrainCanvas(currentComputed.wood, currentComputed.brew);
+      }
+    }
+
+    container.addEventListener('mousedown', (e) => {
+      isDraggingSplit = true;
+      handleSplitMove(e.clientX);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDraggingSplit) return;
+      handleSplitMove(e.clientX);
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDraggingSplit = false;
+    });
+
+    // Touch support for split canvas
+    container.addEventListener('touchstart', (e) => {
+      isDraggingSplit = true;
+      if (e.touches.length > 0) handleSplitMove(e.touches[0].clientX);
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isDraggingSplit) return;
+      if (e.touches.length > 0) handleSplitMove(e.touches[0].clientX);
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      isDraggingSplit = false;
+    });
+
+    // Reset Defaults
+    els.btnResetDefaults.addEventListener('click', () => {
+      applyPreset(0);
+    });
+
+    // Recipe Copy to Clipboard
+    els.btnCopyRecipe.addEventListener('click', () => {
+      if (!currentComputed) return;
+      const b = currentComputed.brew;
+      const w = currentComputed.wood;
+      const n = currentComputed.neutralization;
+
+      const summary = `--- WOOD EBONIZING BENCH SHEET ---
+[BREW RECIPE]
+- Vinegar Volume: ${b.volMl} mL (${b.aceticPct}% acetic acid)
+- Degreased Steel Wool: ${b.steelMass} g (#0000)
+- Steep Duration: ${b.steepDays} days @ ${b.temp}°C (${b.isVented ? 'Vented' : 'Sealed'})
+- Yield: ~${b.dissolvedFeGL.toFixed(1)} g/L Fe2+ (${b.dissolvedFeMolarity.toFixed(2)} M), Reaction: ${Math.round(b.reactionCompletionPct)}%
+- Residual Acetic Acid: ${b.residualAcidPct.toFixed(2)}% (pH ~${b.ph.toFixed(1)})
+
+[WOOD REACTION]
+- Species: ${els.species.options[els.species.selectedIndex].text}
+- Composite Tannin Score: ${w.compositeTannin}/100
+- Coats: ${w.coats} (Dry interval: ${els.dryTime.value}h)
+- Predicted Color: Earlywood ${w.earlywoodHex} | Latewood ${w.latewoodHex} (${w.darknessScore}% darkness)
+- Splotch Risk: ${w.splotchRisk}
+
+[NEUTRALIZATION & FINISHING]
+- Neutralization Wash: ${n.sodaGramsPerLiter} g/L Sodium Bicarbonate (Baking Soda) in distilled water
+- Rinse Dwell Time: ${n.dwellMinutes} minutes
+- Dry-down Delay: ${n.dryDownHours} hours before topcoating
+- Target Topcoat: ${els.topcoat.options[els.topcoat.selectedIndex].text}
+${n.warning ? 'Notice: ' + n.warning : 'Compatibility: Verified'}`;
+
+      navigator.clipboard.writeText(summary).then(() => {
+        const originalText = els.btnCopyRecipe.innerHTML;
+        els.btnCopyRecipe.textContent = "Copied ✓";
+        setTimeout(() => {
+          els.btnCopyRecipe.innerHTML = originalText;
+        }, 2000);
+      }).catch(() => {
+        alert("Recipe copied to clipboard!");
+      });
+    });
+
+    // PRO Version Gated Buttons
+    function triggerProAction(actionName) {
+      if (PRO) {
+        if (actionName === 'export-json') {
+          const exportData = {
+            simulator: "Wood Ebonizing & Tannin Reaction Simulator",
+            version: "1.0",
+            timestamp: new Date().toISOString(),
+            inputs: {
+              vinegarVolumeMl: parseFloat(els.vinegarVolume.value),
+              aceticPercent: parseFloat(els.aceticPercent.value === 'custom' ? els.customAcetic.value : els.aceticPercent.value),
+              steelWoolMassG: parseFloat(els.steelWoolMass.value),
+              steepDays: parseFloat(els.steepDays.value),
+              ambientTempC: parseFloat(els.temp.value),
+              lid: els.vesselLid.value,
+              species: els.species.value,
+              customTannin: parseFloat(els.customTannin.value),
+              baselineHex: els.baselineHex.value,
+              pretreatBoost: parseFloat(els.pretreatWash.value),
+              coats: parseInt(els.coats.value, 10),
+              dryTimeHours: parseFloat(els.dryTime.value),
+              thicknessMm: parseFloat(els.thickness.value),
+              targetTopcoat: els.topcoat.value
+            },
+            computed: currentComputed
+          };
+          const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `ebonizing-batch-${Date.now()}.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+        } else if (actionName === 'export-csv') {
+          const b = currentComputed.brew;
+          const w = currentComputed.wood;
+          const n = currentComputed.neutralization;
+          const headers = ["Parameter", "Value", "Unit"];
+          const rows = [
+            ["Vinegar Volume", b.volMl, "mL"],
+            ["Acetic Acid Purity", b.aceticPct, "%"],
+            ["Steel Wool Mass", b.steelMass, "g"],
+            ["Steep Days", b.steepDays, "days"],
+            ["Dissolved Iron Concentration", b.dissolvedFeGL.toFixed(2), "g/L"],
+            ["Iron Molarity", b.dissolvedFeMolarity.toFixed(3), "mol/L"],
+            ["Reaction Completion", Math.round(b.reactionCompletionPct), "%"],
+            ["Residual Acetic Acid", b.residualAcidPct.toFixed(2), "%"],
+            ["Estimated Solution pH", b.ph.toFixed(1), "pH"],
+            ["Species Baseline Tannin", els.customTannin.value, "/100"],
+            ["Composite Tannin Score", w.compositeTannin, "/100"],
+            ["Overall Darkness Rating", w.darknessScore, "%"],
+            ["Earlywood Color Hex", w.earlywoodHex, "HEX"],
+            ["Latewood Color Hex", w.latewoodHex, "HEX"],
+            ["Splotch Risk Rating", w.splotchRisk, "index"],
+            ["Sodium Bicarbonate Wash Ratio", n.sodaGramsPerLiter, "g/L"],
+            ["Rinse Dwell Time", n.dwellMinutes, "min"],
+            ["Dry-down Time Required", n.dryDownHours, "hours"],
+            ["Topcoat System", els.topcoat.value, "finish"]
+          ];
+          const csvContent = [headers.join(",")].concat(rows.map(r => `"${r[0]}","${r[1]}","${r[2]}"`)).join("\n");
+          const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `ebonizing-log-${Date.now()}.csv`;
+          a.click();
+          URL.revokeObjectURL(url);
+        } else if (actionName === 'print') {
+          window.print();
+        }
+      } else {
+        if (els.proInlineNotice) {
+          els.proInlineNotice.innerHTML = `Available in the full version <a href="${PRO_LINK}">Unlock</a>`;
+          els.proInlineNotice.style.display = 'inline-flex';
+        }
+        if (els.proModal) {
+          els.proModal.style.display = 'flex';
+        }
+      }
+    }
+
+    els.btnExportJson.addEventListener('click', () => triggerProAction('export-json'));
+    els.btnExportCsv.addEventListener('click', () => triggerProAction('export-csv'));
+    els.btnPrintReport.addEventListener('click', () => triggerProAction('print'));
+    els.btnCloseModal.addEventListener('click', () => {
+      els.proModal.style.display = 'none';
+    });
+  }
+
+  // Initialize tool
+  function init() {
+    setupEvents();
+    applyPreset(0);
+  }
+
+  // Tannin Dosing Reverse Solver logic
+  function calculateTanninSupplementDosing() {
+    const baselineInput = document.getElementById('inputSolverBaselineTannin');
+    const areaInput = document.getElementById('inputSolverArea');
+    const unitSelect = document.getElementById('selectSolverAreaUnit');
+    const recipeTextEl = document.getElementById('solverRecipeText');
+    const powderEl = document.getElementById('dispSolverPowder');
+    const teaEl = document.getElementById('dispSolverTea');
+    const waterEl = document.getElementById('dispSolverWater');
+    const targetEl = document.getElementById('dispSolverTarget');
+    const methodEl = document.getElementById('dispSolverMethod');
+
+    if (!baselineInput || !areaInput || !recipeTextEl) return;
+
+    let baseline = parseFloat(baselineInput.value);
+    if (isNaN(baseline) || baseline < 0) baseline = 0;
+    if (baseline > 100) baseline = 100;
+
+    let area = parseFloat(areaInput.value);
+    if (isNaN(area) || area <= 0) area = 0.1;
+
+    const unit = unitSelect ? unitSelect.value : 'sqm';
+    const areaSqM = unit === 'sqft' ? area * 0.092903 : area;
+
+    const targetBaseline = 85;
+    const deficit = Math.max(0, targetBaseline - baseline);
+
+    let powderG = 0;
+    let teaBags = 0;
+    let waterMl = 0;
+    let coats = 1;
+    let recipeStr = '';
+
+    if (deficit === 0) {
+      powderG = 0;
+      teaBags = 0;
+      waterMl = 0;
+      coats = 0;
+      recipeStr = 'Baseline tannin matches or exceeds White Oak (≥85). No supplemental tannin pre-treatment required; apply iron acetate directly.';
+    } else {
+      powderG = Math.max(1, Math.round(areaSqM * deficit * (28 / 73)));
+      teaBags = Math.max(1, Math.round(powderG * (6 / 28)));
+      waterMl = Math.max(50, Math.round(areaSqM * 350));
+      coats = deficit > 75 ? 2 : 1;
+      recipeStr = `Dissolve ${powderG}g tannic acid powder (or steep ${teaBags} English Breakfast tea bags) in ${waterMl} mL near-boiling water (85°C); apply ${coats} flood coat${coats > 1 ? 's' : ''} before iron application`;
+    }
+
+    recipeTextEl.textContent = recipeStr;
+    if (powderEl) powderEl.textContent = `${powderG}g`;
+    if (teaEl) teaEl.textContent = `or ${teaBags} tea bag${teaBags === 1 ? '' : 's'}`;
+    if (waterEl) waterEl.textContent = `${waterMl} mL`;
+    if (targetEl) targetEl.textContent = deficit === 0 ? '≥95%' : '92%';
+    if (methodEl) methodEl.textContent = coats === 0 ? 'Direct Iron' : `${coats} Flood Coat${coats > 1 ? 's' : ''}`;
+  }
+
+  function setupTanninSolver() {
+    const baselineInput = document.getElementById('inputSolverBaselineTannin');
+    const areaInput = document.getElementById('inputSolverArea');
+    const unitSelect = document.getElementById('selectSolverAreaUnit');
+
+    if (baselineInput) baselineInput.addEventListener('input', calculateTanninSupplementDosing);
+    if (areaInput) areaInput.addEventListener('input', calculateTanninSupplementDosing);
+    if (unitSelect) unitSelect.addEventListener('change', calculateTanninSupplementDosing);
+
+    if (els.species) {
+      els.species.addEventListener('change', () => {
+        if (baselineInput && els.customTannin) {
+          baselineInput.value = els.customTannin.value;
+          calculateTanninSupplementDosing();
+        }
+      });
+    }
+    if (els.customTannin) {
+      els.customTannin.addEventListener('input', () => {
+        if (baselineInput) {
+          baselineInput.value = els.customTannin.value;
+          calculateTanninSupplementDosing();
+        }
+      });
+    }
+  }
+
+  // Multi-Species Batch Scenario Comparison Matrix
+  const SPECIES_DB = {
+    'white-oak': { name: 'White Oak', bot: 'Quercus alba', tannin: 85, color: '#C8AD7F', ringPorous: true, earlywoodMult: 1.08 },
+    'red-oak': { name: 'Red Oak', bot: 'Quercus rubra', tannin: 60, color: '#CCA283', ringPorous: true, earlywoodMult: 1.08 },
+    'american-walnut': { name: 'American Walnut', bot: 'Juglans nigra', tannin: 55, color: '#6E533C', ringPorous: false, earlywoodMult: 1.03 },
+    'ash': { name: 'European Ash', bot: 'Fraxinus excelsior', tannin: 40, color: '#D6C4A2', ringPorous: true, earlywoodMult: 1.07 },
+    'black-cherry': { name: 'Black Cherry', bot: 'Prunus serotina', tannin: 30, color: '#BF7D55', ringPorous: false, earlywoodMult: 1.02 },
+    'european-beech': { name: 'European Beech', bot: 'Fagus sylvatica', tannin: 25, color: '#D9B793', ringPorous: false, earlywoodMult: 1.02 },
+    'hard-maple': { name: 'Hard Maple', bot: 'Acer saccharum', tannin: 12, color: '#E7D3AD', ringPorous: false, earlywoodMult: 1.01 },
+    'white-pine': { name: 'Eastern White Pine', bot: 'Pinus strobus', tannin: 8, color: '#EED59B', ringPorous: false, earlywoodMult: 1.00 }
+  };
+
+  function computeSpeciesComparison(speciesKey, brew) {
+    const sp = SPECIES_DB[speciesKey] || SPECIES_DB['white-oak'];
+    const feNorm = Math.min(1.15, brew.dissolvedFeMolarity / 0.28);
+    const tanninNorm = Math.min(1.1, sp.tannin / 75);
+    const coats = parseInt(els.coats.value, 10) || 2;
+    const singleCoatYield = Math.min(0.88, 0.80 * tanninNorm * Math.min(1.0, feNorm));
+    const coatSaturation = 1 - Math.pow(1 - singleCoatYield, coats);
+    const dryTime = parseFloat(els.dryTime.value) || 2.0;
+    const dryFactor = Math.min(1.0, 0.97 + (dryTime / 12) * 0.03);
+    const intensity = Math.min(0.98, coatSaturation * dryFactor);
+    const darknessPct = Math.round(intensity * 100);
+
+    const baseRgb = hexToRgb(sp.color);
+    const ebonizedTarget = { r: 16, g: 17, b: 20 };
+    const latewoodTarget = { r: 18, g: 18, b: 20 };
+    const earlywoodIntensity = Math.min(0.985, intensity * sp.earlywoodMult);
+    const latewoodIntensity = Math.min(0.97, intensity * 0.94);
+    const earlywoodRgb = lerpColor(baseRgb, ebonizedTarget, earlywoodIntensity);
+    const latewoodRgb = lerpColor(baseRgb, latewoodTarget, latewoodIntensity);
+    const earlyHex = rgbToHex(earlywoodRgb.r, earlywoodRgb.g, earlywoodRgb.b);
+    const lateHex = rgbToHex(latewoodRgb.r, latewoodRgb.g, latewoodRgb.b);
+
+    let contrastRatio;
+    if (sp.ringPorous) {
+      contrastRatio = `${(1.5 + (sp.tannin / 100) * 1.1).toFixed(2)}:1 (High Ring-Porous)`;
+    } else if (sp.tannin > 40) {
+      contrastRatio = `${(1.15 + (sp.tannin / 100) * 0.35).toFixed(2)}:1 (Moderate Contrast)`;
+    } else {
+      contrastRatio = `${(1.02 + (sp.tannin / 100) * 0.2).toFixed(2)}:1 (Diffuse / Low)`;
+    }
+
+    let urgency = 'Standard (15 g/L rinse in 2h)';
+    if (brew.residualAcidPct > 1.8) {
+      urgency = sp.ringPorous ? 'Critical (<1.5h wash, 25 g/L NaHCO₃)' : 'High (<3h wash, 20 g/L NaHCO₃)';
+    } else if (brew.residualAcidPct > 0.8) {
+      urgency = sp.ringPorous ? 'Standard (Wash within 2h, 15 g/L)' : 'Moderate (Wash within 4h, 12 g/L)';
+    } else {
+      urgency = sp.tannin > 50 ? 'Low (Standard 10-15 g/L rinse)' : 'Minimal (Quick wipe 10 g/L)';
+    }
+
+    return { sp, darknessPct, earlyHex, lateHex, contrastRatio, urgency };
+  }
+
+  function renderSpeciesComparator() {
+    const s1 = document.getElementById('compSpecies1')?.value || 'white-oak';
+    const s2 = document.getElementById('compSpecies2')?.value || 'american-walnut';
+    const s3 = document.getElementById('compSpecies3')?.value || 'hard-maple';
+    const brew = calculateChemistry();
+
+    const r1 = computeSpeciesComparison(s1, brew);
+    const r2 = computeSpeciesComparison(s2, brew);
+    const r3 = computeSpeciesComparison(s3, brew);
+    const cols = [r1, r2, r3];
+
+    const thead = document.getElementById('comparatorHeaderRow');
+    const tbody = document.getElementById('comparatorBody');
+    if (!thead || !tbody) return;
+
+    thead.innerHTML = cols.map(c => `
+      <th>
+        <div>${c.sp.name}</div>
+        <div style="font-size:0.75rem; color:var(--text-muted); font-style:italic;">${c.sp.bot}</div>
+      </th>
+    `).join('');
+
+    tbody.innerHTML = `
+      <tr class="comp-section-row"><td colspan="3">Simulated Swatches (Raw vs Reacted Earlywood)</td></tr>
+      <tr>
+        ${cols.map(c => `
+          <td>
+            <div class="comp-swatch-pair">
+              <div class="comp-swatch-item">
+                <div class="comp-swatch-chip" style="background:${c.sp.color};" title="Raw Substrate"></div>
+                <div><span style="font-size:0.72rem;color:var(--text-dim);">Raw:</span> <strong style="font-family:var(--mono);font-size:0.8rem;">${c.sp.color}</strong></div>
+              </div>
+              <div class="comp-swatch-item">
+                <div class="comp-swatch-chip" style="background:${c.earlyHex};" title="Reacted Earlywood"></div>
+                <div><span style="font-size:0.72rem;color:var(--text-dim);">Ebonized:</span> <strong style="font-family:var(--mono);font-size:0.8rem;">${c.earlyHex}</strong></div>
+              </div>
+            </div>
+          </td>
+        `).join('')}
+      </tr>
+      <tr class="comp-section-row"><td colspan="3">Reaction Darkness Rating</td></tr>
+      <tr>
+        ${cols.map(c => `
+          <td>
+            <div style="font-size:1.2rem; font-weight:700; font-family:var(--mono); color:var(--accent);">${c.darknessPct}%</div>
+            <div style="font-size:0.73rem; color:var(--text-dim);">Under ${brew.dissolvedFeMolarity.toFixed(2)} M Fe²⁺</div>
+          </td>
+        `).join('')}
+      </tr>
+      <tr class="comp-section-row"><td colspan="3">Pore Contrast Ratio</td></tr>
+      <tr>
+        ${cols.map(c => `<td><strong style="font-family:var(--mono);">${c.contrastRatio}</strong></td>`).join('')}
+      </tr>
+      <tr class="comp-section-row"><td colspan="3">Neutralization Urgency</td></tr>
+      <tr>
+        ${cols.map(c => `<td><span style="font-size:0.78rem; font-weight:600;">${c.urgency}</span></td>`).join('')}
+      </tr>
+    `;
+  }
+
+  function runSpeciesComparator() {
+    const noticeEl = document.getElementById('comparatorProNotice');
+    const tableWrap = document.getElementById('comparatorTableWrap');
+    if (!PRO) {
+      if (noticeEl) {
+        noticeEl.innerHTML = `Available in the full version <a href="${PRO_LINK}">Unlock</a>`;
+        noticeEl.style.display = 'inline-flex';
+      }
+      return;
+    }
+    if (noticeEl) noticeEl.style.display = 'none';
+    if (tableWrap) tableWrap.style.display = 'block';
+    renderSpeciesComparator();
+  }
+
+  function setupSpeciesComparator() {
+    const btn = document.getElementById('btnRunComparator');
+    if (btn) btn.addEventListener('click', runSpeciesComparator);
+    ['compSpecies1', 'compSpecies2', 'compSpecies3'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('change', runSpeciesComparator);
+    });
+    if (PRO) {
+      runSpeciesComparator();
+    } else {
+      const noticeEl = document.getElementById('comparatorProNotice');
+      if (noticeEl) {
+        noticeEl.innerHTML = `Available in the full version <a href="${PRO_LINK}">Unlock</a>`;
+        noticeEl.style.display = 'inline-flex';
+      }
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    init();
+    setupTanninSolver();
+    calculateTanninSupplementDosing();
+    setupSpeciesComparator();
+  });
+// FEATURE-JS
+</script>
+
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This interactive tool calculates precise iron acetate formulations, supplemental tannin dosing, and neutralization washes for wood finishing. Designed for woodworkers and luthiers, it lets you simulate grain contrast and darkness across various wood species before applying reactive chemical finishes to raw lumber.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your lumber species to load its natural baseline tannin profile.</li><li>Input batch volume to calculate required supplemental tannin powder and hot water dosing.</li><li>Set vinegar concentration and steel wool mass to calculate steep time and residual acidity.</li><li>Review the simulated grain contrast preview and print your bench formulation sheet.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">Iron chemistry: acetates for ebonizing wood</h4><p style="margin:0">You enter: Vinegar type and acetic acid concentration (e.g., standard 5% white vinegar) · Volume of vinegar prepared (e.g., 500 mL) · Mass of degreased #0000 steel wool added (e.g., 15 grams) · Target wood species (e.g., White Oak vs. Sugar Maple) · Number of steeping days allowed for the iron-acid bath.<br>You get: The resulting iron acetate concentration, reaction completion percentage, remaining unreacted acetic acid level, predicted wood color transformation (natural wood tone to ebonized black/charcoal hex value), splotch risk rating, and exact post-ebonizing neutralization recipe (baking soda wash ratio) to prevent acid damage and finish failure.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What is the chemical reaction between iron acetate and wood tannins?</h4><p style="margin:0">Steel wool reacts with acetic acid in vinegar to form iron(II) acetate. When applied to wood, the dissolved iron bonds with polyphenolic compounds (tannins) inside the wood cell structure, oxidizing into ferric tannate, an insoluble organometallic pigment that dyes the wood grain pitch black.</p><h4 style="font-size:16px;margin:16px 0 4px">Why did my iron acetate turn wood gray or purple instead of deep black?</h4><p style="margin:0">Species like pine, maple, poplar, and birch naturally contain very few tannins. Without sufficient polyphenols to bond with the iron, the reaction yields a weak gray or blotchy purple. Applying a pre-wash of dissolved tannin powder (such as quebracho or chestnut) restores the stoichiometric balance needed for deep black.</p><h4 style="font-size:16px;margin:16px 0 4px">How does residual iron acetate acid damage finishes, and how do I prevent it?</h4><p style="margin:0">Incompletely reacted iron solutions contain leftover acetic acid that remains in the wood grain. This acidity inhibits drying oils like linseed or tung oil from polymerizing and can degrade shellac or lacquer. Wiping the thoroughly dried piece with a mild sodium bicarbonate (baking soda) wash neutralizes residual acid.</p><h4 style="font-size:16px;margin:16px 0 4px">How do I know when an iron acetate batch is fully reacted?</h4><p style="margin:0">The steep is ready when hydrogen gas bubbles stop forming, the liquid turns amber-gray, and the steel wool has largely dissolved. Using a slight excess of steel wool ensures all acetic acid is consumed. Always filter through paper coffee filters before bench application to remove settled iron sludge.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/teqml" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../multivariate-card-game-opening-hand-simulator/" style="color:inherit;font-weight:600">Multi-Card Hypergeometric Opening Hand Simulator</a>: Calculate exact joint opening hand odds, mulligan sequences, and draw curves offline in your browser.</li><li><a href="../microcontroller-adc-filter-and-moving-average-lab/" style="color:inherit;font-weight:600">MCU Sensor Noise Filter &amp; Moving Average Tuner</a>: Real-time DSP bench to simulate filters, solve latency budgets, and generate zero-dependency MCU C++ code.</li><li><a href="../3d-printer-mechanical-geometry-calibrator/" style="color:inherit;font-weight:600">3D Printer Geometry &amp; Squaring Tool</a>: Eliminate frame skew, calculate M852 &amp; M92 values, and true your 3D printer geometry completely offline.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
