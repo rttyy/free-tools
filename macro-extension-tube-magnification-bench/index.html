@@ -1,0 +1,2378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+  --bg-primary: #0f141c;
+  --bg-secondary: #18202c;
+  --bg-tertiary: #222c3d;
+  --bg-card: #1b2432;
+  --border-color: #2b394f;
+  --border-highlight: #3b82f6;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --accent-blue: #38bdf8;
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-emerald: #10b981;
+  --accent-purple: #a855f7;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f1f5f9;
+    --bg-card: #ffffff;
+    --border-color: #cbd5e1;
+    --border-highlight: #2563eb;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --text-dim: #64748b;
+    --accent-blue: #0284c7;
+    --accent-amber: #d97706;
+    --accent-red: #dc2626;
+    --accent-emerald: #059669;
+    --accent-purple: #7c3aed;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  line-height: 1.5;
+  padding: 16px;
+  font-size: 14px;
+  min-height: 100vh;
+}
+
+.app-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Header & Controls */
+header.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.brand-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  color: var(--accent-blue);
+}
+
+.brand-title h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.brand-title p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+button, select, input {
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-tertiary);
+  color: var(--text-main);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.btn:hover {
+  background: var(--border-color);
+  border-color: var(--text-dim);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 1px;
+}
+
+.btn-primary {
+  background: var(--accent-blue);
+  color: #ffffff;
+  border-color: var(--accent-blue);
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+/* Preset Bar */
+.preset-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.preset-bar label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.preset-select {
+  flex: 1;
+  min-width: 180px;
+  max-width: 100%;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+
+/* Visualizer Bench */
+[data-feature="working-distance-optical-bench"] {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bench-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.bench-title {
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bench-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+.bench-metric-chip {
+  padding: 4px 8px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.bench-svg-wrap {
+  width: 100%;
+  height: 240px;
+  background: #090d14;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  position: relative;
+}
+
+#optical-bench-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.bench-warning-banner {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background-color: rgba(239, 68, 68, 0.15);
+  border: 1px solid var(--accent-red);
+  color: var(--accent-red);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* Grid layout for remaining capabilities */
+.lab-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .lab-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.lab-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Form Styles */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-group input, .form-group select {
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-tertiary);
+  color: var(--text-main);
+  font-size: 0.85rem;
+}
+
+.form-group input:focus, .form-group select:focus {
+  outline: 2px solid var(--accent-blue);
+  border-color: transparent;
+}
+
+.tube-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.tube-check-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  background: var(--bg-tertiary);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  font-size: 0.8rem;
+}
+
+.tube-check-label input {
+  cursor: pointer;
+}
+
+/* Output metric tables / rows */
+.stats-badge-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.stat-item {
+  padding: 8px 10px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-val {
+  font-family: var(--font-mono);
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+  font-weight: 700;
+  color: var(--text-main);
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+.stat-sub {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.badge-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.tag-green { background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); border: 1px solid var(--accent-emerald); }
+.tag-amber { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+.tag-red { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); }
+.tag-purple { background: rgba(168, 85, 247, 0.2); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+
+/* Live Advice / Insights card */
+.insights-box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+.insights-box h3 {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.insights-content {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.insights-content p + p {
+  margin-top: 8px;
+}
+
+.disclaimer-note {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  border-top: 1px dashed var(--border-color);
+  padding-top: 8px;
+  margin-top: 12px;
+}
+
+.pro-modal-msg {
+  display: none;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--accent-amber);
+  color: var(--accent-amber);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  margin-left: auto;
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    padding: 0;
+  }
+  .app-header button, .preset-bar button, .header-actions {
+    display: none !important;
+  }
+  .lab-card, [data-feature="working-distance-optical-bench"], .preset-bar {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+}
+.reverse-macro-panel {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: var(--bg-tertiary);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.reverse-macro-panel.active {
+  border-color: var(--accent-blue);
+  background: rgba(56, 189, 248, 0.06);
+}
+.rev-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.rev-toggle-label {
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.rev-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  margin-top: 4px;
+}
+.rev-stat-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-color);
+  padding-top: 8px;
+  margin-top: 6px;
+}
+.rev-stat-strip strong {
+  color: var(--accent-blue);
+  font-family: var(--font-mono);
+}
+/* Target Magnification Reverse Solver Drawer */
+[data-feature="target-magnification-reverse-solver"] {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.solver-drawer summary {
+  cursor: pointer;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  user-select: none;
+  list-style: none;
+}
+.solver-drawer summary::-webkit-details-marker { display: none; }
+.solver-body {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 12px;
+}
+.solver-order-badge {
+  font-family: var(--font-mono);
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid var(--accent-blue);
+  color: var(--accent-blue);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  display: inline-block;
+}
+.sweep-chart-container { display: flex; flex-direction: column; gap: 8px; }
+.sweep-legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.78rem; color: var(--text-muted); justify-content: center; margin-top: 2px; }
+.legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.legend-color { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+
+/* Multi-Scenario Matrix & Field Card Export */
+[data-feature="macro-exposure-flash-scenario-export"] {
+  order: 99;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.matrix-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.matrix-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+}
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  text-align: left;
+}
+.matrix-table th, .matrix-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+.matrix-table th {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+.matrix-table tr:hover td {
+  background: rgba(56, 189, 248, 0.04);
+}
+.matrix-empty-cell {
+  text-align: center;
+  color: var(--text-dim);
+  padding: 18px !important;
+  font-style: italic;
+}
+.pocket-card-preview {
+  margin-top: 8px;
+  padding: 12px;
+  background: var(--bg-tertiary);
+  border: 1px dashed var(--accent-blue);
+  border-radius: var(--radius-md);
+}
+.pocket-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+}
+.pocket-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+}
+.field-pocket-chip {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  font-size: 0.78rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-pocket-chip strong {
+  color: var(--accent-blue);
+  font-size: 0.85rem;
+}
+/* FEATURE-CSS */
+</style>
+<title>Calculate Extension Tube Macro Magnification &amp; Optics</title>
+<meta name="description" content="Free tool to calculate extension tube magnification, effective f-stop, working distance, and Airy disk diffraction limits. Offline lab available.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/macro-extension-tube-magnification-bench/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/macro-extension-tube-magnification-bench/">
+<meta property="og:title" content="Calculate Extension Tube Macro Magnification &amp; Optics"><meta property="og:description" content="Free tool to calculate extension tube magnification, effective f-stop, working distance, and Airy disk diffraction limits. Offline lab available.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/macro-extension-tube-magnification-bench/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Calculate Extension Tube Macro Magnification & Optics","description":"Free tool to calculate extension tube magnification, effective f-stop, working distance, and Airy disk diffraction limits. Offline lab available.","url":"https://rttyy.github.io/free-tools/macro-extension-tube-magnification-bench/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How can I calculate what the effect of an extension tube will be?","acceptedAnswer":{"@type":"Answer","text":"The general formula is New Magnification = Native Magnification + (Extension Tube Length / Lens Focal Length). For example, adding a 25mm tube to a 50mm lens with a native 0.15x magnification yields approximately 0.15 + (25 / 50) = 0.65x magnification. Note that this formula assumes a simple lens design; internal focusing lenses will vary slightly."}},{"@type":"Question","name":"How does a teleconverter affect depth of field?","acceptedAnswer":{"@type":"Answer","text":"A teleconverter magnifies the image produced by the prime lens without changing the lens's physical distance to the subject. Because depth of field is governed primarily by aperture and reproduction ratio on the sensor, multiplying your focal length increases subject magnification, which proportionally reduces optical depth of field for any given camera position and marked f-stop."}},{"@type":"Question","name":"Why isn't this portrait taken at f/29 sharp?","acceptedAnswer":{"@type":"Answer","text":"At f/29, optical diffraction severely limits resolution. When an aperture narrows to that degree, light waves bend around the diaphragm edges and spread into Airy disks that are significantly larger than the individual pixels on your camera sensor. Even with a high-end lens, this physical phenomenon blurs fine detail and lowers overall image contrast."}},{"@type":"Question","name":"What is the difference between marked f-stop and effective f-stop in macro photography?","acceptedAnswer":{"@type":"Answer","text":"Marked f-stop is the aperture ratio set on your lens barrel or camera dial when focused at infinity. Effective f-stop accounts for the physical distance between the rear lens element and the sensor as you focus closer or add extension tubes ($f_{eff} \\approx f_{marked} \\times [1 + m]$). At 1:1 magnification, an aperture set to f/8 transmits light and creates diffraction equivalent to f/16."}}]}</script>
+</head>
+<body>
+
+<div class="app-container">
+  <header class="app-header">
+    <div class="brand-title">
+      <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="9"/>
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M12 3v3M12 18v3M3 12h3M18 12h3"/>
+      </svg>
+      <div>
+        <h1>Macro Photography Extension Tube &amp; Magnification Lab</h1>
+        <p>Optical bench, working distance clearance, effective f-stop, and Airy disk diffraction simulator</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span id="proMsg" class="pro-modal-msg"></span>
+      <button type="button" class="btn" id="btnCopyReport" title="Copy optical summary text">
+        <span>📋</span> Copy Report
+      </button>
+      <button type="button" class="btn" id="btnExportJSON" title="Export scenario data">
+        <span>💾</span> Export JSON
+      </button>
+      <button type="button" class="btn" id="btnExportCSV" title="Export metrics to CSV">
+        <span>📊</span> Export CSV
+      </button>
+      <button type="button" class="btn" id="btnPrint" title="Print optical spec sheet">
+        <span>🖨️</span> Print
+      </button>
+      <button type="button" class="btn" id="btnReset" title="Reset all fields to defaults">
+        <span>🔄</span> Reset
+      </button>
+    </div>
+  </header>
+
+  <!-- Presets Selection Bar -->
+  <div class="preset-bar">
+    <label for="scenarioPreset">Lab Scenario Preset:</label>
+    <select id="scenarioPreset" class="preset-select">
+      <option value="preset-50mm">50mm Standard Lens + 36mm Tube Stack (Healthy Enthusiast Macro)</option>
+      <option value="preset-100mm">100mm Dedicated Macro + 36mm Extension (Ultra Close-up 1.36:1)</option>
+      <option value="preset-24mm">24mm Wide-Angle Lens + 20mm Tube (Collision Hazard Alert Case)</option>
+      <option value="custom">-- Custom User Configuration --</option>
+    </select>
+  </div>
+
+  <!-- CAPABILITY 4: Working Distance Optical Bench (Viewport Spanning) -->
+  <section class="optical-bench-card" data-feature="working-distance-optical-bench">
+    <div class="bench-header">
+      <div class="bench-title">
+        <span>🔬 Optical Bench &amp; Clearance Cross-Section</span>
+      </div>
+      <div class="bench-metrics">
+        <div class="bench-metric-chip">Subject MFD: <strong id="benchMfd">201 mm</strong></div>
+        <div class="bench-metric-chip">Working Distance (Glass to Subject): <strong id="benchWd">82 mm</strong></div>
+        <div class="bench-metric-chip">Total Tube Stack: <strong id="benchTubeStack">36 mm</strong></div>
+      </div>
+    </div>
+
+    <div id="collisionBanner" class="bench-warning-banner">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span id="collisionBannerText">COLLISION HAZARD: Focal plane is inside or too close to the front lens element!</span>
+    </div>
+
+    <div class="bench-svg-wrap">
+      <svg id="optical-bench-svg" viewBox="0 0 950 240" preserveAspectRatio="xMidYMid meet">
+        <!-- SVG diagram rendered via JS -->
+      </svg>
+    </div>
+  </section>
+
+  <!-- CAPABILITY: Diffraction vs Depth-of-Field Sweet Spot Chart -->
+  <section class="lab-card" data-feature="diffraction-vs-aperture-sweep-chart">
+    <div class="card-title">
+      <span>📈 Diffraction vs Depth-of-Field Aperture Sweep</span>
+      <span class="badge-tag tag-green" id="sweepSweetSpotBadge">Sweet Spot: f/5.6 – f/8.0 (f/11.2 – f/16 Eff)</span>
+    </div>
+    <div class="sweep-chart-container">
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.78rem; color:var(--text-muted);">
+        <span>Plotting Marked Apertures (f/2.8 → f/32 in 1/3 EV)</span>
+        <span id="sweepHoverInfo" style="font-family:var(--font-mono); font-weight:600; color:var(--accent-blue);">Hover points to inspect values</span>
+      </div>
+      <div class="sweep-svg-wrap">
+        <svg id="diffraction-vs-aperture-sweep-chart-svg" viewBox="0 0 900 240" preserveAspectRatio="xMidYMid meet" style="width:100%; height:220px; display:block; background:#090d14; border-radius:var(--radius-md); border:1px solid var(--border-color);"></svg>
+      </div>
+      <div class="sweep-legend">
+        <span class="legend-item"><span class="legend-color" style="background:#38bdf8;"></span> DOF (µm, Left Axis)</span>
+        <span class="legend-item"><span class="legend-color" style="background:#ef4444;"></span> Airy Disk (µm, Right Axis)</span>
+        <span class="legend-item"><span class="legend-color" style="background:#f59e0b; border: 1px stroke #f59e0b;"></span> 2× Pixel Pitch Threshold</span>
+        <span class="legend-item"><span class="legend-color" style="background:rgba(16,185,129,0.35); border:1px solid #10b981;"></span> Sharpness Sweet Spot</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPABILITY: Target Magnification & Framing Reverse Solver Drawer -->
+  <details class="solver-drawer" data-feature="target-magnification-reverse-solver" open>
+    <summary>
+      <span>🎯 Target Magnification &amp; Framing Reverse Solver</span>
+      <span class="badge-tag tag-purple" id="solverHeaderBadge">Target: 1.20x → 1.19x (0.8% error)</span>
+    </summary>
+    <div class="solver-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="solverTargetMag">Desired Reproduction Ratio (x)</label>
+          <input type="number" id="solverTargetMag" value="1.20" min="0.1" max="10.0" step="0.05">
+        </div>
+        <div class="form-group">
+          <label for="solverSubjectWidth">Target Subject Width to Fill (mm)</label>
+          <input type="number" id="solverSubjectWidth" value="30.0" min="1.0" max="200.0" step="0.5">
+        </div>
+        <div class="form-group">
+          <label for="solverTubeKit">Commercial Tube Arsenal</label>
+          <select id="solverTubeKit">
+            <option value="commercial-full" selected>Commercial Set (12, 16, 20, 36 mm)</option>
+            <option value="classic-trio">Classic Trio (12, 20, 36 mm)</option>
+            <option value="mirrorless-duo">Mirrorless Pair (10, 16 mm)</option>
+            <option value="macro-quad">Extended Set (12, 20, 24, 36 mm)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="solverSharpnessGoal">Aperture Target Goal</label>
+          <select id="solverSharpnessGoal">
+            <option value="dla" selected>Diffraction-Limited Sharpness (DLA Cap)</option>
+            <option value="sweetspot">Sweet Spot (f/5.6 - f/8 Effective)</option>
+            <option value="dof">Deep Macro DOF (Accepts Mild Softness)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="stats-badge-grid">
+        <div class="stat-item">
+          <span class="stat-label">Required Extension</span>
+          <span class="stat-val" id="solverStatRequiredExt">52.5 mm</span>
+          <span class="stat-sub" id="solverStatStackRec">Commercial stack: 52.0 mm</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Actual Mag &amp; Framing Error</span>
+          <span class="stat-val" id="solverStatActualMag">1.19x</span>
+          <span class="stat-sub" id="solverStatError">0.8% error (Target: 1.20x)</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Recommended Tube Stacking Order</span>
+          <span class="stat-val" style="font-size:0.85rem;" id="solverStatStackOrder">
+            <span class="solver-order-badge">Mount → 36mm → 16mm → Lens</span>
+          </span>
+          <span class="stat-sub">Heaviest ring closest to camera body</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Sharpness Preserving f-stop</span>
+          <span class="stat-val" id="solverStatRecFstop">f/5.6 Marked</span>
+          <span class="stat-sub" id="solverStatFstopNote">Avoids pixel diffraction limit</span>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end;">
+        <button type="button" class="btn btn-primary" id="btnApplySolverStack" title="Transfer this combination to tube calculator">
+          <span>⚡</span> Apply Recommended Stack to Bench
+        </button>
+      </div>
+    </div>
+  </details>
+
+  <!-- CAPABILITY: Multi-Scenario Matrix & Field Card Export -->
+  <section class="lab-card scenario-export-card" data-feature="macro-exposure-flash-scenario-export">
+    <div class="card-title">
+      <span>📋 Multi-Scenario Matrix &amp; Field Card Export</span>
+      <span class="badge-tag tag-purple" id="matrixCountBadge">0 / 4 Scenarios</span>
+    </div>
+
+    <div class="matrix-toolbar">
+      <button type="button" class="btn btn-primary" id="btnAddScenario" title="Snapshot current configuration">
+        <span>➕</span> Add to Comparison
+      </button>
+      <button type="button" class="btn" id="btnExportScenarioCSV" title="Export comparison matrix to CSV">
+        <span>📊</span> Export Field Reference CSV
+      </button>
+      <button type="button" class="btn" id="btnExportScenarioJSON" title="Export configurations to JSON">
+        <span>💾</span> Export JSON
+      </button>
+      <button type="button" class="btn" id="btnPrintFieldCard" title="Generate printable exposure reference card">
+        <span>📇</span> Pocket Field Exposure Card
+      </button>
+      <button type="button" class="btn" id="btnClearScenarios" title="Reset scenario matrix">
+        <span>🗑️</span> Clear
+      </button>
+      <span id="scenarioExportMsg" class="pro-modal-msg"></span>
+    </div>
+
+    <div class="matrix-table-wrap">
+      <table class="matrix-table" id="matrixComparisonTable">
+        <thead>
+          <tr>
+            <th>Scenario / Setup</th>
+            <th>Extension</th>
+            <th>Magnification</th>
+            <th>Working Distance</th>
+            <th>Effective f-stop</th>
+            <th>Light Loss EV</th>
+            <th>Diffraction Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="matrixTableBody">
+          <tr id="matrixEmptyRow">
+            <td colspan="8" class="matrix-empty-cell">No scenarios snapshotted yet. Click 'Add to Comparison' to compare up to 4 optical configurations side-by-side.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="pocketFieldCardView" class="pocket-card-preview" style="display:none;">
+      <div class="pocket-card-header">
+        <strong>🏷️ Pocket Field Exposure Card Preview</strong>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn btn-primary" id="btnConfirmPrintCard" style="padding:3px 8px;font-size:0.75rem;">Print Card</button>
+          <button type="button" class="btn" id="btnCloseCardPreview" style="padding:3px 8px;font-size:0.75rem;">Close</button>
+        </div>
+      </div>
+      <div class="pocket-card-grid" id="pocketCardContent"></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+
+  <div class="lab-grid">
+    <!-- CAPABILITY 1: Tube Stack & Magnification Calculator -->
+    <section class="lab-card" data-feature="tube-stack-magnification-calculator">
+      <div class="card-title">
+        <span>📐 1. Tube Stack &amp; Magnification</span>
+        <span class="badge-tag tag-purple" id="badgeReproRatio">0.87x (1:1.15)</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="focalLength">Lens Focal Length (mm)</label>
+          <input type="number" id="focalLength" value="50" min="10" max="800" step="1">
+        </div>
+        <div class="form-group">
+          <label for="nativeMag">Native Lens Magnification</label>
+          <input type="number" id="nativeMag" value="0.15" min="0" max="2.0" step="0.01">
+        </div>
+        <div class="form-group">
+          <label for="nativeMfd">Native MFD (mm)</label>
+          <input type="number" id="nativeMfd" value="450" min="50" max="3000" step="10">
+        </div>
+        <div class="form-group">
+          <label for="lensLength">Lens Physical Length (mm)</label>
+          <input type="number" id="lensLength" value="55" min="20" max="400" step="1">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Extension Tubes Stack (Hollow Rings Added):</label>
+        <div class="tube-checkboxes">
+          <label class="tube-check-label"><input type="checkbox" id="tube12" checked> 12 mm Tube</label>
+          <label class="tube-check-label"><input type="checkbox" id="tube20"> 20 mm Tube</label>
+          <label class="tube-check-label"><input type="checkbox" id="tube24" checked> 24 mm Tube</label>
+          <label class="tube-check-label"><input type="checkbox" id="tube36"> 36 mm Tube</label>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="customTube">Custom / Additional Extension (mm)</label>
+          <input type="number" id="customTube" value="0" min="0" max="300" step="1">
+        </div>
+        <div class="form-group">
+          <label for="cameraMount">Mount Flange Distance</label>
+          <select id="cameraMount">
+            <option value="18">Sony E (18.0 mm)</option>
+            <option value="20">Canon RF (20.0 mm)</option>
+            <option value="16">Nikon Z (16.0 mm)</option>
+            <option value="17.7">Fujifilm X (17.7 mm)</option>
+            <option value="19.25">Micro 4/3 (19.25 mm)</option>
+            <option value="44">Canon EF (44.0 mm)</option>
+            <option value="46.5">Nikon F (46.5 mm)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="stats-badge-grid">
+        <div class="stat-item">
+          <span class="stat-label">Total Tube Extension</span>
+          <span class="stat-val" id="statTotalTube">36.0 mm</span>
+          <span class="stat-sub">Physical spacing added</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Magnification Gain</span>
+          <span class="stat-val" id="statMagGain">+0.72x</span>
+          <span class="stat-sub">Extension / Focal length</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Total Magnification</span>
+          <span class="stat-val" id="statTotalMag">0.87x</span>
+          <span class="stat-sub" id="statRatioText">1:1.15 reproduction</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Framed Subject Area</span>
+          <span class="stat-val" id="statFramedField">41.4 × 27.6 mm</span>
+          <span class="stat-sub" id="statSensorName">On 36×24 mm Full Frame</span>
+        </div>
+      </div>
+
+      <!-- REVERSE LENS MACRO MODE SUB-PANEL -->
+      <div class="reverse-macro-panel" id="revMacroPanel" data-feature="reverse-lens-macro-mode">
+        <div class="rev-toggle-row">
+          <label class="rev-toggle-label" for="revToggle">
+            <input type="checkbox" id="revToggle">
+            <span>🔄 Reverse Lens Macro Mode</span>
+          </label>
+          <span class="badge-tag tag-purple" id="revStatusBadge" style="display:none;">Reversed Active</span>
+        </div>
+        <div id="revControls" style="display:none;">
+          <div class="rev-fields-grid">
+            <div class="form-group">
+              <label for="revFocalLength">Reverse Lens Focal (mm)</label>
+              <input type="number" id="revFocalLength" value="50" min="10" max="300" step="1">
+            </div>
+            <div class="form-group">
+              <label for="revFilterOffset">Filter Ring Offset (mm)</label>
+              <input type="number" id="revFilterOffset" value="0" min="0" max="40" step="0.5">
+            </div>
+            <div class="form-group">
+              <label for="revLensFlange">Rear-to-Front Flange (mm)</label>
+              <input type="number" id="revLensFlange" value="44" min="10" max="150" step="1">
+            </div>
+          </div>
+          <div class="rev-stat-strip">
+            <span>Inverted Mag (M_rev): <strong id="statRevMag">1.28x</strong></span>
+            <span>Corrected Pupil (1/P): <strong id="statRevPupil">1.00</strong></span>
+            <span>Rear Working Distance: <strong id="statRevWd">45.1 mm</strong></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAPABILITY 2: Effective Aperture & Optical Light-Falloff Engine -->
+    <section class="lab-card" data-feature="effective-aperture-exposure-engine">
+      <div class="card-title">
+        <span>🔆 2. Effective Aperture &amp; Light Loss</span>
+        <span class="badge-tag tag-amber" id="badgeEffAperture">f/7.48 Eff.</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="markedAperture">Marked Lens Aperture (f-stop)</label>
+          <select id="markedAperture">
+            <option value="1.4">f/1.4</option>
+            <option value="2.0">f/2.0</option>
+            <option value="2.8">f/2.8</option>
+            <option value="4.0" selected>f/4.0</option>
+            <option value="5.6">f/5.6</option>
+            <option value="8.0">f/8.0</option>
+            <option value="11.0">f/11.0</option>
+            <option value="16.0">f/16.0</option>
+            <option value="22.0">f/22.0</option>
+            <option value="29.0">f/29.0</option>
+            <option value="32.0">f/32.0</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="pupilFactor">Pupil Magnification (P)</label>
+          <input type="number" id="pupilFactor" value="1.0" min="0.5" max="2.0" step="0.05" title="Symmetric lens = 1.0, Retrofocus wide = 1.2+, Telephoto = 0.8">
+        </div>
+      </div>
+
+      <div class="stats-badge-grid">
+        <div class="stat-item">
+          <span class="stat-label">Effective Working f-stop</span>
+          <span class="stat-val" id="statEffFstop">f/7.48</span>
+          <span class="stat-sub">N * (1 + M / P)</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Exposure Value Loss</span>
+          <span class="stat-val" id="statEvLoss">+1.80 EV</span>
+          <span class="stat-sub">Light falloff on sensor</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Exposure Time Multiplier</span>
+          <span class="stat-val" id="statTimeMult">3.50×</span>
+          <span class="stat-sub">Longer shutter or flash boost</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">ISO Equivalent Shift</span>
+          <span class="stat-val" id="statIsoShift">ISO 100 → 350</span>
+          <span class="stat-sub">To preserve shutter speed</span>
+        </div>
+      </div>
+
+      <div class="stat-sub" style="margin-top:4px;">
+        <em>Notice:</em> Camera TTL metering automatically detects light loss, but manual flash power or studio strobe calculations must increase output by the exact EV stops shown.
+      </div>
+    </section>
+
+    <!-- CAPABILITY 3: Airy Disk Diffraction & Pixel Pitch Analyzer -->
+    <section class="lab-card" data-feature="airy-disk-diffraction-analyzer">
+      <div class="card-title">
+        <span>✨ 3. Airy Disk Diffraction Analyzer</span>
+        <span class="badge-tag tag-green" id="badgeDiffraction">Diffraction Free</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="sensorPreset">Camera Sensor Preset</label>
+          <select id="sensorPreset">
+            <option value="ff-24" selected>Full Frame 24MP (5.94 µm pitch, 36×24mm)</option>
+            <option value="ff-45">Full Frame 45MP (4.39 µm pitch, 36×24mm)</option>
+            <option value="ff-61">Full Frame 61MP (3.76 µm pitch, 36×24mm)</option>
+            <option value="apsc-26">APS-C 26MP (3.76 µm pitch, 23.5×15.6mm)</option>
+            <option value="apsc-40">APS-C 40MP (3.04 µm pitch, 23.5×15.6mm)</option>
+            <option value="m43-20">Micro Four Thirds 20MP (3.33 µm pitch, 17.3×13mm)</option>
+            <option value="inch-20">1-inch 20MP (2.41 µm pitch, 13.2×8.8mm)</option>
+            <option value="custom">Custom Sensor Specs</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="customPitch">Pixel Pitch (µm)</label>
+          <input type="number" id="customPitch" value="5.94" min="1.0" max="15.0" step="0.01">
+        </div>
+      </div>
+
+      <div class="stats-badge-grid">
+        <div class="stat-item">
+          <span class="stat-label">Airy Disk Blur Diameter</span>
+          <span class="stat-val" id="statAiryDiam">10.04 µm</span>
+          <span class="stat-sub">At λ = 550 nm (green light)</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Blur-to-Pixel Ratio</span>
+          <span class="stat-val" id="statPixelCoverage">1.69× pitch</span>
+          <span class="stat-sub" id="statPixelsSpanned">Spans ~2.2 sensor pixels</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Optical Resolving Power</span>
+          <span class="stat-val" id="statMaxMp">24.0 MP</span>
+          <span class="stat-sub" id="statMpLimitLabel">Unconstrained by diffraction</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Diffraction Threshold</span>
+          <span class="stat-val" id="statDlaAperture">f/7.0 Marked</span>
+          <span class="stat-sub">DLA before pixel softness</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Synthesis & Advice Section -->
+    <section class="insights-box" data-feature="macro-insights-advisor">
+      <h3>
+        <span>💡 What this means / What to do next</span>
+      </h3>
+      <div class="insights-content" id="insightDynamicText">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="disclaimer-note">
+        <strong>Optical Engineering Note:</strong> Formulas assume standard optical centers and paraxial approximations for symmetrical or retrofocus lenses. Working distance varies slightly with internal focusing movements. Estimate only - verify with a qualified professional before relying on it.
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+const PRO = false;
+const PRO_LINK = "https://ferrywave73.gumroad.com/l/rpyndv";
+
+// PRESET SCENARIO DATA
+const PRESETS = {
+  "preset-50mm": {
+    focalLength: 50,
+    nativeMag: 0.15,
+    nativeMfd: 450,
+    lensLength: 55,
+    flange: 18, // Sony E
+    aperture: 4.0,
+    pupil: 1.0,
+    sensor: "ff-24",
+    tubes: [12, 24],
+    customTube: 0
+  },
+  "preset-100mm": {
+    focalLength: 100,
+    nativeMag: 1.00,
+    nativeMfd: 300,
+    lensLength: 120,
+    flange: 20, // Canon RF
+    aperture: 8.0,
+    pupil: 1.0,
+    sensor: "ff-45",
+    tubes: [36],
+    customTube: 0
+  },
+  "preset-24mm": {
+    focalLength: 24,
+    nativeMag: 0.14,
+    nativeMfd: 250,
+    lensLength: 75,
+    flange: 16, // Nikon Z
+    aperture: 11.0,
+    pupil: 1.0,
+    sensor: "apsc-26",
+    tubes: [20],
+    customTube: 0
+  }
+};
+
+const SENSOR_SPECS = {
+  "ff-24": { name: "Full Frame 24MP", width: 36, height: 24, pitch: 5.94, mp: 24.2 },
+  "ff-45": { name: "Full Frame 45MP", width: 36, height: 24, pitch: 4.39, mp: 45.0 },
+  "ff-61": { name: "Full Frame 61MP", width: 36, height: 24, pitch: 3.76, mp: 61.0 },
+  "apsc-26": { name: "APS-C 26MP", width: 23.5, height: 15.6, pitch: 3.76, mp: 26.1 },
+  "apsc-40": { name: "APS-C 40MP", width: 23.5, height: 15.6, pitch: 3.04, mp: 40.2 },
+  "m43-20": { name: "Micro Four Thirds 20MP", width: 17.3, height: 13.0, pitch: 3.33, mp: 20.4 },
+  "inch-20": { name: "1-inch 20MP", width: 13.2, height: 8.8, pitch: 2.41, mp: 20.1 },
+  "custom": { name: "Custom Sensor", width: 36, height: 24, pitch: 5.94, mp: 24.0 }
+};
+
+// DOM ELEMENT REFERENCES
+const els = {
+  scenarioPreset: document.getElementById('scenarioPreset'),
+  focalLength: document.getElementById('focalLength'),
+  nativeMag: document.getElementById('nativeMag'),
+  nativeMfd: document.getElementById('nativeMfd'),
+  lensLength: document.getElementById('lensLength'),
+  cameraMount: document.getElementById('cameraMount'),
+  tube12: document.getElementById('tube12'),
+  tube20: document.getElementById('tube20'),
+  tube24: document.getElementById('tube24'),
+  tube36: document.getElementById('tube36'),
+  customTube: document.getElementById('customTube'),
+  markedAperture: document.getElementById('markedAperture'),
+  pupilFactor: document.getElementById('pupilFactor'),
+  sensorPreset: document.getElementById('sensorPreset'),
+  customPitch: document.getElementById('customPitch'),
+
+  // Outputs
+  badgeReproRatio: document.getElementById('badgeReproRatio'),
+  statTotalTube: document.getElementById('statTotalTube'),
+  statMagGain: document.getElementById('statMagGain'),
+  statTotalMag: document.getElementById('statTotalMag'),
+  statRatioText: document.getElementById('statRatioText'),
+  statFramedField: document.getElementById('statFramedField'),
+  statSensorName: document.getElementById('statSensorName'),
+
+  badgeEffAperture: document.getElementById('badgeEffAperture'),
+  statEffFstop: document.getElementById('statEffFstop'),
+  statEvLoss: document.getElementById('statEvLoss'),
+  statTimeMult: document.getElementById('statTimeMult'),
+  statIsoShift: document.getElementById('statIsoShift'),
+
+  badgeDiffraction: document.getElementById('badgeDiffraction'),
+  statAiryDiam: document.getElementById('statAiryDiam'),
+  statPixelCoverage: document.getElementById('statPixelCoverage'),
+  statPixelsSpanned: document.getElementById('statPixelsSpanned'),
+  statMaxMp: document.getElementById('statMaxMp'),
+  statMpLimitLabel: document.getElementById('statMpLimitLabel'),
+  statDlaAperture: document.getElementById('statDlaAperture'),
+
+  benchMfd: document.getElementById('benchMfd'),
+  benchWd: document.getElementById('benchWd'),
+  benchTubeStack: document.getElementById('benchTubeStack'),
+  collisionBanner: document.getElementById('collisionBanner'),
+  collisionBannerText: document.getElementById('collisionBannerText'),
+  benchSvg: document.getElementById('optical-bench-svg'),
+  insightDynamicText: document.getElementById('insightDynamicText'),
+
+  btnCopyReport: document.getElementById('btnCopyReport'),
+  btnExportJSON: document.getElementById('btnExportJSON'),
+  btnExportCSV: document.getElementById('btnExportCSV'),
+  btnPrint: document.getElementById('btnPrint'),
+  btnReset: document.getElementById('btnReset'),
+  proMsg: document.getElementById('proMsg'),
+
+  // Reverse lens controls
+  revMacroPanel: document.getElementById('revMacroPanel'),
+  revToggle: document.getElementById('revToggle'),
+  revStatusBadge: document.getElementById('revStatusBadge'),
+  revControls: document.getElementById('revControls'),
+  revFocalLength: document.getElementById('revFocalLength'),
+  revFilterOffset: document.getElementById('revFilterOffset'),
+  revLensFlange: document.getElementById('revLensFlange'),
+  statRevMag: document.getElementById('statRevMag'),
+  statRevPupil: document.getElementById('statRevPupil'),
+  statRevWd: document.getElementById('statRevWd')
+};
+
+// SAFE NUMERIC PARSER
+function getFloatInput(el, defaultVal, minVal = 0) {
+  if (!el) return defaultVal;
+  const val = parseFloat(el.value);
+  if (isNaN(val)) return defaultVal;
+  return Math.max(minVal, val);
+}
+
+// LOCAL STORAGE HELPERS
+function saveStateToStorage() {
+  try {
+    const state = {
+      preset: els.scenarioPreset.value,
+      focalLength: els.focalLength.value,
+      nativeMag: els.nativeMag.value,
+      nativeMfd: els.nativeMfd.value,
+      lensLength: els.lensLength.value,
+      cameraMount: els.cameraMount.value,
+      markedAperture: els.markedAperture.value,
+      pupilFactor: els.pupilFactor.value,
+      sensorPreset: els.sensorPreset.value,
+      customPitch: els.customPitch.value,
+      customTube: els.customTube.value,
+      tube12: els.tube12.checked,
+      tube20: els.tube20.checked,
+      tube24: els.tube24.checked,
+      tube36: els.tube36.checked,
+      revToggle: els.revToggle.checked,
+      revFocalLength: els.revFocalLength.value,
+      revFilterOffset: els.revFilterOffset.value,
+      revLensFlange: els.revLensFlange.value
+    };
+    localStorage.setItem('macro_lab_user_state', JSON.stringify(state));
+  } catch (e) {
+    // Storage blocked or restricted
+  }
+}
+
+function loadStateFromStorage() {
+  try {
+    const raw = localStorage.getItem('macro_lab_user_state');
+    if (!raw) return false;
+    const state = JSON.parse(raw);
+    if (!state || typeof state !== 'object') return false;
+    if (state.focalLength) els.focalLength.value = state.focalLength;
+    if (state.nativeMag) els.nativeMag.value = state.nativeMag;
+    if (state.nativeMfd) els.nativeMfd.value = state.nativeMfd;
+    if (state.lensLength) els.lensLength.value = state.lensLength;
+    if (state.cameraMount) els.cameraMount.value = state.cameraMount;
+    if (state.markedAperture) els.markedAperture.value = state.markedAperture;
+    if (state.pupilFactor) els.pupilFactor.value = state.pupilFactor;
+    if (state.sensorPreset) els.sensorPreset.value = state.sensorPreset;
+    if (state.customPitch) els.customPitch.value = state.customPitch;
+    if (state.customTube) els.customTube.value = state.customTube;
+    if (typeof state.tube12 === 'boolean') els.tube12.checked = state.tube12;
+    if (typeof state.tube20 === 'boolean') els.tube20.checked = state.tube20;
+    if (typeof state.tube24 === 'boolean') els.tube24.checked = state.tube24;
+    if (typeof state.tube36 === 'boolean') els.tube36.checked = state.tube36;
+    if (typeof state.revToggle === 'boolean') els.revToggle.checked = state.revToggle;
+    if (state.revFocalLength) els.revFocalLength.value = state.revFocalLength;
+    if (state.revFilterOffset) els.revFilterOffset.value = state.revFilterOffset;
+    if (state.revLensFlange) els.revLensFlange.value = state.revLensFlange;
+    if (state.preset) els.scenarioPreset.value = state.preset;
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+// INITIALIZATION
+function init() {
+  attachEvents();
+  if (!loadStateFromStorage()) {
+    loadPreset('preset-50mm');
+  } else {
+    recalc();
+  }
+}
+
+function attachEvents() {
+  const inputs = [
+    els.focalLength, els.nativeMag, els.nativeMfd, els.lensLength,
+    els.cameraMount, els.tube12, els.tube20, els.tube24, els.tube36,
+    els.customTube, els.markedAperture, els.pupilFactor, els.customPitch,
+    els.revToggle, els.revFocalLength, els.revFilterOffset, els.revLensFlange
+  ];
+
+  inputs.forEach(el => {
+    el.addEventListener('input', () => {
+      els.scenarioPreset.value = 'custom';
+      recalc();
+    });
+    el.addEventListener('change', () => {
+      els.scenarioPreset.value = 'custom';
+      recalc();
+    });
+  });
+
+  els.sensorPreset.addEventListener('change', () => {
+    const sKey = els.sensorPreset.value;
+    if (sKey !== 'custom' && SENSOR_SPECS[sKey]) {
+      els.customPitch.value = SENSOR_SPECS[sKey].pitch;
+    }
+    els.scenarioPreset.value = 'custom';
+    recalc();
+  });
+
+  els.scenarioPreset.addEventListener('change', (e) => {
+    if (e.target.value !== 'custom') {
+      loadPreset(e.target.value);
+    }
+  });
+
+  els.btnCopyReport.addEventListener('click', copySummaryReport);
+  els.btnExportJSON.addEventListener('click', exportJSON);
+  els.btnExportCSV.addEventListener('click', exportCSV);
+  els.btnPrint.addEventListener('click', handlePrint);
+  els.btnReset.addEventListener('click', () => {
+    try { localStorage.removeItem('macro_lab_user_state'); } catch(e) {}
+    loadPreset('preset-50mm');
+  });
+}
+
+function loadPreset(key) {
+  const p = PRESETS[key];
+  if (!p) return;
+  els.scenarioPreset.value = key;
+  els.focalLength.value = p.focalLength;
+  els.nativeMag.value = p.nativeMag;
+  els.nativeMfd.value = p.nativeMfd;
+  els.lensLength.value = p.lensLength;
+  els.cameraMount.value = p.flange;
+  els.markedAperture.value = p.aperture.toFixed(1);
+  els.pupilFactor.value = p.pupil;
+  els.sensorPreset.value = p.sensor;
+  els.customPitch.value = SENSOR_SPECS[p.sensor].pitch;
+  els.customTube.value = p.customTube;
+
+  els.tube12.checked = p.tubes.includes(12);
+  els.tube20.checked = p.tubes.includes(20);
+  els.tube24.checked = p.tubes.includes(24);
+  els.tube36.checked = p.tubes.includes(36);
+
+  recalc();
+}
+
+function showProNotice(msg = "Available in the full version") {
+  els.proMsg.innerHTML = `${msg} <a href="${PRO_LINK}" style="color:inherit;text-decoration:underline;font-weight:700;">Learn More</a>`;
+  els.proMsg.style.display = 'inline-block';
+  setTimeout(() => {
+    els.proMsg.style.display = 'none';
+  }, 4500);
+}
+
+// MAIN OPTICAL CALCULATION ENGINE
+function recalc() {
+  // Robust parsing fallbacks
+  const f = getFloatInput(els.focalLength, 50, 5);
+  const mNative = getFloatInput(els.nativeMag, 0.15, 0);
+  const nativeMfd = getFloatInput(els.nativeMfd, 450, 50);
+  const markedN = getFloatInput(els.markedAperture, 4.0, 1.0);
+  const lensL = getFloatInput(els.lensLength, 55, 10);
+  const ffd = getFloatInput(els.cameraMount, 18, 10);
+  const pupilP = getFloatInput(els.pupilFactor, 1.0, 0.2);
+  const customT = getFloatInput(els.customTube, 0, 0);
+
+  let tubeStack = 0;
+  if (els.tube12.checked) tubeStack += 12;
+  if (els.tube20.checked) tubeStack += 20;
+  if (els.tube24.checked) tubeStack += 24;
+  if (els.tube36.checked) tubeStack += 36;
+  tubeStack += customT;
+
+  const sensorKey = els.sensorPreset.value;
+  const sensorInfo = SENSOR_SPECS[sensorKey] || SENSOR_SPECS['ff-24'];
+  const pixelPitch = getFloatInput(els.customPitch, sensorInfo.pitch, 0.5);
+  const sensorW = sensorInfo.width;
+  const sensorH = sensorInfo.height;
+  const sensorMaxMp = sensorInfo.mp;
+
+  // Reverse Lens Macro Mode calculations
+  const isReverse = els.revToggle.checked;
+  const revF = getFloatInput(els.revFocalLength, f, 5);
+  const revOffset = getFloatInput(els.revFilterOffset, 0, 0);
+  const revFlange = getFloatInput(els.revLensFlange, 44, 5);
+
+  let magGain = 0;
+  let totalMag = 0;
+  let effectivePupilP = pupilP;
+
+  if (isReverse) {
+    els.revMacroPanel.classList.add('active');
+    els.revStatusBadge.style.display = 'inline-block';
+    els.revControls.style.display = 'block';
+
+    // Inverted magnification ratio: M_rev ≈ (Extension + Flange) / Focal Length
+    totalMag = (tubeStack + ffd + revOffset) / revF;
+    magGain = totalMag;
+    // Inverted entrance pupil geometry (P_rev = 1 / P_native)
+    effectivePupilP = 1.0 / pupilP;
+  } else {
+    els.revMacroPanel.classList.remove('active');
+    els.revStatusBadge.style.display = 'none';
+    els.revControls.style.display = 'none';
+
+    magGain = tubeStack / f;
+    totalMag = mNative + magGain;
+  }
+
+  const reproRatio1toX = totalMag > 0 ? (1 / totalMag) : 999;
+
+  // Subject dimensions in mm
+  const framedW = totalMag > 0 ? (sensorW / totalMag) : 0;
+  const framedH = totalMag > 0 ? (sensorH / totalMag) : 0;
+
+  // 2. Effective Aperture & Light loss
+  // Standard optical formula: N_eff = N * (1 + M / P)
+  const effFstop = markedN * (1 + (totalMag / effectivePupilP));
+  // Exposure compensation in EV: ΔEV = 2 * log2(1 + M / P)
+  const evLoss = 2 * Math.log2(1 + (totalMag / effectivePupilP));
+  const timeMultiplier = Math.pow(1 + (totalMag / effectivePupilP), 2);
+  const isoEquiv = Math.round(100 * timeMultiplier);
+
+  // 3. Airy Disk & Diffraction
+  // Reference wavelength λ = 550nm green light = 0.55 µm
+  const wavelengthUm = 0.55;
+  const airyDiamUm = 2.44 * wavelengthUm * effFstop; // in micrometers
+  const blurRatio = airyDiamUm / pixelPitch;
+  const pixelsCoveredArea = (Math.PI / 4) * Math.pow(blurRatio, 2);
+
+  // Diffraction limited MP estimate:
+  // Resolving capacity capped by Airy disk: area / (0.57 * airyDiam)^2
+  const sensorAreaMm2 = sensorW * sensorH;
+  const airyDiamMm = airyDiamUm / 1000;
+  const opticalResolvableSpots = sensorAreaMm2 / Math.pow(airyDiamMm * 0.56, 2);
+  const opticalMp = Math.min(sensorMaxMp, opticalResolvableSpots / 1000000);
+
+  // Diffraction classification
+  let diffBadgeText = "Diffraction Free";
+  let diffBadgeClass = "tag-green";
+  let diffStatusMsg = "";
+
+  if (blurRatio < 1.35) {
+    diffBadgeText = "Diffraction Free";
+    diffBadgeClass = "tag-green";
+    diffStatusMsg = "Tack-sharp. Sensor pixel pitch is the limiting resolving factor.";
+  } else if (blurRatio < 2.5) {
+    diffBadgeText = "Acceptable / Mild Softening";
+    diffBadgeClass = "tag-amber";
+    diffStatusMsg = "Slight softening at pixel peeping level; easily sharpenable in raw converter.";
+  } else if (blurRatio < 4.5) {
+    diffBadgeText = "Diffraction Limited";
+    diffBadgeClass = "tag-purple";
+    diffStatusMsg = "Noticeable loss of micro-contrast. Sensor resolution partially throttled.";
+  } else {
+    diffBadgeText = "Severe Softness";
+    diffBadgeClass = "tag-red";
+    diffStatusMsg = `Diffraction disk spans ~${pixelsCoveredArea.toFixed(0)} pixels. True optical resolving power throttled below ~${opticalMp.toFixed(1)} MP regardless of glass quality.`;
+  }
+
+  // DLA (Diffraction Limited Marked Aperture for this sensor):
+  // When 2.44 * 0.55 * N_eff = 1.35 * pitch => markedN = (1.35 * pitch / 1.342) / (1 + M/P)
+  const dlaMarked = Math.max(1.4, (1.2 * pixelPitch / 1.342) / (1 + (totalMag / pupilP)));
+
+  // 4. Working Distance & Optical Bench Cross-Section
+  let theoreticalConjugate = 0;
+  let workingDistance = 0;
+  let frontGlassFromSensor = 0;
+
+  if (isReverse) {
+    // Ultra-short working distance computed from rear optical element to subject
+    workingDistance = Math.max(1.0, revF * (1 + 1 / totalMag) - revFlange + revOffset);
+    frontGlassFromSensor = ffd + tubeStack + revOffset + revFlange;
+    theoreticalConjugate = frontGlassFromSensor + workingDistance;
+
+    els.statRevMag.textContent = `${totalMag.toFixed(2)}x`;
+    els.statRevPupil.textContent = `${effectivePupilP.toFixed(2)} (1/P)`;
+    els.statRevWd.textContent = `${workingDistance.toFixed(1)} mm`;
+  } else {
+    // Optical conjugate model with nodal spacing delta derived from native MFD
+    const nativeConjugate = f * (2 + mNative + (mNative > 0.0001 ? (1 / mNative) : 1000));
+    const nodalOffset = Math.max(0, nativeMfd - nativeConjugate);
+
+    const totalConjugate = f * (2 + totalMag + (totalMag > 0.0001 ? (1 / totalMag) : 1000));
+    theoreticalConjugate = totalConjugate + nodalOffset;
+
+    // Total physical hardware length from sensor plane to front element:
+    frontGlassFromSensor = ffd + tubeStack + lensL;
+    workingDistance = theoreticalConjugate - frontGlassFromSensor;
+  }
+  const isCollision = workingDistance < 5.0;
+
+  saveStateToStorage();
+
+  // RENDER VALUES TO UI
+  els.badgeReproRatio.textContent = `${totalMag.toFixed(2)}x (1:${reproRatio1toX.toFixed(2)})`;
+  els.statTotalTube.textContent = `${tubeStack.toFixed(1)} mm`;
+  els.statMagGain.textContent = `+${magGain.toFixed(2)}x`;
+  els.statTotalMag.textContent = `${totalMag.toFixed(2)}x`;
+  els.statRatioText.textContent = isReverse ? `1:${reproRatio1toX.toFixed(2)} (reversed)` : `1:${reproRatio1toX.toFixed(2)} reproduction`;
+  els.statFramedField.textContent = `${framedW.toFixed(1)} × ${framedH.toFixed(1)} mm`;
+  els.statSensorName.textContent = `On ${sensorW}×${sensorH}mm (${sensorInfo.name})`;
+
+  els.badgeEffAperture.textContent = `f/${effFstop.toFixed(2)} Eff.`;
+  els.statEffFstop.textContent = `f/${effFstop.toFixed(2)}`;
+  els.statEvLoss.textContent = `+${evLoss.toFixed(2)} EV`;
+  els.statTimeMult.textContent = `${timeMultiplier.toFixed(2)}×`;
+  els.statIsoShift.textContent = `ISO 100 → ${isoEquiv}`;
+
+  els.badgeDiffraction.textContent = diffBadgeText;
+  els.badgeDiffraction.className = `badge-tag ${diffBadgeClass}`;
+  els.statAiryDiam.textContent = `${airyDiamUm.toFixed(2)} µm`;
+  els.statPixelCoverage.textContent = `${blurRatio.toFixed(2)}× pitch`;
+  els.statPixelsSpanned.textContent = `Spans ~${Math.max(1, pixelsCoveredArea).toFixed(1)} pixels`;
+  els.statMaxMp.textContent = opticalMp >= sensorMaxMp ? `${sensorMaxMp.toFixed(1)} MP` : `~${opticalMp.toFixed(1)} MP`;
+  els.statMpLimitLabel.textContent = opticalMp >= sensorMaxMp ? "Unconstrained by diffraction" : `Capped from native ${sensorMaxMp} MP`;
+  els.statDlaAperture.textContent = `f/${dlaMarked.toFixed(1)} Marked`;
+
+  els.benchMfd.textContent = `${Math.round(theoreticalConjugate)} mm`;
+  els.benchWd.textContent = isReverse ? `${workingDistance.toFixed(1)} mm (Rear Glass)` : `${workingDistance.toFixed(1)} mm`;
+  els.benchTubeStack.textContent = `${tubeStack.toFixed(1)} mm`;
+
+  // Collision Warning Banner
+  if (isCollision) {
+    els.collisionBanner.style.display = 'flex';
+    if (workingDistance <= 0) {
+      els.collisionBannerText.textContent = `COLLISION / IMPOSSIBLE FOCUS: Working distance is ${workingDistance.toFixed(1)} mm! The focal plane has retracted inside the lens barrel.`;
+    } else {
+      els.collisionBannerText.textContent = `HAZARDOUS CLEARANCE: Only ${workingDistance.toFixed(1)} mm between glass and subject! Extreme risk of scratching front element or blocking illumination.`;
+    }
+  } else {
+    els.collisionBanner.style.display = 'none';
+  }
+
+  // Live Advice / What This Means
+  let adviceHTML = `
+    <p><strong>Reproduction &amp; Framing:</strong> With a <strong>${f}mm</strong> lens and <strong>${tubeStack}mm</strong> of extension, your reproduction ratio is <strong>${totalMag.toFixed(2)}:1</strong>. A <strong>${framedW.toFixed(1)} × ${framedH.toFixed(1)} mm</strong> subject will fill the frame edge-to-edge.</p>
+    <p><strong>Effective Light Falloff:</strong> Even though the lens ring is set to <strong>f/${markedN.toFixed(1)}</strong>, stretching the light cone adds <strong>+${evLoss.toFixed(2)} EV stops</strong> of light loss, creating a true working aperture of <strong>f/${effFstop.toFixed(2)}</strong>. You will need <strong>${timeMultiplier.toFixed(1)}× longer shutter speed</strong> or must increase flash power accordingly.</p>
+    <p><strong>Diffraction Physics:</strong> At effective f/${effFstop.toFixed(2)}, green light (550nm) produces an Airy disk of <strong>${airyDiamUm.toFixed(2)} µm</strong> (${blurRatio.toFixed(2)}× your camera's ${pixelPitch.toFixed(2)}µm pixel pitch). ${diffStatusMsg}</p>
+  `;
+
+  if (isCollision) {
+    adviceHTML += `<p style="color:var(--accent-red);font-weight:600;">⚠️ Recommended Action: Wide focal lengths (${f}mm) suffer severe working distance collapse when extended. Switch to a longer focal length (e.g. 50mm to 100mm) or mount this wide-angle lens reversed using a reverse ring adapter.</p>`;
+  } else if (blurRatio > 3.0) {
+    adviceHTML += `<p style="color:var(--accent-amber);font-weight:600;">⚠️ Recommended Action for Sharpness: Open the aperture ring 1–2 stops wider (to f/5.6 or f/8). Depth of field in macro is so narrow that stopping down to f/22+ destroys micro-contrast without giving real sharpness. Use focus stacking at f/5.6–f/8 instead.</p>`;
+  } else {
+    adviceHTML += `<p style="color:var(--accent-emerald);font-weight:600;">✅ Excellent balance of depth-of-field and optical resolution. Ample working distance (${workingDistance.toFixed(0)} mm) allows easy placement of macro ring-lights or natural sidelight reflectors.</p>`;
+  }
+
+  els.insightDynamicText.innerHTML = adviceHTML;
+
+  // Render optical bench cutaway SVG
+  renderOpticalBench({
+    f,
+    lensL,
+    ffd,
+    tubeStack,
+    workingDistance,
+    theoreticalConjugate,
+    frontGlassFromSensor,
+    totalMag,
+    isCollision,
+    framedH
+  });
+
+  renderApertureSweepChart(totalMag, effectivePupilP, pixelPitch);
+}
+
+const APERTURE_SWEEP = [2.8, 3.2, 3.5, 4.0, 4.5, 5.0, 5.6, 6.3, 7.1, 8.0, 9.0, 10, 11, 13, 14, 16, 18, 20, 22, 25, 28, 32];
+
+function renderApertureSweepChart(mag, pupilP, pitch) {
+  const svg = document.getElementById('diffraction-vs-aperture-sweep-chart-svg');
+  const badge = document.getElementById('sweepSweetSpotBadge');
+  if (!svg) return;
+
+  const width = 900, height = 240;
+  const padL = 50, padR = 50, padT = 25, padB = 35;
+  const plotW = width - padL - padR;
+  const plotH = height - padT - padB;
+
+  const data = APERTURE_SWEEP.map(N => {
+    const effN = N * (1 + mag / pupilP);
+    const airy = 2.44 * 0.55 * effN;
+    const c_um = 2 * pitch;
+    const dof = (2 * c_um * effN) / Math.max(0.01, Math.pow(mag, 2));
+    return { N, effN, airy, dof };
+  });
+
+  const maxDof = Math.max(...data.map(d => d.dof));
+  const maxAiry = Math.max(...data.map(d => d.airy));
+
+  const targetEffStart = 2.55 * pitch;
+  const targetEffEnd = 3.65 * pitch;
+
+  let startIdx = 0, endIdx = data.length - 1;
+  let minDiffStart = Infinity, minDiffEnd = Infinity;
+
+  data.forEach((d, i) => {
+    const diffS = Math.abs(d.effN - targetEffStart);
+    const diffE = Math.abs(d.effN - targetEffEnd);
+    if (diffS < minDiffStart) { minDiffStart = diffS; startIdx = i; }
+    if (diffE < minDiffEnd) { minDiffEnd = diffE; endIdx = i; }
+  });
+
+  if (endIdx < startIdx) endIdx = startIdx;
+
+  const N_start = data[startIdx].N;
+  const N_end = data[endIdx].N;
+  const eff_start = data[startIdx].effN;
+  const eff_end = data[endIdx].effN;
+
+  if (badge) {
+    badge.textContent = `Sweet Spot: f/${N_start.toFixed(1)} – f/${N_end.toFixed(1)} (f/${eff_start.toFixed(1)} – f/${eff_end.toFixed(1)} Eff)`;
+  }
+
+  const xStep = plotW / (data.length - 1);
+  const getX = idx => padL + idx * xStep;
+  const getYDof = val => padT + plotH - (val / (maxDof || 1)) * plotH;
+  const getYAiry = val => padT + plotH - (val / (maxAiry || 1)) * plotH;
+
+  const xStart = getX(startIdx);
+  const xEnd = getX(endIdx);
+
+  const dofPoints = data.map((d, i) => `${getX(i).toFixed(1)},${getYDof(d.dof).toFixed(1)}`).join(' L ');
+  const airyPoints = data.map((d, i) => `${getX(i).toFixed(1)},${getYAiry(d.airy).toFixed(1)}`).join(' L ');
+  const pitchThresholdY = getYAiry(2 * pitch);
+
+  let svgContent = `
+    <line x1="${padL}" y1="${padT + plotH}" x2="${width - padR}" y2="${padT + plotH}" stroke="#334155" stroke-width="1"/>
+    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + plotH}" stroke="#334155" stroke-width="1"/>
+    <line x1="${width - padR}" y1="${padT}" x2="${width - padR}" y2="${padT + plotH}" stroke="#334155" stroke-width="1"/>
+
+    <rect x="${xStart.toFixed(1)}" y="${padT}" width="${Math.max(12, xEnd - xStart).toFixed(1)}" height="${plotH}" fill="rgba(16, 185, 129, 0.18)" stroke="#10b981" stroke-dasharray="3,3" stroke-width="1"/>
+    <text x="${((xStart + xEnd) / 2).toFixed(1)}" y="${padT + 14}" fill="#10b981" font-size="10" font-weight="700" text-anchor="middle" font-family="monospace">SWEET SPOT</text>
+
+    ${pitchThresholdY >= padT && pitchThresholdY <= padT + plotH ? `
+      <line x1="${padL}" y1="${pitchThresholdY.toFixed(1)}" x2="${width - padR}" y2="${pitchThresholdY.toFixed(1)}" stroke="#f59e0b" stroke-dasharray="4,4" stroke-width="1.5"/>
+      <text x="${width - padR - 6}" y="${pitchThresholdY - 4}" fill="#f59e0b" font-size="9" text-anchor="end" font-family="monospace">2× Pitch (${(2*pitch).toFixed(1)}µm)</text>
+    ` : ''}
+
+    <path d="M ${dofPoints}" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
+    <path d="M ${airyPoints}" fill="none" stroke="#ef4444" stroke-width="2.5"/>
+  `;
+
+  data.forEach((d, i) => {
+    const cx = getX(i);
+    const cyD = getYDof(d.dof);
+    const cyA = getYAiry(d.airy);
+    svgContent += `
+      <circle cx="${cx.toFixed(1)}" cy="${cyD.toFixed(1)}" r="3" fill="#38bdf8"/>
+      <circle cx="${cx.toFixed(1)}" cy="${cyA.toFixed(1)}" r="3" fill="#ef4444"/>
+      <text x="${cx.toFixed(1)}" y="${height - 10}" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="monospace">f/${d.N}</text>
+      <rect x="${(cx - xStep/2).toFixed(1)}" y="${padT}" width="${xStep.toFixed(1)}" height="${plotH}" fill="transparent" style="cursor:pointer"
+        onmouseover="document.getElementById('sweepHoverInfo').textContent='Marked f/${d.N} → Eff f/${d.effN.toFixed(1)} | DOF: ${d.dof.toFixed(0)}µm | Airy: ${d.airy.toFixed(1)}µm (${(d.airy/pitch).toFixed(1)}× pitch)';"
+      />
+    `;
+  });
+
+  svgContent += `
+    <text x="${padL - 6}" y="${padT + 10}" fill="#38bdf8" font-size="9" text-anchor="end" font-family="monospace">${maxDof.toFixed(0)}µm</text>
+    <text x="${padL - 6}" y="${padT + plotH}" fill="#38bdf8" font-size="9" text-anchor="end" font-family="monospace">0µm</text>
+    <text x="${width - padR + 6}" y="${padT + 10}" fill="#ef4444" font-size="9" text-anchor="start" font-family="monospace">${maxAiry.toFixed(0)}µm</text>
+    <text x="${width - padR + 6}" y="${padT + plotH}" fill="#ef4444" font-size="9" text-anchor="start" font-family="monospace">0µm</text>
+  `;
+
+  svg.innerHTML = svgContent;
+}
+
+// RENDER INTERACTIVE OPTICAL BENCH SVG
+function renderOpticalBench(p) {
+  const svg = els.benchSvg;
+  const width = 950;
+  const height = 240;
+  const groundY = 120; // optical center axis
+
+  // We map physical millimeters to SVG X coordinates
+  // Origin X=90 will be the sensor plane.
+  const sensorX = 110;
+  
+  // Calculate display scale: fit from SensorX to SubjectX within 850px
+  const maxPhysicalSpan = Math.max(160, p.frontGlassFromSensor + Math.max(10, p.workingDistance) + 30);
+  const pxPerMm = Math.min(3.2, Math.max(1.1, (width - sensorX - 100) / maxPhysicalSpan));
+
+  const mountX = sensorX + (p.ffd * pxPerMm);
+  const tubeEndX = mountX + (p.tubeStack * pxPerMm);
+  const lensFrontX = tubeEndX + (p.lensL * pxPerMm);
+  const subjectX = lensFrontX + (p.workingDistance * pxPerMm);
+
+  // SVG strings
+  let svgContent = `
+    <defs>
+      <linearGradient id="sensorGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#38bdf8"/>
+        <stop offset="100%" stop-color="#0284c7"/>
+      </linearGradient>
+      <linearGradient id="lensGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#334155"/>
+        <stop offset="100%" stop-color="#1e293b"/>
+      </linearGradient>
+      <linearGradient id="tubeGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#475569"/>
+        <stop offset="50%" stop-color="#334155"/>
+        <stop offset="100%" stop-color="#1e293b"/>
+      </linearGradient>
+      <pattern id="gridPattern" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#172233" stroke-width="1"/>
+      </pattern>
+    </defs>
+
+    <!-- Background Grid & Axis -->
+    <rect width="${width}" height="${height}" fill="#090d14"/>
+    <rect width="${width}" height="${height}" fill="url(#gridPattern)"/>
+    
+    <!-- Optical Center Optical Axis Line -->
+    <line x1="20" y1="${groundY}" x2="${width - 20}" y2="${groundY}" stroke="#334155" stroke-dasharray="4,4" stroke-width="1.5"/>
+    <text x="30" y="${groundY - 8}" fill="#64748b" font-size="10" font-family="monospace">OPTICAL AXIS</text>
+  `;
+
+  // Draw Light Cone Rays
+  if (p.workingDistance > -15) {
+    const coneRayColor = p.isCollision ? "rgba(239, 68, 68, 0.45)" : "rgba(56, 189, 248, 0.35)";
+    const coneLineColor = p.isCollision ? "#ef4444" : "#38bdf8";
+
+    // Sensor to Lens rear
+    const conePath1 = `M ${sensorX} ${groundY - 35} L ${tubeEndX} ${groundY - 45} L ${lensFrontX} ${groundY - 45} L ${subjectX} ${groundY} L ${lensFrontX} ${groundY + 45} L ${tubeEndX} ${groundY + 45} L ${sensorX} ${groundY + 35} Z`;
+    
+    svgContent += `
+      <path d="${conePath1}" fill="${coneRayColor}" stroke="${coneLineColor}" stroke-width="1.2" stroke-dasharray="3,3"/>
+    `;
+  }
+
+  // 1. Camera Body & Mount
+  svgContent += `
+    <!-- Camera Body Shell -->
+    <rect x="${sensorX - 70}" y="${groundY - 75}" width="70" height="150" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+    <text x="${sensorX - 35}" y="${groundY + 88}" fill="#94a3b8" font-size="10" text-anchor="middle" font-family="sans-serif">CAMERA</text>
+
+    <!-- Sensor Plane -->
+    <line x1="${sensorX}" y1="${groundY - 45}" x2="${sensorX}" y2="${groundY + 45}" stroke="#38bdf8" stroke-width="4" stroke-linecap="round"/>
+    <rect x="${sensorX - 4}" y="${groundY - 40}" width="4" height="80" fill="url(#sensorGrad)"/>
+    <text x="${sensorX - 8}" y="${groundY - 50}" fill="#38bdf8" font-size="11" font-weight="700" text-anchor="end" font-family="monospace">SENSOR</text>
+
+    <!-- Camera Mount Flange -->
+    <rect x="${sensorX}" y="${groundY - 55}" width="${p.ffd * pxPerMm}" height="110" fill="#0f172a" stroke="#475569" stroke-width="1"/>
+    <text x="${sensorX + (p.ffd * pxPerMm) / 2}" y="${groundY - 60}" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="monospace">${p.ffd}mm FLANGE</text>
+  `;
+
+  // 2. Extension Tube Stack
+  if (p.tubeStack > 0) {
+    const tubeWidth = p.tubeStack * pxPerMm;
+    svgContent += `
+      <g id="svgTubeStack">
+        <!-- Hollow Extension Ring Body -->
+        <rect x="${mountX}" y="${groundY - 58}" width="${tubeWidth}" height="116" fill="url(#tubeGrad)" stroke="#f59e0b" stroke-width="1.5" rx="3"/>
+        <!-- Hollow interior cutaway lines -->
+        <rect x="${mountX + 2}" y="${groundY - 48}" width="${tubeWidth - 4}" height="96" fill="#090d14" opacity="0.6"/>
+        <line x1="${mountX}" y1="${groundY - 58}" x2="${tubeEndX}" y2="${groundY - 58}" stroke="#f59e0b" stroke-width="2"/>
+        <line x1="${mountX}" y1="${groundY + 58}" x2="${tubeEndX}" y2="${groundY + 58}" stroke="#f59e0b" stroke-width="2"/>
+        <text x="${mountX + tubeWidth / 2}" y="${groundY + 75}" fill="#f59e0b" font-weight="bold" font-size="11" text-anchor="middle" font-family="monospace">+${p.tubeStack}mm TUBES</text>
+      </g>
+    `;
+  }
+
+  // 3. Lens Chassis & Optical Elements
+  const lensWidth = p.lensL * pxPerMm;
+  svgContent += `
+    <g id="svgLens">
+      <!-- Lens Outer Barrel -->
+      <rect x="${tubeEndX}" y="${groundY - 52}" width="${lensWidth}" height="104" fill="url(#lensGrad)" stroke="#94a3b8" stroke-width="1.5" rx="4"/>
+      
+      <!-- Internal Optical Glass Groups -->
+      <ellipse cx="${tubeEndX + lensWidth * 0.25}" cy="${groundY}" rx="${lensWidth * 0.08}" ry="42" fill="#38bdf8" opacity="0.4" stroke="#7dd3fc" stroke-width="1"/>
+      <ellipse cx="${tubeEndX + lensWidth * 0.7}" cy="${groundY}" rx="${lensWidth * 0.09}" ry="46" fill="#38bdf8" opacity="0.45" stroke="#7dd3fc" stroke-width="1"/>
+
+      <!-- Front Element -->
+      <path d="M ${lensFrontX} ${groundY - 48} A 20 48 0 0 1 ${lensFrontX} ${groundY + 48}" stroke="${p.isCollision ? '#ef4444' : '#38bdf8'}" stroke-width="4" fill="none"/>
+      
+      <text x="${tubeEndX + lensWidth / 2}" y="${groundY - 58}" fill="#f1f5f9" font-weight="600" font-size="11" text-anchor="middle" font-family="sans-serif">${p.f}mm LENS (${p.lensL}mm)</text>
+      <text x="${lensFrontX}" y="${groundY + 68}" fill="#94a3b8" font-size="10" text-anchor="middle" font-family="monospace">Front Element</text>
+    </g>
+  `;
+
+  // 4. Target Subject Plane & Dimension Ruler
+  const targetColor = p.isCollision ? "#ef4444" : "#10b981";
+  const targetLabel = p.isCollision ? "FOCAL PLANE (INSIDE BARREL!)" : "SUBJECT PLANE";
+  const displaySubjectX = Math.max(sensorX + 30, Math.min(width - 50, subjectX));
+
+  svgContent += `
+    <g id="svgSubject" transform="translate(${displaySubjectX}, 0)">
+      <!-- Subject Plane Marker Line -->
+      <line x1="0" y1="${groundY - 60}" x2="0" y2="${groundY + 60}" stroke="${targetColor}" stroke-width="3" stroke-linecap="round"/>
+      
+      <!-- Subject Silhouette (Leaf / Micro target) -->
+      <circle cx="0" cy="${groundY}" r="7" fill="${targetColor}"/>
+      <path d="M 0 ${groundY - 30} C 15 ${groundY - 15}, 15 ${groundY + 15}, 0 ${groundY + 30} C -15 ${groundY + 15}, -15 ${groundY - 15}, 0 ${groundY - 30}" fill="${targetColor}" opacity="0.3" stroke="${targetColor}" stroke-width="1.5"/>
+
+      <text x="0" y="${groundY - 68}" fill="${targetColor}" font-weight="700" font-size="11" text-anchor="middle" font-family="monospace">${targetLabel}</text>
+    </g>
+  `;
+
+  // 5. Working Distance Dimension Arrow
+  if (!p.isCollision && p.workingDistance >= 5) {
+    const wdMidX = lensFrontX + (p.workingDistance * pxPerMm) / 2;
+    svgContent += `
+      <g id="svgWdArrow">
+        <line x1="${lensFrontX + 4}" y1="${groundY + 22}" x2="${subjectX - 4}" y2="${groundY + 22}" stroke="#10b981" stroke-width="1.8" marker-end="url(#arrow)"/>
+        <!-- Arrow heads -->
+        <polygon points="${lensFrontX + 6},${groundY + 18} ${lensFrontX + 1},${groundY + 22} ${lensFrontX + 6},${groundY + 26}" fill="#10b981"/>
+        <polygon points="${subjectX - 6},${groundY + 18} ${subjectX - 1},${groundY + 22} ${subjectX - 6},${groundY + 26}" fill="#10b981"/>
+        
+        <rect x="${wdMidX - 40}" y="${groundY + 10}" width="80" height="20" rx="3" fill="#0f172a" stroke="#10b981" stroke-width="1"/>
+        <text x="${wdMidX}" y="${groundY + 24}" fill="#10b981" font-weight="bold" font-size="11" text-anchor="middle" font-family="monospace">WD: ${p.workingDistance.toFixed(0)}mm</text>
+      </g>
+    `;
+  } else if (p.isCollision) {
+    // Collision Indicator Marker
+    svgContent += `
+      <g id="svgCollisionWarning">
+        <circle cx="${lensFrontX}" cy="${groundY}" r="26" fill="rgba(239, 68, 68, 0.25)" stroke="#ef4444" stroke-width="2" stroke-dasharray="3,3"/>
+        <text x="${lensFrontX}" y="${groundY + 5}" fill="#ef4444" font-weight="900" font-size="18" text-anchor="middle">✕</text>
+        <text x="${lensFrontX}" y="${groundY - 32}" fill="#ef4444" font-weight="bold" font-size="10" text-anchor="middle" font-family="monospace">COLLISION</text>
+      </g>
+    `;
+  }
+
+  svg.innerHTML = svgContent;
+}
+
+// EXPORT & REPORT UTILITIES
+function generateReportText() {
+  return `=== MACRO EXTENSION TUBE & MAGNIFICATION LAB REPORT ===
+Lens: ${els.focalLength.value}mm | Native Mag: ${els.nativeMag.value}x | Marked Aperture: f/${els.markedAperture.value}
+Tube Stack Added: ${els.statTotalTube.textContent}
+Total Reproduction Ratio: ${els.statTotalMag.textContent} (${els.statRatioText.textContent})
+Framed Subject Area: ${els.statFramedField.textContent} (${els.statSensorName.textContent})
+
+--- OPTICAL EXPOSURE & FALLOFF ---
+Effective Working Aperture: ${els.statEffFstop.textContent}
+Exposure Compensation: ${els.statEvLoss.textContent} (Factor: ${els.statTimeMult.textContent})
+ISO Shift Needed: ${els.statIsoShift.textContent}
+
+--- AIRY DISK & DIFFRACTION ---
+Sensor Pitch: ${els.customPitch.value} µm
+Airy Disk Diameter: ${els.statAiryDiam.textContent}
+Coverage Ratio: ${els.statPixelCoverage.textContent} (${els.statPixelsSpanned.textContent})
+Diffraction Status: ${els.badgeDiffraction.textContent}
+Optical Resolving Limit: ${els.statMaxMp.textContent}
+
+--- CLEARANCE & WORKING DISTANCE ---
+Working Distance (Glass to Subject): ${els.benchWd.textContent}
+Minimum Focus Distance (Sensor to Subject): ${els.benchMfd.textContent}
+Safety Evaluation: ${els.collisionBanner.style.display === 'flex' ? 'HAZARD - Working distance collapsed' : 'SAFE CLEARANCE'}
+Generated by Macro Optical Lab (Single-File Optical Bench).`;
+}
+
+function copySummaryReport() {
+  const text = generateReportText();
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = els.btnCopyReport.innerHTML;
+      els.btnCopyReport.innerHTML = "<span>✅</span> Copied!";
+      setTimeout(() => els.btnCopyReport.innerHTML = orig, 2000);
+    }).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    const orig = els.btnCopyReport.innerHTML;
+    els.btnCopyReport.innerHTML = "<span>✅</span> Copied!";
+    setTimeout(() => els.btnCopyReport.innerHTML = orig, 2000);
+  } catch (e) {
+    alert("Could not copy automatically. Please select text manually.");
+  }
+  document.body.removeChild(ta);
+}
+
+function exportJSON() {
+  if (!PRO) {
+    showProNotice("Available in the full version");
+    return;
+  }
+  const payload = {
+    timestamp: new Date().toISOString(),
+    preset: els.scenarioPreset.value,
+    inputs: {
+      focalLength_mm: parseFloat(els.focalLength.value),
+      nativeMagnification: parseFloat(els.nativeMag.value),
+      markedAperture: parseFloat(els.markedAperture.value),
+      lensLength_mm: parseFloat(els.lensLength.value),
+      flangeDistance_mm: parseFloat(els.cameraMount.value),
+      tubes: {
+        t12: els.tube12.checked,
+        t20: els.tube20.checked,
+        t24: els.tube24.checked,
+        t36: els.tube36.checked,
+        custom_mm: parseFloat(els.customTube.value)
+      },
+      sensor: els.sensorPreset.value,
+      pixelPitch_um: parseFloat(els.customPitch.value)
+    },
+    results: {
+      totalExtension_mm: els.statTotalTube.textContent,
+      magnificationGain: els.statMagGain.textContent,
+      totalMagnification: els.statTotalMag.textContent,
+      reproductionRatio: els.statRatioText.textContent,
+      framedSubject_mm: els.statFramedField.textContent,
+      effectiveAperture: els.statEffFstop.textContent,
+      lightLoss_EV: els.statEvLoss.textContent,
+      shutterMultiplier: els.statTimeMult.textContent,
+      airyDiskDiameter_um: els.statAiryDiam.textContent,
+      blurToPixelRatio: els.statPixelCoverage.textContent,
+      diffractionClassification: els.badgeDiffraction.textContent,
+      maxResolvingPower_MP: els.statMaxMp.textContent,
+      workingDistance_mm: els.benchWd.textContent,
+      subjectMFD_mm: els.benchMfd.textContent
+    }
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  downloadBlob(blob, `macro-optical-analysis-${Date.now()}.json`);
+}
+
+function exportCSV() {
+  if (!PRO) {
+    showProNotice("Available in the full version");
+    return;
+  }
+  const rows = [
+    ["Metric", "Value", "Unit"],
+    ["Focal Length", els.focalLength.value, "mm"],
+    ["Native Magnification", els.nativeMag.value, "x"],
+    ["Marked Aperture", "f/" + els.markedAperture.value, ""],
+    ["Total Extension Added", els.statTotalTube.textContent.replace(' mm', ''), "mm"],
+    ["Magnification Gain", els.statMagGain.textContent, ""],
+    ["Total Magnification", els.statTotalMag.textContent, ""],
+    ["Reproduction Ratio", els.statRatioText.textContent, ""],
+    ["Framed Subject Size", els.statFramedField.textContent, "mm"],
+    ["Effective Working f-stop", els.statEffFstop.textContent, ""],
+    ["Light Loss Falloff", els.statEvLoss.textContent, "EV"],
+    ["Exposure Multiplier", els.statTimeMult.textContent, "x"],
+    ["Sensor Pixel Pitch", els.customPitch.value, "µm"],
+    ["Airy Disk Diameter", els.statAiryDiam.textContent.replace(' µm', ''), "µm"],
+    ["Airy Disk to Pixel Pitch Ratio", els.statPixelCoverage.textContent.replace('× pitch', ''), "ratio"],
+    ["Diffraction Status", els.badgeDiffraction.textContent, ""],
+    ["Optical Resolving Power", els.statMaxMp.textContent, "MP"],
+    ["Working Distance Front Element to Subject", els.benchWd.textContent.replace(' mm', ''), "mm"],
+    ["Subject-to-Sensor Distance (MFD)", els.benchMfd.textContent.replace(' mm', ''), "mm"]
+  ];
+
+  const csvContent = rows.map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  downloadBlob(blob, `macro-bench-data-${Date.now()}.csv`);
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function handlePrint() {
+  if (!PRO) {
+    showProNotice("Available in the full version");
+    return;
+  }
+  window.print();
+}
+
+// CAPABILITY: Target Magnification & Framing Reverse Solver
+const solverEls = {
+  targetMag: document.getElementById('solverTargetMag'),
+  subjectWidth: document.getElementById('solverSubjectWidth'),
+  tubeKit: document.getElementById('solverTubeKit'),
+  sharpnessGoal: document.getElementById('solverSharpnessGoal'),
+  headerBadge: document.getElementById('solverHeaderBadge'),
+  statRequiredExt: document.getElementById('solverStatRequiredExt'),
+  statStackRec: document.getElementById('solverStatStackRec'),
+  statActualMag: document.getElementById('solverStatActualMag'),
+  statError: document.getElementById('solverStatError'),
+  statStackOrder: document.getElementById('solverStatStackOrder'),
+  statRecFstop: document.getElementById('solverStatRecFstop'),
+  statFstopNote: document.getElementById('solverStatFstopNote'),
+  btnApply: document.getElementById('btnApplySolverStack')
+};
+
+const COMMERCIAL_TUBE_KITS = {
+  "commercial-full": [36, 20, 16, 12],
+  "classic-trio": [36, 20, 12],
+  "mirrorless-duo": [16, 10],
+  "macro-quad": [36, 24, 20, 12]
+};
+
+let currentSolverResult = null;
+
+function solveTargetStack() {
+  const f = getFloatInput(els.focalLength, 50, 5);
+  const mNative = getFloatInput(els.nativeMag, 0.15, 0);
+  const targetMag = getFloatInput(solverEls.targetMag, 1.20, 0.05);
+  const sensorKey = els.sensorPreset.value;
+  const sensorInfo = SENSOR_SPECS[sensorKey] || SENSOR_SPECS['ff-24'];
+  const pixelPitch = getFloatInput(els.customPitch, sensorInfo.pitch, 0.5);
+  const pupilP = getFloatInput(els.pupilFactor, 1.0, 0.2);
+
+  // Required theoretical extension: (M_target - M_native) * f
+  const requiredExt = Math.max(0, (targetMag - mNative) * f);
+
+  // Available tube segments
+  const kitKey = solverEls.tubeKit.value;
+  const availableTubes = COMMERCIAL_TUBE_KITS[kitKey] || COMMERCIAL_TUBE_KITS['commercial-full'];
+
+  // Generate all subset combinations
+  const combinations = [[]];
+  for (const tube of availableTubes) {
+    const len = combinations.length;
+    for (let i = 0; i < len; i++) {
+      combinations.push([...combinations[i], tube]);
+    }
+  }
+
+  // Find combination yielding minimum absolute error against targetMag
+  let bestComb = [];
+  let bestError = Infinity;
+  let bestStack = 0;
+  let bestActualMag = mNative;
+
+  for (const comb of combinations) {
+    const stack = comb.reduce((sum, val) => sum + val, 0);
+    const mag = mNative + (stack / f);
+    const err = Math.abs(mag - targetMag) / targetMag;
+    if (err < bestError || (Math.abs(err - bestError) < 0.0001 && stack < bestStack)) {
+      bestError = err;
+      bestComb = comb;
+      bestStack = stack;
+      bestActualMag = mag;
+    }
+  }
+
+  // Sort chosen segments descending (heaviest/thickest closest to camera mount)
+  const sortedStack = [...bestComb].sort((a, b) => b - a);
+  const stackOrderText = sortedStack.length > 0
+    ? `Mount → ${sortedStack.map(t => `${t}mm`).join(' → ')} → Lens`
+    : 'No tubes (Native lens)';
+
+  const framingErrorPct = (bestError * 100);
+
+  // Sharpness Preserving Aperture (DLA calculation)
+  // Airy disk diameter = 2.44 * 0.55 * N_eff <= 1.35 * pitch
+  const goal = solverEls.sharpnessGoal.value;
+  let maxEffFstop = (1.35 * pixelPitch) / 1.342;
+  if (goal === 'sweetspot') maxEffFstop = 8.0;
+  else if (goal === 'dof') maxEffFstop = (2.2 * pixelPitch) / 1.342;
+
+  const dlaMarked = maxEffFstop / (1 + (bestActualMag / pupilP));
+  const standardFstops = [1.4, 2.0, 2.8, 4.0, 5.6, 8.0, 11.0, 16.0, 22.0];
+  let recommendedFstop = 5.6;
+  for (const n of standardFstops) {
+    if (n <= dlaMarked) recommendedFstop = n;
+  }
+
+  const currentMarkedN = getFloatInput(els.markedAperture, 4.0, 1.0);
+  const stopDiff = Math.log2(currentMarkedN / recommendedFstop);
+
+  let fstopNote = `Diffraction threshold: f/${dlaMarked.toFixed(1)} marked`;
+  if (stopDiff > 0.3) {
+    fstopNote = `Open up ~${Math.abs(stopDiff).toFixed(1)} stops from f/${currentMarkedN.toFixed(1)} for peak sharpness`;
+  } else if (stopDiff < -0.3) {
+    fstopNote = `Safe to stop down ~${Math.abs(stopDiff).toFixed(1)} stops for extra DOF`;
+  }
+
+  currentSolverResult = {
+    targetMag,
+    requiredExt,
+    bestStack,
+    sortedStack,
+    bestActualMag,
+    framingErrorPct,
+    stackOrderText,
+    recommendedFstop
+  };
+
+  // Render to UI
+  solverEls.statRequiredExt.textContent = `${requiredExt.toFixed(1)} mm`;
+  solverEls.statStackRec.textContent = sortedStack.length > 0 
+    ? `${bestStack}mm (${sortedStack.map(t => `${t}mm`).join(' + ')}) or custom ${requiredExt.toFixed(1)}mm`
+    : `0mm (Native lens)`;
+  solverEls.statActualMag.textContent = `${bestActualMag.toFixed(2)}x`;
+  solverEls.statError.textContent = `${framingErrorPct.toFixed(1)}% error (Target: ${targetMag.toFixed(2)}x)`;
+  solverEls.statStackOrder.innerHTML = `<span class="solver-order-badge">${stackOrderText}</span>`;
+  solverEls.statRecFstop.textContent = `f/${recommendedFstop.toFixed(1)} Marked`;
+  solverEls.statFstopNote.textContent = fstopNote;
+
+  solverEls.headerBadge.textContent = `Target: ${targetMag.toFixed(2)}x → ${bestActualMag.toFixed(2)}x (${framingErrorPct.toFixed(1)}% error)`;
+  solverEls.headerBadge.className = framingErrorPct < 3.0 ? 'badge-tag tag-green' : 'badge-tag tag-amber';
+}
+
+function initReverseSolver() {
+  solverEls.targetMag.addEventListener('input', () => {
+    const sInfo = SENSOR_SPECS[els.sensorPreset.value] || SENSOR_SPECS['ff-24'];
+    const mag = Math.max(0.05, parseFloat(solverEls.targetMag.value) || 1.0);
+    solverEls.subjectWidth.value = (sInfo.width / mag).toFixed(1);
+    solveTargetStack();
+  });
+
+  solverEls.subjectWidth.addEventListener('input', () => {
+    const sInfo = SENSOR_SPECS[els.sensorPreset.value] || SENSOR_SPECS['ff-24'];
+    const w = Math.max(1.0, parseFloat(solverEls.subjectWidth.value) || 30.0);
+    solverEls.targetMag.value = (sInfo.width / w).toFixed(2);
+    solveTargetStack();
+  });
+
+  solverEls.tubeKit.addEventListener('change', solveTargetStack);
+  solverEls.sharpnessGoal.addEventListener('change', solveTargetStack);
+
+  solverEls.btnApply.addEventListener('click', () => {
+    if (!currentSolverResult) return;
+    const stack = currentSolverResult.sortedStack;
+    els.tube12.checked = stack.includes(12);
+    els.tube20.checked = stack.includes(20);
+    els.tube24.checked = stack.includes(24);
+    els.tube36.checked = stack.includes(36);
+
+    // Apply any 16mm or custom leftover extension
+    const standardBuiltSum = (els.tube12.checked ? 12 : 0) + (els.tube20.checked ? 20 : 0) + (els.tube24.checked ? 24 : 0) + (els.tube36.checked ? 36 : 0);
+    const remainder = Math.max(0, currentSolverResult.bestStack - standardBuiltSum);
+    els.customTube.value = remainder;
+
+    els.scenarioPreset.value = 'custom';
+    recalc();
+
+    const orig = solverEls.btnApply.innerHTML;
+    solverEls.btnApply.innerHTML = "<span>✅</span> Stack Applied!";
+    setTimeout(() => solverEls.btnApply.innerHTML = orig, 1800);
+  });
+
+  // Re-run solver whenever parent lens or sensor inputs shift
+  [els.focalLength, els.nativeMag, els.sensorPreset, els.customPitch, els.markedAperture, els.pupilFactor].forEach(el => {
+    el.addEventListener('change', solveTargetStack);
+    el.addEventListener('input', solveTargetStack);
+  });
+
+  solveTargetStack();
+}
+
+window.addEventListener('DOMContentLoaded', initReverseSolver);
+
+// CAPABILITY: Multi-Scenario Matrix & Field Card Export Logic
+let savedScenarios = [];
+
+function captureCurrentScenario() {
+  const pSelect = els.scenarioPreset;
+  const pName = pSelect.value !== 'custom' 
+    ? pSelect.options[pSelect.selectedIndex].text.split('(')[0].trim() 
+    : `${els.focalLength.value}mm Lens + ${els.statTotalTube.textContent} Tube Stack`;
+
+  return {
+    id: Date.now(),
+    name: pName,
+    focalLength: els.focalLength.value + "mm",
+    markedAperture: "f/" + els.markedAperture.value,
+    extension: els.statTotalTube.textContent,
+    magnification: els.statTotalMag.textContent + " (" + els.statRatioText.textContent + ")",
+    workingDistance: els.benchWd.textContent,
+    effectiveFstop: els.statEffFstop.textContent,
+    lightLossEV: els.statEvLoss.textContent,
+    timeMult: els.statTimeMult.textContent,
+    isoShift: els.statIsoShift.textContent,
+    diffraction: els.badgeDiffraction.textContent,
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+}
+
+function renderScenarioMatrix() {
+  const tbody = document.getElementById('matrixTableBody');
+  const countBadge = document.getElementById('matrixCountBadge');
+  if (!tbody || !countBadge) return;
+
+  countBadge.textContent = `${savedScenarios.length} / 4 Scenarios`;
+  countBadge.className = savedScenarios.length > 0 ? 'badge-tag tag-green' : 'badge-tag tag-purple';
+
+  if (savedScenarios.length === 0) {
+    tbody.innerHTML = `
+      <tr id="matrixEmptyRow">
+        <td colspan="8" class="matrix-empty-cell">No scenarios snapshotted yet. Click 'Add to Comparison' to compare up to 4 optical configurations side-by-side.</td>
+      </tr>
+    `;
+    updatePocketCards();
+    return;
+  }
+
+  tbody.innerHTML = savedScenarios.map((s, idx) => `
+    <tr>
+      <td><strong>${s.name}</strong> <span style="font-size:0.72rem;color:var(--text-dim);">#${idx + 1} (${s.timestamp})</span></td>
+      <td><span style="font-family:var(--font-mono);">${s.extension}</span></td>
+      <td><strong style="color:var(--accent-blue);">${s.magnification}</strong></td>
+      <td><span style="font-family:var(--font-mono);">${s.workingDistance}</span></td>
+      <td><span style="font-weight:600;color:var(--accent-amber);">${s.effectiveFstop}</span></td>
+      <td><span style="font-weight:600;">${s.lightLossEV}</span></td>
+      <td><span class="badge-tag ${s.diffraction.includes('Free') ? 'tag-green' : s.diffraction.includes('Mild') ? 'tag-amber' : 'tag-red'}" style="font-size:0.7rem;">${s.diffraction}</span></td>
+      <td>
+        <button type="button" class="btn" onclick="removeScenario(${s.id})" style="padding:2px 6px;font-size:0.72rem;" title="Remove this setup">✕</button>
+      </td>
+    </tr>
+  `).join('');
+
+  updatePocketCards();
+}
+
+window.removeScenario = function(id) {
+  savedScenarios = savedScenarios.filter(s => s.id !== id);
+  try { localStorage.setItem('macro_comparison_scenarios', JSON.stringify(savedScenarios)); } catch(e) {}
+  renderScenarioMatrix();
+};
+
+function updatePocketCards() {
+  const container = document.getElementById('pocketCardContent');
+  if (!container) return;
+  const list = savedScenarios.length > 0 ? savedScenarios : [captureCurrentScenario()];
+  container.innerHTML = list.map(s => `
+    <div class="field-pocket-chip">
+      <strong>🏷️ ${s.name}</strong>
+      <div>Mag: <b>${s.magnification}</b> | Ext: <b>${s.extension}</b></div>
+      <div>Clearance WD: <b>${s.workingDistance}</b></div>
+      <div>Marked: <b>${s.markedAperture}</b> → True: <b>${s.effectiveFstop}</b></div>
+      <div style="color:var(--accent-amber); font-weight:600;">Flash/Exposure Boost: ${s.lightLossEV} (${s.timeMult})</div>
+      <div style="font-size:0.72rem; color:var(--text-muted);">${s.isoShift} | ${s.diffraction}</div>
+    </div>
+  `).join('');
+}
+
+function showScenarioNotice(msg = "Available in the full version") {
+  const el = document.getElementById('scenarioExportMsg');
+  if (!el) return;
+  el.innerHTML = `${msg} <a href="${PRO_LINK}" style="color:inherit;text-decoration:underline;font-weight:700;">Upgrade</a>`;
+  el.style.display = 'inline-block';
+  setTimeout(() => { el.style.display = 'none'; }, 4500);
+}
+
+function initScenarioExport() {
+  try {
+    const raw = localStorage.getItem('macro_comparison_scenarios');
+    if (raw) savedScenarios = JSON.parse(raw) || [];
+  } catch(e) {}
+
+  document.getElementById('btnAddScenario').addEventListener('click', () => {
+    if (savedScenarios.length >= 4) {
+      savedScenarios.shift();
+    }
+    savedScenarios.push(captureCurrentScenario());
+    try { localStorage.setItem('macro_comparison_scenarios', JSON.stringify(savedScenarios)); } catch(e) {}
+    renderScenarioMatrix();
+  });
+
+  document.getElementById('btnClearScenarios').addEventListener('click', () => {
+    savedScenarios = [];
+    try { localStorage.removeItem('macro_comparison_scenarios'); } catch(e) {}
+    renderScenarioMatrix();
+  });
+
+  document.getElementById('btnExportScenarioCSV').addEventListener('click', () => {
+    if (!PRO) {
+      showScenarioNotice("Available in the full version");
+      return;
+    }
+    const list = savedScenarios.length > 0 ? savedScenarios : [captureCurrentScenario()];
+    const rows = [
+      ["Setup Name", "Focal Length", "Marked f-stop", "Extension Stack", "Magnification", "Working Distance", "Effective f-stop", "Light Loss EV", "Exposure Multiplier", "Diffraction Status"]
+    ];
+    list.forEach(s => {
+      rows.push([s.name, s.focalLength, s.markedAperture, s.extension, s.magnification, s.workingDistance, s.effectiveFstop, s.lightLossEV, s.timeMult, s.diffraction]);
+    });
+    const csvContent = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    downloadBlob(blob, 'macro-tube-reference.csv');
+  });
+
+  document.getElementById('btnExportScenarioJSON').addEventListener('click', () => {
+    if (!PRO) {
+      showScenarioNotice("Available in the full version");
+      return;
+    }
+    const list = savedScenarios.length > 0 ? savedScenarios : [captureCurrentScenario()];
+    const blob = new Blob([JSON.stringify({ scenarios: list, exportedAt: new Date().toISOString() }, null, 2)], { type: "application/json" });
+    downloadBlob(blob, `macro-scenarios-matrix-${Date.now()}.json`);
+  });
+
+  document.getElementById('btnPrintFieldCard').addEventListener('click', () => {
+    if (!PRO) {
+      showScenarioNotice("Available in the full version");
+      return;
+    }
+    const preview = document.getElementById('pocketFieldCardView');
+    preview.style.display = preview.style.display === 'none' ? 'block' : 'none';
+    updatePocketCards();
+  });
+
+  document.getElementById('btnCloseCardPreview').addEventListener('click', () => {
+    document.getElementById('pocketFieldCardView').style.display = 'none';
+  });
+
+  document.getElementById('btnConfirmPrintCard').addEventListener('click', () => {
+    window.print();
+  });
+
+  renderScenarioMatrix();
+}
+
+// RUN ON LOAD
+init();
+window.addEventListener('DOMContentLoaded', initScenarioExport);
+// FEATURE-JS
+</script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Macro Photography Extension Tube &amp; Magnification Lab is a browser-based optical simulator designed for macro, product, and nature photographers. It models multi-tube stacking sequences, calculates light loss and effective apertures, and plots Airy disk diffraction against your camera sensor&#39;s pixel pitch. Use the free online bench to plan working distance, or grab the offline pack for field reference.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your camera sensor format to load your sensor&#39;s exact pixel pitch.</li><li>Input your lens focal length, native minimum focus distance, and maximum reproduction ratio.</li><li>Stack individual extension tube sizes (e.g., 12mm, 20mm, 36mm) in the simulator.</li><li>Review calculated working distance, effective aperture, EV compensation, and Airy disk limits.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">How can I calculate what the effect of an extension tube will be?</h4><p style="margin:0">You enter: Lens focal length (50 mm) · Native lens magnification without tubes (0.15x) · Marked lens aperture setting (f/4.0) · Stack of extension tubes added (12 mm + 24 mm = 36 mm total extension).<br>You get: Resulting total magnification ratio, effective aperture, light loss in exposure value (EV) stops, and reduction in working distance.</p><h4 style="font-size:16px;margin:16px 0 4px">Why isn&#39;t this portrait taken at f/29 sharp?</h4><p style="margin:0">You enter: Marked aperture used (f/29) · Camera sensor format and resolution (Full Frame 24 MP, pixel pitch 5.94 µm) · Subject distance / magnification (~0.05x portrait framing).<br>You get: Why the image lacks sharpness despite being stopped down, explained via diffraction physics and the size of the blur spot compared to the camera sensor&#39;s pixels.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">How can I calculate what the effect of an extension tube will be?</h4><p style="margin:0">The general formula is New Magnification = Native Magnification + (Extension Tube Length / Lens Focal Length). For example, adding a 25mm tube to a 50mm lens with a native 0.15x magnification yields approximately 0.15 + (25 / 50) = 0.65x magnification. Note that this formula assumes a simple lens design; internal focusing lenses will vary slightly.</p><h4 style="font-size:16px;margin:16px 0 4px">How does a teleconverter affect depth of field?</h4><p style="margin:0">A teleconverter magnifies the image produced by the prime lens without changing the lens&#39;s physical distance to the subject. Because depth of field is governed primarily by aperture and reproduction ratio on the sensor, multiplying your focal length increases subject magnification, which proportionally reduces optical depth of field for any given camera position and marked f-stop.</p><h4 style="font-size:16px;margin:16px 0 4px">Why isn&#39;t this portrait taken at f/29 sharp?</h4><p style="margin:0">At f/29, optical diffraction severely limits resolution. When an aperture narrows to that degree, light waves bend around the diaphragm edges and spread into Airy disks that are significantly larger than the individual pixels on your camera sensor. Even with a high-end lens, this physical phenomenon blurs fine detail and lowers overall image contrast.</p><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between marked f-stop and effective f-stop in macro photography?</h4><p style="margin:0">Marked f-stop is the aperture ratio set on your lens barrel or camera dial when focused at infinity. Effective f-stop accounts for the physical distance between the rear lens element and the sensor as you focus closer or add extension tubes ($f_{eff} \approx f_{marked} \times [1 + m]$). At 1:1 magnification, an aperture set to f/8 transmits light and creates diffraction equivalent to f/16.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/rpyndv" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../astrophotography-exposure-signal-planner/" style="color:inherit;font-weight:600">Night Sky Exposure &amp; Color Signal Lab</a>: A professional SNR planner and star-trail solver for capturing deep Milky Way colors without tracking hardware.</li><li><a href="../visual-depth-of-field-bokeh-lab/" style="color:inherit;font-weight:600">Visual Depth of Field &amp; Perspective Lab</a>: Interactive optical geometry simulator and lens comparison lab in a single offline HTML file.</li><li><a href="../multivariate-card-game-opening-hand-simulator/" style="color:inherit;font-weight:600">Multi-Card Hypergeometric Opening Hand Simulator</a>: Calculate exact joint opening hand odds, mulligan sequences, and draw curves offline in your browser.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
