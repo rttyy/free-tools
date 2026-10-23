@@ -1,0 +1,2884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #0e1117;
+      --surface: #161b22;
+      --surface-border: #30363d;
+      --surface-hover: #21262d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #2f81f7;
+      --accent-hover: #388bfd;
+      --accent-glow: rgba(47, 129, 247, 0.2);
+      --danger: #f85149;
+      --success: #238636;
+      --warning: #d29922;
+      --radius: 8px;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f6f8fa;
+        --surface: #ffffff;
+        --surface-border: #d0d7de;
+        --surface-hover: #f3f4f6;
+        --text: #1f2328;
+        --text-muted: #656d76;
+        --accent: #0969da;
+        --accent-hover: #0860ca;
+        --accent-glow: rgba(9, 105, 218, 0.15);
+        --danger: #cf222e;
+        --success: #1a7f37;
+        --warning: #9a6700;
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .preset-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      background: var(--surface-hover);
+      border: 1px solid var(--surface-border);
+      color: var(--text);
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: var(--surface-border);
+      border-color: var(--text-muted);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .btn-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+      gap: 16px;
+      min-width: 0;
+    }
+
+    @media (max-width: 990px) {
+      .grid-layout { grid-template-columns: minmax(0, 1fr); }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--surface-border);
+      padding-bottom: 8px;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-label small {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    input[type="number"], select {
+      background: var(--bg);
+      border: 1px solid var(--surface-border);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      width: 100%;
+      font-family: inherit;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.82rem;
+    }
+
+    .switch-label {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .viewport-column {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .canvas-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .canvas-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+    }
+
+    .viewport-wrapper {
+      position: relative;
+      background: #000;
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+      border: 1px solid var(--surface-border);
+    }
+
+    #compositeCanvas {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .canvas-overlay-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      pointer-events: none;
+      max-width: calc(100% - 20px);
+      word-break: break-word;
+    }
+
+    .reel-container {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 6px 2px 10px 2px;
+      scroll-snap-type: x proximity;
+    }
+
+    .reel-container::-webkit-scrollbar {
+      height: 6px;
+    }
+    .reel-container::-webkit-scrollbar-thumb {
+      background: var(--surface-border);
+      border-radius: 4px;
+    }
+
+    .thumbnail-card {
+      flex: 0 0 115px;
+      background: var(--bg);
+      border: 2px solid var(--surface-border);
+      border-radius: 6px;
+      padding: 5px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.72rem;
+      position: relative;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+
+    .thumbnail-card.active-scrub {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .thumbnail-card.reference-frame {
+      border-color: var(--warning);
+    }
+
+    .thumbnail-card.disabled-frame {
+      opacity: 0.4;
+      filter: grayscale(80%);
+    }
+
+    .thumb-preview {
+      width: 100%;
+      height: 64px;
+      background: #000;
+      border-radius: 3px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumb-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 0.65rem;
+      font-weight: 600;
+    }
+
+    .badge-ref {
+      background: var(--warning);
+      color: #000;
+    }
+
+    .badge-diff {
+      background: var(--accent-glow);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .metric-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 600;
+    }
+
+    .metric-value {
+      font-size: 1.35rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+
+    .metric-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .comparison-section {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .comparison-table-wrapper {
+      overflow-x: auto;
+      max-width: 100%;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table.comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      text-align: left;
+    }
+
+    table.comparison-table th,
+    table.comparison-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    table.comparison-table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+
+    .status-alert {
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-alert.warning {
+      background: rgba(210, 153, 34, 0.15);
+      border: 1px solid var(--warning);
+      color: var(--text);
+    }
+
+    .status-alert.info {
+      background: var(--accent-glow);
+      border: 1px solid var(--accent);
+      color: var(--text);
+    }
+
+    .inline-pro-msg {
+      font-size: 0.8rem;
+      color: var(--warning);
+      margin-top: 4px;
+      display: none;
+    }
+
+    .inline-pro-msg a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .trajectory-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: var(--bg);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--surface-border);
+    }
+
+    .interpretation-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .interpretation-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 0.84rem;
+    }
+
+    .interpretation-title {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    @media print {
+      body { background: #fff !important; color: #000 !important; padding: 0 !important; }
+      header, .preset-bar, .panel, .canvas-toolbar, .trajectory-bar, .reel-container, .inline-pro-msg { display: none !important; }
+      .grid-layout { display: block !important; }
+      .app-container { max-width: 100% !important; }
+      .canvas-card, .comparison-section, .interpretation-card { border: 1px solid #ccc !important; break-inside: avoid; }
+    }
+    .strobe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .strobe-track-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .strobe-gradient-bar {
+      height: 10px;
+      border-radius: 5px;
+      background: linear-gradient(to right, #ff0000, #ffaa00, #00ff00, #00e5ff, #0033ff, #aa00ff);
+      border: 1px solid var(--surface-border);
+      transition: background 0.2s ease;
+    }
+    .strobe-legend-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .export-controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+    }
+    .export-options-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: var(--bg);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--surface-border);
+      font-size: 0.82rem;
+    }
+    .export-meta-preview {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: rgba(0, 0, 0, 0.4);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--surface-border);
+      transition: opacity 0.2s;
+    }
+    .export-action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+    .export-status-info {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+    .vault-input-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .vault-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+    .vault-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--bg);
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+    }
+    .vault-item-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow: hidden;
+      min-width: 0;
+    }
+    .vault-item-title {
+      font-weight: 600;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .vault-item-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+/* FEATURE-CSS */
+</style>
+  
+<title>Combine Burst Photos into One Action Sequence</title>
+<meta name="description" content="Combine burst photos into one action sequence offline in your browser. Automated background subtraction, velocity tinting, and full-resolution export.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/burst-action-sequence-multi-exposure-compositor/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/burst-action-sequence-multi-exposure-compositor/">
+<meta property="og:title" content="Combine Burst Photos into One Action Sequence"><meta property="og:description" content="Combine burst photos into one action sequence offline in your browser. Automated background subtraction, velocity tinting, and full-resolution export.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/burst-action-sequence-multi-exposure-compositor/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Combine Burst Photos into One Action Sequence","description":"Combine burst photos into one action sequence offline in your browser. Automated background subtraction, velocity tinting, and full-resolution export.","url":"https://rttyy.github.io/free-tools/burst-action-sequence-multi-exposure-compositor/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I combine multiple exposures for action shots?","acceptedAnswer":{"@type":"Answer","text":"To combine multiple action exposures, capture a sequence on a locked tripod so the background remains identical across all frames. In software, each frame is layered over a base plate, and pixels that differ from the background (the athlete or subject) are isolated using difference masks or automated subtraction. The isolated subjects are then blended onto the final static background frame."}},{"@type":"Question","name":"Why do it \"in-camera\" rather than in post-processing?","acceptedAnswer":{"@type":"Answer","text":"In-camera multi-exposure modes are convenient for instant results, but they add exposure values together directly on the sensor, which frequently causes overexposure or washed-out subjects when blending more than two or three frames. Processing in post-processing allows you to use selective masking and background subtraction, ensuring the background remains properly exposed and each instance of the subject retains its full contrast and sharpness."}},{"@type":"Question","name":"Do my burst photos need to be shot from a locked tripod?","acceptedAnswer":{"@type":"Answer","text":"Yes, automated background subtraction relies on a static background between frames to detect the moving subject. Handheld bursts with camera movement will cause alignment errors, requiring manual frame registration or manual masking. For best results, use a sturdy tripod with fixed focal length, manual focus, and locked manual exposure."}},{"@type":"Question","name":"What is the difference between the free web page and the $12 Gumroad product?","acceptedAnswer":{"@type":"Answer","text":"The web page is completely free and fully functional when you have an internet connection to load the page. The $12 Gumroad download is a self-contained offline package containing all code and assets, designed for field use on laptops without an active internet connection, alongside direct support for ongoing development."}}]}</script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div>
+      <div class="brand-title">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="m4.93 4.93 4.24 4.24"></path>
+          <path d="m14.83 9.17 4.24-4.24"></path>
+          <path d="m14.83 14.83 4.24 4.24"></path>
+          <path d="m9.17 14.83-4.24 4.24"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        Burst Action Sequence Multi-Exposure Compositor
+      </div>
+      <div class="brand-subtitle">
+        Client-side optical isolation, background subtraction &amp; dynamic strobe trajectory synthesizer
+      </div>
+    </div>
+
+    <div class="preset-bar">
+      <span style="font-size:0.8rem; color:var(--text-muted); font-weight:500;">Presets:</span>
+      <button class="btn" id="presetSkate">Skatepark Kickflip</button>
+      <button class="btn" id="presetGym">Gymnastics Vault</button>
+      <button class="btn" id="presetMtb">MTB Berm Jump</button>
+      <button class="btn" id="btnResetTool" title="Reset to initial default">Reset</button>
+    </div>
+  </header>
+
+  <section class="panel" data-feature="chromatic-motion-strobe">
+    <div class="panel-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+          <path d="M2 12h20"></path>
+        </svg>
+        <span>Chromatic Velocity Strobe Tinting</span>
+      </div>
+      <span class="badge badge-diff">Kinematic Analysis</span>
+    </div>
+    <div class="strobe-grid">
+      <div class="form-group">
+        <label class="form-label" for="strobeColorMode">Color Mapping Mode</label>
+        <select id="strobeColorMode">
+          <option value="spectral" selected>Spectral Rainbow</option>
+          <option value="heatmap">Velocity Heatmap Blue-to-Red</option>
+          <option value="monochrome">Monochrome Strobe</option>
+          <option value="cyberpunk">Cyberpunk Amber/Teal</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="strobeBlendStrength">
+          Blend Strength
+          <small id="strobeBlendStrengthVal">80%</small>
+        </label>
+        <input type="range" id="strobeBlendStrength" min="0" max="100" value="80" step="1">
+      </div>
+    </div>
+    <div class="strobe-track-wrapper">
+      <div class="strobe-gradient-bar" id="strobeGradientBar"></div>
+      <div class="strobe-legend-row">
+        <span>Phase T₀ (Launch / Acceleration)</span>
+        <span id="strobeLegendStatus">Spectral Hue Shift: 0° (Red) &rarr; 295° (Violet)</span>
+        <span>Phase Tₙ (Landing / Deceleration)</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" data-feature="hi-res-canvas-export">
+    <div class="panel-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span>Full-Resolution Client-Side Canvas Exporter</span>
+      </div>
+      <span class="badge badge-diff">Native Sensor Res</span>
+    </div>
+    <div class="export-controls-grid">
+      <div class="form-group">
+        <label class="form-label" for="exportFormatSelect">Export Format</label>
+        <select id="exportFormatSelect">
+          <option value="image/png" selected>PNG (Lossless)</option>
+          <option value="image/jpeg">JPEG (95% Quality)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="exportShutterSpeed">Nominal Shutter Speed</label>
+        <select id="exportShutterSpeed">
+          <option value="1/1000s">1/1000s (Fast Action)</option>
+          <option value="1/2000s" selected>1/2000s (Action Freeze)</option>
+          <option value="1/4000s">1/4000s (High Speed)</option>
+          <option value="1/500s">1/500s (Panning Blur)</option>
+        </select>
+      </div>
+    </div>
+    <div class="export-options-row">
+      <label class="switch-label">
+        <input type="checkbox" id="chkEmbedWatermark" checked>
+        Embed Technical Metadata Watermark (Corner Telemetry)
+      </label>
+      <div class="export-meta-preview" id="exportMetaPreview">
+        Watermark: Burst 12 fps • Shutter 1/2000s • 7 frames
+      </div>
+    </div>
+    <div class="export-action-bar">
+      <button class="btn btn-primary" id="btnHiResExport">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export Composite
+      </button>
+      <span class="export-status-info" id="exportStatusInfo">Native: 1000 × 562 px • PNG (Lossless) • Instant Blob</span>
+    </div>
+    <div class="inline-pro-msg" id="hiResProNotice" style="display:none;">
+      Available in the full version: <a href="https://example.com/pro">https://example.com/pro</a>
+    </div>
+  </section>
+
+  <section class="panel" data-feature="sequence-session-vault">
+    <div class="panel-header">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 8v13H3V8"></path>
+          <path d="M1 3h22v5H1z"></path>
+          <path d="M10 12h4"></path>
+        </svg>
+        <span>Multi-Sequence Scenario &amp; Configuration Vault</span>
+      </div>
+      <span class="badge badge-diff">Session Storage</span>
+    </div>
+    <div class="vault-input-row">
+      <input type="text" id="vaultScenarioName" placeholder="Scenario name (e.g. Setup 1)" style="flex:1; min-width:180px;">
+      <button class="btn btn-primary" id="btnVaultSave">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save Current Sequence
+      </button>
+      <button class="btn" id="btnVaultExport">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export Session JSON
+      </button>
+    </div>
+    <div class="inline-pro-msg" id="vaultProNotice">Available in the full version: <a href="https://example.com/pro">https://example.com/pro</a></div>
+    <div class="vault-list-container" id="vaultScenarioList">
+      <!-- Populated dynamically -->
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+
+  <!-- Top Metrics Bar -->
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="metric-title">Loaded Action Frames</div>
+      <div class="metric-value" id="valFrameCount">7 frames</div>
+      <div class="metric-sub" id="valCanvasDim">Canvas: 1000 × 562 px</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-title">Subject Net Trajectory</div>
+      <div class="metric-value" id="valDisplacement">0 px</div>
+      <div class="metric-sub" id="valTrajectoryMeters">Est: 0.0 m across field</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-title">Mean Subject Mask Area</div>
+      <div class="metric-value" id="valMeanCoverage">0.0 %</div>
+      <div class="metric-sub" id="valIsolatedPixels">0 active pixels keyed</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-title">Daylight Background Delta</div>
+      <div class="metric-value" style="color:var(--success);">0.0 EV (Post)</div>
+      <div class="metric-sub" id="valCameraEVBlowout">vs In-Camera: +2.8 EV (Blown)</div>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Controls Panel -->
+    <div style="display:flex; flex-direction:column; gap:16px; min-width:0;">
+      
+      <!-- Feature 1: Frame Loader & Simulator -->
+      <section class="panel" data-feature="burst-frame-loader">
+        <div class="panel-header">
+          <span>Burst Sequence Input</span>
+          <span class="badge badge-diff">Frame Engine</span>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Import Athlete Burst Files</label>
+          <div class="btn-group">
+            <button class="btn btn-primary" style="flex:1;" id="btnTriggerUpload">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Upload Images (JPG/PNG)
+            </button>
+            <input type="file" id="fileInput" multiple accept="image/jpeg,image/png,image/webp">
+            <button class="btn" id="btnLoadSample" title="Regenerate current preset burst">Sample</button>
+          </div>
+          <small style="color:var(--text-muted); font-size:0.73rem;">Processes 100% locally via Canvas API.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="refFrameSelect">
+            Static Base Plate (Reference Frame)
+            <small id="refFrameIndexLabel">Index: 0</small>
+          </label>
+          <select id="refFrameSelect"></select>
+        </div>
+
+        <div class="switch-row">
+          <label class="switch-label">
+            <input type="checkbox" id="chkReverseOrder">
+            Reverse Chronological Order
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="numBurstFps">
+            Capture Burst Rate (FPS)
+            <small id="burstFpsDisplay">12 fps</small>
+          </label>
+          <input type="range" id="numBurstFps" min="5" max="60" value="12" step="1">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="numAthleteSpeed">
+            Subject Velocity (m/s)
+            <small id="athleteSpeedDisplay">4.5 m/s</small>
+          </label>
+          <input type="range" id="numAthleteSpeed" min="1.0" max="25.0" value="4.5" step="0.1">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="numAmbientEv">
+            Ambient Light (EV)
+            <small id="ambientEvDisplay">EV 14</small>
+          </label>
+          <input type="range" id="numAmbientEv" min="4" max="17" value="14" step="1">
+        </div>
+      </section>
+
+      <!-- Feature 2: Difference Isolation Engine -->
+      <section class="panel" data-feature="difference-isolation-engine">
+        <div class="panel-header">
+          <span>Background Subtraction &amp; Keyer</span>
+          <span class="badge badge-diff">Optical Math</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="rangeThreshold">
+            Difference Threshold (Luma Units)
+            <small id="threshVal">20</small>
+          </label>
+          <input type="range" id="rangeThreshold" min="2" max="100" value="20" step="1">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="rangeNoiseFloor">
+            Noise Floor Cutoff
+            <small id="noiseVal">6</small>
+          </label>
+          <input type="range" id="rangeNoiseFloor" min="0" max="40" value="6" step="1">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="rangeFeather">
+            Edge Feather Softness (Radius px)
+            <small id="featherVal">3 px</small>
+          </label>
+          <input type="range" id="rangeFeather" min="0" max="15" value="3" step="1">
+        </div>
+
+        <div class="switch-row">
+          <label class="switch-label">
+            <input type="checkbox" id="chkInvertMask">
+            Invert Extraction Mask
+          </label>
+        </div>
+
+        <div class="switch-row">
+          <label class="switch-label">
+            <input type="checkbox" id="chkShowMaskPreview">
+            Live High-Contrast Mask Matte View
+          </label>
+        </div>
+      </section>
+
+      <!-- Feature 3: Multi-Exposure Compositor Blend Settings -->
+      <section class="panel" data-feature="multi-exposure-compositor">
+        <div class="panel-header">
+          <span>Blend &amp; Trail Dynamics</span>
+          <span class="badge badge-diff">Synthesis</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="selectBlendMode">Compositing Mode</label>
+          <select id="selectBlendMode">
+            <option value="overlay" selected>Subject Overlay (Clean Action)</option>
+            <option value="lighten">Lighten / Strobe Max</option>
+            <option value="darken">Darken / Shadow Silhouette</option>
+            <option value="chronological">Chronological Stagger (Depth Clustered)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="selectCadence">Frame Cadence / Stride</label>
+          <select id="selectCadence">
+            <option value="1" selected>Every Frame (Full Fluidity)</option>
+            <option value="2">Every 2nd Frame (Standard Stagger)</option>
+            <option value="3">Every 3rd Frame (Wide Displacement)</option>
+            <option value="4">Key Extrema Only (First &amp; Last + Peak)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="selectDecay">Opacity Ghosting Decay</label>
+          <select id="selectDecay">
+            <option value="none">None (100% Solid Overlays)</option>
+            <option value="linear" selected>Linear Fade (Early &rarr; Late)</option>
+            <option value="exponential">Exponential Ghosting (Motion Echo)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="rangeTerminalAlpha">
+            Earliest Trail Alpha Floor
+            <small id="terminalAlphaVal">25%</small>
+          </label>
+          <input type="range" id="rangeTerminalAlpha" min="10" max="100" value="25" step="5">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="selectChromatic">Chromatic Velocity Tint</label>
+          <select id="selectChromatic">
+            <option value="none" selected>Natural Colors (RGB Native)</option>
+            <option value="heatmap">Velocity Heatmap (Blue &rarr; Red)</option>
+            <option value="spectral">Spectral Rainbow (Phase Colorized)</option>
+          </select>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Right Viewport & Playback Column -->
+    <div class="viewport-column">
+      
+      <div class="canvas-card">
+        <div class="canvas-toolbar">
+          <div style="font-weight:600; display:flex; align-items:center; gap:8px;">
+            <span>Interactive Multi-Exposure Canvas</span>
+            <span id="renderStatusBadge" class="badge" style="background:#238636; color:#fff;">SYNTHESIZED</span>
+          </div>
+          
+          <div class="btn-group">
+            <button class="btn" id="btnExportImage" title="Download High-Res Composite">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export Composite PNG
+            </button>
+            <button class="btn" id="btnExportTrajectory" title="Download Motion Telemetry CSV">Export CSV</button>
+            <button class="btn" id="btnExportJson" title="Export Compositor Settings JSON">Save JSON</button>
+            <button class="btn" id="btnCopySummary" title="Copy telemetry summary to clipboard">Copy</button>
+            <button class="btn" id="btnPrintReport" title="Print composite report">Print</button>
+          </div>
+        </div>
+
+        <div class="inline-pro-msg" id="proExportNotice">Available in the full version: <a href="https://example.com/pro">Upgrade to Pro</a></div>
+
+        <div class="viewport-wrapper" id="viewportContainer">
+          <canvas id="compositeCanvas" width="1000" height="562"></canvas>
+          <div class="canvas-overlay-badge" id="canvasTelemetryOverlay">
+            Burst: 7 frames @ 12 fps | Mode: Overlay | Decay: Linear Fade
+          </div>
+        </div>
+
+        <!-- Feature 4: Interactive Motion Trajectory Scrubber -->
+        <div data-feature="timeline-trajectory-scrubber" style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
+          <div class="trajectory-bar">
+            <button class="btn btn-primary" id="btnPlaySweep" style="padding:4px 10px;">
+              <span id="playIcon">&#9658;</span> Play Sweep
+            </button>
+            <div style="display:flex; align-items:center; gap:6px; flex:1;">
+              <span style="font-size:0.75rem; color:var(--text-muted); white-space:nowrap;">Sweep Head:</span>
+              <input type="range" id="rangeSweepHead" min="0" max="6" value="6" step="1" style="flex:1;">
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="font-size:0.75rem; color:var(--text-muted); white-space:nowrap;">Speed:</span>
+              <input type="range" id="rangeSweepFps" min="2" max="30" value="8" step="1" style="width:70px;">
+              <span style="font-size:0.75rem; font-family:var(--font-mono);" id="sweepFpsLabel">8 fps</span>
+            </div>
+          </div>
+
+          <!-- Thumbnail Reel & Frame Toggle Strip -->
+          <div class="reel-container" id="timelineThumbnailReel">
+            <!-- Dynamically populated frame cards -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature: What this means / What to do next -->
+      <div class="interpretation-card" data-feature="actionable-guidance-interpreter">
+        <div class="interpretation-row">
+          <div class="interpretation-title">What this means</div>
+          <div id="textWhatThisMeans">Computing exposure diagnostics...</div>
+        </div>
+        <div class="interpretation-row" style="border-top:1px solid var(--surface-border); padding-top:6px; margin-top:4px;">
+          <div class="interpretation-title" style="color:var(--success);">What to do next</div>
+          <div id="textWhatToDoNext">Optimizing strobe spacing and background subtraction...</div>
+        </div>
+      </div>
+
+      <!-- Action Athlete Physics & EV Optical Isolation Analysis -->
+      <div class="comparison-section" data-feature="optical-accumulation-analysis">
+        <div class="panel-header">
+          <span>In-Camera vs. Post-Processing Multi-Exposure Analysis</span>
+          <span style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">Optical Accumulation Model</span>
+        </div>
+
+        <div class="status-alert info" id="liveRecommendationBlock">
+        </div>
+
+        <div class="comparison-table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Capture Metric</th>
+                <th>Traditional In-Camera Multiple Exposure</th>
+                <th>Client-Side Digital Keyed Isolation</th>
+                <th>Diagnostic Variance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Background Exposure Accumulation</strong></td>
+                <td id="tableInCameraAccum">+2.8 EV Overexposed (Severe Blowout)</td>
+                <td id="tablePostAccum" style="color:var(--success); font-weight:600;">0.0 EV Delta (Perfect Retained Plate)</td>
+                <td>Background stays constant; no white flare</td>
+              </tr>
+              <tr>
+                <td><strong>Subject Motion Ghosting</strong></td>
+                <td>Transparent athlete; background bleeds through limbs</td>
+                <td style="color:var(--success); font-weight:600;">Full pixel opacity or controlled trajectory decay</td>
+                <td>Clear anatomical silhouette &amp; edge retention</td>
+              </tr>
+              <tr>
+                <td><strong>Threshold Sensitivity &amp; Noise</strong></td>
+                <td>Fixed sensor sum: random optical photon noise spikes</td>
+                <td id="tableSubtractiveRatio">Luma Delta &ge; 20 units with 3px feather</td>
+                <td>Noise floor rejection cuts camera sensor grain</td>
+              </tr>
+              <tr>
+                <td><strong>Athlete Trajectory Cadence</strong></td>
+                <td>Locked to shutter trip timing; non-adjustable</td>
+                <td id="tableCadenceRatio">Selectable (Cadence: Every Frame)</td>
+                <td>Drop overlapping or cluttered phases at will</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="font-size:0.72rem; color:var(--text-muted); border-top:1px solid var(--surface-border); padding-top:8px;">
+          Estimate only - verify with a qualified professional before relying on it. Calculation assumes stationary camera tripod or sub-pixel stabilized plate.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const PRO = false;
+const PRO_LINK = "https://ferrywave73.gumroad.com/l/sfbsow";
+
+(function() {
+  // State definition
+  const state = {
+    frames: [], // Array of { id, index, canvas, width, height, active, diffPct, posX, posY, thumbCanvas }
+    basePlateIndex: 0,
+    burstFps: 12,
+    athleteSpeed: 4.5,
+    ambientEv: 14,
+    differenceThreshold: 20,
+    noiseFloor: 6,
+    featherRadius: 3,
+    invertMask: false,
+    showMaskPreview: false,
+    blendMode: 'overlay', // overlay, lighten, darken, chronological
+    cadence: 1, // 1, 2, 3, 4
+    decayMode: 'linear', // none, linear, exponential
+    terminalAlpha: 0.25,
+    chromaticMode: 'none', // none, heatmap, spectral
+    reverseOrder: false,
+    sweepHead: 6,
+    sweepFps: 8,
+    isPlaying: false,
+    activePresetName: 'Skatepark Kickflip'
+  };
+
+  let animationTimer = null;
+
+  // DOM Elements
+  const compositeCanvas = document.getElementById('compositeCanvas');
+  const compCtx = compositeCanvas.getContext('2d');
+  const timelineThumbnailReel = document.getElementById('timelineThumbnailReel');
+  const refFrameSelect = document.getElementById('refFrameSelect');
+  const fileInput = document.getElementById('fileInput');
+
+  // Input bindings
+  const rangeThreshold = document.getElementById('rangeThreshold');
+  const threshVal = document.getElementById('threshVal');
+  const rangeNoiseFloor = document.getElementById('rangeNoiseFloor');
+  const noiseVal = document.getElementById('noiseVal');
+  const rangeFeather = document.getElementById('rangeFeather');
+  const featherVal = document.getElementById('featherVal');
+  const chkInvertMask = document.getElementById('chkInvertMask');
+  const chkShowMaskPreview = document.getElementById('chkShowMaskPreview');
+  const selectBlendMode = document.getElementById('selectBlendMode');
+  const selectCadence = document.getElementById('selectCadence');
+  const selectDecay = document.getElementById('selectDecay');
+  const rangeTerminalAlpha = document.getElementById('rangeTerminalAlpha');
+  const terminalAlphaVal = document.getElementById('terminalAlphaVal');
+  const selectChromatic = document.getElementById('selectChromatic');
+  const chkReverseOrder = document.getElementById('chkReverseOrder');
+  const numBurstFps = document.getElementById('numBurstFps');
+  const burstFpsDisplay = document.getElementById('burstFpsDisplay');
+  const numAthleteSpeed = document.getElementById('numAthleteSpeed');
+  const athleteSpeedDisplay = document.getElementById('athleteSpeedDisplay');
+  const numAmbientEv = document.getElementById('numAmbientEv');
+  const ambientEvDisplay = document.getElementById('ambientEvDisplay');
+  const rangeSweepHead = document.getElementById('rangeSweepHead');
+  const rangeSweepFps = document.getElementById('rangeSweepFps');
+  const sweepFpsLabel = document.getElementById('sweepFpsLabel');
+  const btnPlaySweep = document.getElementById('btnPlaySweep');
+  const playIcon = document.getElementById('playIcon');
+
+  // Metrics DOM
+  const valFrameCount = document.getElementById('valFrameCount');
+  const valCanvasDim = document.getElementById('valCanvasDim');
+  const valDisplacement = document.getElementById('valDisplacement');
+  const valTrajectoryMeters = document.getElementById('valTrajectoryMeters');
+  const valMeanCoverage = document.getElementById('valMeanCoverage');
+  const valIsolatedPixels = document.getElementById('valIsolatedPixels');
+  const valCameraEVBlowout = document.getElementById('valCameraEVBlowout');
+  const tableInCameraAccum = document.getElementById('tableInCameraAccum');
+  const tableCadenceRatio = document.getElementById('tableCadenceRatio');
+  const tableSubtractiveRatio = document.getElementById('tableSubtractiveRatio');
+  const liveRecommendationBlock = document.getElementById('liveRecommendationBlock');
+  const canvasTelemetryOverlay = document.getElementById('canvasTelemetryOverlay');
+  const proExportNotice = document.getElementById('proExportNotice');
+
+  // Helper: Gaussian-like 1D box blur for alpha feathering
+  function boxBlurAlpha(alphaChannel, width, height, radius) {
+    if (radius <= 0) return alphaChannel;
+    const output = new Uint8ClampedArray(alphaChannel.length);
+    const temp = new Uint8ClampedArray(alphaChannel.length);
+
+    // Horizontal pass
+    for (let y = 0; y < height; y++) {
+      const rowOffset = y * width;
+      let sum = 0;
+      let count = 0;
+      for (let x = -radius; x <= radius; x++) {
+        if (x >= 0 && x < width) {
+          sum += alphaChannel[rowOffset + x];
+          count++;
+        }
+      }
+      for (let x = 0; x < width; x++) {
+        temp[rowOffset + x] = Math.round(sum / count);
+        const remX = x - radius;
+        const addX = x + radius + 1;
+        if (remX >= 0) {
+          sum -= alphaChannel[rowOffset + remX];
+          count--;
+        }
+        if (addX < width) {
+          sum += alphaChannel[rowOffset + addX];
+          count++;
+        }
+      }
+    }
+
+    // Vertical pass
+    for (let x = 0; x < width; x++) {
+      let sum = 0;
+      let count = 0;
+      for (let y = -radius; y <= radius; y++) {
+        if (y >= 0 && y < height) {
+          sum += temp[y * width + x];
+          count++;
+        }
+      }
+      for (let y = 0; y < height; y++) {
+        output[y * width + x] = Math.round(sum / count);
+        const remY = y - radius;
+        const addY = y + radius + 1;
+        if (remY >= 0) {
+          sum -= temp[remY * width + x];
+          count--;
+        }
+        if (addY < height) {
+          sum += temp[addY * width + x];
+          count++;
+        }
+      }
+    }
+    return output;
+  }
+
+  // Procedural action burst generators
+  function createSkateBurst(frameCount = 7) {
+    const w = 1000;
+    const h = 562;
+    const frames = [];
+
+    // Background base
+    const bgCanvas = document.createElement('canvas');
+    bgCanvas.width = w;
+    bgCanvas.height = h;
+    const bctx = bgCanvas.getContext('2d');
+    
+    // Sky
+    const sky = bctx.createLinearGradient(0, 0, 0, h * 0.65);
+    sky.addColorStop(0, '#6fa8dc');
+    sky.addColorStop(1, '#cfe2f3');
+    bctx.fillStyle = sky;
+    bctx.fillRect(0, 0, w, h * 0.65);
+
+    // Concrete bowl & rail
+    bctx.fillStyle = '#8f9399';
+    bctx.fillRect(0, h * 0.65, w, h * 0.35);
+
+    // Coping & texture
+    bctx.fillStyle = '#b0b5bc';
+    bctx.fillRect(0, h * 0.65 - 6, w, 10);
+    bctx.fillStyle = '#444950';
+    for (let i = 0; i < w; i += 70) {
+      bctx.fillRect(i, h * 0.65 + 4, 3, h * 0.35);
+    }
+    // Concrete graffiti tag in distance
+    bctx.fillStyle = '#d9534f';
+    bctx.font = 'bold 36px monospace';
+    bctx.fillText('STREET PARK', 120, h * 0.55);
+
+    // Create sequence with skater kickflipping
+    for (let i = 0; i < frameCount; i++) {
+      const fCanvas = document.createElement('canvas');
+      fCanvas.width = w;
+      fCanvas.height = h;
+      const ctx = fCanvas.getContext('2d');
+      // Draw static background
+      ctx.drawImage(bgCanvas, 0, 0);
+
+      // Trajectory physics
+      const t = i / (frameCount - 1);
+      const px = 140 + t * 720;
+      // Parabolic jump arc: starts at coping, peaks at t=0.5, lands
+      const arcHeight = Math.sin(t * Math.PI) * 160;
+      const py = (h * 0.64) - arcHeight;
+
+      // Draw Skater Figure
+      ctx.save();
+      ctx.translate(px, py);
+
+      // Shadow on ground
+      const groundY = (h * 0.65) - py;
+      ctx.fillStyle = 'rgba(20, 25, 30, 0.4)';
+      ctx.beginPath();
+      ctx.ellipse(0, groundY + 10, 35 - arcHeight * 0.1, 8, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Skateboard
+      const boardRot = (t * 4 * Math.PI) % (Math.PI * 2); // kickflip rotation
+      ctx.save();
+      ctx.translate(0, 18);
+      ctx.rotate(boardRot * 0.5);
+      ctx.fillStyle = '#d35400';
+      ctx.fillRect(-38, -4, 76, 8);
+      // Wheels
+      ctx.fillStyle = '#f1c40f';
+      ctx.beginPath();
+      ctx.arc(-26, 6, 4, 0, Math.PI * 2);
+      ctx.arc(26, 6, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Skater Legs (jeans)
+      ctx.strokeStyle = '#2c3e50';
+      ctx.lineWidth = 10;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(-10, -5);
+      ctx.lineTo(-16, 14); // Left leg
+      ctx.moveTo(8, -5);
+      ctx.lineTo(14, 12);  // Right leg
+      ctx.stroke();
+
+      // Torso (Yellow hoodie)
+      ctx.strokeStyle = '#f39c12';
+      ctx.lineWidth = 16;
+      ctx.beginPath();
+      ctx.moveTo(0, -38);
+      ctx.lineTo(0, -6);
+      ctx.stroke();
+
+      // Arms (spread for balance)
+      ctx.strokeStyle = '#e67e22';
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.moveTo(-12, -32);
+      ctx.lineTo(-32, -42 + Math.sin(t * 6) * 10);
+      ctx.moveTo(12, -32);
+      ctx.lineTo(34, -40 - Math.sin(t * 6) * 10);
+      ctx.stroke();
+
+      // Head / Helmet
+      ctx.fillStyle = '#2c3e50';
+      ctx.beginPath();
+      ctx.arc(0, -50, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+
+      frames.push({
+        id: `skate-${i}`,
+        index: i,
+        canvas: fCanvas,
+        width: w,
+        height: h,
+        active: true,
+        diffPct: 0,
+        posX: px,
+        posY: py,
+        thumbCanvas: null
+      });
+    }
+
+    return frames;
+  }
+
+  function createGymBurst(frameCount = 10) {
+    const w = 1000;
+    const h = 562;
+    const frames = [];
+
+    // Background base
+    const bgCanvas = document.createElement('canvas');
+    bgCanvas.width = w;
+    bgCanvas.height = h;
+    const bctx = bgCanvas.getContext('2d');
+    
+    // Arena gradient
+    const wall = bctx.createLinearGradient(0, 0, 0, h);
+    wall.addColorStop(0, '#111726');
+    wall.addColorStop(0.7, '#1f293d');
+    wall.addColorStop(1, '#0b0f19');
+    bctx.fillStyle = wall;
+    bctx.fillRect(0, 0, w, h);
+
+    // Blue gymnastics floor mat
+    bctx.fillStyle = '#1e40af';
+    bctx.fillRect(0, h * 0.78, w, h * 0.22);
+    bctx.fillStyle = '#3b82f6';
+    bctx.fillRect(0, h * 0.78, w, 4);
+
+    // Vaulting table apparatus
+    bctx.fillStyle = '#dc2626';
+    bctx.fillRect(260, h * 0.54, 80, 28);
+    bctx.fillStyle = '#475569';
+    bctx.fillRect(295, h * 0.54 + 28, 10, h * 0.24);
+
+    for (let i = 0; i < frameCount; i++) {
+      const fCanvas = document.createElement('canvas');
+      fCanvas.width = w;
+      fCanvas.height = h;
+      const ctx = fCanvas.getContext('2d');
+      ctx.drawImage(bgCanvas, 0, 0);
+
+      const t = i / (frameCount - 1);
+      // Approach run -> spring off vault -> high twisting aerial -> land
+      let px, py, rot;
+      if (t < 0.25) {
+        // Run
+        px = 60 + t * 4 * 200;
+        py = h * 0.72;
+        rot = 0.2;
+      } else {
+        // Vault trajectory flight
+        const flightT = (t - 0.25) / 0.75;
+        px = 260 + flightT * 640;
+        py = (h * 0.65) - Math.sin(flightT * Math.PI) * 220;
+        rot = flightT * Math.PI * 4; // Multiple twists/flips
+      }
+
+      ctx.save();
+      ctx.translate(px, py);
+      ctx.rotate(rot);
+
+      // Gymnast in bright red/white leotard
+      // Torso
+      ctx.fillStyle = '#ef4444';
+      ctx.fillRect(-8, -20, 16, 40);
+
+      // Limbs
+      ctx.strokeStyle = '#f87171';
+      ctx.lineWidth = 6;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(-6, 20);
+      ctx.lineTo(-12, 45); // Left leg
+      ctx.moveTo(6, 20);
+      ctx.lineTo(12, 45);  // Right leg
+      ctx.moveTo(-8, -15);
+      ctx.lineTo(-24, -30); // Left arm
+      ctx.moveTo(8, -15);
+      ctx.lineTo(24, -30);  // Right arm
+      ctx.stroke();
+
+      // Head
+      ctx.fillStyle = '#fed7aa';
+      ctx.beginPath();
+      ctx.arc(0, -28, 9, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+
+      frames.push({
+        id: `gym-${i}`,
+        index: i,
+        canvas: fCanvas,
+        width: w,
+        height: h,
+        active: true,
+        diffPct: 0,
+        posX: px,
+        posY: py,
+        thumbCanvas: null
+      });
+    }
+
+    return frames;
+  }
+
+  function createMtbBurst(frameCount = 6) {
+    const w = 1000;
+    const h = 562;
+    const frames = [];
+
+    const bgCanvas = document.createElement('canvas');
+    bgCanvas.width = w;
+    bgCanvas.height = h;
+    const bctx = bgCanvas.getContext('2d');
+    
+    // Forest background
+    const forest = bctx.createLinearGradient(0, 0, 0, h);
+    forest.addColorStop(0, '#14342b');
+    forest.addColorStop(0.5, '#20402b');
+    forest.addColorStop(1, '#3b2f20');
+    bctx.fillStyle = forest;
+    bctx.fillRect(0, 0, w, h);
+
+    // Dirt berm curve
+    bctx.fillStyle = '#5c4033';
+    bctx.beginPath();
+    bctx.moveTo(0, h * 0.85);
+    bctx.quadraticCurveTo(w * 0.45, h * 0.55, w, h * 0.75);
+    bctx.lineTo(w, h);
+    bctx.lineTo(0, h);
+    bctx.closePath();
+    bctx.fill();
+
+    // Trees
+    bctx.fillStyle = '#0f241a';
+    for (let tx = 40; tx < w; tx += 90) {
+      bctx.fillRect(tx, 0, 24, h * 0.5);
+    }
+
+    for (let i = 0; i < frameCount; i++) {
+      const fCanvas = document.createElement('canvas');
+      fCanvas.width = w;
+      fCanvas.height = h;
+      const ctx = fCanvas.getContext('2d');
+      ctx.drawImage(bgCanvas, 0, 0);
+
+      const t = i / (frameCount - 1);
+      const px = 100 + t * 800;
+      const py = (h * 0.65) - Math.sin(t * Math.PI) * 140;
+
+      ctx.save();
+      ctx.translate(px, py);
+
+      // MTB Wheels
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.arc(-32, 22, 18, 0, Math.PI * 2); // Rear wheel
+      ctx.arc(32, 22, 18, 0, Math.PI * 2);  // Front wheel
+      ctx.stroke();
+
+      // Bike Frame (Bright Neon Green)
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(-32, 22);
+      ctx.lineTo(-8, 20);
+      ctx.lineTo(12, 0);
+      ctx.lineTo(-12, 0);
+      ctx.closePath();
+      ctx.moveTo(-8, 20);
+      ctx.lineTo(-12, 0);
+      ctx.moveTo(12, 0);
+      ctx.lineTo(32, 22);
+      ctx.stroke();
+
+      // Handlebars
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(10, -5);
+      ctx.lineTo(18, -12);
+      ctx.stroke();
+
+      // Rider body
+      ctx.fillStyle = '#0284c7';
+      ctx.beginPath();
+      ctx.arc(-2, -18, 12, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Full-face helmet
+      ctx.fillStyle = '#ea580c';
+      ctx.beginPath();
+      ctx.arc(8, -32, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+
+      frames.push({
+        id: `mtb-${i}`,
+        index: i,
+        canvas: fCanvas,
+        width: w,
+        height: h,
+        active: true,
+        diffPct: 0,
+        posX: px,
+        posY: py,
+        thumbCanvas: null
+      });
+    }
+
+    return frames;
+  }
+
+  // Generate thumbnail element
+  function generateThumb(frame) {
+    const thumb = document.createElement('canvas');
+    thumb.width = 115;
+    thumb.height = 64;
+    const tctx = thumb.getContext('2d');
+    tctx.drawImage(frame.canvas, 0, 0, 115, 64);
+    frame.thumbCanvas = thumb;
+  }
+
+  // Compute optical difference metrics against the reference base plate
+  function analyzeDifferences() {
+    if (state.frames.length === 0) return;
+    const refFrame = state.frames[state.basePlateIndex] || state.frames[0];
+    const w = refFrame.width;
+    const h = refFrame.height;
+
+    const refCtx = refFrame.canvas.getContext('2d');
+    const refData = refCtx.getImageData(0, 0, w, h).data;
+
+    let totalActivePixels = 0;
+    let countedFrames = 0;
+
+    state.frames.forEach((frame) => {
+      if (frame.index === state.basePlateIndex) {
+        frame.diffPct = 0;
+        return;
+      }
+
+      const fCtx = frame.canvas.getContext('2d');
+      const fData = fCtx.getImageData(0, 0, w, h).data;
+      let diffPixels = 0;
+      const totalPixels = w * h;
+
+      // Downsampled check for fast metric readout
+      const step = 4; // Check every 4th pixel for telemetry
+      let sampled = 0;
+      for (let i = 0; i < fData.length; i += 4 * step) {
+        sampled++;
+        const rDiff = Math.abs(fData[i] - refData[i]);
+        const gDiff = Math.abs(fData[i+1] - refData[i+1]);
+        const bDiff = Math.abs(fData[i+2] - refData[i+2]);
+        const lumaDiff = 0.299 * rDiff + 0.587 * gDiff + 0.114 * bDiff;
+
+        if (lumaDiff > state.differenceThreshold && lumaDiff > state.noiseFloor) {
+          diffPixels++;
+        }
+      }
+
+      frame.diffPct = (diffPixels / sampled) * 100;
+      if (frame.active) {
+        totalActivePixels += (frame.diffPct / 100) * totalPixels;
+        countedFrames++;
+      }
+    });
+
+    const meanPct = countedFrames > 0 ? (totalActivePixels / (countedFrames * (w * h))) * 100 : 0;
+    valMeanCoverage.textContent = `${meanPct.toFixed(1)} %`;
+    valIsolatedPixels.textContent = `${Math.round(totalActivePixels).toLocaleString()} keyed px / frame avg`;
+
+    // Calculate displacement trajectory with safety guards
+    const activeFrames = state.frames.filter(f => f.active);
+    const safeFps = Math.max(1, state.burstFps || 12);
+    const safeSpeed = Math.max(0.1, state.athleteSpeed || 4.5);
+    let durationSeconds = 0;
+    let meters = 0;
+
+    if (activeFrames.length >= 2) {
+      const first = activeFrames[0];
+      const last = activeFrames[activeFrames.length - 1];
+      const dx = last.posX - first.posX;
+      const dy = last.posY - first.posY;
+      const netPixels = Math.hypot(dx, dy);
+      valDisplacement.textContent = `${Math.round(netPixels)} px`;
+
+      durationSeconds = (activeFrames.length - 1) / safeFps;
+      meters = safeSpeed * durationSeconds;
+      valTrajectoryMeters.textContent = `Est: ${meters.toFixed(2)} m (${durationSeconds.toFixed(2)}s sequence)`;
+    } else {
+      valDisplacement.textContent = '0 px';
+      valTrajectoryMeters.textContent = 'Est: 0.0 m';
+    }
+
+    // EV Analysis: In-Camera EV vs Digital Subtraction
+    const numExposures = activeFrames.length;
+    const evBlowout = numExposures > 1 ? Math.log2(numExposures) : 0;
+    valCameraEVBlowout.textContent = `vs In-Camera: +${evBlowout.toFixed(1)} EV (${numExposures}x light blowout)`;
+    tableInCameraAccum.textContent = `+${evBlowout.toFixed(1)} EV Overexposed (${numExposures}x photons accumulated)`;
+    tableSubtractiveRatio.textContent = `Luma Delta ≥ ${state.differenceThreshold} units with ${state.featherRadius}px feather`;
+    tableCadenceRatio.textContent = `Cadence: ${selectCadence.options[selectCadence.selectedIndex].text}`;
+
+    // Update "What this means / What to do next" live interpretations
+    const textWhatThisMeans = document.getElementById('textWhatThisMeans');
+    const textWhatToDoNext = document.getElementById('textWhatToDoNext');
+
+    if (state.ambientEv >= 13 && numExposures >= 5) {
+      textWhatThisMeans.textContent = `Daylight ambient level (EV ${state.ambientEv}) with ${numExposures} stacked frames would burn physical camera sensor plates by +${evBlowout.toFixed(1)} EV (pure white blowout). Digital subtraction keyed ${meanPct.toFixed(1)}% mean athlete silhouette area while keeping the static background locked at 0.0 EV delta.`;
+      textWhatToDoNext.textContent = `Cadence is currently ${selectCadence.options[selectCadence.selectedIndex].text}. If athlete silhouettes overlap heavily, increase Stride Cadence to "Every 2nd Frame" or raise Difference Threshold above ${state.differenceThreshold} to reject background flutter.`;
+      liveRecommendationBlock.className = 'status-alert warning';
+      liveRecommendationBlock.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div><strong>Daylight EV Warning:</strong> Sensor blowout of +${evBlowout.toFixed(1)} EV detected. Digital optical isolation is actively neutralizing plate overexposure.</div>
+      `;
+    } else {
+      textWhatThisMeans.textContent = `Sequence displays ${numExposures} active phases spanning ~${meters.toFixed(1)} m of physical travel across ${durationSeconds.toFixed(2)}s. Noise floor is set at ${state.noiseFloor} units, rejecting sensor ISO grain while retaining anatomical contours.`;
+      textWhatToDoNext.textContent = `Use the sweep scrubber below to verify trajectory spacing. If edges appear aliased, increase Edge Feather Softness from ${state.featherRadius}px to ${state.featherRadius + 2}px.`;
+      liveRecommendationBlock.className = 'status-alert info';
+      liveRecommendationBlock.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <div><strong>Optimal Isolation Plate:</strong> Base plate is Frame #${state.basePlateIndex + 1}. All difference deltas are within linear color reproduction tolerance.</div>
+      `;
+    }
+  }
+
+  // Multi-exposure compositing render loop
+  function renderComposite() {
+    if (state.frames.length === 0) return;
+
+    const baseFrame = state.frames[state.basePlateIndex] || state.frames[0];
+    const w = baseFrame.width;
+    const h = baseFrame.height;
+
+    compositeCanvas.width = w;
+    compositeCanvas.height = h;
+
+    valCanvasDim.textContent = `Canvas: ${w} × ${h} px`;
+
+    // 1. Draw base plate
+    compCtx.clearRect(0, 0, w, h);
+    compCtx.drawImage(baseFrame.canvas, 0, 0);
+
+    const refCtx = baseFrame.canvas.getContext('2d');
+    const refImgData = refCtx.getImageData(0, 0, w, h);
+    const refData = refImgData.data;
+
+    // Filter frames by active, cadence, order, and sweep head
+    let renderList = state.frames.map((f, idx) => ({ frame: f, origIndex: idx }));
+    if (state.reverseOrder) {
+      renderList.reverse();
+    }
+
+    // Cadence filtering
+    renderList = renderList.filter((item, listIdx) => {
+      if (!item.frame.active) return false;
+      if (item.origIndex === state.basePlateIndex) return false; // don't re-overlay base
+      if (listIdx > state.sweepHead) return false; // trajectory scrubber position
+
+      if (state.cadence === 2) return listIdx % 2 === 0;
+      if (state.cadence === 3) return listIdx % 3 === 0;
+      if (state.cadence === 4) {
+        // Extrema: first, middle, last
+        return listIdx === 0 || listIdx === Math.floor(renderList.length / 2) || listIdx === renderList.length - 1;
+      }
+      return true;
+    });
+
+    const totalActive = renderList.length;
+
+    // Render each isolated subject
+    renderList.forEach((item, pos) => {
+      const { frame } = item;
+      const fCtx = frame.canvas.getContext('2d');
+      const fImgData = fCtx.getImageData(0, 0, w, h);
+      const fData = fImgData.data;
+
+      // Create mask channel
+      const mask = new Uint8ClampedArray(w * h);
+
+      for (let i = 0, p = 0; i < fData.length; i += 4, p++) {
+        const rDiff = Math.abs(fData[i] - refData[i]);
+        const gDiff = Math.abs(fData[i+1] - refData[i+1]);
+        const bDiff = Math.abs(fData[i+2] - refData[i+2]);
+        const lumaDiff = 0.299 * rDiff + 0.587 * gDiff + 0.114 * bDiff;
+
+        let isSubject = (lumaDiff >= state.differenceThreshold) && (lumaDiff >= state.noiseFloor);
+        if (state.invertMask) isSubject = !isSubject;
+
+        mask[p] = isSubject ? 255 : 0;
+      }
+
+      // Edge Feathering via box blur on alpha
+      const featheredMask = boxBlurAlpha(mask, w, h, state.featherRadius);
+
+      // Determine Opacity Decay factor
+      let alphaMultiplier = 1.0;
+      if (state.decayMode === 'linear') {
+        const t = totalActive > 1 ? pos / (totalActive - 1) : 1;
+        alphaMultiplier = state.terminalAlpha + t * (1 - state.terminalAlpha);
+      } else if (state.decayMode === 'exponential') {
+        const t = totalActive > 1 ? pos / (totalActive - 1) : 1;
+        alphaMultiplier = Math.pow(t, 2) * (1 - state.terminalAlpha) + state.terminalAlpha;
+      }
+
+      // Create isolated subject offscreen canvas
+      const isolateCanvas = document.createElement('canvas');
+      isolateCanvas.width = w;
+      isolateCanvas.height = h;
+      const isoCtx = isolateCanvas.getContext('2d');
+      const isoImgData = isoCtx.createImageData(w, h);
+      const isoData = isoImgData.data;
+
+      // Chromatic phase tint computation
+      const phaseNorm = totalActive > 1 ? pos / (totalActive - 1) : 0; // 0 (start) to 1 (end)
+
+      for (let p = 0, i = 0; p < mask.length; p++, i += 4) {
+        const alpha = featheredMask[p];
+        if (alpha > 0) {
+          let r = fData[i];
+          let g = fData[i+1];
+          let b = fData[i+2];
+
+          // Apply chromatic tints if selected
+          if (state.chromaticMode === 'heatmap') {
+            // Blue (slow/early) -> Red (fast/late)
+            r = Math.min(255, r * (0.3 + 0.7 * phaseNorm) * 1.5);
+            g = g * 0.7;
+            b = Math.min(255, b * (1.2 - 0.7 * phaseNorm) * 1.5);
+          } else if (state.chromaticMode === 'spectral') {
+            const hue = phaseNorm * 300; // red through purple
+            // simple shift
+            r = (r + hue * 0.5) % 255;
+            b = (b + (300 - hue) * 0.5) % 255;
+          }
+
+          if (state.showMaskPreview) {
+            // High contrast mask visualization
+            isoData[i] = 47;
+            isoData[i+1] = 129;
+            isoData[i+2] = 247;
+            isoData[i+3] = alpha;
+          } else {
+            isoData[i] = r;
+            isoData[i+1] = g;
+            isoData[i+2] = b;
+            isoData[i+3] = Math.round(alpha * alphaMultiplier);
+          }
+        }
+      }
+
+      isoCtx.putImageData(isoImgData, 0, 0);
+
+      // Composite onto master canvas using chosen blend mode
+      compCtx.save();
+      if (state.blendMode === 'lighten') {
+        compCtx.globalCompositeOperation = 'lighten';
+      } else if (state.blendMode === 'darken') {
+        compCtx.globalCompositeOperation = 'darken';
+      } else if (state.blendMode === 'chronological') {
+        compCtx.globalCompositeOperation = 'source-over';
+        compCtx.globalAlpha = 0.95;
+      } else {
+        // Subject overlay (clean sharp action)
+        compCtx.globalCompositeOperation = 'source-over';
+      }
+
+      compCtx.drawImage(isolateCanvas, 0, 0);
+      compCtx.restore();
+    });
+
+    // Update canvas telemetry overlay text
+    const activeCount = state.frames.filter(f => f.active).length;
+    canvasTelemetryOverlay.textContent = `Burst: ${activeCount}/${state.frames.length} frames @ ${state.burstFps} fps | Base: #${state.basePlateIndex} | Mode: ${state.blendMode} | Key: ${state.differenceThreshold} Luma`;
+  }
+
+  // Update Reel thumbnails UI
+  function updateTimelineUI() {
+    timelineThumbnailReel.innerHTML = '';
+    refFrameSelect.innerHTML = '';
+
+    state.frames.forEach((frame, idx) => {
+      // Add reference option
+      const opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = `Frame #${idx + 1} ${idx === state.basePlateIndex ? '(Base Plate)' : ''}`;
+      if (idx === state.basePlateIndex) opt.selected = true;
+      refFrameSelect.appendChild(opt);
+
+      // Thumbnail card
+      const card = document.createElement('div');
+      card.className = `thumbnail-card ${!frame.active ? 'disabled-frame' : ''} ${idx === state.basePlateIndex ? 'reference-frame' : ''} ${idx === state.sweepHead ? 'active-scrub' : ''}`;
+      
+      const thumbImg = document.createElement('img');
+      thumbImg.className = 'thumb-preview';
+      thumbImg.src = frame.thumbCanvas ? frame.thumbCanvas.toDataURL() : '';
+      thumbImg.alt = `Frame ${idx + 1}`;
+
+      const meta = document.createElement('div');
+      meta.className = 'thumb-meta';
+      meta.innerHTML = `
+        <span>#${idx + 1}</span>
+        <span class="badge ${idx === state.basePlateIndex ? 'badge-ref' : 'badge-diff'}">
+          ${idx === state.basePlateIndex ? 'REF' : frame.diffPct.toFixed(0) + '% diff'}
+        </span>
+      `;
+
+      const controlsRow = document.createElement('div');
+      controlsRow.style.display = 'flex';
+      controlsRow.style.justifyContent = 'space-between';
+      controlsRow.style.alignItems = 'center';
+      controlsRow.style.marginTop = '2px';
+
+      const chk = document.createElement('input');
+      chk.type = 'checkbox';
+      chk.checked = frame.active;
+      chk.title = 'Include frame in multi-exposure';
+      chk.addEventListener('change', (e) => {
+        e.stopPropagation();
+        frame.active = chk.checked;
+        analyzeDifferences();
+        renderComposite();
+        updateTimelineUI();
+      });
+
+      const setRefBtn = document.createElement('button');
+      setRefBtn.className = 'btn';
+      setRefBtn.style.padding = '1px 5px';
+      setRefBtn.style.fontSize = '0.65rem';
+      setRefBtn.textContent = idx === state.basePlateIndex ? '★ Base' : 'Set Base';
+      setRefBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        state.basePlateIndex = idx;
+        refFrameSelect.value = idx;
+        analyzeDifferences();
+        renderComposite();
+        updateTimelineUI();
+      });
+
+      controlsRow.appendChild(chk);
+      controlsRow.appendChild(setRefBtn);
+
+      card.appendChild(thumbImg);
+      card.appendChild(meta);
+      card.appendChild(controlsRow);
+
+      card.addEventListener('click', () => {
+        state.sweepHead = idx;
+        rangeSweepHead.value = idx;
+        renderComposite();
+        updateTimelineUI();
+      });
+
+      timelineThumbnailReel.appendChild(card);
+    });
+
+    valFrameCount.textContent = `${state.frames.length} frames`;
+    rangeSweepHead.max = Math.max(0, state.frames.length - 1);
+  }
+
+  // Load a preset sequence
+  function loadPreset(name) {
+    const key = (name || '').toLowerCase();
+    if (key.includes('gym')) {
+      state.activePresetName = 'gym';
+      state.frames = createGymBurst(10);
+      state.basePlateIndex = 0;
+      state.differenceThreshold = 14;
+      state.noiseFloor = 4;
+      state.featherRadius = 2;
+      state.blendMode = 'lighten';
+      state.cadence = 1;
+      state.decayMode = 'exponential';
+      state.terminalAlpha = 0.20;
+      state.athleteSpeed = 7.2;
+      state.burstFps = 20;
+      state.ambientEv = 8;
+      state.chromaticMode = 'heatmap';
+      state.sweepHead = 9;
+    } else if (key.includes('mtb')) {
+      state.activePresetName = 'mtb';
+      state.frames = createMtbBurst(6);
+      state.basePlateIndex = 0;
+      state.differenceThreshold = 26;
+      state.noiseFloor = 8;
+      state.featherRadius = 5;
+      state.blendMode = 'overlay';
+      state.cadence = 1;
+      state.decayMode = 'none';
+      state.terminalAlpha = 1.0;
+      state.athleteSpeed = 11.0;
+      state.burstFps = 8;
+      state.ambientEv = 11;
+      state.chromaticMode = 'spectral';
+      state.sweepHead = 5;
+    } else {
+      state.activePresetName = 'skate';
+      state.frames = createSkateBurst(7);
+      state.basePlateIndex = 0;
+      state.differenceThreshold = 20;
+      state.noiseFloor = 6;
+      state.featherRadius = 3;
+      state.blendMode = 'overlay';
+      state.cadence = 1;
+      state.decayMode = 'linear';
+      state.terminalAlpha = 0.25;
+      state.athleteSpeed = 4.5;
+      state.burstFps = 12;
+      state.ambientEv = 14;
+      state.chromaticMode = 'none';
+      state.sweepHead = 6;
+    }
+
+    // Generate thumbnails
+    state.frames.forEach(generateThumb);
+
+    // Sync input controls
+    rangeThreshold.value = state.differenceThreshold;
+    threshVal.textContent = state.differenceThreshold;
+    rangeNoiseFloor.value = state.noiseFloor;
+    noiseVal.textContent = state.noiseFloor;
+    rangeFeather.value = state.featherRadius;
+    featherVal.textContent = `${state.featherRadius} px`;
+    selectBlendMode.value = state.blendMode;
+    selectCadence.value = state.cadence;
+    selectDecay.value = state.decayMode;
+    rangeTerminalAlpha.value = Math.round(state.terminalAlpha * 100);
+    terminalAlphaVal.textContent = `${Math.round(state.terminalAlpha * 100)}%`;
+    selectChromatic.value = state.chromaticMode;
+    numBurstFps.value = state.burstFps;
+    burstFpsDisplay.textContent = `${state.burstFps} fps`;
+    numAthleteSpeed.value = state.athleteSpeed;
+    athleteSpeedDisplay.textContent = `${state.athleteSpeed} m/s`;
+    numAmbientEv.value = state.ambientEv;
+    ambientEvDisplay.textContent = `EV ${state.ambientEv}`;
+    chkReverseOrder.checked = state.reverseOrder;
+    rangeSweepHead.value = state.sweepHead;
+
+    analyzeDifferences();
+    renderComposite();
+    updateTimelineUI();
+  }
+
+  // Handle User File Uploads
+  function handleImageFiles(fileList) {
+    if (!fileList || fileList.length === 0) return;
+    const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+    if (files.length === 0) return;
+
+    let loadedCount = 0;
+    const newFrames = [];
+
+    files.forEach((file, idx) => {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const fCanvas = document.createElement('canvas');
+          fCanvas.width = img.naturalWidth || img.width;
+          fCanvas.height = img.naturalHeight || img.height;
+          const ctx = fCanvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+
+          newFrames.push({
+            id: `user-${Date.now()}-${idx}`,
+            index: idx,
+            canvas: fCanvas,
+            width: fCanvas.width,
+            height: fCanvas.height,
+            active: true,
+            diffPct: 0,
+            posX: (fCanvas.width / (files.length + 1)) * (idx + 1),
+            posY: fCanvas.height * 0.5,
+            thumbCanvas: null
+          });
+
+          loadedCount++;
+          if (loadedCount === files.length) {
+            // Sort by original index
+            newFrames.sort((a, b) => a.index - b.index);
+            state.frames = newFrames;
+            state.basePlateIndex = 0;
+            state.sweepHead = state.frames.length - 1;
+            state.frames.forEach(generateThumb);
+            analyzeDifferences();
+            renderComposite();
+            updateTimelineUI();
+          }
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Pass embedded sample burst images through the standard File/Blob reader parser
+  function loadSampleThroughParser() {
+    const rawFrames = state.activePresetName === 'gym' ? createGymBurst(10) :
+                     state.activePresetName === 'mtb' ? createMtbBurst(6) :
+                     createSkateBurst(7);
+
+    const blobPromises = rawFrames.map((rf, idx) => {
+      return new Promise((resolve) => {
+        rf.canvas.toBlob((blob) => {
+          const file = new File([blob], `sample_${state.activePresetName}_frame_${idx + 1}.png`, { type: 'image/png' });
+          resolve(file);
+        }, 'image/png');
+      });
+    });
+
+    Promise.all(blobPromises).then(files => {
+      handleImageFiles(files);
+    });
+  }
+
+  // Event Listeners
+  document.getElementById('presetSkate').addEventListener('click', () => loadPreset('skate'));
+  document.getElementById('presetGym').addEventListener('click', () => loadPreset('gym'));
+  document.getElementById('presetMtb').addEventListener('click', () => loadPreset('mtb'));
+  document.getElementById('btnLoadSample').addEventListener('click', () => loadSampleThroughParser());
+  document.getElementById('btnResetTool').addEventListener('click', () => {
+    try { localStorage.removeItem('burst_compositor_state'); } catch(e){}
+    loadPreset('skate');
+  });
+
+  document.getElementById('btnTriggerUpload').addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', (e) => handleImageFiles(e.target.files));
+
+  refFrameSelect.addEventListener('change', (e) => {
+    state.basePlateIndex = parseInt(e.target.value, 10);
+    document.getElementById('refFrameIndexLabel').textContent = `Index: ${state.basePlateIndex}`;
+    analyzeDifferences();
+    renderComposite();
+    updateTimelineUI();
+  });
+
+  rangeThreshold.addEventListener('input', (e) => {
+    state.differenceThreshold = parseInt(e.target.value, 10);
+    threshVal.textContent = state.differenceThreshold;
+    analyzeDifferences();
+    renderComposite();
+  });
+
+  rangeNoiseFloor.addEventListener('input', (e) => {
+    state.noiseFloor = parseInt(e.target.value, 10);
+    noiseVal.textContent = state.noiseFloor;
+    analyzeDifferences();
+    renderComposite();
+  });
+
+  rangeFeather.addEventListener('input', (e) => {
+    state.featherRadius = parseInt(e.target.value, 10);
+    featherVal.textContent = `${state.featherRadius} px`;
+    renderComposite();
+  });
+
+  chkInvertMask.addEventListener('change', (e) => {
+    state.invertMask = e.target.checked;
+    renderComposite();
+  });
+
+  chkShowMaskPreview.addEventListener('change', (e) => {
+    state.showMaskPreview = e.target.checked;
+    renderComposite();
+  });
+
+  selectBlendMode.addEventListener('change', (e) => {
+    state.blendMode = e.target.value;
+    renderComposite();
+  });
+
+  selectCadence.addEventListener('change', (e) => {
+    state.cadence = parseInt(e.target.value, 10);
+    analyzeDifferences();
+    renderComposite();
+  });
+
+  selectDecay.addEventListener('change', (e) => {
+    state.decayMode = e.target.value;
+    renderComposite();
+  });
+
+  rangeTerminalAlpha.addEventListener('input', (e) => {
+    state.terminalAlpha = parseInt(e.target.value, 10) / 100;
+    terminalAlphaVal.textContent = `${Math.round(state.terminalAlpha * 100)}%`;
+    renderComposite();
+  });
+
+  selectChromatic.addEventListener('change', (e) => {
+    state.chromaticMode = e.target.value;
+    renderComposite();
+  });
+
+  chkReverseOrder.addEventListener('change', (e) => {
+    state.reverseOrder = e.target.checked;
+    renderComposite();
+  });
+
+  numBurstFps.addEventListener('input', (e) => {
+    state.burstFps = parseInt(e.target.value, 10);
+    burstFpsDisplay.textContent = `${state.burstFps} fps`;
+    analyzeDifferences();
+  });
+
+  numAthleteSpeed.addEventListener('input', (e) => {
+    state.athleteSpeed = parseFloat(e.target.value);
+    athleteSpeedDisplay.textContent = `${state.athleteSpeed.toFixed(1)} m/s`;
+    analyzeDifferences();
+  });
+
+  numAmbientEv.addEventListener('input', (e) => {
+    state.ambientEv = parseInt(e.target.value, 10);
+    ambientEvDisplay.textContent = `EV ${state.ambientEv}`;
+    analyzeDifferences();
+  });
+
+  rangeSweepHead.addEventListener('input', (e) => {
+    state.sweepHead = parseInt(e.target.value, 10);
+    renderComposite();
+    updateTimelineUI();
+  });
+
+  rangeSweepFps.addEventListener('input', (e) => {
+    state.sweepFps = parseInt(e.target.value, 10);
+    sweepFpsLabel.textContent = `${state.sweepFps} fps`;
+    if (state.isPlaying) {
+      startSweepAnimation();
+    }
+  });
+
+  function startSweepAnimation() {
+    clearInterval(animationTimer);
+    const intervalMs = 1000 / state.sweepFps;
+    animationTimer = setInterval(() => {
+      let nextHead = state.sweepHead + 1;
+      if (nextHead >= state.frames.length) {
+        nextHead = 0;
+      }
+      state.sweepHead = nextHead;
+      rangeSweepHead.value = nextHead;
+      renderComposite();
+      updateTimelineUI();
+    }, intervalMs);
+  }
+
+  btnPlaySweep.addEventListener('click', () => {
+    state.isPlaying = !state.isPlaying;
+    if (state.isPlaying) {
+      playIcon.innerHTML = '&#10074;&#10074;';
+      btnPlaySweep.classList.remove('btn-primary');
+      btnPlaySweep.style.background = 'var(--danger)';
+      startSweepAnimation();
+    } else {
+      clearInterval(animationTimer);
+      playIcon.innerHTML = '&#9658;';
+      btnPlaySweep.classList.add('btn-primary');
+      btnPlaySweep.style.background = '';
+    }
+  });
+
+  // Export handlers obeying PRO gating constraint
+  function checkProAccess(actionFn) {
+    if (!PRO) {
+      proExportNotice.innerHTML = `Available in the full version: <a href="${PRO_LINK}">${PRO_LINK}</a>`;
+      proExportNotice.style.display = 'block';
+      setTimeout(() => { proExportNotice.style.display = 'none'; }, 6000);
+      return;
+    }
+    actionFn();
+  }
+
+  document.getElementById('btnPrintReport').addEventListener('click', () => {
+    checkProAccess(() => window.print());
+  });
+
+  document.getElementById('btnCopySummary').addEventListener('click', () => {
+    checkProAccess(() => {
+      const summary = `Burst Action Multi-Exposure Summary:
+Preset: ${state.activePresetName}
+Frames: ${state.frames.length} frames (${state.frames.filter(f=>f.active).length} active) @ ${state.burstFps} fps
+Subject Velocity: ${state.athleteSpeed} m/s | Ambient: EV ${state.ambientEv}
+Estimated Trajectory: ${valDisplacement.textContent} (${valTrajectoryMeters.textContent})
+Keying Threshold: ${state.differenceThreshold} Luma | Feather: ${state.featherRadius}px
+In-Camera vs Post EV: ${valCameraEVBlowout.textContent}`;
+      navigator.clipboard.writeText(summary).then(() => {
+        const btn = document.getElementById('btnCopySummary');
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 2000);
+      }).catch(() => {
+        alert('Clipboard write restricted.');
+      });
+    });
+  });
+
+  document.getElementById('btnExportImage').addEventListener('click', () => {
+    checkProAccess(() => {
+      compositeCanvas.toBlob((blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `multi-exposure-composite-${Date.now()}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 'image/png');
+    });
+  });
+
+  document.getElementById('btnExportTrajectory').addEventListener('click', () => {
+    checkProAccess(() => {
+      let csv = 'frame_index,active,diff_pct,est_x_px,est_y_px,timestamp_sec\n';
+      state.frames.forEach((f, idx) => {
+        const timeSec = (idx / state.burstFps).toFixed(4);
+        csv += `${idx},${f.active},${f.diffPct.toFixed(2)},${Math.round(f.posX)},${Math.round(f.posY)},${timeSec}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `action-trajectory-${Date.now()}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  });
+
+  document.getElementById('btnExportJson').addEventListener('click', () => {
+    checkProAccess(() => {
+      const exportData = {
+        tool: 'Burst Action Sequence Multi-Exposure Compositor',
+        version: '1.0.0',
+        preset: state.activePresetName,
+        settings: {
+          basePlateIndex: state.basePlateIndex,
+          differenceThreshold: state.differenceThreshold,
+          noiseFloor: state.noiseFloor,
+          featherRadius: state.featherRadius,
+          blendMode: state.blendMode,
+          cadence: state.cadence,
+          decayMode: state.decayMode,
+          terminalAlpha: state.terminalAlpha,
+          chromaticMode: state.chromaticMode,
+          burstFps: state.burstFps,
+          athleteSpeed: state.athleteSpeed,
+          ambientEv: state.ambientEv
+        },
+        framesMeta: state.frames.map(f => ({
+          index: f.index,
+          active: f.active,
+          diffPct: f.diffPct,
+          posX: f.posX,
+          posY: f.posY
+        }))
+      };
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `compositor-config-${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  });
+
+  // Local storage save/restore with safe try/catch
+  try {
+    const saved = localStorage.getItem('burst_compositor_state');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed.activePresetName) {
+        loadPreset(parsed.activePresetName);
+        return;
+      }
+    }
+  } catch (err) {
+    // Storage blocked; fail gracefully
+  }
+
+  // Initialize with first preset
+  loadPreset('skate');
+})();
+(function() {
+  const compCanvas = document.getElementById('compositeCanvas');
+  if (!compCanvas) return;
+  const compCtx = compCanvas.getContext('2d');
+  const origClearRect = compCtx.clearRect.bind(compCtx);
+  const origDrawImage = compCtx.drawImage.bind(compCtx);
+
+  const strobeColorMode = document.getElementById('strobeColorMode');
+  const strobeBlendStrength = document.getElementById('strobeBlendStrength');
+  const strobeBlendStrengthVal = document.getElementById('strobeBlendStrengthVal');
+  const strobeGradientBar = document.getElementById('strobeGradientBar');
+  const strobeLegendStatus = document.getElementById('strobeLegendStatus');
+  const selectChromatic = document.getElementById('selectChromatic');
+
+  if (selectChromatic) {
+    selectChromatic.value = 'none';
+    selectChromatic.dispatchEvent(new Event('change'));
+    const parent = selectChromatic.closest('.form-group');
+    if (parent) parent.style.display = 'none';
+  }
+
+  function hslToRgb(h, s, l) {
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = l - c / 2;
+    let r = 0, g = 0, b = 0;
+    if (h < 60) { r = c; g = x; }
+    else if (h < 120) { r = x; g = c; }
+    else if (h < 180) { g = c; b = x; }
+    else if (h < 240) { g = x; b = c; }
+    else if (h < 300) { r = x; b = c; }
+    else { r = c; b = x; }
+    return [(r + m) * 255, (g + m) * 255, (b + m) * 255];
+  }
+
+  function getTint(mode, phaseNorm) {
+    if (mode === 'heatmap') {
+      const h = (1 - phaseNorm) * 240;
+      return hslToRgb(h, 1.0, 0.5);
+    } else if (mode === 'monochrome') {
+      const mono = Math.round(140 + 115 * phaseNorm);
+      return [mono, mono, mono];
+    } else if (mode === 'cyberpunk') {
+      return [
+        255 * (1 - phaseNorm),
+        150 * (1 - phaseNorm) + 230 * phaseNorm,
+        245 * phaseNorm
+      ];
+    } else {
+      const h = phaseNorm * 295;
+      return hslToRgb(h, 1.0, 0.5);
+    }
+  }
+
+  let pendingSilhouettes = [];
+  let isCapturing = false;
+  let microtaskQueued = false;
+
+  function flushSilhouettes() {
+    microtaskQueued = false;
+    isCapturing = false;
+    const items = pendingSilhouettes.filter(p => !p.isBase);
+    const total = items.length;
+    const mode = strobeColorMode ? strobeColorMode.value : 'spectral';
+    const strength = strobeBlendStrength ? parseInt(strobeBlendStrength.value, 10) / 100 : 0.8;
+
+    items.forEach((item, pos) => {
+      const phaseNorm = total > 1 ? pos / (total - 1) : 0;
+      const tint = getTint(mode, phaseNorm);
+
+      if (strength > 0 && item.canvas && item.canvas.width) {
+        const ictx = item.canvas.getContext('2d');
+        const imgData = ictx.getImageData(0, 0, item.canvas.width, item.canvas.height);
+        const d = imgData.data;
+
+        for (let i = 0; i < d.length; i += 4) {
+          if (d[i + 3] > 0) {
+            const r = d[i], g = d[i + 1], b = d[i + 2];
+            const luma = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+            const lumWeight = 0.35 + 0.65 * luma;
+            const tr = Math.min(255, tint[0] * lumWeight);
+            const tg = Math.min(255, tint[1] * lumWeight);
+            const tb = Math.min(255, tint[2] * lumWeight);
+            d[i] = Math.round(r * (1 - strength) + tr * strength);
+            d[i + 1] = Math.round(g * (1 - strength) + tg * strength);
+            d[i + 2] = Math.round(b * (1 - strength) + tb * strength);
+          }
+        }
+        ictx.putImageData(imgData, 0, 0);
+      }
+
+      compCtx.save();
+      compCtx.globalCompositeOperation = item.gco;
+      compCtx.globalAlpha = item.alpha;
+      origDrawImage(item.canvas, ...item.args);
+      compCtx.restore();
+    });
+  }
+
+  compCtx.clearRect = function(x, y, w, h) {
+    pendingSilhouettes = [];
+    isCapturing = true;
+    origClearRect(x, y, w, h);
+    if (!microtaskQueued) {
+      microtaskQueued = true;
+      queueMicrotask(flushSilhouettes);
+    }
+  };
+
+  compCtx.drawImage = function(img, ...args) {
+    if (isCapturing && pendingSilhouettes.length === 0) {
+      origDrawImage(img, ...args);
+      pendingSilhouettes.push({ isBase: true });
+    } else if (isCapturing) {
+      pendingSilhouettes.push({
+        canvas: img,
+        args: args,
+        gco: compCtx.globalCompositeOperation,
+        alpha: compCtx.globalAlpha
+      });
+    } else {
+      origDrawImage(img, ...args);
+    }
+  };
+
+  function updateLegend() {
+    const mode = strobeColorMode.value;
+    if (mode === 'spectral') {
+      strobeGradientBar.style.background = 'linear-gradient(to right, #ff0000, #ffaa00, #00ff00, #00e5ff, #0033ff, #aa00ff)';
+      strobeLegendStatus.textContent = 'Spectral Hue Shift: 0° (Red) → 295° (Violet)';
+    } else if (mode === 'heatmap') {
+      strobeGradientBar.style.background = 'linear-gradient(to right, #0022ff, #00ddff, #00ff00, #ffdd00, #ff0000)';
+      strobeLegendStatus.textContent = 'Velocity Heatmap: 240° (Blue) → 0° (Red)';
+    } else if (mode === 'monochrome') {
+      strobeGradientBar.style.background = 'linear-gradient(to right, #888888, #cccccc, #ffffff, #aaaaaa, #ffffff)';
+      strobeLegendStatus.textContent = 'Monochrome Strobe: High-Key Luma Phase Stagger';
+    } else if (mode === 'cyberpunk') {
+      strobeGradientBar.style.background = 'linear-gradient(to right, #ff9600, #c800ff, #00e6f5)';
+      strobeLegendStatus.textContent = 'Cyberpunk: Amber (#ff9600) → Teal (#00e6f5)';
+    }
+  }
+
+  function triggerCompositeRefresh() {
+    if (selectChromatic) {
+      selectChromatic.value = 'none';
+      selectChromatic.dispatchEvent(new Event('change'));
+    }
+    const th = document.getElementById('rangeThreshold');
+    if (th) th.dispatchEvent(new Event('input'));
+  }
+
+  if (strobeColorMode) {
+    strobeColorMode.addEventListener('change', () => {
+      updateLegend();
+      triggerCompositeRefresh();
+    });
+  }
+
+  if (strobeBlendStrength) {
+    strobeBlendStrength.addEventListener('input', (e) => {
+      strobeBlendStrengthVal.textContent = e.target.value + '%';
+      triggerCompositeRefresh();
+    });
+  }
+
+  ['presetSkate', 'presetGym', 'presetMtb', 'btnResetTool'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('click', () => {
+        setTimeout(triggerCompositeRefresh, 50);
+      });
+    }
+  });
+
+  updateLegend();
+  triggerCompositeRefresh();
+})();
+(function() {
+  const btnHiResExport = document.getElementById('btnHiResExport');
+  const exportFormatSelect = document.getElementById('exportFormatSelect');
+  const exportShutterSpeed = document.getElementById('exportShutterSpeed');
+  const chkEmbedWatermark = document.getElementById('chkEmbedWatermark');
+  const exportMetaPreview = document.getElementById('exportMetaPreview');
+  const exportStatusInfo = document.getElementById('exportStatusInfo');
+  const hiResProNotice = document.getElementById('hiResProNotice');
+  const compCanvas = document.getElementById('compositeCanvas');
+
+  function updateExportSpec() {
+    const w = compCanvas ? compCanvas.width : 1000;
+    const h = compCanvas ? compCanvas.height : 562;
+    const isJpeg = exportFormatSelect && exportFormatSelect.value === 'image/jpeg';
+    const formatName = isJpeg ? 'JPEG (95% Quality)' : 'PNG (Lossless)';
+    const shutter = exportShutterSpeed ? exportShutterSpeed.value : '1/2000s';
+    const fpsInput = document.getElementById('numBurstFps');
+    const fps = fpsInput ? fpsInput.value : 12;
+    const activeCards = document.querySelectorAll('.thumbnail-card:not(.disabled-frame)');
+    const count = activeCards.length || 7;
+
+    if (exportMetaPreview) {
+      if (chkEmbedWatermark && chkEmbedWatermark.checked) {
+        exportMetaPreview.style.opacity = '1';
+        exportMetaPreview.style.textDecoration = 'none';
+        exportMetaPreview.textContent = `Watermark: Burst ${fps} fps • Shutter ${shutter} • ${count} frames`;
+      } else {
+        exportMetaPreview.style.opacity = '0.35';
+        exportMetaPreview.style.textDecoration = 'line-through';
+        exportMetaPreview.textContent = `Watermark Off (${fps} fps • ${shutter} • ${count} frames)`;
+      }
+    }
+    if (exportStatusInfo) {
+      exportStatusInfo.textContent = `Native: ${w} × ${h} px • ${formatName} • Instant Blob`;
+    }
+  }
+
+  function runHiResExport() {
+    if (!PRO) {
+      if (hiResProNotice) {
+        hiResProNotice.innerHTML = `Available in the full version: <a href="${PRO_LINK}">${PRO_LINK}</a>`;
+        hiResProNotice.style.display = 'block';
+        setTimeout(() => { hiResProNotice.style.display = 'none'; }, 6000);
+      }
+      return;
+    }
+
+    if (!compCanvas || compCanvas.width === 0 || compCanvas.height === 0) return;
+
+    const expCanvas = document.createElement('canvas');
+    expCanvas.width = compCanvas.width;
+    expCanvas.height = compCanvas.height;
+    const ectx = expCanvas.getContext('2d');
+    ectx.drawImage(compCanvas, 0, 0);
+
+    if (chkEmbedWatermark && chkEmbedWatermark.checked) {
+      const shutter = exportShutterSpeed ? exportShutterSpeed.value : '1/2000s';
+      const fpsInput = document.getElementById('numBurstFps');
+      const fps = fpsInput ? fpsInput.value : 12;
+      const count = document.querySelectorAll('.thumbnail-card:not(.disabled-frame)').length || 7;
+
+      const pad = Math.max(12, Math.round(expCanvas.width * 0.015));
+      const fontSize = Math.max(12, Math.round(expCanvas.height * 0.025));
+      ectx.font = `600 ${fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+      const text = `BURST: ${fps} FPS | SHUTTER: ${shutter} | FRAMES: ${count} | ${expCanvas.width}×${expCanvas.height}px`;
+      const textMetrics = ectx.measureText(text);
+      const boxW = Math.round(textMetrics.width + 20);
+      const boxH = Math.round(fontSize * 1.8);
+      const x = expCanvas.width - boxW - pad;
+      const y = expCanvas.height - boxH - pad;
+
+      ectx.save();
+      ectx.fillStyle = 'rgba(10, 14, 20, 0.82)';
+      ectx.fillRect(x, y, boxW, boxH);
+      ectx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+      ectx.lineWidth = 1;
+      ectx.strokeRect(x, y, boxW, boxH);
+      ectx.fillStyle = '#ffffff';
+      ectx.textBaseline = 'middle';
+      ectx.fillText(text, x + 10, y + boxH / 2);
+      ectx.restore();
+    }
+
+    const mime = exportFormatSelect ? exportFormatSelect.value : 'image/png';
+    const quality = mime === 'image/jpeg' ? 0.95 : undefined;
+    const ext = mime === 'image/jpeg' ? 'jpg' : 'png';
+
+    expCanvas.toBlob(function(blob) {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `composite-sensor-native-${Date.now()}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }, mime, quality);
+  }
+
+  if (exportFormatSelect) exportFormatSelect.addEventListener('change', updateExportSpec);
+  if (exportShutterSpeed) exportShutterSpeed.addEventListener('change', updateExportSpec);
+  if (chkEmbedWatermark) chkEmbedWatermark.addEventListener('change', updateExportSpec);
+  if (btnHiResExport) btnHiResExport.addEventListener('click', runHiResExport);
+
+  ['numBurstFps', 'presetSkate', 'presetGym', 'presetMtb', 'btnResetTool', 'selectCadence'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('click', () => setTimeout(updateExportSpec, 60));
+      el.addEventListener('input', () => setTimeout(updateExportSpec, 60));
+      el.addEventListener('change', () => setTimeout(updateExportSpec, 60));
+    }
+  });
+
+  updateExportSpec();
+})();
+(function() {
+  const VAULT_STORAGE_KEY = 'burst_sequence_vault_scenarios';
+  let memoryVault = [];
+
+  const vaultScenarioName = document.getElementById('vaultScenarioName');
+  const btnVaultSave = document.getElementById('btnVaultSave');
+  const btnVaultExport = document.getElementById('btnVaultExport');
+  const vaultScenarioList = document.getElementById('vaultScenarioList');
+  const vaultProNotice = document.getElementById('vaultProNotice');
+
+  function checkVaultProAccess(actionFn) {
+    if (!PRO) {
+      if (vaultProNotice) {
+        vaultProNotice.innerHTML = `Available in the full version: <a href="${PRO_LINK}">${PRO_LINK}</a>`;
+        vaultProNotice.style.display = 'block';
+        setTimeout(() => { vaultProNotice.style.display = 'none'; }, 6000);
+      }
+      return;
+    }
+    actionFn();
+  }
+
+  function getSavedScenarios() {
+    try {
+      const data = localStorage.getItem(VAULT_STORAGE_KEY);
+      if (data) memoryVault = JSON.parse(data) || [];
+    } catch (e) {
+      // localStorage restricted; preserve in-memory
+    }
+    return memoryVault;
+  }
+
+  function saveScenarios(scenarios) {
+    memoryVault = scenarios;
+    try {
+      localStorage.setItem(VAULT_STORAGE_KEY, JSON.stringify(scenarios));
+    } catch (e) {}
+  }
+
+  function captureCurrentConfig() {
+    const frameCards = document.querySelectorAll('#timelineThumbnailReel .thumbnail-card');
+    const frameToggles = Array.from(frameCards).map(card => {
+      const chk = card.querySelector('input[type="checkbox"]');
+      return chk ? chk.checked : true;
+    });
+
+    return {
+      threshold: parseInt(document.getElementById('rangeThreshold').value, 10),
+      noiseFloor: parseInt(document.getElementById('rangeNoiseFloor').value, 10),
+      feather: parseInt(document.getElementById('rangeFeather').value, 10),
+      invertMask: document.getElementById('chkInvertMask').checked,
+      showMaskPreview: document.getElementById('chkShowMaskPreview').checked,
+      blendMode: document.getElementById('selectBlendMode').value,
+      cadence: document.getElementById('selectCadence').value,
+      decayMode: document.getElementById('selectDecay').value,
+      terminalAlpha: document.getElementById('rangeTerminalAlpha').value,
+      burstFps: document.getElementById('numBurstFps').value,
+      athleteSpeed: document.getElementById('numAthleteSpeed').value,
+      ambientEv: document.getElementById('numAmbientEv').value,
+      reverseOrder: document.getElementById('chkReverseOrder').checked,
+      basePlateIndex: document.getElementById('refFrameSelect').value,
+      strobeMode: document.getElementById('strobeColorMode') ? document.getElementById('strobeColorMode').value : 'spectral',
+      strobeBlendStrength: document.getElementById('strobeBlendStrength') ? document.getElementById('strobeBlendStrength').value : '80',
+      frameToggles: frameToggles,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+  }
+
+  function restoreScenarioConfig(config) {
+    const setVal = (id, val, evt) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.type === 'checkbox') {
+        el.checked = !!val;
+        el.dispatchEvent(new Event('change'));
+      } else {
+        el.value = val;
+        el.dispatchEvent(new Event(evt));
+      }
+    };
+
+    setVal('rangeThreshold', config.threshold, 'input');
+    setVal('rangeNoiseFloor', config.noiseFloor, 'input');
+    setVal('rangeFeather', config.feather, 'input');
+    setVal('chkInvertMask', config.invertMask, 'change');
+    setVal('chkShowMaskPreview', config.showMaskPreview, 'change');
+    setVal('selectBlendMode', config.blendMode, 'change');
+    setVal('selectCadence', config.cadence, 'change');
+    setVal('selectDecay', config.decayMode, 'change');
+    setVal('rangeTerminalAlpha', config.terminalAlpha, 'input');
+    setVal('numBurstFps', config.burstFps, 'input');
+    setVal('numAthleteSpeed', config.athleteSpeed, 'input');
+    setVal('numAmbientEv', config.ambientEv, 'input');
+    setVal('chkReverseOrder', config.reverseOrder, 'change');
+    setVal('refFrameSelect', config.basePlateIndex, 'change');
+    if (config.strobeMode) setVal('strobeColorMode', config.strobeMode, 'change');
+    if (config.strobeBlendStrength) setVal('strobeBlendStrength', config.strobeBlendStrength, 'input');
+
+    if (Array.isArray(config.frameToggles)) {
+      const frameCards = document.querySelectorAll('#timelineThumbnailReel .thumbnail-card');
+      frameCards.forEach((card, idx) => {
+        const chk = card.querySelector('input[type="checkbox"]');
+        if (chk && config.frameToggles[idx] !== undefined && chk.checked !== config.frameToggles[idx]) {
+          chk.checked = config.frameToggles[idx];
+          chk.dispatchEvent(new Event('change'));
+        }
+      });
+    }
+  }
+
+  function renderVaultList() {
+    if (!vaultScenarioList) return;
+    const scenarios = getSavedScenarios();
+    vaultScenarioList.innerHTML = '';
+
+    if (scenarios.length === 0) {
+      vaultScenarioList.innerHTML = '<div style="font-size:0.78rem; color:var(--text-muted); padding:8px 2px;">No saved sequence scenarios yet. Enter a name above and click "Save Current Sequence".</div>';
+      return;
+    }
+
+    scenarios.forEach((sc, idx) => {
+      const item = document.createElement('div');
+      item.className = 'vault-item';
+
+      const meta = document.createElement('div');
+      meta.className = 'vault-item-meta';
+      meta.innerHTML = `
+        <div class="vault-item-title">${sc.name}</div>
+        <div class="vault-item-sub">Saved at ${sc.config.timestamp} • Thresh ${sc.config.threshold} • Mode: ${sc.config.blendMode} • Stride ${sc.config.cadence} • ${sc.config.burstFps} fps</div>
+      `;
+
+      const actions = document.createElement('div');
+      actions.className = 'btn-group';
+
+      const btnLoad = document.createElement('button');
+      btnLoad.className = 'btn btn-primary';
+      btnLoad.style.padding = '3px 8px';
+      btnLoad.style.fontSize = '0.74rem';
+      btnLoad.textContent = `Load ${sc.name}`;
+      btnLoad.addEventListener('click', () => {
+        checkVaultProAccess(() => restoreScenarioConfig(sc.config));
+      });
+
+      const btnDel = document.createElement('button');
+      btnDel.className = 'btn';
+      btnDel.style.padding = '3px 8px';
+      btnDel.style.fontSize = '0.74rem';
+      btnDel.textContent = 'Delete';
+      btnDel.addEventListener('click', () => {
+        checkVaultProAccess(() => {
+          const list = getSavedScenarios().filter((_, i) => i !== idx);
+          saveScenarios(list);
+          renderVaultList();
+        });
+      });
+
+      actions.appendChild(btnLoad);
+      actions.appendChild(btnDel);
+      item.appendChild(meta);
+      item.appendChild(actions);
+      vaultScenarioList.appendChild(item);
+    });
+  }
+
+  if (btnVaultSave) {
+    btnVaultSave.addEventListener('click', () => {
+      checkVaultProAccess(() => {
+        const scenarios = getSavedScenarios();
+        const inputName = vaultScenarioName ? vaultScenarioName.value.trim() : '';
+        const name = inputName || `Setup ${scenarios.length + 1}`;
+        const newScenario = {
+          id: `scenario-${Date.now()}`,
+          name: name,
+          config: captureCurrentConfig()
+        };
+        scenarios.unshift(newScenario);
+        saveScenarios(scenarios);
+        if (vaultScenarioName) vaultScenarioName.value = '';
+        renderVaultList();
+      });
+    });
+  }
+
+  if (btnVaultExport) {
+    btnVaultExport.addEventListener('click', () => {
+      checkVaultProAccess(() => {
+        const scenarios = getSavedScenarios();
+        const exportBlob = new Blob([JSON.stringify({
+          tool: 'Burst Action Sequence Multi-Exposure Compositor',
+          version: '1.0.0',
+          scenarios: scenarios,
+          exportedAt: new Date().toISOString()
+        }, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(exportBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `sequence-vault-scenarios-${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
+    });
+  }
+
+  renderVaultList();
+})();
+// FEATURE-JS
+</script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>Burst Action Sequence Compositor allows photographers, videographers, and athletic coaches to create multi-exposure action sequences directly in their web browser. Using client-side background subtraction, the tool isolates moving subjects from burst frames without manual masking or cloud uploads. It is completely free to use online, with an optional offline edition for field production.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Mount your camera on a tripod and capture an action burst using fixed manual exposure and focus.</li><li>Drop your sequence frames into the browser interface to automatically calculate the background plate.</li><li>Adjust the subtraction threshold and scrub the timeline to select which action frames to include.</li><li>Optional: Enable chromatic velocity tinting or inspect trajectory paths across the movement arc.</li><li>Export your finished composite at full original resolution or save a reusable session preset.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">How do I combine multiple exposures for action shots?</h4><p style="margin:0">You enter: A sequence of burst photos or video frames of an action athlete against a stationary or semi-stationary background · Camera burst rate (e.g., 10 to 30 frames per second) · Approximate athlete displacement across the frame.<br>You get: An automated way to isolate the moving subject across every frame, align the background, blend all motion phases into a single sharp multi-exposure image without manual masking, and adjust trail decay and frame cadence.</p><h4 style="font-size:16px;margin:16px 0 4px">Why do it &quot;in-camera&quot; rather than in post-processing?</h4><p style="margin:0">You enter: Ambient lighting condition (e.g., EV 14 bright daylight vs EV 6 dark arena) · Desired number of composite exposures (e.g., 8 frames) · Camera multi-exposure mode limits vs post-processing burst mode.<br>You get: A quantitative rule showing why in-camera multi-exposure causes blown-out highlights in daylight and ghosted backgrounds, and how post-processing burst isolation eliminates background overexposure while preserving individual athlete sharpness.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">How do I combine multiple exposures for action shots?</h4><p style="margin:0">To combine multiple action exposures, capture a sequence on a locked tripod so the background remains identical across all frames. In software, each frame is layered over a base plate, and pixels that differ from the background (the athlete or subject) are isolated using difference masks or automated subtraction. The isolated subjects are then blended onto the final static background frame.</p><h4 style="font-size:16px;margin:16px 0 4px">Why do it &quot;in-camera&quot; rather than in post-processing?</h4><p style="margin:0">In-camera multi-exposure modes are convenient for instant results, but they add exposure values together directly on the sensor, which frequently causes overexposure or washed-out subjects when blending more than two or three frames. Processing in post-processing allows you to use selective masking and background subtraction, ensuring the background remains properly exposed and each instance of the subject retains its full contrast and sharpness.</p><h4 style="font-size:16px;margin:16px 0 4px">Do my burst photos need to be shot from a locked tripod?</h4><p style="margin:0">Yes, automated background subtraction relies on a static background between frames to detect the moving subject. Handheld bursts with camera movement will cause alignment errors, requiring manual frame registration or manual masking. For best results, use a sturdy tripod with fixed focal length, manual focus, and locked manual exposure.</p><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free web page and the $12 Gumroad product?</h4><p style="margin:0">The web page is completely free and fully functional when you have an internet connection to load the page. The $12 Gumroad download is a self-contained offline package containing all code and assets, designed for field use on laptops without an active internet connection, alongside direct support for ongoing development.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $12, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/sfbsow" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $12</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../macro-extension-tube-magnification-bench/" style="color:inherit;font-weight:600">Macro Photography Extension Tube &amp; Magnification Lab</a>: Simulate tube stacks, working distance, effective f-stops, and Airy disk diffraction in an offline optical bench.</li><li><a href="../astrophotography-exposure-signal-planner/" style="color:inherit;font-weight:600">Night Sky Exposure &amp; Color Signal Lab</a>: A professional SNR planner and star-trail solver for capturing deep Milky Way colors without tracking hardware.</li><li><a href="../visual-depth-of-field-bokeh-lab/" style="color:inherit;font-weight:600">Visual Depth of Field &amp; Perspective Lab</a>: Interactive optical geometry simulator and lens comparison lab in a single offline HTML file.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $12</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $12"});</script>
+</body>
+</html>
