@@ -1,0 +1,2776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --border-focus: #3b82f6;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --accent: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --freeze: #38bdf8;
+      --mass: #2563eb;
+      --badge-bg: #f1f5f9;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #090d16;
+        --card-bg: #111827;
+        --border: #1f2937;
+        --border-focus: #60a5fa;
+        --text: #f1f5f9;
+        --text-muted: #94a3b8;
+        --primary: #38bdf8;
+        --primary-hover: #0284c7;
+        --accent: #34d399;
+        --warning: #fbbf24;
+        --danger: #f87171;
+        --freeze: #7dd3fc;
+        --mass: #60a5fa;
+        --badge-bg: #1e293b;
+        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+      font-size: 14px;
+    }
+
+    .app-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Header */
+    header {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+      max-width: 100%;
+    }
+    .header-title {
+      min-width: 0;
+      max-width: 100%;
+    }
+    .header-title h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+    .header-title h1 svg {
+      flex-shrink: 0;
+    }
+    .header-title p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .header-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      max-width: 100%;
+    }
+    #presetSelect {
+      max-width: 100%;
+      min-width: 0;
+      text-overflow: ellipsis;
+    }
+
+    /* Buttons & Inputs */
+    button, select, input {
+      font: inherit;
+      color: inherit;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      font-size: 0.825rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background: var(--badge-bg);
+      border-color: var(--text-muted);
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: transparent;
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+    .btn-sm {
+      padding: 4px 8px;
+      font-size: 0.775rem;
+    }
+
+    /* Layout Grid */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 460px minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+      min-width: 0;
+    }
+    @media (max-width: 1024px) {
+      .dashboard-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .left-controls, .right-results {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    /* Card Panels */
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .panel:last-child {
+      margin-bottom: 0;
+    }
+    .panel-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .panel-header h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      max-width: 100%;
+      word-break: break-word;
+    }
+    .panel-header h2 svg {
+      flex-shrink: 0;
+    }
+    .panel-header .badge {
+      font-size: 0.75rem;
+      background: var(--badge-bg);
+      padding: 2px 8px;
+      border-radius: 999px;
+      color: var(--text-muted);
+    }
+
+    /* Forms & Fieldsets */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .col-full { grid-column: span 2; }
+    .col-3 { grid-template-columns: repeat(3, 1fr); }
+    
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .field label {
+      font-size: 0.775rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+    .field label span.unit {
+      font-weight: 400;
+      color: var(--text-muted);
+      opacity: 0.8;
+    }
+    .field input, .field select {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 0.85rem;
+      outline: none;
+      width: 100%;
+    }
+    .field input:focus, .field select:focus {
+      border-color: var(--border-focus);
+    }
+    .field input[type="range"] {
+      padding: 0;
+      cursor: pointer;
+    }
+
+    /* Stats strip */
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      background: var(--badge-bg);
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 14px;
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-item .label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .stat-item .val {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .stat-item .val small {
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-left: 2px;
+    }
+
+    /* Diagrams & Visuals */
+    .cross-section-container {
+      background: var(--badge-bg);
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .cross-section-container svg {
+      width: 100%;
+      height: 140px;
+    }
+
+    /* Interpretation Block */
+    .interpretation-box {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(16, 185, 129, 0.08) 100%);
+      border: 1px solid rgba(2, 132, 199, 0.25);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+    .interpretation-box h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary);
+    }
+    .interpretation-box p {
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .interpretation-actions {
+      margin-top: 8px;
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* Key Metric Cards */
+    .metrics-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) {
+      .metrics-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .metric-card .title {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .metric-card .value {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin: 4px 0;
+      color: var(--text);
+    }
+    .metric-card .value.alert { color: var(--danger); }
+    .metric-card .value.safe { color: var(--accent); }
+    .metric-card .subtext {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Simulation Chart Panel */
+    .chart-wrapper {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .chart-wrapper svg {
+      width: 100%;
+      height: 100%;
+    }
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      font-size: 0.75rem;
+      margin-top: 8px;
+      justify-content: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .legend-line {
+      width: 14px;
+      height: 3px;
+      border-radius: 2px;
+    }
+
+    /* Glazing Comparison Table */
+    .table-container {
+      overflow-x: auto;
+      max-width: 100%;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 10px;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.785rem;
+      text-align: left;
+    }
+    table.data-table th, table.data-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    table.data-table th {
+      background: var(--badge-bg);
+      color: var(--text-muted);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    table.data-table tr.selected-row {
+      background: rgba(2, 132, 199, 0.08);
+      font-weight: 600;
+    }
+    .tag {
+      font-size: 0.68rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      display: inline-block;
+    }
+    .tag-success { background: rgba(16, 185, 129, 0.15); color: var(--accent); }
+    .tag-warning { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+    .tag-danger { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+
+    /* Footer / Engineering Disclaimer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .disclaimer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--warning);
+      font-weight: 600;
+    }
+
+    .pro-message-toast {
+      display: none;
+      padding: 6px 12px;
+      background: var(--warning);
+      color: #000;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+    .pro-message-toast a {
+      color: #000;
+      text-decoration: underline;
+    }
+
+    /* Radio Tabs */
+    .segmented-control {
+      display: flex;
+      background: var(--badge-bg);
+      padding: 2px;
+      border-radius: 6px;
+      gap: 2px;
+    }
+    .segmented-control button {
+      flex: 1;
+      padding: 4px 8px;
+      border: none;
+      background: transparent;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .segmented-control button.active {
+      background: var(--card-bg);
+      color: var(--text);
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .validation-alert {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      margin-bottom: 16px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 8px; }
+      header { padding: 12px; gap: 10px; }
+      .header-title h1 { font-size: 1.1rem; }
+      .panel { padding: 12px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .col-full { grid-column: 1 / -1 !important; }
+      .metrics-summary-grid { grid-template-columns: 1fr; }
+      .header-controls { justify-content: flex-start; width: 100%; }
+      #presetSelect { width: 100%; }
+      .stat-strip { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* Print styles */
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .btn, .header-controls, .segmented-control button:not(.active), .validation-alert { display: none !important; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .panel { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+    }
+    /* Glazing Comparator Matrix */
+    .cmp-matrix th, .cmp-matrix td { vertical-align: top; min-width: 155px; font-size: 0.775rem; }
+    .cmp-matrix th:first-child, .cmp-matrix td:first-child { min-width: 135px; font-weight: 600; background: var(--badge-bg); position: sticky; left: 0; z-index: 1; }
+    .cmp-list { margin: 0; padding-left: 14px; list-style-type: disc; }
+    .cmp-list li { margin-bottom: 4px; line-height: 1.35; }
+    .highlight-pro { color: var(--accent); font-weight: 700; background: rgba(16,185,129,0.12); padding: 1px 4px; border-radius: 3px; display: inline-block; }
+    .fuel-cost-row { display: flex; justify-content: space-between; gap: 6px; padding: 1px 0; font-size: 0.74rem; }
+    .fuel-cost-row.fuel-active { font-weight: 700; color: var(--primary); }
+    /* Reverse Thermal Mass Solver Sub-Tool */
+    .opt-subpanel {
+      margin-top: 14px;
+      padding: 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--primary);
+      border-radius: 8px;
+    }
+    .opt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .opt-alert {
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+    .opt-alert.warn {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+      border: 1px solid var(--warning);
+    }
+    .opt-alert.danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+    .opt-alert.ok {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    #insulation-retrofit-roi-evaluator select, #insulation-retrofit-roi-evaluator input {
+      cursor: pointer;
+    }
+    .scenario-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .scenario-item { display: flex; justify-content: space-between; align-items: center; background: var(--badge-bg); padding: 8px 12px; border-radius: 6px; font-size: 0.8rem; gap: 8px; flex-wrap: wrap; }
+    .scenario-actions { display: flex; gap: 4px; }
+    .delta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-top: 8px; background: var(--badge-bg); padding: 10px; border-radius: 6px; }
+    .delta-card { font-size: 0.75rem; }
+    .delta-card .d-lbl { color: var(--text-muted); font-size: 0.7rem; }
+    .delta-card .d-val { font-weight: 700; font-size: 0.88rem; color: var(--text); }
+    .delta-card .d-diff { font-size: 0.72rem; font-weight: 600; }
+    .delta-card .d-diff.pos { color: var(--accent); }
+    .delta-card .d-diff.neg { color: var(--danger); }
+    /* FEATURE-CSS */
+  </style>
+<title>Greenhouse Heat Loss Calculator: Polycarbonate vs Glass</title>
+<meta name="description" content="Calculate greenhouse heat loss, compare polycarbonate vs glass U-values, size heaters, and simulate water barrel thermal mass requirements.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/greenhouse-thermal-loss-and-glazing-simulator/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/greenhouse-thermal-loss-and-glazing-simulator/">
+<meta property="og:title" content="Greenhouse Heat Loss Calculator: Polycarbonate vs Glass"><meta property="og:description" content="Calculate greenhouse heat loss, compare polycarbonate vs glass U-values, size heaters, and simulate water barrel thermal mass requirements.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/greenhouse-thermal-loss-and-glazing-simulator/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Greenhouse Heat Loss Calculator: Polycarbonate vs Glass","description":"Calculate greenhouse heat loss, compare polycarbonate vs glass U-values, size heaters, and simulate water barrel thermal mass requirements.","url":"https://rttyy.github.io/free-tools/greenhouse-thermal-loss-and-glazing-simulator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How to convert inches to gallons?","acceptedAnswer":{"@type":"Answer","text":"To find gallons from dimensions measured in inches, first calculate the container volume in cubic inches (Length × Width × Height for rectangular containers, or π × Radius² × Height for round drums). Then, divide the total cubic inches by 231, because one US liquid gallon equals exactly 231 cubic inches."}},{"@type":"Question","name":"Glass vs plastic greenhouse covering: pros and cons","acceptedAnswer":{"@type":"Answer","text":"Glass offers high clarity, long lifespan, and resists UV degradation, but it has poor insulation values (U-value ~1.1–1.2 for single pane), heavy weight, and higher framing costs. Multi-wall plastic (polycarbonate) provides significantly better thermal retention (U-value ~0.58–0.65 for 8mm twin-wall), high impact resistance, and easier installation, but it gradually loses light transmittance over 10–15 years due to UV exposure."}},{"@type":"Question","name":"How does draft infiltration affect total greenhouse heating requirements?","acceptedAnswer":{"@type":"Answer","text":"Infiltration accounts for cold outdoor air leaking through frame seams, vents, and foundation gaps. In drafty or unsealed hobby structures, air leakage can add 20% to 40% on top of conductive glazing losses, requiring a substantially larger heater output to maintain target temperatures."}},{"@type":"Question","name":"What is the offline simulator pack?","acceptedAnswer":{"@type":"Answer","text":"The offline pack is a single self-contained HTML/JS file that runs directly in any web browser without an internet connection, tracking, or account logins. It includes scenario saving, instant CSV/JSON data export, and lifetime offline access for use in remote farm fields and off-grid homesteads."}}]}</script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="header-title">
+        <h1>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent);">
+            <path d="M3 21h18"/>
+            <path d="M5 21V10l7-5 7 5v11"/>
+            <path d="M12 5v16"/>
+            <line x1="5" y1="14" x2="19" y2="14"/>
+          </svg>
+          Greenhouse Thermal Loss and Glazing Performance Simulator
+        </h1>
+        <p>Horticultural physics engine for envelope heat balancing, water thermal mass sizing, and freeze risk prediction.</p>
+      </div>
+
+      <div class="header-controls">
+        <label for="presetSelect" style="font-size:0.75rem; font-weight:600; color:var(--text-muted)">Scenario Preset:</label>
+        <select id="presetSelect" class="btn" style="padding:5px 10px;" onchange="loadPreset(this.value)">
+          <option value="0">Homestead Backyard Gable (Twin-Wall Polycarbonate)</option>
+          <option value="1">Market Gardener High Tunnel / Quonset (Double Poly Film)</option>
+          <option value="2">Suburban Sunroom / Lean-To (Single Horticultural Glass)</option>
+        </select>
+        <button class="btn btn-sm" onclick="exportData('csv')" title="Export analysis to CSV">Export CSV</button>
+        <button class="btn btn-sm" onclick="exportData('json')" title="Export full state as JSON">Export JSON</button>
+        <button class="btn btn-sm" onclick="printReport()" title="Print summary report">Print</button>
+        <button class="btn btn-sm" onclick="copySummary()" title="Copy key results to clipboard">Copy</button>
+        <button class="btn btn-sm" onclick="resetForm()" title="Reset to defaults">Reset</button>
+        <div id="proToast" class="pro-message-toast"></div>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <div class="dashboard-grid">
+      
+      <!-- LEFT COLUMN: INPUT CONTROLS -->
+      <div class="left-controls">
+        
+        <!-- FEATURE 1: Geometry & Glazing Envelope Calculator -->
+        <section class="panel" data-feature="geometry-and-envelope-calculator">
+          <div class="panel-header">
+            <h2>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3zM3 9h18M9 21V9"/></svg>
+              1. Geometry & Envelope
+            </h2>
+            <span class="badge" id="geomSummaryBadge">Gable • 16x24 ft</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="field col-full">
+              <label>Structural Architecture Style</label>
+              <div class="segmented-control" id="archStyleControl">
+                <button type="button" class="active" onclick="setStyle('Gable')">Gable</button>
+                <button type="button" onclick="setStyle('Quonset')">Quonset / Hoop</button>
+                <button type="button" onclick="setStyle('Lean-to')">Lean-to</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="inWidth">Width (Span) <span class="unit">ft</span></label>
+              <input type="number" id="inWidth" value="16" min="6" max="60" step="0.5" oninput="calculateAll()">
+            </div>
+
+            <div class="field">
+              <label for="inLength">Length <span class="unit">ft</span></label>
+              <input type="number" id="inLength" value="24" min="6" max="200" step="1" oninput="calculateAll()">
+            </div>
+
+            <div class="field">
+              <label for="inEaveHeight">Side / Eave Height <span class="unit">ft</span></label>
+              <input type="number" id="inEaveHeight" value="6.0" min="0" max="20" step="0.5" oninput="calculateAll()">
+            </div>
+
+            <div class="field">
+              <label for="inRidgeHeight">Ridge / Peak Height <span class="unit">ft</span></label>
+              <input type="number" id="inRidgeHeight" value="10.0" min="3" max="30" step="0.5" oninput="calculateAll()">
+            </div>
+
+            <div class="field col-full">
+              <label for="inGlazing">Primary Covering / Glazing Material</label>
+              <select id="inGlazing" onchange="calculateAll()">
+                <option value="6mm_pc" selected>6mm Twin-wall Polycarbonate (U = 0.62, PAR = 80%)</option>
+                <option value="4mm_pc">4mm Twin-wall Polycarbonate (U = 0.68, PAR = 82%)</option>
+                <option value="10mm_pc">10mm Triple-wall Polycarbonate (U = 0.42, PAR = 72%)</option>
+                <option value="single_glass">Single 3mm Horticultural Glass (U = 1.13, PAR = 89%)</option>
+                <option value="double_glass">Double Insulated Low-E Glass (U = 0.58, PAR = 78%)</option>
+                <option value="single_poly">Single Polyethylene Film 6-mil (U = 1.20, PAR = 88%)</option>
+                <option value="double_poly">Double Inflated Polyethylene Film (U = 0.70, PAR = 82%)</option>
+              </select>
+            </div>
+
+            <div class="field col-full">
+              <label for="inEndFraming">
+                End-wall Framing / Opaque Ratio: <span id="lblEndFraming">37.8</span>%
+                <span class="unit">doors, louvers, wood</span>
+              </label>
+              <input type="range" id="inEndFraming" min="0" max="60" step="0.1" value="37.8" oninput="updateFramingSlider(this.value)">
+            </div>
+          </div>
+
+          <!-- Cross-section SVG preview -->
+          <div class="cross-section-container">
+            <svg id="svgCrossSection" viewBox="0 0 320 130" aria-label="Greenhouse cross-section diagram"></svg>
+          </div>
+
+          <!-- Output metrics for geometry -->
+          <div class="stat-strip">
+            <div class="stat-item">
+              <span class="label">Glazing Envelope</span>
+              <span class="val" id="outEnvelopeArea">876.5 <small>sq ft</small></span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Interior Air Volume</span>
+              <span class="val" id="outAirVolume">3,072 <small>cu ft</small></span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Ground Footprint</span>
+              <span class="val" id="outFloorArea">384 <small>sq ft</small></span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Conduction UA</span>
+              <span class="val" id="outUA">543.4 <small>BTU/hr·°F</small></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- FEATURE 2: Water Thermal Mass Sizing & Dimensional Converter -->
+        <section class="panel" data-feature="thermal-mass-and-dimensional-converter">
+          <div class="panel-header">
+            <h2>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+              2. Water Thermal Mass Sizing
+            </h2>
+            <span class="badge" id="massSummaryBadge">219 gal • 1,827 lbs</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="field col-full">
+              <label>Container Sizing Methodology</label>
+              <div class="segmented-control" id="massModeControl">
+                <button type="button" onclick="setMassMode('presets')">Standard Gallons</button>
+                <button type="button" class="active" onclick="setMassMode('custom')">Custom Dimensions in Inches</button>
+              </div>
+            </div>
+
+            <!-- Custom Container Dimensions in Inches -->
+            <div id="customDimFields" class="col-full form-grid" style="display: grid;">
+              <div class="field col-full">
+                <label for="inContainerShape">Container Vessel Shape</label>
+                <select id="inContainerShape" onchange="toggleShapeFields()">
+                  <option value="cylinder" selected>Cylindrical Drum / Barrel</option>
+                  <option value="box">Rectangular Tank / Cistern</option>
+                </select>
+              </div>
+
+              <div class="field" id="shapeFldDiameter">
+                <label for="inDiameter">Diameter <span class="unit">inches</span></label>
+                <input type="number" id="inDiameter" value="22.5" min="4" max="120" step="0.5" oninput="calculateAll()">
+              </div>
+
+              <div class="field" id="shapeFldLength" style="display:none;">
+                <label for="inBoxLength">Length <span class="unit">inches</span></label>
+                <input type="number" id="inBoxLength" value="96" min="6" max="240" step="1" oninput="calculateAll()">
+              </div>
+
+              <div class="field" id="shapeFldWidth" style="display:none;">
+                <label for="inBoxWidth">Width <span class="unit">inches</span></label>
+                <input type="number" id="inBoxWidth" value="18" min="6" max="120" step="1" oninput="calculateAll()">
+              </div>
+
+              <div class="field" id="shapeFldHeight">
+                <label for="inHeight">Height / Depth <span class="unit">inches</span></label>
+                <input type="number" id="inHeight" value="33.5" min="6" max="120" step="0.5" oninput="calculateAll()">
+              </div>
+            </div>
+
+            <!-- Standard Gallon Preset Fields -->
+            <div id="presetGalFields" class="col-full form-grid" style="display: none;">
+              <div class="field col-full">
+                <label for="inGalPreset">Preset Container Type</label>
+                <select id="inGalPreset" onchange="applyGalPreset(this.value)">
+                  <option value="55" selected>55 Gallon Standard Blue Drum (480 lbs)</option>
+                  <option value="275">275 Gallon Intermediate Bulk Container (IBC Tote)</option>
+                  <option value="15">15 Gallon Utility Pail</option>
+                  <option value="30">30 Gallon Poly Tank</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="inDrumCount">Number of Containers <span class="unit">qty</span></label>
+              <input type="number" id="inDrumCount" value="4" min="0" max="60" step="1" oninput="calculateAll()">
+            </div>
+
+            <div class="field">
+              <label for="inFillPct">Water Fill Level <span class="unit">%</span></label>
+              <input type="number" id="inFillPct" value="95" min="10" max="100" step="5" oninput="calculateAll()">
+            </div>
+
+            <div class="field col-full">
+              <label for="inDayWaterTemp">Daytime Solar Charging Temp <span class="unit">°F</span></label>
+              <input type="number" id="inDayWaterTemp" value="58" min="32" max="110" step="1" oninput="calculateAll()">
+            </div>
+          </div>
+
+          <div class="stat-strip">
+            <div class="stat-item">
+              <span class="label">Single Net Vol</span>
+              <span class="val" id="outSingleGal">54.75 <small>gal</small></span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Total Water Mass</span>
+              <span class="val" id="outTotalGal">219.0 <small>gal</small></span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Water Weight</span>
+              <span class="val" id="outWaterWeight">1,827 <small>lbs</small></span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Sensible Storage</span>
+              <span class="val" id="outMassCapacity">1,827 <small>BTU/°F</small></span>
+            </div>
+          </div>
+
+          <!-- Reverse Thermal Mass Solver Sub-Tool -->
+          <div class="opt-subpanel" data-feature="passive-thermal-mass-optimizer" id="passiveThermalMassOptimizer">
+            <div class="opt-header">
+              <span>⚡ Reverse Thermal Mass Solver (Water Buffer Sizing)</span>
+              <span class="badge">Optimization Tool</span>
+            </div>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="inOptTargetHours">Target Buffer <span class="unit">hours</span></label>
+                <input type="number" id="inOptTargetHours" value="6" min="0.5" max="72" step="0.5" oninput="calculateAll()">
+              </div>
+
+              <div class="field">
+                <label for="inOptFreezeTemp">Outdoor Low <span class="unit">°F</span></label>
+                <input type="number" id="inOptFreezeTemp" value="10" min="-40" max="32" step="1" oninput="calculateAll()">
+              </div>
+
+              <div class="field col-full">
+                <label for="inOptMaxFootprint">Max Allowable Barrel Footprint <span class="unit">sq ft</span></label>
+                <input type="number" id="inOptMaxFootprint" value="60" min="5" max="500" step="1" oninput="calculateAll()">
+              </div>
+            </div>
+
+            <div class="stat-strip" style="margin-top:10px;">
+              <div class="stat-item">
+                <span class="label">Required Water</span>
+                <span class="val" id="outOptGallons">780 <small>gallons needed</small></span>
+              </div>
+              <div class="stat-item">
+                <span class="label">Standard 55-Gal Drums</span>
+                <span class="val" id="outOptDrums">15 <small>standard 55-gal drums</small></span>
+              </div>
+              <div class="stat-item col-full" style="grid-column: span 2;">
+                <span class="label">Floor Area Consumed (24-inch drum diameter)</span>
+                <span class="val" id="outOptFootprint" style="font-size:0.95rem;">consuming 47.1 sq ft (12.3% of 384 sq ft floor area)</span>
+              </div>
+            </div>
+
+            <div id="outOptWarning" class="opt-alert ok"></div>
+
+            <div style="margin-top:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+              <button type="button" class="btn btn-sm btn-primary" id="btnApplyOptDrums" onclick="applyOptimizedDrums()">Apply 15 Drums</button>
+              <span style="font-size:0.7rem; color:var(--text-muted);">Standard 55-gal drum: 24" dia. = 3.14 sq ft</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- FEATURE 3: Infiltration, Drafts, and Peak Heating Sizing Engine -->
+        <section class="panel" data-feature="infiltration-and-peak-heat-loss">
+          <div class="panel-header">
+            <h2>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/></svg>
+              3. Climate, Drafts & Heating
+            </h2>
+            <span class="badge" id="climateBadge">Target 45°F • Low 10°F</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="inTargetTemp">Target Crop Min Temp <span class="unit">°F</span></label>
+              <input type="number" id="inTargetTemp" value="45" min="32" max="75" step="1" oninput="calculateAll()">
+            </div>
+
+            <div class="field">
+              <label for="inOutdoorColdSnap">Extreme Cold Snap Low <span class="unit">°F</span></label>
+              <input type="number" id="inOutdoorColdSnap" value="10" min="-40" max="45" step="1" oninput="calculateAll()">
+            </div>
+
+            <div class="field">
+              <label for="inWindSpeed">Sustained Wind Speed <span class="unit">mph</span></label>
+              <input type="number" id="inWindSpeed" value="15" min="0" max="65" step="1" oninput="calculateAll()">
+            </div>
+
+            <div class="field">
+              <label for="inTightness">Envelope Tightness Rating</label>
+              <select id="inTightness" onchange="calculateAll()">
+                <option value="0.5">Tight Weather-stripped (0.5 ACH)</option>
+                <option value="1.2" selected>Medium Hobby Grade (1.2 ACH)</option>
+                <option value="2.5">Loose / Drafty Frame (2.5 ACH)</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="inDayHigh">Daytime Peak Solar High <span class="unit">°F</span></label>
+              <input type="number" id="inDayHigh" value="38" min="-20" max="100" step="1" oninput="calculateAll()">
+            </div>
+
+            <div class="field">
+              <label for="inSolarCondition">Solar Insolation Sky Condition</label>
+              <select id="inSolarCondition" onchange="calculateAll()">
+                <option value="clear" selected>Clear Sunny Winter Sky</option>
+                <option value="partly">Partly Cloudy / Hazy</option>
+                <option value="overcast">Overcast / Gloomy Winter Day</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="stat-strip">
+            <div class="stat-item">
+              <span class="label">Wind-Adj Infiltration</span>
+              <span class="val" id="outAdjACH">1.45 <small>ACH</small></span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Peak Conduction</span>
+              <span class="val" id="outPeakCond">19,019 <small>BTU/hr</small></span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Infiltration Loss</span>
+              <span class="val" id="outPeakInf">2,752 <small>BTU/hr</small></span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Heater (+20% Margin)</span>
+              <span class="val" id="outHeaterBTU" style="color:var(--danger);">26,125 <small>BTU/hr</small></span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT COLUMN: RESULTS & SIMULATIONS -->
+      <div class="right-results">
+        
+        <div id="validationAlert" class="validation-alert" style="display:none;" role="alert"></div>
+
+        <!-- Live Interpretation Box -->
+        <div class="interpretation-box" id="interpretationBox">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            What This Means & What To Do Next
+          </h3>
+          <p id="interpretSummary">
+            With 4 water barrels (219 gal), freeze onset is delayed by 2.8 hours. Your peak heat deficit during a 10°F cold snap requires a 26,125 BTU/hr (7.66 kW) heater.
+          </p>
+          <div class="interpretation-actions" id="interpretAction">
+            Action: Increase water storage along north wall or add an automated thermostat set to 45°F.
+          </div>
+        </div>
+
+        <!-- 4 Key Metric Cards -->
+        <div class="metrics-summary-grid">
+          <div class="metric-card">
+            <div class="title">Peak Heat Demand</div>
+            <div class="value alert" id="cardPeakLoad">21,771 <small style="font-size:0.8rem">BTU/hr</small></div>
+            <div class="subtext" id="cardPeakKW">6.38 kW steady-state deficit</div>
+          </div>
+          <div class="metric-card">
+            <div class="title">Recommended Heater</div>
+            <div class="value" id="cardRecHeater">7.66 <small style="font-size:0.8rem">kW</small></div>
+            <div class="subtext" id="cardRecBTU">26,125 BTU/hr (+20% margin)</div>
+          </div>
+          <div class="metric-card">
+            <div class="title">Unheated Freeze Risk</div>
+            <div class="value" id="cardFreezeHours">5.5 <small style="font-size:0.8rem">hours</small></div>
+            <div class="subtext" id="cardNadir">Nadir: 18.2°F with mass</div>
+          </div>
+          <div class="metric-card">
+            <div class="title">Thermal Buffer Gain</div>
+            <div class="value safe" id="cardBufferGain">+2.8 <small style="font-size:0.8rem">hours</small></div>
+            <div class="subtext" id="cardMassBTU">1,827 BTU/°F water buffer</div>
+          </div>
+        </div>
+
+        <!-- FEATURE 4: 24-Hour Diurnal Temperature Cycle & Freeze Risk Visualizer -->
+        <section class="panel" data-feature="diurnal-simulation-and-freeze-trajectory">
+          <div class="panel-header">
+            <h2>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              4. 24-Hour Diurnal Cycle Simulation & Freeze Trajectory
+            </h2>
+            <span class="badge" id="simStatusBadge">Simulation Active</span>
+          </div>
+
+          <div style="font-size:0.775rem; color:var(--text-muted); margin-bottom:6px;">
+            Simulated diurnal trajectory through daytime solar gain and extreme overnight cold snap (12:00 PM to 12:00 PM next day).
+          </div>
+
+          <div class="chart-wrapper">
+            <svg id="svgDiurnalChart" viewBox="0 0 650 260" preserveAspectRatio="none"></svg>
+          </div>
+
+          <div class="chart-legend">
+            <div class="legend-item"><span class="legend-line" style="background:#64748b;"></span> Outdoor Ambient</div>
+            <div class="legend-item"><span class="legend-line" style="background:#ef4444; border-top:1px dashed #ef4444;"></span> Freezing Line (32°F)</div>
+            <div class="legend-item"><span class="legend-line" style="background:#f59e0b;"></span> Unheated (No Water Mass)</div>
+            <div class="legend-item"><span class="legend-line" style="background:#2563eb; height:4px;"></span> Unheated (With Water Mass)</div>
+            <div class="legend-item"><span class="legend-line" style="background:#10b981;"></span> Heated Crop Target</div>
+          </div>
+
+          <div class="stat-strip" style="margin-top:12px;">
+            <div class="stat-item">
+              <span class="label">Time to 32°F (No Mass)</span>
+              <span class="val" id="outFreezeTimeNoMass">8:30 PM</span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Time to 32°F (With Mass)</span>
+              <span class="val" id="outFreezeTimeWithMass" style="color:var(--mass);">11:15 PM</span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Unheated Nadir (No Mass)</span>
+              <span class="val" id="outNadirNoMass">12.4 <small>°F</small></span>
+            </div>
+            <div class="stat-item">
+              <span class="label">Unheated Nadir (With Mass)</span>
+              <span class="val" id="outNadirWithMass" style="color:var(--mass);">18.2 <small>°F</small></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Glazing Performance Comparison Table (Question 2: Glass vs Plastic) -->
+        <section class="panel">
+          <div class="panel-header">
+            <h2>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              Glass vs Horticultural Plastic Covering Performance Matrix
+            </h2>
+            <span class="badge">Dynamic Sizing for Your Envelope</span>
+          </div>
+
+          <div style="font-size:0.775rem; color:var(--text-muted); margin-bottom:8px;">
+            Side-by-side engineering evaluation for your <span id="tblSummarySpan">876.5 sq ft envelope</span> maintaining <span id="tblDeltaSpan">45°F against 10°F</span>.
+          </div>
+
+          <div class="table-container">
+            <table class="data-table" id="glazingTable">
+              <thead>
+                <tr>
+                  <th>Glazing Material</th>
+                  <th>U-Factor</th>
+                  <th>Conduction Loss</th>
+                  <th>Light (PAR)</th>
+                  <th>Lifespan</th>
+                  <th>Impact Strength</th>
+                  <th>Est. Heating Fuel Cost</th>
+                </tr>
+              </thead>
+              <tbody id="glazingTableBody">
+                <!-- Dynamically populated in JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- FEATURE: Side-by-Side Glazing Material and Fuel Cost Comparator -->
+    <section class="panel" data-feature="glazing-pros-cons-comparator" style="margin-top: 20px;">
+      <div class="panel-header">
+        <h2>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+          Side-by-Side Glazing Material & Fuel Cost Comparator
+        </h2>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <label for="cmpFuelSelect" style="font-size:0.75rem; font-weight:600; color:var(--text-muted)">Fuel:</label>
+          <select id="cmpFuelSelect" class="btn btn-sm" onchange="renderGlazingComparator()" title="Primary heating fuel rate standard">
+            <option value="propane" selected>Propane ($3.10/gal)</option>
+            <option value="natgas">Natural Gas ($1.40/therm)</option>
+            <option value="elec">Electric Resistance ($0.15/kWh)</option>
+            <option value="heatpump">Heat Pump COP 2.8 ($0.15/kWh)</option>
+          </select>
+          <button type="button" class="btn btn-primary btn-sm" id="btnCompareGlazings" onclick="renderGlazingComparator()">Compare Glazings</button>
+        </div>
+      </div>
+
+      <div id="cmpSavingsBanner" class="interpretation-box" style="margin-bottom:12px; padding:10px 14px;"></div>
+
+      <div class="table-container">
+        <table class="data-table cmp-matrix" id="cmpTable">
+          <thead>
+            <tr id="cmpTableHead"></tr>
+          </thead>
+          <tbody id="cmpTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FEATURE: Thermal Blanket and Bubble-Wrap Insulation Retrofit Evaluator -->
+    <section class="panel" id="insulation-retrofit-roi-evaluator" data-feature="insulation-retrofit-roi-evaluator">
+      <div class="panel-header">
+        <h2>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Insulation & Curtain Retrofit Evaluator
+        </h2>
+        <span class="badge" id="retrofitBadge">No Retrofit</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="field col-full">
+          <label for="inRetrofitType">Nighttime Blanket / Insulation Deployment</label>
+          <select id="inRetrofitType" onchange="calculateAll()">
+            <option value="none" selected>None (Uninsulated Glazing Envelope)</option>
+            <option value="north_wall">North-wall reflective foil insulation / foam board R-3.5</option>
+            <option value="curtain">Nighttime overhead thermal shade curtain R-2.0</option>
+            <option value="bubble_wrap">Complete perimeter bubble-wrap layer R-1.2</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="inRetrofitFuel">Fuel Type</label>
+          <select id="inRetrofitFuel" onchange="onRetrofitFuelChange()">
+            <option value="elec" selected>Electricity ($/kWh)</option>
+            <option value="propane">Propane ($/gal propane)</option>
+            <option value="natgas">Natural Gas ($/therm)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="inRetrofitFuelCost">Unit Cost <span class="unit" id="lblRetrofitUnit">$/kWh</span></label>
+          <input type="number" id="inRetrofitFuelCost" value="0.15" min="0.01" max="100" step="0.01" oninput="calculateAll()">
+        </div>
+      </div>
+
+      <div class="stat-strip">
+        <div class="stat-item">
+          <span class="label">Revised Nighttime UA</span>
+          <span class="val" id="outRetrofitUA">543.4 <small>BTU/hr·°F</small></span>
+        </div>
+        <div class="stat-item">
+          <span class="label">Peak Heater Reduction</span>
+          <span class="val" id="outRetrofitHeaterCut">0.0%</span>
+        </div>
+        <div class="stat-item col-full" style="grid-column: span 2;">
+          <span class="label">Est. Annual Winter Fuel Savings</span>
+          <span class="val" id="outRetrofitAnnualSavings" style="color:var(--accent);">$0 <small>/ year</small></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" data-feature="engineering-report-and-scenario-export">
+      <div class="panel-header">
+        <h2>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          5. Scenario Comparison, Export & Audit Report
+        </h2>
+        <span class="badge" id="snapshotCountBadge">0 / 5 Snapshots</span>
+      </div>
+
+      <div class="form-grid">
+        <div class="field col-full" style="flex-direction:row; gap:8px; align-items:center;">
+          <input type="text" id="inSnapshotName" placeholder="Snapshot Name (e.g. Double Poly + 6 Barrels)" style="flex:1;">
+          <button type="button" class="btn btn-primary btn-sm" onclick="saveScenarioSnapshot()">Save Snapshot</button>
+        </div>
+      </div>
+
+      <div class="scenario-list" id="savedScenarioList">
+        <div style="font-size:0.78rem; color:var(--text-muted); font-style:italic;">No saved snapshots yet. Adjust parameters above and click 'Save Snapshot'.</div>
+      </div>
+
+      <div id="deltaResults" style="margin-top:12px; display:none;">
+        <div style="font-size:0.8rem; font-weight:700; color:var(--primary); margin-bottom:6px;" id="deltaHeader">Delta Comparison</div>
+        <div class="delta-grid" id="deltaGrid"></div>
+      </div>
+
+      <div style="margin-top:14px; padding-top:10px; border-top:1px solid var(--border); display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+        <button type="button" class="btn btn-sm" onclick="exportFullAuditCSV()">Export Full Audit CSV</button>
+        <button type="button" class="btn btn-sm" onclick="exportJSONConfig()">Export JSON Config</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="printAuditReport()">Print Engineering Audit Sheet</button>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+
+    <!-- Engineering Disclaimer & Footer -->
+    <footer>
+      <div>
+        <span class="disclaimer-badge">⚠️ Notice:</span>
+        <span>Estimate only - verify with a qualified structural or HVAC professional before relying on it.</span>
+      </div>
+      <div>
+        <span>Diurnal Energy Balance Model v1.0 • Horticultural Engineering Calculations</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Configuration constants
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/hxsqfi";
+
+    // Scenario Presets
+    const PRESETS = [
+      {
+        name: "Homestead Backyard Gable (Twin-Wall Polycarbonate)",
+        style: "Gable",
+        width: 16,
+        length: 24,
+        eaveHeight: 6.0,
+        ridgeHeight: 10.0,
+        glazing: "6mm_pc",
+        endFraming: 37.8,
+        massMode: "custom",
+        containerShape: "cylinder",
+        diameter: 22.5,
+        height: 33.5,
+        boxLength: 96,
+        boxWidth: 18,
+        drumCount: 4,
+        fillPct: 95,
+        dayWaterTemp: 58,
+        targetTemp: 45,
+        outdoorColdSnap: 10,
+        windSpeed: 15,
+        tightness: "1.2",
+        dayHigh: 38,
+        solarCondition: "clear"
+      },
+      {
+        name: "Market Gardener High Tunnel / Quonset (Double Poly Film)",
+        style: "Quonset",
+        width: 20,
+        length: 48,
+        eaveHeight: 4.5,
+        ridgeHeight: 11.5,
+        glazing: "double_poly",
+        endFraming: 25.0,
+        massMode: "presets",
+        containerShape: "cylinder",
+        diameter: 22.5,
+        height: 33.5,
+        drumCount: 0,
+        fillPct: 90,
+        dayWaterTemp: 50,
+        targetTemp: 36,
+        outdoorColdSnap: -5,
+        windSpeed: 20,
+        tightness: "2.5",
+        dayHigh: 24,
+        solarCondition: "overcast"
+      },
+      {
+        name: "Suburban Sunroom / Lean-To (Single Horticultural Glass)",
+        style: "Lean-to",
+        width: 10,
+        length: 18,
+        eaveHeight: 7.0,
+        ridgeHeight: 10.5,
+        glazing: "single_glass",
+        endFraming: 20.0,
+        massMode: "custom",
+        containerShape: "box",
+        diameter: 22.5,
+        height: 28,
+        boxLength: 96,
+        boxWidth: 18,
+        drumCount: 1,
+        fillPct: 95,
+        dayWaterTemp: 64,
+        targetTemp: 52,
+        outdoorColdSnap: 22,
+        windSpeed: 8,
+        tightness: "0.5",
+        dayHigh: 44,
+        solarCondition: "partly"
+      }
+    ];
+
+    // Glazing Material Master Data
+    const GLAZING_DATA = {
+      "single_glass": { name: "Single 3mm Horticultural Glass", u: 1.13, par: 89, lifespan: "30+ yrs", impact: "Low (Fragile)", tag: "tag-danger" },
+      "double_glass": { name: "Double Insulated Low-E Glass", u: 0.58, par: 78, lifespan: "25+ yrs", impact: "Moderate", tag: "tag-warning" },
+      "4mm_pc": { name: "4mm Twin-wall Polycarbonate", u: 0.68, par: 82, lifespan: "10-12 yrs", impact: "Very High", tag: "tag-success" },
+      "6mm_pc": { name: "6mm Twin-wall Polycarbonate", u: 0.62, par: 80, lifespan: "12-15 yrs", impact: "Very High", tag: "tag-success" },
+      "10mm_pc": { name: "10mm Triple-wall Polycarbonate", u: 0.42, par: 72, lifespan: "15-20 yrs", impact: "Extreme", tag: "tag-success" },
+      "single_poly": { name: "Single Poly Film (6-mil)", u: 1.20, par: 88, lifespan: "3-4 yrs", impact: "Moderate (Tear Risk)", tag: "tag-warning" },
+      "double_poly": { name: "Double Inflated Poly Film", u: 0.70, par: 82, lifespan: "4-5 yrs", impact: "High", tag: "tag-success" }
+    };
+
+    // State
+    let currentStyle = "Gable";
+    let currentMassMode = "custom";
+
+    // Initialize application
+    window.addEventListener("DOMContentLoaded", () => {
+      loadPreset(0);
+    });
+
+    function setStyle(style) {
+      currentStyle = style;
+      const buttons = document.querySelectorAll("#archStyleControl button");
+      buttons.forEach(btn => {
+        btn.classList.toggle("active", btn.textContent.includes(style));
+      });
+      calculateAll();
+    }
+
+    function setMassMode(mode) {
+      currentMassMode = mode;
+      const buttons = document.querySelectorAll("#massModeControl button");
+      buttons.forEach(btn => {
+        btn.classList.toggle("active", (mode === 'presets' && btn.textContent.includes("Standard")) || (mode === 'custom' && btn.textContent.includes("Custom")));
+      });
+      document.getElementById("customDimFields").style.display = (mode === 'custom') ? "grid" : "none";
+      document.getElementById("presetGalFields").style.display = (mode === 'presets') ? "grid" : "none";
+      calculateAll();
+    }
+
+    function toggleShapeFields() {
+      const shape = document.getElementById("inContainerShape").value;
+      const isCylinder = (shape === "cylinder");
+      document.getElementById("shapeFldDiameter").style.display = isCylinder ? "flex" : "none";
+      document.getElementById("shapeFldLength").style.display = isCylinder ? "none" : "flex";
+      document.getElementById("shapeFldWidth").style.display = isCylinder ? "none" : "flex";
+      calculateAll();
+    }
+
+    function applyGalPreset(galVal) {
+      calculateAll();
+    }
+
+    function updateFramingSlider(val) {
+      document.getElementById("lblEndFraming").textContent = parseFloat(val).toFixed(1);
+      calculateAll();
+    }
+
+    function loadPreset(index) {
+      if (!PRO && parseInt(index, 10) > 0) {
+        showProMessage();
+        document.getElementById("presetSelect").value = 0;
+        return;
+      }
+      const p = PRESETS[index];
+      if (!p) return;
+
+      setStyle(p.style);
+      document.getElementById("inWidth").value = p.width;
+      document.getElementById("inLength").value = p.length;
+      document.getElementById("inEaveHeight").value = p.eaveHeight;
+      document.getElementById("inRidgeHeight").value = p.ridgeHeight;
+      document.getElementById("inGlazing").value = p.glazing;
+      document.getElementById("inEndFraming").value = p.endFraming;
+      document.getElementById("lblEndFraming").textContent = p.endFraming.toFixed(1);
+
+      setMassMode(p.massMode);
+      document.getElementById("inContainerShape").value = p.containerShape;
+      toggleShapeFields();
+
+      document.getElementById("inDiameter").value = p.diameter;
+      document.getElementById("inHeight").value = p.height;
+      if (p.boxLength) document.getElementById("inBoxLength").value = p.boxLength;
+      if (p.boxWidth) document.getElementById("inBoxWidth").value = p.boxWidth;
+      document.getElementById("inDrumCount").value = p.drumCount;
+      document.getElementById("inFillPct").value = p.fillPct;
+      document.getElementById("inDayWaterTemp").value = p.dayWaterTemp;
+
+      document.getElementById("inTargetTemp").value = p.targetTemp;
+      document.getElementById("inOutdoorColdSnap").value = p.outdoorColdSnap;
+      document.getElementById("inWindSpeed").value = p.windSpeed;
+      document.getElementById("inTightness").value = p.tightness;
+      document.getElementById("inDayHigh").value = p.dayHigh;
+      document.getElementById("inSolarCondition").value = p.solarCondition;
+
+      document.getElementById("presetSelect").value = index;
+      calculateAll();
+    }
+
+    function resetForm() {
+      loadPreset(0);
+    }
+
+    // Main Engine Computation
+    function calculateAll() {
+      // Input Validation & Feedback
+      const rawW = parseFloat(document.getElementById("inWidth").value);
+      const rawL = parseFloat(document.getElementById("inLength").value);
+      const rawHe = parseFloat(document.getElementById("inEaveHeight").value);
+      const rawHr = parseFloat(document.getElementById("inRidgeHeight").value);
+      const alertBox = document.getElementById("validationAlert");
+      const warnings = [];
+
+      if (isNaN(rawW) || rawW <= 0) warnings.push("Width must be a positive number.");
+      if (isNaN(rawL) || rawL <= 0) warnings.push("Length must be a positive number.");
+      if (!isNaN(rawHe) && !isNaN(rawHr) && rawHr <= rawHe) {
+        warnings.push("Ridge height must be greater than side/eave height for proper roof slope.");
+      }
+
+      if (warnings.length > 0) {
+        alertBox.style.display = "block";
+        alertBox.textContent = "Notice: " + warnings.join(" ");
+      } else {
+        alertBox.style.display = "none";
+      }
+
+      // 1. Geometry inputs
+      const W = Math.max(1, rawW || 16);
+      const L = Math.max(1, rawL || 24);
+      let He = Math.max(0, isNaN(rawHe) ? 6 : rawHe);
+      let Hr = Math.max(He + 0.5, isNaN(rawHr) ? He + 4 : rawHr);
+      const framingRatio = (parseFloat(document.getElementById("inEndFraming").value) || 0) / 100;
+      const glazingKey = document.getElementById("inGlazing").value;
+      const glazing = GLAZING_DATA[glazingKey] || GLAZING_DATA["6mm_pc"];
+
+      let floorArea = W * L;
+      let envelopeArea = 0;
+      let airVolume = 0;
+
+      if (currentStyle === "Gable") {
+        const rise = Hr - He;
+        const rafter = Math.sqrt(Math.pow(W / 2, 2) + Math.pow(rise, 2));
+        const roofArea = 2 * L * rafter;
+        const sideWalls = 2 * L * He;
+        const singleEndArea = (W * He) + (0.5 * W * rise);
+        const netEndWalls = 2 * singleEndArea * (1 - framingRatio);
+        envelopeArea = roofArea + sideWalls + netEndWalls;
+        airVolume = (W * L * He) + (0.5 * W * rise * L);
+      } else if (currentStyle === "Quonset") {
+        const rise = Hr - He;
+        // Approximate semi-ellipse hoop arc
+        const a = W / 2;
+        const b = rise;
+        const semiPerimeter = (Math.PI / 2) * (3 * (a + b) - Math.sqrt((3 * a + b) * (a + 3 * b)));
+        const roofHoopArea = L * semiPerimeter;
+        const sideWalls = 2 * L * He;
+        const singleEndArea = (W * He) + ((Math.PI / 4) * W * rise);
+        const netEndWalls = 2 * singleEndArea * (1 - framingRatio);
+        envelopeArea = roofHoopArea + sideWalls + netEndWalls;
+        airVolume = (W * L * He) + ((Math.PI / 4) * W * rise * L);
+      } else { // Lean-to
+        const rise = Hr - He;
+        const rafter = Math.sqrt(Math.pow(W, 2) + Math.pow(rise, 2));
+        const roofArea = L * rafter;
+        const frontWall = L * He;
+        const singleEndArea = (W * He) + (0.5 * W * rise);
+        const netEndWalls = 2 * singleEndArea * (1 - framingRatio);
+        // Shared back wall is residential/insulated interior wall
+        envelopeArea = roofArea + frontWall + netEndWalls;
+        airVolume = (W * L * He) + (0.5 * W * rise * L);
+      }
+
+      const totalUA = envelopeArea * glazing.u;
+
+      // Update UI for Feature 1
+      document.getElementById("geomSummaryBadge").textContent = `${currentStyle} • ${W.toFixed(0)}x${L.toFixed(0)} ft`;
+      document.getElementById("outEnvelopeArea").innerHTML = `${envelopeArea.toFixed(1)} <small>sq ft</small>`;
+      document.getElementById("outAirVolume").innerHTML = `${Math.round(airVolume).toLocaleString()} <small>cu ft</small>`;
+      document.getElementById("outFloorArea").innerHTML = `${Math.round(floorArea).toLocaleString()} <small>sq ft</small>`;
+      document.getElementById("outUA").innerHTML = `${totalUA.toFixed(1)} <small>BTU/hr·°F</small>`;
+
+      // 2. Thermal Mass calculations
+      const drumCount = Math.max(0, parseInt(document.getElementById("inDrumCount").value) || 0);
+      const fillPct = Math.min(100, Math.max(0, parseFloat(document.getElementById("inFillPct").value) || 95)) / 100;
+      const dayWaterTemp = parseFloat(document.getElementById("inDayWaterTemp").value) || 58;
+      
+      let singleGrossGal = 0;
+      if (currentMassMode === "custom") {
+        const shape = document.getElementById("inContainerShape").value;
+        const H = parseFloat(document.getElementById("inHeight").value) || 33.5;
+        if (shape === "cylinder") {
+          const D = parseFloat(document.getElementById("inDiameter").value) || 22.5;
+          const radius = D / 2;
+          const cuInches = Math.PI * Math.pow(radius, 2) * H;
+          singleGrossGal = cuInches / 231;
+        } else {
+          const lIn = parseFloat(document.getElementById("inBoxLength").value) || 96;
+          const wIn = parseFloat(document.getElementById("inBoxWidth").value) || 18;
+          const cuInches = lIn * wIn * H;
+          singleGrossGal = cuInches / 231;
+        }
+      } else {
+        singleGrossGal = parseFloat(document.getElementById("inGalPreset").value) || 55;
+      }
+
+      const singleNetGal = singleGrossGal * fillPct;
+      const totalGal = singleNetGal * drumCount;
+      const waterWeight = totalGal * 8.34; // lbs
+      const thermalCapacity = waterWeight * 1.0; // 1.0 BTU/lb·°F
+
+      document.getElementById("massSummaryBadge").textContent = `${totalGal.toFixed(0)} gal • ${Math.round(waterWeight).toLocaleString()} lbs`;
+      document.getElementById("outSingleGal").innerHTML = `${singleNetGal.toFixed(2)} <small>gal</small>`;
+      document.getElementById("outTotalGal").innerHTML = `${totalGal.toFixed(1)} <small>gal</small>`;
+      document.getElementById("outWaterWeight").innerHTML = `${Math.round(waterWeight).toLocaleString()} <small>lbs</small>`;
+      document.getElementById("outMassCapacity").innerHTML = `${Math.round(thermalCapacity).toLocaleString()} <small>BTU/°F</small>`;
+
+      // 3. Infiltration & Peak Heating Sizing
+      const targetTemp = parseFloat(document.getElementById("inTargetTemp").value) || 45;
+      const coldSnapLow = parseFloat(document.getElementById("inOutdoorColdSnap").value) || 10;
+      const windSpeed = Math.max(0, parseFloat(document.getElementById("inWindSpeed").value) || 15);
+      const baseACH = parseFloat(document.getElementById("inTightness").value) || 1.2;
+      const dayHigh = parseFloat(document.getElementById("inDayHigh").value) || 38;
+      const solarSky = document.getElementById("inSolarCondition").value;
+
+      const deltaT = Math.max(0, targetTemp - coldSnapLow);
+      
+      // Wind adjustment: 1.2 ACH -> 1.45 ACH at 15 mph (factor: 1 + 0.01389 * wind)
+      const adjACH = baseACH * (1 + 0.01389 * windSpeed);
+      const cfm = (airVolume * adjACH) / 60;
+      
+      // Sensible infiltration heat loss: 1.059 * CFM * DeltaT
+      const peakConduction = totalUA * deltaT;
+      const peakInfiltration = 1.059 * cfm * deltaT;
+      const peakTotalLoss = peakConduction + peakInfiltration;
+      const recommendedHeaterBTU = peakTotalLoss * 1.20; // 20% safety margin
+      const recommendedHeaterKW = recommendedHeaterBTU / 3412.142;
+
+      document.getElementById("climateBadge").textContent = `Target ${targetTemp}°F • Low ${coldSnapLow}°F`;
+      document.getElementById("outAdjACH").innerHTML = `${adjACH.toFixed(2)} <small>ACH</small>`;
+      document.getElementById("outPeakCond").innerHTML = `${Math.round(peakConduction).toLocaleString()} <small>BTU/hr</small>`;
+      document.getElementById("outPeakInf").innerHTML = `${Math.round(peakInfiltration).toLocaleString()} <small>BTU/hr</small>`;
+      document.getElementById("outHeaterBTU").innerHTML = `${Math.round(recommendedHeaterBTU).toLocaleString()} <small>BTU/hr</small>`;
+
+      // Update Key Metric Cards
+      document.getElementById("cardPeakLoad").innerHTML = `${Math.round(peakTotalLoss).toLocaleString()} <small style="font-size:0.8rem">BTU/hr</small>`;
+      document.getElementById("cardPeakKW").textContent = `${(peakTotalLoss / 3412.142).toFixed(2)} kW steady-state deficit`;
+      document.getElementById("cardRecHeater").innerHTML = `${recommendedHeaterKW.toFixed(2)} <small style="font-size:0.8rem">kW</small>`;
+      document.getElementById("cardRecBTU").textContent = `${Math.round(recommendedHeaterBTU).toLocaleString()} BTU/hr (+20% margin)`;
+      document.getElementById("cardMassBTU").textContent = `${Math.round(thermalCapacity).toLocaleString()} BTU/°F water buffer`;
+
+      // 4. Run Diurnal 24-Hour Simulation
+      const simResults = runDiurnalSimulation({
+        dayHigh,
+        coldSnapLow,
+        targetTemp,
+        solarSky,
+        airVolume,
+        totalUA,
+        adjACH,
+        floorArea,
+        waterCapacity: thermalCapacity,
+        dayWaterTemp,
+        glazingPAR: glazing.par / 100
+      });
+
+      // Update simulation stats and card
+      document.getElementById("outFreezeTimeNoMass").textContent = simResults.freezeTimeNoMassStr;
+      document.getElementById("outFreezeTimeWithMass").textContent = simResults.freezeTimeWithMassStr;
+      document.getElementById("outNadirNoMass").innerHTML = `${simResults.nadirNoMass.toFixed(1)} <small>°F</small>`;
+      document.getElementById("outNadirWithMass").innerHTML = `${simResults.nadirWithMass.toFixed(1)} <small>°F</small>`;
+      document.getElementById("cardFreezeHours").innerHTML = `${simResults.freezeDurationWithMass.toFixed(1)} <small style="font-size:0.8rem">hours</small>`;
+      document.getElementById("cardNadir").textContent = `Nadir: ${simResults.nadirWithMass.toFixed(1)}°F with mass`;
+
+      const delayDiff = simResults.freezeDelayHours;
+      const delaySign = delayDiff > 0 ? "+" : "";
+      document.getElementById("cardBufferGain").innerHTML = `${delaySign}${delayDiff.toFixed(1)} <small style="font-size:0.8rem">hours</small>`;
+
+      // Dynamic interpretation block
+      updateInterpretation({
+        peakTotalLoss,
+        recommendedHeaterBTU,
+        recommendedHeaterKW,
+        delayDiff,
+        freezeTimeWithMassStr: simResults.freezeTimeWithMassStr,
+        nadirWithMass: simResults.nadirWithMass,
+        targetTemp,
+        coldSnapLow,
+        totalGal,
+        glazingName: glazing.name
+      });
+
+      // Render Visualizations
+      renderCrossSection(W, He, Hr, currentStyle, drumCount);
+      renderDiurnalChart(simResults);
+      renderGlazingTable(envelopeArea, deltaT, glazingKey);
+    }
+
+    // Dynamic Interpretation Logic
+    function updateInterpretation(data) {
+      const summaryEl = document.getElementById("interpretSummary");
+      const actionEl = document.getElementById("interpretAction");
+
+      let summaryText = "";
+      let actionText = "";
+
+      if (data.totalGal > 0) {
+        summaryText = `With ${data.totalGal.toFixed(0)} gallons of thermal mass, freeze onset is delayed by ${data.delayDiff.toFixed(1)} hours (freezing hits at ${data.freezeTimeWithMassStr}, with an unheated nadir of ${data.nadirWithMass.toFixed(1)}°F). Your design cold snap (${data.coldSnapLow}°F) requires a ${Math.round(data.recommendedHeaterBTU).toLocaleString()} BTU/hr (${data.recommendedHeaterKW.toFixed(2)} kW) heater with 20% engineering safety margin.`;
+      } else {
+        summaryText = `Without thermal mass water storage, this greenhouse will freeze rapidly once solar radiation ceases. The unheated interior drops to ${data.nadirWithMass.toFixed(1)}°F. Steady-state heat deficit is ${Math.round(data.peakTotalLoss).toLocaleString()} BTU/hr.`;
+      }
+
+      if (data.delayDiff > 4) {
+        actionText = "Action: Water thermal buffer provides substantial nocturnal carryover. You can downsize supplemental nighttime heating or use modest thermostatically-controlled backup.";
+      } else if (data.delayDiff > 1.5) {
+        actionText = "Action: Water barrels buy several hours of freeze protection. Set supplemental heater thermostat at " + data.targetTemp + "°F to bridge the early morning 3:00 AM - 7:00 AM freeze dip.";
+      } else {
+        actionText = "Action: Consider adding at least 2 to 4 additional 55-gal water barrels painted matte black along the north wall to prevent rapid post-sunset chill.";
+      }
+
+      summaryEl.textContent = summaryText;
+      actionEl.textContent = actionText;
+    }
+
+    // 24-Hour Diurnal Physics Simulation
+    function runDiurnalSimulation(params) {
+      const hours = 24;
+      const dt = 0.1; // 6 minute steps
+      const steps = Math.round(hours / dt);
+
+      // Hourly trajectories
+      const trajOutdoor = [];
+      const trajNoMass = [];
+      const trajWithMass = [];
+      const trajHeated = [];
+      const timeLabels = [];
+
+      // Solar insolation peak BTU/hr·sq ft
+      let peakSolar = 210;
+      if (params.solarSky === "partly") peakSolar = 135;
+      if (params.solarSky === "overcast") peakSolar = 55;
+
+      const tAirCapacity = Math.max(50, params.airVolume * 0.018); // BTU/°F
+      const tMassCapacity = params.waterCapacity; // BTU/°F
+
+      // State variables: start at 12:00 PM (Hour 0)
+      let tOut = params.dayHigh;
+      let tAirNoMass = params.dayHigh + 8;
+      let tAirWithMass = params.dayHigh + 6;
+      let tWater = params.dayWaterTemp;
+
+      let freezeTimeNoMass = null;
+      let freezeTimeWithMass = null;
+      let minNoMass = 999;
+      let minWithMass = 999;
+      let freezeDurationWithMass = 0;
+
+      for (let s = 0; s <= steps; s++) {
+        const t = s * dt; // time in hours (0 to 24)
+        
+        // Solar profile: Peak at t=2h (2 PM), sunset at t=6h (6 PM), sunrise at t=19h (7 AM)
+        let solarRad = 0;
+        if (t >= 0 && t <= 6) {
+          solarRad = peakSolar * Math.sin((t + 2) / 8 * Math.PI);
+        } else if (t >= 19 && t <= 24) {
+          solarRad = peakSolar * Math.sin((t - 19) / 5 * Math.PI) * 0.7;
+        }
+        solarRad = Math.max(0, solarRad);
+
+        // Outdoor ambient sinusoidal diurnal curve: Max at 2 PM (t=2), Min at 6 AM (t=18)
+        const outdoorRange = params.dayHigh - params.coldSnapLow;
+        const outTemp = params.coldSnapLow + outdoorRange * 0.5 * (1 + Math.cos(((t - 2) / 12) * Math.PI));
+
+        // Effective solar heat entering structure
+        const qSolar = solarRad * params.floorArea * params.glazingPAR * 0.75;
+
+        // Infiltration UA
+        const infUA = params.airVolume * params.adjACH * 0.0176;
+        const totalLossUA = params.totalUA + infUA;
+
+        // Update No Mass condition
+        const qLossNoMass = totalLossUA * (tAirNoMass - outTemp);
+        const dtAirNoMass = ((qSolar * 0.7) - qLossNoMass) / tAirCapacity;
+        tAirNoMass += dtAirNoMass * dt;
+        // Clamp air swing damping
+        tAirNoMass = Math.max(outTemp - 1, tAirNoMass);
+
+        // Update With Mass condition
+        // Water surface heat exchange coefficient ~ 1.8 BTU/hr·sq ft or UA_mass
+        const massUA = Math.max(10, Math.min(250, tMassCapacity * 0.12));
+        const qMassToAir = massUA * (tWater - tAirWithMass);
+        const qLossWithMass = totalLossUA * (tAirWithMass - outTemp);
+        
+        const dtAirWithMass = ((qSolar * 0.4) + qMassToAir - qLossWithMass) / tAirCapacity;
+        const dtWater = ((qSolar * 0.3) - qMassToAir) / Math.max(100, tMassCapacity);
+
+        tAirWithMass += dtAirWithMass * dt;
+        if (tMassCapacity > 0) {
+          tWater += dtWater * dt;
+        } else {
+          tAirWithMass = tAirNoMass;
+        }
+
+        // Freeze detection
+        if (tAirNoMass < 32 && freezeTimeNoMass === null && t > 3) {
+          freezeTimeNoMass = t;
+        }
+        if (tAirWithMass < 32 && freezeTimeWithMass === null && t > 3) {
+          freezeTimeWithMass = t;
+        }
+        if (tAirWithMass < 32) {
+          freezeDurationWithMass += dt;
+        }
+
+        if (tAirNoMass < minNoMass) minNoMass = tAirNoMass;
+        if (tAirWithMass < minWithMass) minWithMass = tAirWithMass;
+
+        // Record on the hour
+        if (Math.abs(t - Math.round(t)) < 0.001) {
+          trajOutdoor.push(outTemp);
+          trajNoMass.push(tAirNoMass);
+          trajWithMass.push(tAirWithMass);
+          trajHeated.push(params.targetTemp);
+
+          const clockH = (12 + Math.round(t)) % 24;
+          const ampm = clockH >= 12 ? "PM" : "AM";
+          const displayH = clockH % 12 === 0 ? 12 : clockH % 12;
+          timeLabels.push(`${displayH} ${ampm}`);
+        }
+      }
+
+      function formatHour(h) {
+        if (h === null) return "No Freeze";
+        const clockH = (12 + h) % 24;
+        const totalMinutes = Math.round(clockH * 60);
+        const hours24 = Math.floor(totalMinutes / 60) % 24;
+        const minutes = totalMinutes % 60;
+        const ampm = hours24 >= 12 ? "PM" : "AM";
+        const displayH = hours24 % 12 === 0 ? 12 : hours24 % 12;
+        const minStr = minutes < 10 ? `0${minutes}` : minutes;
+        return `${displayH}:${minStr} ${ampm}`;
+      }
+
+      const freezeDelayHours = (freezeTimeWithMass !== null && freezeTimeNoMass !== null)
+        ? Math.max(0, freezeTimeWithMass - freezeTimeNoMass)
+        : (freezeTimeWithMass === null && freezeTimeNoMass !== null ? 12.0 : 0);
+
+      return {
+        trajOutdoor,
+        trajNoMass,
+        trajWithMass,
+        trajHeated,
+        timeLabels,
+        nadirNoMass: minNoMass,
+        nadirWithMass: minWithMass,
+        freezeTimeNoMassStr: formatHour(freezeTimeNoMass),
+        freezeTimeWithMassStr: formatHour(freezeTimeWithMass),
+        freezeDelayHours,
+        freezeDurationWithMass
+      };
+    }
+
+    // Render Cross Section SVG
+    function renderCrossSection(W, He, Hr, style, drums) {
+      const svg = document.getElementById("svgCrossSection");
+      svg.innerHTML = "";
+
+      const svgW = 320;
+      const svgH = 130;
+      const pad = 24;
+      const groundY = svgH - 18;
+
+      const scaleX = (svgW - pad * 2) / Math.max(20, W);
+      const scaleY = (groundY - 20) / Math.max(14, Hr);
+
+      const xL = pad + (svgW - pad * 2 - W * scaleX) / 2;
+      const xR = xL + W * scaleX;
+      const yEave = groundY - He * scaleY;
+      const yRidge = groundY - Hr * scaleY;
+
+      // Ground Line
+      const ground = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      ground.setAttribute("x1", 10);
+      ground.setAttribute("y1", groundY);
+      ground.setAttribute("x2", svgW - 10);
+      ground.setAttribute("y2", groundY);
+      ground.setAttribute("stroke", "var(--text-muted)");
+      ground.setAttribute("stroke-width", "2");
+      ground.setAttribute("stroke-dasharray", "4,4");
+      svg.appendChild(ground);
+
+      let pathD = "";
+      if (style === "Gable") {
+        const xMid = (xL + xR) / 2;
+        pathD = `M ${xL} ${groundY} L ${xL} ${yEave} L ${xMid} ${yRidge} L ${xR} ${yEave} L ${xR} ${groundY} Z`;
+      } else if (style === "Quonset") {
+        const xMid = (xL + xR) / 2;
+        pathD = `M ${xL} ${groundY} L ${xL} ${yEave} Q ${xL} ${yRidge} ${xMid} ${yRidge} Q ${xR} ${yRidge} ${xR} ${yEave} L ${xR} ${groundY} Z`;
+      } else { // Lean-to
+        pathD = `M ${xL} ${groundY} L ${xL} ${yEave} L ${xR} ${yRidge} L ${xR} ${groundY} Z`;
+      }
+
+      // Structure Fill & Outline
+      const poly = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      poly.setAttribute("d", pathD);
+      poly.setAttribute("fill", "rgba(56, 189, 248, 0.12)");
+      poly.setAttribute("stroke", "var(--primary)");
+      poly.setAttribute("stroke-width", "2.5");
+      svg.appendChild(poly);
+
+      // Barrels visualization inside
+      if (drums > 0) {
+        const barrelCount = Math.min(6, drums);
+        const barrelW = 9;
+        const barrelH = 14;
+        for (let i = 0; i < barrelCount; i++) {
+          const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          const bX = xL + 10 + i * (barrelW + 4);
+          rect.setAttribute("x", bX);
+          rect.setAttribute("y", groundY - barrelH);
+          rect.setAttribute("width", barrelW);
+          rect.setAttribute("height", barrelH);
+          rect.setAttribute("rx", "2");
+          rect.setAttribute("fill", "var(--mass)");
+          rect.setAttribute("stroke", "#1d4ed8");
+          svg.appendChild(rect);
+        }
+      }
+
+      // Dimension Annotations
+      function addLabel(txt, x, y, anchor = "middle", color = "var(--text)") {
+        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        t.setAttribute("x", x);
+        t.setAttribute("y", y);
+        t.setAttribute("text-anchor", anchor);
+        t.setAttribute("font-size", "10");
+        t.setAttribute("font-weight", "600");
+        t.setAttribute("fill", color);
+        t.textContent = txt;
+        svg.appendChild(t);
+      }
+
+      addLabel(`Span ${W}'`, (xL + xR) / 2, groundY + 14);
+      addLabel(`Ridge ${Hr}'`, (xL + xR) / 2, yRidge - 6, "middle", "var(--primary)");
+      addLabel(`Eave ${He}'`, xL - 4, (groundY + yEave) / 2, "end", "var(--text-muted)");
+    }
+
+    // Render 24-Hour Diurnal Chart SVG
+    function renderDiurnalChart(data) {
+      const svg = document.getElementById("svgDiurnalChart");
+      svg.innerHTML = "";
+
+      const w = 650;
+      const h = 260;
+      const padL = 40;
+      const padR = 20;
+      const padT = 20;
+      const padB = 30;
+
+      const chartW = w - padL - padR;
+      const chartH = h - padT - padB;
+
+      // Find min & max temperature across trajectories
+      let allTemps = [...data.trajOutdoor, ...data.trajNoMass, ...data.trajWithMass, ...data.trajHeated, 32];
+      let minT = Math.floor(Math.min(...allTemps) / 5) * 5 - 5;
+      let maxT = Math.ceil(Math.max(...allTemps) / 5) * 5 + 5;
+      minT = Math.min(minT, 0);
+
+      const getY = temp => padT + chartH - ((temp - minT) / (maxT - minT)) * chartH;
+      const getX = idx => padL + (idx / (data.timeLabels.length - 1)) * chartW;
+
+      // Draw Grid Lines & Y-axis labels
+      const stepT = (maxT - minT) > 50 ? 15 : 10;
+      for (let t = minT; t <= maxT; t += stepT) {
+        const y = getY(t);
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", padL);
+        line.setAttribute("y1", y);
+        line.setAttribute("x2", w - padR);
+        line.setAttribute("y2", y);
+        line.setAttribute("stroke", "var(--border)");
+        line.setAttribute("stroke-width", "1");
+        svg.appendChild(line);
+
+        const lbl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        lbl.setAttribute("x", padL - 8);
+        lbl.setAttribute("y", y + 3);
+        lbl.setAttribute("text-anchor", "end");
+        lbl.setAttribute("font-size", "10");
+        lbl.setAttribute("fill", "var(--text-muted)");
+        lbl.textContent = `${t}°`;
+        svg.appendChild(lbl);
+      }
+
+      // Critical Freeze line at 32°F
+      const freezeY = getY(32);
+      const freezeLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      freezeLine.setAttribute("x1", padL);
+      freezeLine.setAttribute("y1", freezeY);
+      freezeLine.setAttribute("x2", w - padR);
+      freezeLine.setAttribute("y2", freezeY);
+      freezeLine.setAttribute("stroke", "#ef4444");
+      freezeLine.setAttribute("stroke-width", "1.5");
+      freezeLine.setAttribute("stroke-dasharray", "5,4");
+      svg.appendChild(freezeLine);
+
+      const freezeLbl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      freezeLbl.setAttribute("x", w - padR - 4);
+      freezeLbl.setAttribute("y", freezeY - 4);
+      freezeLbl.setAttribute("text-anchor", "end");
+      freezeLbl.setAttribute("font-size", "10");
+      freezeLbl.setAttribute("font-weight", "700");
+      freezeLbl.setAttribute("fill", "#ef4444");
+      freezeLbl.textContent = "32°F Freeze Threshold";
+      svg.appendChild(freezeLbl);
+
+      // Path generator
+      function createPath(arr, color, strokeW = "2", strokeDash = "") {
+        let d = "";
+        arr.forEach((temp, i) => {
+          const x = getX(i);
+          const y = getY(temp);
+          d += (i === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
+        });
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", d);
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", color);
+        path.setAttribute("stroke-width", strokeW);
+        if (strokeDash) path.setAttribute("stroke-dasharray", strokeDash);
+        svg.appendChild(path);
+      }
+
+      // Plot Trajectories
+      createPath(data.trajOutdoor, "#64748b", "1.5");
+      createPath(data.trajNoMass, "#f59e0b", "2");
+      createPath(data.trajWithMass, "#2563eb", "2.8");
+      createPath(data.trajHeated, "#10b981", "1.8", "4,4");
+
+      // X-axis Time Labels
+      data.timeLabels.forEach((lblText, i) => {
+        if (i % 3 === 0 || i === data.timeLabels.length - 1) {
+          const x = getX(i);
+          const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          text.setAttribute("x", x);
+          text.setAttribute("y", h - 10);
+          text.setAttribute("text-anchor", "middle");
+          text.setAttribute("font-size", "9.5");
+          text.setAttribute("fill", "var(--text-muted)");
+          text.textContent = lblText;
+          svg.appendChild(text);
+        }
+      });
+    }
+
+    // Render Glazing Comparison Table (Question 2: Glass vs Plastic)
+    function renderGlazingTable(envelopeArea, deltaT, currentGlazingKey) {
+      const tbody = document.getElementById("glazingTableBody");
+      tbody.innerHTML = "";
+
+      document.getElementById("tblSummarySpan").textContent = `${envelopeArea.toFixed(1)} sq ft envelope`;
+      document.getElementById("tblDeltaSpan").textContent = `ΔT=${deltaT}°F cold snap`;
+
+      // Fuel cost assumption: Heating with Propane ($3.10/gal, 91,500 BTU/gal at 85% heater efficiency = $39.80 per 1,000,000 BTU)
+      // Estimated typical 100-night winter heating degree hours multiplier ~ 1,800
+      const costPerMillionBTU = 39.80;
+
+      Object.keys(GLAZING_DATA).forEach(key => {
+        const item = GLAZING_DATA[key];
+        const condLoss = envelopeArea * item.u * deltaT;
+        // Estimated annual heating fuel consumption (seasonal proxy)
+        const estAnnualBTU = envelopeArea * item.u * 65 * 1800; // 65 degree hours proxy
+        const estCost = (estAnnualBTU / 1000000) * costPerMillionBTU;
+
+        const tr = document.createElement("tr");
+        if (key === currentGlazingKey) {
+          tr.className = "selected-row";
+        }
+
+        tr.innerHTML = `
+          <td>
+            <strong>${item.name}</strong>
+            ${key === currentGlazingKey ? '<span class="tag tag-success" style="margin-left:4px;">Selected</span>' : ''}
+          </td>
+          <td><code>${item.u.toFixed(2)}</code></td>
+          <td><strong>${Math.round(condLoss).toLocaleString()}</strong> BTU/hr</td>
+          <td>${item.par}%</td>
+          <td>${item.lifespan}</td>
+          <td><span class="tag ${item.tag}">${item.impact}</span></td>
+          <td>$${Math.round(estCost).toLocaleString()} / season</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // PRO gating toast helper
+    function showProMessage() {
+      const toast = document.getElementById("proToast");
+      toast.style.display = "inline-block";
+      toast.innerHTML = `Available in the full version <a href="${PRO_LINK}">Upgrade</a>`;
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, 4500);
+    }
+
+    // Export & Action handlers
+    function exportData(type) {
+      if (!PRO) {
+        showProMessage();
+        return;
+      }
+
+      const W = document.getElementById("inWidth").value;
+      const L = document.getElementById("inLength").value;
+      const style = currentStyle;
+      const envelope = document.getElementById("outEnvelopeArea").textContent;
+      const ua = document.getElementById("outUA").textContent;
+      const peakHeater = document.getElementById("outHeaterBTU").textContent;
+      const waterGal = document.getElementById("outTotalGal").textContent;
+
+      if (type === "csv") {
+        const rows = [
+          ["Metric", "Value"],
+          ["Style", style],
+          ["Width (ft)", W],
+          ["Length (ft)", L],
+          ["Envelope Area", envelope],
+          ["Aggregate UA", ua],
+          ["Water Storage", waterGal],
+          ["Peak Heater Sizing (+20%)", peakHeater]
+        ];
+        const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `greenhouse_thermal_model_${style.toLowerCase()}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        const dataObj = {
+          structure: { style, width: W, length: L, envelopeArea: envelope, aggregateUA: ua },
+          thermalMass: { waterGallons: waterGal, thermalCapacity: document.getElementById("outMassCapacity").textContent },
+          hvac: { peakLoad: document.getElementById("cardPeakLoad").textContent, recommendedHeater: peakHeater }
+        };
+        const blob = new Blob([JSON.stringify(dataObj, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `greenhouse_simulation_${style.toLowerCase()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+    }
+
+    function printReport() {
+      if (!PRO) {
+        showProMessage();
+        return;
+      }
+      window.print();
+    }
+
+    function copySummary() {
+      const summary = `Greenhouse Thermal Simulation Summary:
+Structure: ${currentStyle} (${document.getElementById("inWidth").value}' x ${document.getElementById("inLength").value}')
+Glazing Envelope Area: ${document.getElementById("outEnvelopeArea").textContent}
+Total Envelope Conduction UA: ${document.getElementById("outUA").textContent}
+Water Thermal Mass: ${document.getElementById("outTotalGal").textContent} (${document.getElementById("outWaterWeight").textContent})
+Sensible Buffer: ${document.getElementById("outMassCapacity").textContent}
+Peak Cold Snap Deficit: ${document.getElementById("cardPeakLoad").textContent}
+Recommended Heater (+20% safety margin): ${document.getElementById("outHeaterBTU").textContent} (${document.getElementById("cardRecHeater").textContent})`;
+
+      try {
+        navigator.clipboard.writeText(summary).then(() => {
+          alert("Summary copied to clipboard!");
+        });
+      } catch (e) {
+        const t = document.createElement("textarea");
+        t.value = summary;
+        document.body.appendChild(t);
+        t.select();
+        document.execCommand("copy");
+        document.body.removeChild(t);
+        alert("Summary copied to clipboard!");
+      }
+    }
+
+    // Glazing Material & Fuel Cost Comparator Feature Implementation
+    const CMP_MATERIALS = [
+      {
+        id: "single_glass",
+        name: "Single Glass",
+        fullName: "Single 3mm Horticultural Glass",
+        u: 1.13,
+        par: 89,
+        lifespan: "30+ yrs",
+        impact: "Low (Fragile)",
+        pros: ["Maximum light transmission (89% direct PAR)", "Zero UV degradation over decades; timeless optical clarity", "Rigid glass panes withstand extreme wind loads without fluttering"],
+        cons: ["Highest thermal conduction loss (U=1.13)", "Vulnerable to shattering from hail, tree branches, or thermal shock", "Requires heavy framing; zero light diffusion risks leaf scorch"]
+      },
+      {
+        id: "double_glass",
+        name: "Double Insulated Glass",
+        fullName: "Double Insulated Low-E Glass",
+        u: 0.58,
+        par: 78,
+        lifespan: "25+ yrs",
+        impact: "Moderate",
+        pros: ["Superior thermal insulation (U=0.58)", "Architectural appearance with durable gas-tight perimeter seal", "Resistant to surface scratching and commercial pressure washing"],
+        cons: ["High initial capital cost per square foot", "Extremely heavy dead weight demands reinforced rafters and foundations", "Loss of seal over decades causes permanent internal fogging"]
+      },
+      {
+        id: "6mm_pc",
+        name: "6mm Twin-Wall Polycarbonate",
+        fullName: "6mm Twin-Wall Polycarbonate",
+        u: 0.62,
+        par: 80,
+        lifespan: "10-15 yrs",
+        impact: "High (Hail-proof)",
+        pros: ["High impact resistance, 10-year UV warranty, 80% light diffusion", "Cuts monthly heating bill by $168 vs single glass", "Lightweight, shatterproof, cold-bendable over arches and quonsets"],
+        cons: ["Flutes require breathable anti-dust tape to avoid algae or moisture", "Thermal expansion requires oversize pre-drilled fastening holes", "Slightly reduced PAR compared to horticultural glass (80% vs 89%)"]
+      },
+      {
+        id: "10mm_pc",
+        name: "10mm Triple-Wall Polycarbonate",
+        fullName: "10mm Triple-Wall Polycarbonate",
+        u: 0.42,
+        par: 72,
+        lifespan: "15-20 yrs",
+        impact: "Extreme",
+        pros: ["Industry-leading rigid insulation (U=0.42, cuts heat loss 63% vs single glass)", "Virtually unbreakable against 2-inch hail and severe snow accumulation", "Deep light diffusion completely prevents hotspot scorching on leafy greens"],
+        cons: ["Lower PAR light transmission (72%) during low-sun winter days", "Higher upfront cost than twin-wall polycarbonate sheets", "Thicker profile requires specialized aluminum joinery tracks"]
+      },
+      {
+        id: "double_poly",
+        name: "Double Inflated Poly Film",
+        fullName: "Double Inflated Poly Film (6-mil)",
+        u: 0.70,
+        par: 82,
+        lifespan: "4-5 yrs",
+        impact: "High Elastic",
+        pros: ["Lowest initial investment per square foot of envelope", "Good thermal barrier (U=0.70) created by active dead-air inflation layer", "High elasticity absorbs hail impacts and wind shock loads"],
+        cons: ["Short service life; films require cyclical replacement every 4 to 5 years", "Requires continuous operation of small squirrel-cage inflation blower", "Susceptible to punctures, sharp branch tears, and wind abrasion at hoops"]
+      }
+    ];
+
+    function renderGlazingComparator() {
+      const areaMatch = (document.getElementById("outEnvelopeArea")?.textContent || "").match(/[\d,.]+/);
+      const envelopeArea = areaMatch ? parseFloat(areaMatch[0].replace(/,/g, "")) : 876.5;
+
+      const target = parseFloat(document.getElementById("inTargetTemp")?.value) || 45;
+      const outdoor = parseFloat(document.getElementById("inOutdoorColdSnap")?.value) || 10;
+      const deltaT = Math.max(0, target - outdoor);
+
+      const fuelType = document.getElementById("cmpFuelSelect")?.value || "propane";
+
+      // Rates per Million BTU delivered (inclusive of heating appliance AFUE)
+      // Propane: $3.10/gal @ 91,500 BTU/gal, 85% AFUE = $39.80 / MMBtu
+      // Natural Gas: $1.40/therm @ 100,000 BTU/therm, 82% AFUE = $17.10 / MMBtu
+      // Electric Resistance: $0.15/kWh @ 3,412 BTU/kWh, 100% AFUE = $43.95 / MMBtu
+      // Heat Pump: $0.15/kWh, COP 2.8 = $15.70 / MMBtu
+      const FUEL_MMBTU_RATES = {
+        propane: { label: "Propane ($3.10/gal)", rate: 39.80 },
+        natgas: { label: "Nat. Gas ($1.40/thm)", rate: 17.10 },
+        elec: { label: "Electric ($0.15/kWh)", rate: 43.95 },
+        heatpump: { label: "Heat Pump (COP 2.8)", rate: 15.70 }
+      };
+
+      // 270 design heating hours/month (approx 9 nocturnal hours/day x 30 days)
+      const hoursPerMonth = 270;
+
+      function calcMonthlyCost(uVal, rate) {
+        const btuLoss = envelopeArea * uVal * deltaT;
+        return (btuLoss * hoursPerMonth / 1000000) * rate;
+      }
+
+      // Compute dynamic savings for 6mm PC vs single glass
+      const activeRate = FUEL_MMBTU_RATES[fuelType].rate;
+      const singleGlassCost = calcMonthlyCost(1.13, activeRate);
+      const pc6mmCost = calcMonthlyCost(0.62, activeRate);
+      const savingsVsGlass = Math.round(singleGlassCost - pc6mmCost);
+
+      // Render Summary Banner
+      const bannerEl = document.getElementById("cmpSavingsBanner");
+      if (bannerEl) {
+        bannerEl.innerHTML = `
+          <h3 style="margin-bottom:4px; font-size:0.875rem;">Glazing Benchmark Analysis (${envelopeArea.toFixed(1)} sq ft envelope maintaining ${target}°F vs ${outdoor}°F, ΔT = ${deltaT.toFixed(1)}°F)</h3>
+          <p style="font-size:0.825rem; line-height:1.4;">
+            For ${envelopeArea.toFixed(1)} sq ft envelope at ${deltaT.toFixed(1)}°F ΔT, <strong>6mm Polycarbonate cuts monthly heating bill by $${savingsVsGlass} vs single glass</strong> (${FUEL_MMBTU_RATES[fuelType].label}) while providing lightweight hail-proof protection and 80% light diffusion.
+          </p>
+        `;
+      }
+
+      // Build Table Header
+      const thead = document.getElementById("cmpTableHead");
+      thead.innerHTML = `<th>Specification / Glazing</th>` + CMP_MATERIALS.map(m => `
+        <th style="text-align:left;">
+          <strong>${m.name}</strong>
+          <div style="font-weight:400; font-size:0.7rem; color:var(--text-muted);">${m.fullName}</div>
+        </th>
+      `).join("");
+
+      // Rows definitions
+      const rows = [
+        {
+          label: "Thermal U-value",
+          values: CMP_MATERIALS.map(m => `<strong>${m.u.toFixed(2)}</strong> <small>BTU/hr·ft²·°F</small>`)
+        },
+        {
+          label: "Nighttime BTU/hr Loss",
+          values: CMP_MATERIALS.map(m => {
+            const loss = Math.round(envelopeArea * m.u * deltaT);
+            return `<strong>${loss.toLocaleString()}</strong> <small>BTU/hr</small>`;
+          })
+        },
+        {
+          label: `Est. Monthly Heating Cost (${FUEL_MMBTU_RATES[fuelType].label.split(' ')[0]})`,
+          values: CMP_MATERIALS.map(m => {
+            const cPropane = Math.round(calcMonthlyCost(m.u, FUEL_MMBTU_RATES.propane.rate));
+            const cNatGas = Math.round(calcMonthlyCost(m.u, FUEL_MMBTU_RATES.natgas.rate));
+            const cElec = Math.round(calcMonthlyCost(m.u, FUEL_MMBTU_RATES.elec.rate));
+            const cHP = Math.round(calcMonthlyCost(m.u, FUEL_MMBTU_RATES.heatpump.rate));
+            const primaryCost = Math.round(calcMonthlyCost(m.u, activeRate));
+
+            return `
+              <div style="font-size:1.05rem; font-weight:800; margin-bottom:4px; color:var(--text);">$${primaryCost.toLocaleString()}<small style="font-size:0.7rem; font-weight:400;">/mo</small></div>
+              <div class="fuel-cost-row ${fuelType === 'propane' ? 'fuel-active' : ''}"><span>Propane:</span> <span>$${cPropane}</span></div>
+              <div class="fuel-cost-row ${fuelType === 'natgas' ? 'fuel-active' : ''}"><span>Nat. Gas:</span> <span>$${cNatGas}</span></div>
+              <div class="fuel-cost-row ${fuelType === 'elec' ? 'fuel-active' : ''}"><span>Electric:</span> <span>$${cElec}</span></div>
+              <div class="fuel-cost-row ${fuelType === 'heatpump' ? 'fuel-active' : ''}"><span>Heat Pump:</span> <span>$${cHP}</span></div>
+            `;
+          })
+        },
+        {
+          label: "PAR Light Transmission %",
+          values: CMP_MATERIALS.map(m => `<strong>${m.par}%</strong> PAR`)
+        },
+        {
+          label: "Expected Service Life",
+          values: CMP_MATERIALS.map(m => `${m.lifespan}`)
+        },
+        {
+          label: "Impact Resistance Rating",
+          values: CMP_MATERIALS.map(m => {
+            const tagClass = m.impact.includes("Low") ? "tag-danger" : (m.impact.includes("Moderate") ? "tag-warning" : "tag-success");
+            return `<span class="tag ${tagClass}">${m.impact}</span>`;
+          })
+        },
+        {
+          label: "Pros Summary",
+          values: CMP_MATERIALS.map(m => {
+            const bullets = m.pros.map(pro => {
+              if (pro.includes("High impact resistance, 10-year UV warranty, 80% light diffusion")) {
+                return `<li><span class="highlight-pro">High impact resistance, 10-year UV warranty, 80% light diffusion</span></li>`;
+              }
+              if (pro.includes("Cuts monthly heating bill")) {
+                return `<li><strong>Cuts monthly heating bill by $${savingsVsGlass} vs single glass</strong></li>`;
+              }
+              return `<li>${pro}</li>`;
+            }).join("");
+            return `<ul class="cmp-list">${bullets}</ul>`;
+          })
+        },
+        {
+          label: "Cons Summary",
+          values: CMP_MATERIALS.map(m => {
+            const bullets = m.cons.map(con => `<li>${con}</li>`).join("");
+            return `<ul class="cmp-list" style="color:var(--text-muted);">${bullets}</ul>`;
+          })
+        }
+      ];
+
+      const tbody = document.getElementById("cmpTableBody");
+      tbody.innerHTML = rows.map(r => `
+        <tr>
+          <td>${r.label}</td>
+          ${r.values.map(val => `<td>${val}</td>`).join("")}
+        </tr>
+      `).join("");
+    }
+
+    // Decorate calculateAll to keep comparator matrix synchronized with input changes
+    const _origCalculateAll = window.calculateAll;
+    if (typeof _origCalculateAll === "function") {
+      window.calculateAll = function() {
+        _origCalculateAll();
+        renderGlazingComparator();
+      };
+    }
+
+    // Initialize comparator on load
+    window.addEventListener("DOMContentLoaded", () => {
+      setTimeout(renderGlazingComparator, 50);
+    });
+
+    // Reverse Thermal Mass Solver Engine
+    function calculatePassiveThermalMassOptimizer(totalUA, airVolume, adjACH, floorArea, dayWaterTemp) {
+      const optEl = document.getElementById("passiveThermalMassOptimizer");
+      if (!optEl) return;
+
+      const targetHours = Math.max(0.1, parseFloat(document.getElementById("inOptTargetHours").value) || 6);
+      const rawFreeze = parseFloat(document.getElementById("inOptFreezeTemp").value);
+      const freezeTemp = !isNaN(rawFreeze) ? rawFreeze : (parseFloat(document.getElementById("inOutdoorColdSnap").value) || 10);
+      const maxFootprint = Math.max(1, parseFloat(document.getElementById("inOptMaxFootprint").value) || 60);
+
+      const deltaTFreeze = Math.max(1, 32 - freezeTemp);
+      const infUA = airVolume * adjACH * 0.0176;
+      const totalLossUA = totalUA + infUA;
+      const hourlyLossBTU = totalLossUA * deltaTFreeze;
+      const totalBTUNeeded = hourlyLossBTU * targetHours;
+
+      // Passive convective discharge yield per gallon down to 32°F
+      const usableDeltaT = Math.max(5, dayWaterTemp - 32);
+      const btuPerGal = usableDeltaT * 8.34 * 0.48523;
+      const reqGallons = Math.max(0, Math.round(totalBTUNeeded / btuPerGal));
+      const drumCount = Math.ceil(reqGallons / 55);
+      const drumAreaSqFt = Math.PI * Math.pow(24 / (2 * 12), 2); // 24-inch diameter = 3.14159 sq ft
+      const footprintSqFt = drumCount * drumAreaSqFt;
+      const floorPct = floorArea > 0 ? (footprintSqFt / floorArea) * 100 : 0;
+
+      document.getElementById("outOptGallons").innerHTML = `${reqGallons.toLocaleString()} <small>gallons needed</small>`;
+      document.getElementById("outOptDrums").innerHTML = `${drumCount} <small>standard 55-gal drums</small>`;
+      document.getElementById("outOptFootprint").innerHTML = `consuming ${footprintSqFt.toFixed(1)} sq ft (${floorPct.toFixed(1)}% of ${Math.round(floorArea)} sq ft floor area)`;
+
+      const btn = document.getElementById("btnApplyOptDrums");
+      if (btn) btn.textContent = `Apply ${drumCount} Drums`;
+
+      const warnEl = document.getElementById("outOptWarning");
+      if (footprintSqFt > floorArea) {
+        warnEl.className = "opt-alert danger";
+        warnEl.textContent = `⚠️ Warning: Required barrel footprint (${footprintSqFt.toFixed(1)} sq ft) exceeds greenhouse floor area capacity (${Math.round(floorArea)} sq ft)! Passive barrels alone cannot support this buffer.`;
+      } else if (footprintSqFt > maxFootprint) {
+        warnEl.className = "opt-alert warn";
+        warnEl.textContent = `⚠️ Warning: Required barrel footprint (${footprintSqFt.toFixed(1)} sq ft) exceeds your maximum limit of ${maxFootprint} sq ft (${floorPct.toFixed(1)}% of floor area).`;
+      } else {
+        warnEl.className = "opt-alert ok";
+        warnEl.textContent = `✓ Buffer feasible: Consuming ${footprintSqFt.toFixed(1)} sq ft (${floorPct.toFixed(1)}% of floor area). Standard 24-inch drums fit along perimeter.`;
+      }
+    }
+
+    function applyOptimizedDrums() {
+      const drumsTxt = (document.getElementById("outOptDrums")?.textContent || "").match(/\d+/);
+      if (drumsTxt) {
+        document.getElementById("inDrumCount").value = parseInt(drumsTxt[0], 10);
+        calculateAll();
+      }
+    }
+
+    // Hook optimizer execution into core calculation flow
+    const _prevCalcAll = window.calculateAll;
+    window.calculateAll = function() {
+      _prevCalcAll();
+      const rawW = parseFloat(document.getElementById("inWidth").value) || 16;
+      const rawL = parseFloat(document.getElementById("inLength").value) || 24;
+      const floorArea = rawW * rawL;
+      const uaTxt = (document.getElementById("outUA")?.textContent || "").match(/[\d,.]+/);
+      const totalUA = uaTxt ? parseFloat(uaTxt[0].replace(/,/g, "")) : 543.4;
+      const volTxt = (document.getElementById("outAirVolume")?.textContent || "").match(/[\d,.]+/);
+      const airVolume = volTxt ? parseFloat(volTxt[0].replace(/,/g, "")) : 3072;
+      const achTxt = (document.getElementById("outAdjACH")?.textContent || "").match(/[\d,.]+/);
+      const adjACH = achTxt ? parseFloat(achTxt[0].replace(/,/g, "")) : 1.45;
+      const dayWaterTemp = parseFloat(document.getElementById("inDayWaterTemp")?.value) || 58;
+
+      calculatePassiveThermalMassOptimizer(totalUA, airVolume, adjACH, floorArea, dayWaterTemp);
+    };
+
+    // Update optimizer input when presets are loaded
+    const _prevLoadPreset = window.loadPreset;
+    window.loadPreset = function(index) {
+      _prevLoadPreset(index);
+      const p = PRESETS[index];
+      if (p && document.getElementById("inOptFreezeTemp")) {
+        document.getElementById("inOptFreezeTemp").value = p.outdoorColdSnap;
+        calculateAll();
+      }
+    };
+    // FEATURE: Thermal Blanket and Bubble-Wrap Insulation Retrofit Evaluator
+    function onRetrofitFuelChange() {
+      const fuel = document.getElementById("inRetrofitFuel")?.value || "elec";
+      const unitLbl = document.getElementById("lblRetrofitUnit");
+      const costInp = document.getElementById("inRetrofitFuelCost");
+      if (fuel === "elec") {
+        if (unitLbl) unitLbl.textContent = "$/kWh";
+        if (costInp) costInp.value = "0.15";
+      } else if (fuel === "propane") {
+        if (unitLbl) unitLbl.textContent = "$/gal propane";
+        if (costInp) costInp.value = "3.10";
+      } else if (fuel === "natgas") {
+        if (unitLbl) unitLbl.textContent = "$/therm";
+        if (costInp) costInp.value = "1.40";
+      }
+      calculateAll();
+    }
+
+    function calculateRetrofitROI(totalUA, peakTotalLoss, envelopeArea, floorArea, L, He, Hr, glazing, deltaT) {
+      const rPanel = document.getElementById("insulation-retrofit-roi-evaluator");
+      if (!rPanel) return;
+
+      const type = document.getElementById("inRetrofitType")?.value || "none";
+      const fuel = document.getElementById("inRetrofitFuel")?.value || "elec";
+      const cost = Math.max(0, parseFloat(document.getElementById("inRetrofitFuelCost")?.value) || 0);
+
+      let deltaUA = 0;
+      let badgeTxt = "No Retrofit";
+
+      if (type === "north_wall") {
+        badgeTxt = "North-Wall R-3.5";
+        const northArea = (currentStyle === 'Lean-to') ? (L * He) : (L * (He + (Hr - He) * 0.76));
+        const rGlaze = 1 / Math.max(0.01, glazing.u);
+        const uNew = 1 / (rGlaze + 3.5);
+        deltaUA = northArea * (glazing.u - uNew);
+      } else if (type === "curtain") {
+        badgeTxt = "Overhead Curtain R-2.0";
+        const rGlaze = 1 / Math.max(0.01, glazing.u);
+        const uNew = 1 / (rGlaze + 2.0);
+        deltaUA = floorArea * (glazing.u - uNew);
+      } else if (type === "bubble_wrap") {
+        badgeTxt = "Perimeter Bubble-Wrap R-1.2";
+        const rGlaze = 1 / Math.max(0.01, glazing.u);
+        const uNew = 1 / (rGlaze + 1.2);
+        deltaUA = envelopeArea * (glazing.u - uNew);
+      }
+
+      deltaUA = Math.min(totalUA, Math.max(0, deltaUA));
+      const revisedUA = Math.max(0, totalUA - deltaUA);
+
+      const peakReductionBTU = deltaUA * deltaT;
+      const pctCut = peakTotalLoss > 0 ? (peakReductionBTU / peakTotalLoss) * 100 : 0;
+
+      let deliveredBTUPerUnit = 3412.142; // Electric resistance (100% AFUE)
+      if (fuel === "propane") deliveredBTUPerUnit = 77775; // 91,500 BTU/gal @ 85% AFUE
+      else if (fuel === "natgas") deliveredBTUPerUnit = 82000; // 100,000 BTU/therm @ 82% AFUE
+
+      const annualBTUSaved = peakReductionBTU * 1002.5;
+      const annualSavings = (annualBTUSaved / deliveredBTUPerUnit) * cost;
+
+      const badgeEl = document.getElementById("retrofitBadge");
+      if (badgeEl) badgeEl.textContent = badgeTxt;
+
+      const outUAEl = document.getElementById("outRetrofitUA");
+      if (outUAEl) outUAEl.innerHTML = `${revisedUA.toFixed(1)} <small>BTU/hr·°F</small>`;
+
+      const outCutEl = document.getElementById("outRetrofitHeaterCut");
+      if (outCutEl) outCutEl.innerHTML = `${pctCut.toFixed(1)}% <small>reduction</small>`;
+
+      const outSavEl = document.getElementById("outRetrofitAnnualSavings");
+      if (outSavEl) outSavEl.innerHTML = `$${Math.round(annualSavings).toLocaleString()} <small>/ year</small>`;
+    }
+
+    // Move panel beneath infiltration panel in DOM and wire calculation hook
+    window.addEventListener("DOMContentLoaded", () => {
+      const rPanel = document.getElementById("insulation-retrofit-roi-evaluator");
+      const infPanel = document.querySelector('[data-feature="infiltration-and-peak-heat-loss"]');
+      if (rPanel && infPanel && infPanel.parentNode) {
+        infPanel.parentNode.insertBefore(rPanel, infPanel.nextSibling);
+      }
+    });
+
+    const _prevCalcRetrofit = window.calculateAll;
+    window.calculateAll = function() {
+      _prevCalcRetrofit();
+      const rawW = parseFloat(document.getElementById("inWidth")?.value) || 16;
+      const rawL = parseFloat(document.getElementById("inLength")?.value) || 24;
+      const rawHe = parseFloat(document.getElementById("inEaveHeight")?.value) || 6.0;
+      const rawHr = parseFloat(document.getElementById("inRidgeHeight")?.value) || 10.0;
+      const floorArea = rawW * rawL;
+      const uaTxt = (document.getElementById("outUA")?.textContent || "").match(/[\d,.]+/);
+      const totalUA = uaTxt ? parseFloat(uaTxt[0].replace(/,/g, "")) : 543.4;
+      const peakTxt = (document.getElementById("cardPeakLoad")?.textContent || "").match(/[\d,.]+/);
+      const peakTotalLoss = peakTxt ? parseFloat(peakTxt[0].replace(/,/g, "")) : 21771;
+      const envTxt = (document.getElementById("outEnvelopeArea")?.textContent || "").match(/[\d,.]+/);
+      const envelopeArea = envTxt ? parseFloat(envTxt[0].replace(/,/g, "")) : 876.5;
+      const target = parseFloat(document.getElementById("inTargetTemp")?.value) || 45;
+      const outdoor = parseFloat(document.getElementById("inOutdoorColdSnap")?.value) || 10;
+      const deltaT = Math.max(0, target - outdoor);
+      const glazingKey = document.getElementById("inGlazing")?.value || "6mm_pc";
+      const glazing = GLAZING_DATA[glazingKey] || GLAZING_DATA["6mm_pc"];
+
+      calculateRetrofitROI(totalUA, peakTotalLoss, envelopeArea, floorArea, rawL, rawHe, rawHr, glazing, deltaT);
+    };
+
+    function getStoredSnapshots() {
+      try {
+        const raw = localStorage.getItem("gh_scenarios");
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveStoredSnapshots(list) {
+      try {
+        localStorage.setItem("gh_scenarios", JSON.stringify(list));
+      } catch (e) {}
+    }
+
+    function getCurrentState() {
+      return {
+        name: document.getElementById("inSnapshotName")?.value.trim() || `Config ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`,
+        date: new Date().toLocaleDateString(),
+        style: currentStyle,
+        width: parseFloat(document.getElementById("inWidth")?.value) || 16,
+        length: parseFloat(document.getElementById("inLength")?.value) || 24,
+        eaveHeight: parseFloat(document.getElementById("inEaveHeight")?.value) || 6,
+        ridgeHeight: parseFloat(document.getElementById("inRidgeHeight")?.value) || 10,
+        glazingKey: document.getElementById("inGlazing")?.value || "6mm_pc",
+        endFraming: parseFloat(document.getElementById("inEndFraming")?.value) || 37.8,
+        drumCount: parseInt(document.getElementById("inDrumCount")?.value, 10) || 0,
+        targetTemp: parseFloat(document.getElementById("inTargetTemp")?.value) || 45,
+        coldSnap: parseFloat(document.getElementById("inOutdoorColdSnap")?.value) || 10,
+        windSpeed: parseFloat(document.getElementById("inWindSpeed")?.value) || 15,
+        tightness: document.getElementById("inTightness")?.value || "1.2",
+        envelopeArea: parseFloat((document.getElementById("outEnvelopeArea")?.textContent || "0").replace(/,/g, "")),
+        totalUA: parseFloat((document.getElementById("outUA")?.textContent || "0").replace(/,/g, "")),
+        totalGal: parseFloat((document.getElementById("outTotalGal")?.textContent || "0").replace(/,/g, "")),
+        peakLoad: parseFloat((document.getElementById("cardPeakLoad")?.textContent || "0").replace(/,/g, "")),
+        heaterBTU: parseFloat((document.getElementById("outHeaterBTU")?.textContent || "0").replace(/,/g, "")),
+        nadirTemp: parseFloat((document.getElementById("outNadirWithMass")?.textContent || "0").replace(/,/g, ""))
+      };
+    }
+
+    function saveScenarioSnapshot() {
+      if (!PRO) { showProMessage(); return; }
+      const snapshots = getStoredSnapshots();
+      if (snapshots.length >= 5) {
+        alert("Maximum of 5 saved snapshots reached. Delete a snapshot to save a new one.");
+        return;
+      }
+      const snap = getCurrentState();
+      snapshots.push(snap);
+      saveStoredSnapshots(snapshots);
+      document.getElementById("inSnapshotName").value = "";
+      renderScenarioList();
+    }
+
+    function renderScenarioList() {
+      const snapshots = getStoredSnapshots();
+      const listEl = document.getElementById("savedScenarioList");
+      const badgeEl = document.getElementById("snapshotCountBadge");
+      if (badgeEl) badgeEl.textContent = `${snapshots.length} / 5 Snapshots`;
+
+      if (!listEl) return;
+      if (snapshots.length === 0) {
+        listEl.innerHTML = `<div style="font-size:0.78rem; color:var(--text-muted); font-style:italic;">No saved snapshots yet. Adjust parameters above and click 'Save Snapshot'.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = snapshots.map((s, idx) => `
+        <div class="scenario-item">
+          <div class="scenario-item-info">
+            <strong>${s.name}</strong>
+            <span style="font-size:0.72rem; color:var(--text-muted);">${s.style} ${s.width}'x${s.length}' • ${s.glazingKey} • ${s.totalGal} gal mass • Peak ${Math.round(s.peakLoad).toLocaleString()} BTU/hr</span>
+          </div>
+          <div class="scenario-actions">
+            <button type="button" class="btn btn-sm" onclick="compareScenarioDelta(${idx})">Compare</button>
+            <button type="button" class="btn btn-sm" onclick="loadScenarioSnapshot(${idx})">Load</button>
+            <button type="button" class="btn btn-sm" style="color:var(--danger);" onclick="deleteScenarioSnapshot(${idx})">✕</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function deleteScenarioSnapshot(idx) {
+      const snapshots = getStoredSnapshots();
+      snapshots.splice(idx, 1);
+      saveStoredSnapshots(snapshots);
+      renderScenarioList();
+      document.getElementById("deltaResults").style.display = "none";
+    }
+
+    function loadScenarioSnapshot(idx) {
+      const snapshots = getStoredSnapshots();
+      const s = snapshots[idx];
+      if (!s) return;
+      setStyle(s.style);
+      document.getElementById("inWidth").value = s.width;
+      document.getElementById("inLength").value = s.length;
+      document.getElementById("inEaveHeight").value = s.eaveHeight;
+      document.getElementById("inRidgeHeight").value = s.ridgeHeight;
+      document.getElementById("inGlazing").value = s.glazingKey;
+      document.getElementById("inEndFraming").value = s.endFraming;
+      document.getElementById("inDrumCount").value = s.drumCount;
+      document.getElementById("inTargetTemp").value = s.targetTemp;
+      document.getElementById("inOutdoorColdSnap").value = s.coldSnap;
+      document.getElementById("inWindSpeed").value = s.windSpeed;
+      document.getElementById("inTightness").value = s.tightness;
+      calculateAll();
+    }
+
+    function compareScenarioDelta(idx) {
+      const snapshots = getStoredSnapshots();
+      const s = snapshots[idx];
+      if (!s) return;
+
+      const curr = getCurrentState();
+      const deltaBox = document.getElementById("deltaResults");
+      const grid = document.getElementById("deltaGrid");
+      const header = document.getElementById("deltaHeader");
+      deltaBox.style.display = "block";
+      header.textContent = `Delta Comparison: Current Config vs "${s.name}"`;
+
+      const metrics = [
+        { label: "Envelope Area", curr: curr.envelopeArea, snap: s.envelopeArea, unit: "sq ft" },
+        { label: "Conduction UA", curr: curr.totalUA, snap: s.totalUA, unit: "BTU/°F" },
+        { label: "Water Mass", curr: curr.totalGal, snap: s.totalGal, unit: "gal" },
+        { label: "Peak Heat Loss", curr: curr.peakLoad, snap: s.peakLoad, unit: "BTU/hr" },
+        { label: "Heater (+20%)", curr: curr.heaterBTU, snap: s.heaterBTU, unit: "BTU/hr" },
+        { label: "Unheated Nadir", curr: curr.nadirTemp, snap: s.nadirTemp, unit: "°F" }
+      ];
+
+      grid.innerHTML = metrics.map(m => {
+        const diff = m.curr - m.snap;
+        const diffSign = diff > 0 ? "+" : "";
+        const isGood = m.label === "Unheated Nadir" ? diff >= 0 : diff <= 0;
+        const diffClass = diff === 0 ? "" : (isGood ? "pos" : "neg");
+        return `
+          <div class="delta-card">
+            <div class="d-lbl">${m.label}</div>
+            <div class="d-val">${Math.round(m.curr).toLocaleString()} <small>${m.unit}</small></div>
+            <div class="d-diff ${diffClass}">
+              ${diff === 0 ? "No change" : `${diffSign}${Math.round(diff).toLocaleString()} vs snap (${Math.round(m.snap).toLocaleString()})`}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function exportFullAuditCSV() {
+      if (!PRO) { showProMessage(); return; }
+      const curr = getCurrentState();
+      const glazing = GLAZING_DATA[curr.glazingKey] || GLAZING_DATA["6mm_pc"];
+      const vol = parseFloat((document.getElementById("outAirVolume")?.textContent || "0").replace(/,/g, ""));
+      const ach = parseFloat((document.getElementById("outAdjACH")?.textContent || "0").replace(/,/g, ""));
+      const cfm = (vol * ach) / 60;
+
+      const deltaT = Math.max(0, curr.targetTemp - curr.coldSnap);
+      const peakCond = curr.totalUA * deltaT;
+      const peakInf = 1.059 * cfm * deltaT;
+      const peakTotal = peakCond + peakInf;
+      const heaterBTU = peakTotal * 1.20;
+
+      const sim = runDiurnalSimulation({
+        dayHigh: parseFloat(document.getElementById("inDayHigh")?.value) || 38,
+        coldSnapLow: curr.coldSnap,
+        targetTemp: curr.targetTemp,
+        solarSky: document.getElementById("inSolarCondition")?.value || "clear",
+        airVolume: vol,
+        totalUA: curr.totalUA,
+        adjACH: ach,
+        floorArea: curr.width * curr.length,
+        waterCapacity: curr.totalGal * 8.34,
+        dayWaterTemp: parseFloat(document.getElementById("inDayWaterTemp")?.value) || 58,
+        glazingPAR: glazing.par / 100
+      });
+
+      const lines = [
+        ["GREENHOUSE THERMAL ENGINEERING AUDIT LOG"],
+        ["Generated", new Date().toLocaleString()],
+        [],
+        ["1. GEOMETRIC PARAMETERS"],
+        ["Structural Style", curr.style],
+        ["Width (ft)", curr.width],
+        ["Length (ft)", curr.length],
+        ["Eave Height (ft)", curr.eaveHeight],
+        ["Ridge Height (ft)", curr.ridgeHeight],
+        ["End-wall Opaque Framing Ratio (%)", curr.endFraming],
+        ["Glazing Envelope Area (sq ft)", curr.envelopeArea],
+        ["Interior Air Volume (cu ft)", vol],
+        ["Ground Floor Area (sq ft)", curr.width * curr.length],
+        [],
+        ["2. GLAZING & THERMAL ENVELOPE PERFORMANCE"],
+        ["Covering Material", glazing.name],
+        ["Glazing U-Factor (BTU/hr·sq ft·°F)", glazing.u],
+        ["PAR Solar Light Transmission (%)", glazing.par],
+        ["Total Conduction UA (BTU/hr·°F)", curr.totalUA],
+        [],
+        ["3. CLIMATE & INFILTRATION RATES"],
+        ["Target Minimum Crop Temp (°F)", curr.targetTemp],
+        ["Design Extreme Cold Snap Low (°F)", curr.coldSnap],
+        ["Sustained Wind Speed (mph)", curr.windSpeed],
+        ["Base Tightness Rating (ACH)", curr.tightness],
+        ["Wind-Adjusted Infiltration Rate (ACH)", ach.toFixed(2)],
+        ["Infiltration Airflow (CFM)", cfm.toFixed(1)],
+        [],
+        ["4. HEATER SIZING EQUATIONS & LOADS"],
+        ["Conduction Loss Equation", "Q_cond = UA * (T_target - T_outdoor)"],
+        ["Peak Conduction Heat Loss (BTU/hr)", Math.round(peakCond)],
+        ["Infiltration Loss Equation", "Q_inf = 1.059 * CFM * (T_target - T_outdoor)"],
+        ["Peak Infiltration Heat Loss (BTU/hr)", Math.round(peakInf)],
+        ["Total Peak Load Deficit (BTU/hr)", Math.round(peakTotal)],
+        ["Engineering Safety Margin", "20% (Multiplier = 1.20)"],
+        ["Recommended Heater Output (BTU/hr)", Math.round(heaterBTU)],
+        ["Recommended Heater Power (kW)", (heaterBTU / 3412.142).toFixed(2)],
+        [],
+        ["5. HOURLY DIURNAL SIMULATION CURVES"],
+        ["Hour / Time", "Outdoor Temp (°F)", "Unheated No-Mass (°F)", "Unheated With-Mass (°F)", "Heated Target (°F)"]
+      ];
+
+      sim.timeLabels.forEach((lbl, i) => {
+        lines.push([
+          lbl,
+          sim.trajOutdoor[i].toFixed(1),
+          sim.trajNoMass[i].toFixed(1),
+          sim.trajWithMass[i].toFixed(1),
+          sim.trajHeated[i].toFixed(1)
+        ]);
+      });
+
+      const csvText = lines.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+      const blob = new Blob([csvText], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `greenhouse_audit_report_${curr.style.toLowerCase()}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function exportJSONConfig() {
+      if (!PRO) { showProMessage(); return; }
+      const snapshots = getStoredSnapshots();
+      const current = getCurrentState();
+      const exportPayload = {
+        app: "Greenhouse Thermal Loss Simulator",
+        version: "1.0",
+        exportDate: new Date().toISOString(),
+        currentConfig: current,
+        savedSnapshots: snapshots
+      };
+      const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `greenhouse_config_${current.style.toLowerCase()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function printAuditReport() {
+      if (!PRO) { showProMessage(); return; }
+      window.print();
+    }
+
+    window.exportData = function(type) {
+      if (type === "csv") {
+        exportFullAuditCSV();
+      } else if (type === "json") {
+        exportJSONConfig();
+      } else {
+        printAuditReport();
+      }
+    };
+
+    window.addEventListener("DOMContentLoaded", () => {
+      renderScenarioList();
+    });
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This free simulator helps homesteaders, market gardeners, and greenhouse owners calculate conductive heat loss, air infiltration, and peak heating demands. Compare glazing materials side-by-side, model water barrel thermal mass, and forecast fuel expenses across varying winter conditions.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Enter your greenhouse dimensions (length, width, wall height, and roof pitch) to determine total glazing surface area.</li><li>Select your glazing type (glass, twin-wall polycarbonate, or poly film) and input your minimum exterior and desired interior temperatures.</li><li>Set your frame infiltration rate and safety margin to calculate peak required heater output in BTU/hr and kW.</li><li>Add water barrel volume to model passive thermal buffering and view the 24-hour diurnal freezing curve.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">How to convert inches to gallons?</h4><p style="margin:0">You enter: Water container shape (cylindrical barrel or rectangular cistern) · Internal container dimensions measured in inches (diameter and height, or length, width, and depth).<br>You get: Liquid volume in US gallons and the corresponding thermal storage capacity (gallons, pounds of water, and BTU/°F thermal mass buffer)</p><h4 style="font-size:16px;margin:16px 0 4px">Glass vs plastic greenhouse covering: pros and cons</h4><p style="margin:0">You enter: Greenhouse structural dimensions (length, width, ridge height, wall height) · Local design minimum outdoor temperature during cold snaps (e.g., 10°F) · Desired overnight crop protection temperature (e.g., 45°F).<br>You get: Direct quantitative and qualitative comparison between glass and horticultural plastics (single glass, double glass, 4mm/6mm/10mm twin-wall polycarbonate, double-layer inflated polyethylene film) covering U-factor heat loss rates, peak nighttime heating load (BTU/hr), light transmission percentage, lifespan, impact resistance, and annual heating fuel cost differentials</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">How to convert inches to gallons?</h4><p style="margin:0">To find gallons from dimensions measured in inches, first calculate the container volume in cubic inches (Length × Width × Height for rectangular containers, or π × Radius² × Height for round drums). Then, divide the total cubic inches by 231, because one US liquid gallon equals exactly 231 cubic inches.</p><h4 style="font-size:16px;margin:16px 0 4px">Glass vs plastic greenhouse covering: pros and cons</h4><p style="margin:0">Glass offers high clarity, long lifespan, and resists UV degradation, but it has poor insulation values (U-value ~1.1–1.2 for single pane), heavy weight, and higher framing costs. Multi-wall plastic (polycarbonate) provides significantly better thermal retention (U-value ~0.58–0.65 for 8mm twin-wall), high impact resistance, and easier installation, but it gradually loses light transmittance over 10–15 years due to UV exposure.</p><h4 style="font-size:16px;margin:16px 0 4px">How does draft infiltration affect total greenhouse heating requirements?</h4><p style="margin:0">Infiltration accounts for cold outdoor air leaking through frame seams, vents, and foundation gaps. In drafty or unsealed hobby structures, air leakage can add 20% to 40% on top of conductive glazing losses, requiring a substantially larger heater output to maintain target temperatures.</p><h4 style="font-size:16px;margin:16px 0 4px">What is the offline simulator pack?</h4><p style="margin:0">The offline pack is a single self-contained HTML/JS file that runs directly in any web browser without an internet connection, tracking, or account logins. It includes scenario saving, instant CSV/JSON data export, and lifetime offline access for use in remote farm fields and off-grid homesteads.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $12, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/hxsqfi" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $12</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../two-dimensional-orbital-transfer-mission-planner/" style="color:inherit;font-weight:600">2D Orbital Transfer &amp; Gravity Mission Planner</a>: Interactive 2D orbital mechanics sandbox with real-time maneuvers and Hohmann transfer calculations.</li><li><a href="../pendulum-wave-polyphony-visualizer/" style="color:inherit;font-weight:600">Pendulum Wave: Polyrhythm &amp; Polyphony Visualizer</a>: Hypnotic acoustic physics sandbox turning pendulum harmonic waves into generative ambient bells and polyrhythms.</li><li><a href="../burst-action-sequence-multi-exposure-compositor/" style="color:inherit;font-weight:600">Burst Action Sequence Compositor</a>: Generate multi-exposure burst action composites offline in your browser with automated background subtraction.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $12</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $12"});</script>
+</body>
+</html>
