@@ -1,0 +1,2124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-light: rgba(99, 102, 241, 0.15);
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --danger-light: rgba(239, 68, 68, 0.15);
+      --warning-light: rgba(245, 158, 11, 0.15);
+      --highlight: #f43f5e;
+      --radius: 8px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f1f5f9;
+        --card-bg: #ffffff;
+        --card-border: #cbd5e1;
+        --text: #0f172a;
+        --text-muted: #64748b;
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --primary-light: rgba(79, 70, 229, 0.1);
+        --accent: #0891b2;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* Header & Controls */
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .header-titles h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .header-titles p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: var(--radius);
+      border: 1px solid var(--card-border);
+      background-color: var(--card-bg);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+    .btn:hover { background-color: var(--card-border); }
+    .btn-primary { background-color: var(--primary); border-color: var(--primary); color: #fff; }
+    .btn-primary:hover { background-color: var(--primary-hover); }
+    .btn-sm { padding: 4px 8px; font-size: 0.75rem; }
+    .btn-danger { color: var(--danger); border-color: rgba(239, 68, 68, 0.4); }
+    .btn-danger:hover { background-color: var(--danger-light); }
+
+    .control-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      max-width: 100%;
+    }
+    select, input[type="number"], input[type="text"] {
+      background-color: var(--card-bg);
+      color: var(--text);
+      border: 1px solid var(--card-border);
+      padding: 6px 10px;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      outline: none;
+      max-width: 100%;
+      text-overflow: ellipsis;
+    }
+    select:focus, input:focus { border-color: var(--primary); }
+
+    /* Summary KPI Bar */
+    .summary-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 100%;
+    }
+    .kpi-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      box-shadow: var(--shadow);
+    }
+    .kpi-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+    .kpi-value { font-size: 1.25rem; font-weight: 700; margin-top: 2px; }
+    .kpi-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* Main Grid Layout */
+    .app-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+    @media (min-width: 1024px) {
+      .app-layout {
+        grid-template-columns: 1.2fr 0.8fr;
+      }
+      .visualizer-span {
+        grid-column: 1 / -1;
+      }
+    }
+
+    /* Panel Base */
+    .panel {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--card-border);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .panel-title {
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Visualization Canvas */
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    svg.arc-svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Tooltip */
+    .svg-tooltip {
+      position: absolute;
+      padding: 10px 14px;
+      background: rgba(15, 23, 42, 0.95);
+      color: #fff;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      font-size: 0.8rem;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: 50;
+      box-shadow: var(--shadow);
+    }
+    .svg-tooltip.visible { opacity: 1; }
+    .tooltip-title { font-weight: 700; margin-bottom: 4px; color: var(--accent); }
+
+    /* Table Styles */
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 520px;
+      overflow-y: auto;
+      width: 100%;
+      max-width: 100%;
+    }
+    table.beat-table {
+      width: 100%;
+      min-width: 620px;
+      border-collapse: collapse;
+      font-size: 0.825rem;
+      text-align: left;
+    }
+    table.beat-table th {
+      position: sticky;
+      top: 0;
+      background-color: var(--card-bg);
+      padding: 8px 10px;
+      border-bottom: 2px solid var(--card-border);
+      color: var(--text-muted);
+      font-weight: 600;
+      z-index: 10;
+    }
+    table.beat-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--card-border);
+      vertical-align: middle;
+    }
+    table.beat-table tr:hover { background-color: var(--primary-light); }
+    table.beat-table tr.selected-row { background-color: rgba(99, 102, 241, 0.25); }
+    
+    .input-cell { width: 100%; }
+    .input-cell input { width: 100%; font-size: 0.8rem; padding: 4px 6px; }
+    .score-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-align: center;
+    }
+    .drag-handle { cursor: grab; user-select: none; color: var(--text-muted); text-align: center; }
+
+    /* Diagnostics & Insights */
+    .alert-card {
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+      border-left: 4px solid var(--card-border);
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+    .alert-card.warning { border-left-color: var(--warning); background-color: var(--warning-light); }
+    .alert-card.danger { border-left-color: var(--danger); background-color: var(--danger-light); }
+    .alert-card.success { border-left-color: var(--success); background-color: rgba(16, 185, 129, 0.15); }
+    .alert-card.info { border-left-color: var(--accent); background-color: rgba(6, 182, 212, 0.15); }
+
+    .alert-title { font-weight: 700; margin-bottom: 2px; display: flex; justify-content: space-between; }
+    .alert-desc { color: var(--text); font-size: 0.8rem; }
+    .alert-action { margin-top: 6px; font-weight: 600; font-size: 0.78rem; color: var(--primary); }
+
+    .actionable-insights {
+      background-color: rgba(0, 0, 0, 0.15);
+      border: 1px dashed var(--card-border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-top: 14px;
+    }
+    .insights-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; color: var(--accent); }
+    .insights-list { list-style-type: none; padding-left: 0; font-size: 0.825rem; }
+    .insights-list li { margin-bottom: 8px; position: relative; padding-left: 18px; }
+    .insights-list li::before { content: "•"; position: absolute; left: 0; color: var(--primary); font-weight: bold; }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid var(--card-border);
+      padding: 10px 16px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: none;
+      z-index: 100;
+      font-size: 0.85rem;
+    }
+
+    .disclaimer {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    /* Print Styles */
+    @media print {
+      body { background: #fff; color: #000; }
+      .btn, header .header-actions, .panel-header .control-group { display: none !important; }
+      .app-layout { display: block; }
+      .panel { border: 1px solid #ccc; box-shadow: none; margin-bottom: 20px; page-break-inside: avoid; }
+      .canvas-container { height: 300px; background: #fff; }
+    }
+    .modal-comparator { border: 2px solid var(--accent); background: var(--card-bg); }
+    .delta-pos { color: var(--success); font-weight: bold; }
+    .delta-neg { color: var(--danger); font-weight: bold; }
+    .delta-neu { color: var(--text-muted); }
+
+    /* Exporter Component */
+    [data-feature="story-beat-exporter"] {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+      [data-feature="custom-structure-builder"] {
+      margin-top: 20px;
+    }
+    .csb-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+  .sim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 12px; }
+  .sim-card { background: rgba(0, 0, 0, 0.12); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 10px 14px; }
+  .sim-val { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-top: 2px; }
+  .sim-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+  /* FEATURE-CSS */
+  </style>
+<title>Interactive Story Pacing &amp; Tension Arc Mapper</title>
+<meta name="description" content="Map scene tension, diagnose saggy middles, overlay standard story structures, and export clean beat sheets. Free web tool with offline HTML pack.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/narrative-pacing-tension-arc-mapper/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/narrative-pacing-tension-arc-mapper/">
+<meta property="og:title" content="Interactive Story Pacing &amp; Tension Arc Mapper"><meta property="og:description" content="Map scene tension, diagnose saggy middles, overlay standard story structures, and export clean beat sheets. Free web tool with offline HTML pack.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/narrative-pacing-tension-arc-mapper/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Interactive Story Pacing & Tension Arc Mapper","description":"Map scene tension, diagnose saggy middles, overlay standard story structures, and export clean beat sheets. Free web tool with offline HTML pack.","url":"https://rttyy.github.io/free-tools/narrative-pacing-tension-arc-mapper/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between the free online version and the paid Gumroad product?","acceptedAnswer":{"@type":"Answer","text":"The free web version includes the complete pacing engine, archetype overlays, and export features. The $9 Gumroad purchase provides a standalone, single-file offline HTML package with lifetime updates, zero dependencies, and no need for an internet connection."}},{"@type":"Question","name":"Where is my manuscript data stored?","acceptedAnswer":{"@type":"Answer","text":"All scene titles, tension ratings, and notes are processed entirely client-side in your local browser storage. No narrative data is ever sent to an external server or used for model training."}},{"@type":"Question","name":"Can I compare two different drafts of the same story?","acceptedAnswer":{"@type":"Answer","text":"Yes. The Dual Draft Scenario Comparator allows you to load two pacing profiles side-by-side, making it easy to confirm whether developmental rewrites actually resolved flat spots in your narrative arc."}},{"@type":"Question","name":"Which export formats are supported?","acceptedAnswer":{"@type":"Answer","text":"You can export your raw scene list and scores to Markdown, CSV, and JSON, or download publication-ready vector charts in SVG format for printing and visual reference binders."}}]}</script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-titles">
+      <h1>Interactive Story Pacing &amp; Narrative Tension Arc Mapper</h1>
+      <p>Analyze narrative rhythm, detect saggy middles, and optimize reader engagement</p>
+    </div>
+    <div class="header-actions">
+      <div class="control-group">
+        <label for="preset-select">Preset:</label>
+        <select id="preset-select">
+          <option value="0">Thriller / Mystery Beat Map</option>
+          <option value="1">Cozy Romance Arc</option>
+          <option value="2">Epic Fantasy Quest</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label for="wpm-input">Read Speed:</label>
+        <input type="number" id="wpm-input" value="250" min="100" max="800" style="width: 70px;"> <span style="font-size:0.75rem">WPM</span>
+      </div>
+      <button class="btn" id="btn-open-cmp" title="Compare Manuscripts">Compare Drafts</button>
+      <button class="btn" id="btn-copy-summary" title="Copy narrative analysis to clipboard">Copy Report</button>
+      <button class="btn" id="btn-print" title="Print Arc Report">Print</button>
+      <div class="control-group" data-feature="story-beat-exporter">
+        <select id="export-format-select" aria-label="Export Format Selection">
+          <option value="csv">CSV Beat Sheet</option>
+          <option value="json">JSON Arc State</option>
+          <option value="svg">High-Res SVG Graphic</option>
+          <option value="markdown">Markdown Beat Sheet</option>
+        </select>
+        <button class="btn btn-primary" id="btn-run-exporter" title="Export Multi-Format Beat Sheet">Export Arc</button>
+      </div>
+      <button class="btn" id="btn-export-csv" title="Export Beat Table to CSV">CSV</button>
+      <button class="btn" id="btn-export-json" title="Export Full Scenario JSON">JSON</button>
+      <button class="btn" id="btn-load-sample" title="Load sample json preset">Load Sample</button>
+      <button class="btn btn-danger" id="btn-reset" title="Reset table data">Reset</button>
+    </div>
+  </header>
+
+  <!-- Summary KPI Bar -->
+  <section class="summary-bar">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Word Count</div>
+      <div class="kpi-value" id="kpi-total-words">0</div>
+      <div class="kpi-sub" id="kpi-scene-count">0 Scenes</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Est. Read Time</div>
+      <div class="kpi-value" id="kpi-total-time">0 min</div>
+      <div class="kpi-sub" id="kpi-wpm-display">@ 250 WPM</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Peak Tension</div>
+      <div class="kpi-value" id="kpi-peak-tension">0.0 / 10</div>
+      <div class="kpi-sub" id="kpi-peak-location">Position: 0%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Structure Alignment</div>
+      <div class="kpi-value" id="kpi-fit-score">0%</div>
+      <div class="kpi-sub" id="kpi-template-name">3-Act Structure</div>
+    </div>
+  </section>
+
+  <!-- Main Grid Layout -->
+  <div class="app-layout">
+
+    <!-- Visualization Panel (Full Width) -->
+    <section class="panel visualizer-span" data-feature="tension-arc-visualizer">
+      <div class="panel-header">
+        <div class="panel-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          Narrative Tension Arc &amp; Pacing Velocity Canvas
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;" data-feature="structure-overlay-engine">
+          <div class="control-group">
+            <label for="structure-select">Overlay Structure:</label>
+            <select id="structure-select">
+              <option value="3act">3-Act Structure</option>
+              <option value="savethecat">Save the Cat! (15 Beats)</option>
+              <option value="herosjourney">Hero's Journey</option>
+              <option value="freytag">Freytag's Pyramid</option>
+              <option value="none">None (Raw Curve Only)</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="xaxis-mode">X-Axis Mode:</label>
+            <select id="xaxis-mode">
+              <option value="words">Manuscript Word %</option>
+              <option value="sequence">Beat Index</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <input type="checkbox" id="chk-fatigue" checked>
+            <label for="chk-fatigue">Fatigue Zones</label>
+          </div>
+          <div class="control-group">
+            <input type="checkbox" id="chk-heatmap" checked>
+            <label for="chk-heatmap">Pacing Heatmap</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas-container" id="svg-container">
+        <svg class="arc-svg" id="tension-svg" viewBox="0 0 900 380" preserveAspectRatio="none">
+          <!-- Rendered via JS -->
+        </svg>
+        <div class="svg-tooltip" id="graph-tooltip"></div>
+      </div>
+    </section>
+
+    <!-- Beat Table Panel -->
+    <section class="panel" data-feature="scene-beat-table">
+      <div class="panel-header">
+        <div class="panel-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+          Interactive Beat Table
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-primary btn-sm" id="btn-add-scene">+ Add Beat</button>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="beat-table" id="beat-table">
+          <thead>
+            <tr>
+              <th style="width: 30px;">#</th>
+              <th>Scene Title</th>
+              <th style="width: 80px;">Words</th>
+              <th style="width: 65px;" title="Emotional Valence (-5 Heartbreak to +5 Joy)">Valence</th>
+              <th style="width: 65px;" title="Conflict Intensity (1 to 10)">Conflict</th>
+              <th style="width: 65px;" title="Narrative Mystery Level (0 to 10)">Mystery</th>
+              <th style="width: 70px;" title="Composite Tension Index (0-10)">Tension</th>
+              <th style="width: 80px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="beat-tbody">
+            <!-- Dynamic rows -->
+          </tbody>
+          <tfoot>
+            <tr style="font-weight: bold; background: rgba(0,0,0,0.1);">
+              <td>Total</td>
+              <td id="foot-scene-count">0 Scenes</td>
+              <td id="foot-total-words">0</td>
+              <td id="foot-avg-valence">0.0</td>
+              <td id="foot-avg-conflict">0.0</td>
+              <td id="foot-avg-mystery">0.0</td>
+              <td id="foot-avg-tension">0.0</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+
+    <!-- Diagnostics Panel -->
+    <section class="panel" data-feature="pacing-diagnostic-feedback">
+      <div class="panel-header">
+        <div class="panel-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          Automated Pacing Diagnostics
+        </div>
+      </div>
+
+      <div id="diagnostics-list">
+        <!-- Dynamic Alert Cards -->
+      </div>
+
+      <div class="actionable-insights">
+        <div class="insights-title">What this means / What to do next</div>
+        <ul class="insights-list" id="insights-list">
+          <!-- Dynamic actionable recommendations -->
+        </ul>
+      </div>
+    </section>
+
+  </div>
+
+  <div id="pacing-comparator-modal" class="panel modal-comparator" data-feature="pacing-scenario-comparator" style="display:none; margin-top:20px;">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+        Dual Draft Pacing Scenario Comparator
+      </div>
+      <button class="btn btn-sm" id="btn-close-cmp">✕ Close</button>
+    </div>
+    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:12px;">
+      <label style="font-size:0.85rem; font-weight:600;">Draft B Scenario:</label>
+      <select id="cmp-draft-b-preset" style="max-width: 100%;">
+        <option value="tight">Draft B: Tight Streamlined Cut (-15% Words, Higher Pace)</option>
+        <option value="expanded">Draft B: Expanded Subplot (+20% Words, Lower Pace)</option>
+        <option value="climax_shift">Draft B: Climax Restructure (Shifted Peak)</option>
+      </select>
+      <button class="btn btn-primary" id="btn-run-cmp">Compare with Draft B</button>
+      <button class="btn btn-sm btn-danger" id="btn-clear-cmp">Clear Comparison</button>
+    </div>
+    <div id="cmp-pro-msg" style="display:none; color:var(--warning); font-size:0.85rem; margin-bottom:10px;"></div>
+    <div id="cmp-results" style="display:none;">
+      <div class="table-wrapper">
+        <table class="beat-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Draft A (Current)</th>
+              <th>Draft B (Comparison)</th>
+              <th>Delta / Shift</th>
+            </tr>
+          </thead>
+          <tbody id="cmp-metrics-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Structural Template Anchor Editor -->
+  <section class="panel" data-feature="custom-structure-builder">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Custom Structural Template Anchor Editor
+      </div>
+    </div>
+    <div class="csb-controls">
+      <div class="control-group">
+        <label for="csb-label">Milestone Label:</label>
+        <input type="text" id="csb-label" value="Subplot Resolution" placeholder="e.g. Subplot Resolution" style="width: 150px;">
+      </div>
+      <div class="control-group">
+        <label for="csb-pos">Position %:</label>
+        <input type="number" id="csb-pos" value="65" min="0" max="100" style="width: 65px;">
+      </div>
+      <div class="control-group">
+        <label for="csb-tension">Target Tension (0-10):</label>
+        <input type="number" id="csb-tension" value="8.0" min="0" max="10" step="0.5" style="width: 65px;">
+      </div>
+      <button class="btn btn-primary btn-sm" id="btn-csb-add">+ Add Milestone Anchor</button>
+      <button class="btn btn-sm btn-danger" id="btn-csb-clear">Clear Custom Template</button>
+    </div>
+    <div class="table-wrapper" style="max-height: 180px;">
+      <table class="beat-table">
+        <thead>
+          <tr>
+            <th>Milestone Label</th>
+            <th>Position %</th>
+            <th>Target Tension (0-10)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="csb-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Medium-Specific Reading Duration & Fatigue Simulator -->
+  <section class="panel" data-feature="reading-time-fatigue-simulator" style="margin-top: 20px;">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Medium-Specific Reading Duration &amp; Fatigue Simulator
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+        <div class="control-group">
+          <label for="sim-medium">Medium:</label>
+          <select id="sim-medium">
+            <option value="150">Audiobook @ 150 wpm</option>
+            <option value="250" selected>Ebook Reader @ 250 wpm</option>
+            <option value="350">Serial Skimmer @ 350 wpm</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label for="sim-break-interval">Break Preference:</label>
+          <select id="sim-break-interval">
+            <option value="30">30 min sessions</option>
+            <option value="45" selected>45 min sessions</option>
+            <option value="60">60 min sessions</option>
+            <option value="90">90 min sessions</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="sim-grid">
+      <div class="sim-card">
+        <div class="kpi-label">Est. Total Duration</div>
+        <div class="sim-val" id="sim-total-duration">0 min</div>
+        <div class="sim-sub" id="sim-session-count">0 sessions</div>
+      </div>
+      <div class="sim-card">
+        <div class="kpi-label">Engagement Risk Score</div>
+        <div class="sim-val" id="sim-risk-score">0 / 100</div>
+        <div class="sim-sub" id="sim-risk-desc">Fatigue evaluation</div>
+      </div>
+      <div class="sim-card" style="grid-column: span 2;">
+        <div class="kpi-label">Suggested Chapter Break Positions</div>
+        <div class="sim-val" id="sim-break-positions" style="font-size:0.85rem; font-weight:normal; font-style:italic;">None</div>
+        <div class="sim-sub">Recommended intermission points to prevent fatigue</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+
+  <div id="toast">Message notification</div>
+
+  <p class="disclaimer">Estimate only - verify with a qualified professional before relying on it.</p>
+
+  <script>
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/bqjvdn";
+
+    // --- PRESETS DATA ---
+    const PRESETS = [
+      {
+        name: "Thriller / Mystery Beat Map",
+        scenes: [
+          { title: "Crime Discovered", words: 2500, valence: -2, conflict: 7, mystery: 8 },
+          { title: "Initial Interrogation", words: 3500, valence: 0, conflict: 4, mystery: 7 },
+          { title: "Cold Trail", words: 4000, valence: -3, conflict: 3, mystery: 6 },
+          { title: "Unexpected Twist", words: 3000, valence: -4, conflict: 8, mystery: 9 },
+          { title: "Midpoint Trap", words: 5000, valence: -5, conflict: 9, mystery: 9 },
+          { title: "Breath of Relief", words: 3000, valence: 2, conflict: 3, mystery: 5 },
+          { title: "Betrayal", words: 4500, valence: -5, conflict: 8, mystery: 8 },
+          { title: "Final Clues Align", words: 3500, valence: 1, conflict: 6, mystery: 4 },
+          { title: "Confrontation Climax", words: 8000, valence: 4, conflict: 10, mystery: 2 },
+          { title: "Epilogue Resolution", words: 500, valence: 3, conflict: 1, mystery: 0 }
+        ]
+      },
+      {
+        name: "Cozy Romance Arc",
+        scenes: [
+          { title: "Meet-Cute Encounter", words: 3000, valence: 3, conflict: 3, mystery: 2 },
+          { title: "Forced Proximity", words: 4000, valence: 1, conflict: 4, mystery: 3 },
+          { title: "Sparking Friction", words: 4500, valence: -2, conflict: 6, mystery: 4 },
+          { title: "Vulnerable Moment", words: 3500, valence: 4, conflict: 3, mystery: 2 },
+          { title: "Romantic Midpoint Peak", words: 5000, valence: 5, conflict: 4, mystery: 1 },
+          { title: "The Misunderstanding / All Hope Lost", words: 4000, valence: -5, conflict: 8, mystery: 3 },
+          { title: "Grand Gesture Reconciliation", words: 6000, valence: 5, conflict: 9, mystery: 1 },
+          { title: "Happily Ever After Epilogue", words: 2000, valence: 5, conflict: 1, mystery: 0 }
+        ]
+      },
+      {
+        name: "Epic Fantasy Quest",
+        scenes: [
+          { title: "Inciting Disaster in Village", words: 5000, valence: -4, conflict: 7, mystery: 6 },
+          { title: "Departure & Lore", words: 8000, valence: 0, conflict: 3, mystery: 7 },
+          { title: "Wilderness Journey", words: 10000, valence: -1, conflict: 3, mystery: 5 },
+          { title: "First Skirmish", words: 7000, valence: -3, conflict: 7, mystery: 6 },
+          { title: "Ancient Ruins Discovery", words: 8000, valence: 2, conflict: 5, mystery: 9 },
+          { title: "Midpoint Siege Battle", words: 12000, valence: -4, conflict: 9, mystery: 8 },
+          { title: "Retreat into Caverns", words: 6000, valence: -3, conflict: 4, mystery: 6 },
+          { title: "Mentor's Sacrifice", words: 7000, valence: -5, conflict: 9, mystery: 7 },
+          { title: "Gathering Allies", words: 8000, valence: 3, conflict: 5, mystery: 4 },
+          { title: "Fortress Assault", words: 12000, valence: -2, conflict: 10, mystery: 8 },
+          { title: "Final Boss Confrontation", words: 8000, valence: 4, conflict: 10, mystery: 3 },
+          { title: "Coronation & New Dawn", words: 4000, valence: 4, conflict: 2, mystery: 1 }
+        ]
+      }
+    ];
+
+    // --- STRUCTURE ARCHETYPES (Normalized keypoints 0-100% position, 0-100% target tension) ---
+    const ARCHETYPES = {
+      "3act": {
+        name: "3-Act Structure",
+        points: [
+          { p: 0, t: 20, name: "Exposition" },
+          { p: 12, t: 50, name: "Inciting Incident" },
+          { p: 25, t: 65, name: "Plot Point 1" },
+          { p: 50, t: 75, name: "Midpoint" },
+          { p: 75, t: 85, name: "Plot Point 2 / Dark Night" },
+          { p: 88, t: 98, name: "Climax" },
+          { p: 100, t: 20, name: "Resolution" }
+        ]
+      },
+      "savethecat": {
+        name: "Save the Cat! (15 Beats)",
+        points: [
+          { p: 0, t: 20, name: "Opening Image" },
+          { p: 5, t: 25, name: "Theme Stated" },
+          { p: 10, t: 30, name: "Setup" },
+          { p: 12, t: 55, name: "Catalyst" },
+          { p: 20, t: 45, name: "Debate" },
+          { p: 25, t: 60, name: "Break into Two" },
+          { p: 30, t: 50, name: "B Story" },
+          { p: 40, t: 65, name: "Fun & Games" },
+          { p: 50, t: 80, name: "Midpoint" },
+          { p: 62, t: 70, name: "Bad Guys Close In" },
+          { p: 75, t: 30, name: "All Hope Is Lost" },
+          { p: 80, t: 25, name: "Dark Night of Soul" },
+          { p: 85, t: 75, name: "Break into Three" },
+          { p: 92, t: 98, name: "Finale / Climax" },
+          { p: 100, t: 20, name: "Final Image" }
+        ]
+      },
+      "herosjourney": {
+        name: "Hero's Journey",
+        points: [
+          { p: 0, t: 20, name: "Ordinary World" },
+          { p: 10, t: 45, name: "Call to Adventure" },
+          { p: 18, t: 35, name: "Refusal of Call" },
+          { p: 25, t: 60, name: "Crossing Threshold" },
+          { p: 40, t: 65, name: "Tests & Allies" },
+          { p: 50, t: 75, name: "Approach Cave" },
+          { p: 55, t: 88, name: "Ordeal Midpoint" },
+          { p: 68, t: 50, name: "Reward" },
+          { p: 78, t: 70, name: "Road Back" },
+          { p: 88, t: 98, name: "Resurrection Climax" },
+          { p: 100, t: 15, name: "Return with Elixir" }
+        ]
+      },
+      "freytag": {
+        name: "Freytag's Pyramid",
+        points: [
+          { p: 0, t: 15, name: "Exposition" },
+          { p: 20, t: 50, name: "Inciting Incident" },
+          { p: 50, t: 98, name: "Climax Peak" },
+          { p: 80, t: 35, name: "Falling Action" },
+          { p: 100, t: 10, name: "Catastrophe / Denouement" }
+        ]
+      }
+    };
+
+    // --- STATE ---
+    let scenes = JSON.parse(JSON.stringify(PRESETS[0].scenes));
+    let readingWPM = 250;
+    let selectedStructure = "3act";
+    let xAxisMode = "words";
+    let showFatigue = true;
+    let showHeatmap = true;
+    let activeRowIndex = -1;
+
+    // --- DOM ELEMENTS ---
+    const presetSelect = document.getElementById("preset-select");
+    const wpmInput = document.getElementById("wpm-input");
+    const structureSelect = document.getElementById("structure-select");
+    const xAxisSelect = document.getElementById("xaxis-mode");
+    const chkFatigue = document.getElementById("chk-fatigue");
+    const chkHeatmap = document.getElementById("chk-heatmap");
+    const tbody = document.getElementById("beat-tbody");
+    const btnAddScene = document.getElementById("btn-add-scene");
+    const btnReset = document.getElementById("btn-reset");
+    const btnCopySummary = document.getElementById("btn-copy-summary");
+    const btnExportCSV = document.getElementById("btn-export-csv");
+    const btnExportJSON = document.getElementById("btn-export-json");
+    const btnLoadSample = document.getElementById("btn-load-sample");
+    const toastEl = document.getElementById("toast");
+
+    // --- INITIALIZATION ---
+    function init() {
+      loadSavedData();
+      bindEvents();
+      renderAll();
+    }
+
+    function bindEvents() {
+      presetSelect.addEventListener("change", (e) => {
+        if (!PRO) {
+          showToast(`Available in the full version <a href="${PRO_LINK}">Upgrade</a>`);
+          return;
+        }
+        const idx = parseInt(e.target.value, 10);
+        if (PRESETS[idx]) {
+          scenes = JSON.parse(JSON.stringify(PRESETS[idx].scenes));
+          saveData();
+          renderAll();
+          showToast(`Loaded preset: ${PRESETS[idx].name}`);
+        }
+      });
+
+      wpmInput.addEventListener("input", (e) => {
+        let val = parseInt(e.target.value, 10);
+        if (isNaN(val) || val < 50) val = 50;
+        readingWPM = val;
+        saveData();
+        renderAll();
+      });
+
+      const btnPrint = document.getElementById("btn-print");
+      if (btnPrint) {
+        btnPrint.addEventListener("click", () => {
+          checkPro("Print", () => {
+            window.print();
+          });
+        });
+      }
+
+      structureSelect.addEventListener("change", (e) => {
+        selectedStructure = e.target.value;
+        renderCanvas();
+        renderSummaryKPIs();
+        renderDiagnostics();
+      });
+
+      xAxisSelect.addEventListener("change", (e) => {
+        xAxisMode = e.target.value;
+        renderCanvas();
+      });
+
+      chkFatigue.addEventListener("change", (e) => {
+        showFatigue = e.target.checked;
+        renderCanvas();
+      });
+
+      chkHeatmap.addEventListener("change", (e) => {
+        showHeatmap = e.target.checked;
+        renderCanvas();
+      });
+
+      btnAddScene.addEventListener("click", () => {
+        scenes.push({
+          title: `New Scene ${scenes.length + 1}`,
+          words: 2500,
+          valence: 0,
+          conflict: 5,
+          mystery: 5
+        });
+        saveData();
+        renderAll();
+      });
+
+      btnReset.addEventListener("click", () => {
+        if (confirm("Reset beat map to default preset?")) {
+          scenes = JSON.parse(JSON.stringify(PRESETS[0].scenes));
+          presetSelect.value = "0";
+          saveData();
+          renderAll();
+          showToast("Reset to default Thriller map");
+        }
+      });
+
+      btnCopySummary.addEventListener("click", copySummaryReport);
+      btnExportCSV.addEventListener("click", exportCSV);
+      btnExportJSON.addEventListener("click", exportJSON);
+      btnLoadSample.addEventListener("click", loadSamplePrompt);
+    }
+
+    // --- CALCULATION ENGINE ---
+    // Composite Tension Score (0-10 index & 0-100 scale)
+    // Formula from spec: Index = 0.5 * Conflict + 0.3 * Mystery + 0.2 * |Valence|
+    function calculateBeatTension(beat) {
+      if (!beat) return { raw: 0, tension10: 0, tension100: 0 };
+      const conflict = Math.min(10, Math.max(0, parseFloat(beat.conflict) || 0));
+      const mystery = Math.min(10, Math.max(0, parseFloat(beat.mystery) || 0));
+      const val = Math.min(5, Math.max(-5, parseFloat(beat.valence) || 0));
+      const absValence = Math.abs(val);
+
+      const rawIndex = (0.5 * conflict) + (0.3 * mystery) + (0.2 * absValence);
+      const tension10 = Math.min(10, Math.max(0, (rawIndex / 9.0) * 10));
+      const tension100 = (tension10 / 10) * 100;
+
+      return {
+        raw: rawIndex,
+        tension10: tension10,
+        tension100: tension100
+      };
+    }
+
+    function getProcessedData() {
+      let totalWords = 0;
+      const validScenes = (scenes || []).map((s, idx) => {
+        if (!s || typeof s !== 'object') s = {};
+        const words = Math.max(0, parseInt(s.words, 10) || 0);
+        const valence = Math.min(5, Math.max(-5, parseFloat(s.valence) || 0));
+        const conflict = Math.min(10, Math.max(0, parseFloat(s.conflict) || 0));
+        const mystery = Math.min(10, Math.max(0, parseFloat(s.mystery) || 0));
+        const title = s.title !== undefined && s.title !== null ? String(s.title) : `Beat ${idx + 1}`;
+        return { title, words, valence, conflict, mystery };
+      });
+
+      const processed = validScenes.map((s, idx) => {
+        totalWords += s.words;
+        const tensionObj = calculateBeatTension(s);
+        const readSpeed = readingWPM > 0 ? readingWPM : 250;
+        return {
+          ...s,
+          cumWords: totalWords,
+          tension10: tensionObj.tension10,
+          tension100: tensionObj.tension100,
+          readTimeMin: (s.words / readSpeed).toFixed(1),
+          index: idx
+        };
+      });
+
+      let prevTension = processed.length > 0 ? processed[0].tension10 : 0;
+      const count = processed.length;
+      processed.forEach((s, idx) => {
+        s.midWords = s.cumWords - (s.words / 2);
+        s.posPct = totalWords > 0 ? (s.midWords / totalWords) * 100 : (count > 1 ? (idx / (count - 1)) * 100 : 50);
+        
+        const deltaTension = Math.abs(s.tension10 - prevTension);
+        const wK = s.words / 1000;
+        s.velocity = wK > 0 ? (deltaTension / wK).toFixed(2) : "0.00";
+        prevTension = s.tension10;
+      });
+
+      const readSpeed = readingWPM > 0 ? readingWPM : 250;
+      return {
+        scenes: processed,
+        totalWords,
+        totalReadTimeMin: totalWords > 0 ? Math.round(totalWords / readSpeed) : 0
+      };
+    }
+
+    // Correlation with Structure Template
+    function calculateStructuralFit(processedScenes) {
+      if (!selectedStructure || selectedStructure === "none" || !processedScenes || processedScenes.length === 0) return 100;
+      const template = ARCHETYPES[selectedStructure];
+      if (!template || !template.points || template.points.length === 0) return 100;
+
+      // Helper to sample target template tension at given position % (0-100)
+      function getTargetTensionAt(posPct) {
+        const pts = template.points;
+        if (!pts || pts.length === 0) return 50;
+        if (pts.length === 1) return pts[0].t;
+        if (posPct <= pts[0].p) return pts[0].t;
+        if (posPct >= pts[pts.length - 1].p) return pts[pts.length - 1].t;
+        for (let i = 0; i < pts.length - 1; i++) {
+          if (posPct >= pts[i].p && posPct <= pts[i + 1].p) {
+            const denom = pts[i + 1].p - pts[i].p;
+            const ratio = denom === 0 ? 0 : (posPct - pts[i].p) / denom;
+            return pts[i].t + ratio * (pts[i + 1].t - pts[i].t);
+          }
+        }
+        return 50;
+      }
+
+      let totalErr = 0;
+      processedScenes.forEach((s) => {
+        const target = getTargetTensionAt(s.posPct);
+        const err = Math.abs(s.tension100 - target);
+        totalErr += err;
+      });
+
+      const mae = totalErr / processedScenes.length;
+      return Math.max(0, Math.min(100, Math.round(100 - mae)));
+    }
+
+    // --- RENDER ALL ---
+    function renderAll() {
+      const data = getProcessedData();
+      renderTable(data);
+      renderSummaryKPIs(data);
+      renderCanvas(data);
+      renderDiagnostics(data);
+      updateFatigueSimulator(data);
+    }
+
+    // --- RENDER TABLE ---
+    function renderTable(dataObj) {
+      const data = dataObj || getProcessedData();
+      tbody.innerHTML = "";
+
+      data.scenes.forEach((s, idx) => {
+        const tr = document.createElement("tr");
+        if (idx === activeRowIndex) tr.classList.add("selected-row");
+
+        // Color badge for composite tension score
+        let scoreBg = "var(--primary)";
+        if (s.tension10 >= 7.5) scoreBg = "var(--danger)";
+        else if (s.tension10 <= 3.5) scoreBg = "var(--accent)";
+        else scoreBg = "var(--warning)";
+
+        tr.innerHTML = `
+          <td class="drag-handle" title="Reorder">⋮⋮ ${idx + 1}</td>
+          <td class="input-cell"><input type="text" value="${escapeHtml(s.title)}" data-idx="${idx}" data-field="title"></td>
+          <td class="input-cell"><input type="number" value="${s.words}" min="100" step="100" data-idx="${idx}" data-field="words"></td>
+          <td class="input-cell"><input type="number" value="${s.valence}" min="-5" max="5" data-idx="${idx}" data-field="valence"></td>
+          <td class="input-cell"><input type="number" value="${s.conflict}" min="1" max="10" data-idx="${idx}" data-field="conflict"></td>
+          <td class="input-cell"><input type="number" value="${s.mystery}" min="0" max="10" data-idx="${idx}" data-field="mystery"></td>
+          <td>
+            <span class="score-badge" style="background-color: ${scoreBg}; color: #fff;">
+              ${s.tension10.toFixed(1)}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-move-up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''}>▲</button>
+            <button class="btn btn-sm btn-move-down" data-idx="${idx}" ${idx === data.scenes.length - 1 ? 'disabled' : ''}>▼</button>
+            <button class="btn btn-sm btn-danger btn-del-scene" data-idx="${idx}">✕</button>
+          </td>
+        `;
+
+        tr.addEventListener("mouseenter", () => highlightNode(idx));
+        tr.addEventListener("mouseleave", () => clearHighlight());
+
+        tbody.appendChild(tr);
+      });
+
+      // Bind input events in table without destroying focused input element
+      tbody.querySelectorAll("input").forEach((inp) => {
+        inp.addEventListener("input", (e) => {
+          const idx = parseInt(e.target.dataset.idx, 10);
+          const field = e.target.dataset.field;
+          if (isNaN(idx) || !field) return;
+          if (!scenes[idx]) {
+            scenes[idx] = { title: `Beat ${idx + 1}`, words: 0, valence: 0, conflict: 0, mystery: 0 };
+          }
+          let val = e.target.value;
+          if (field === "title") {
+            scenes[idx].title = val;
+          } else {
+            scenes[idx][field] = val === "" ? 0 : (parseFloat(val) || 0);
+          }
+          saveData();
+
+          const data = getProcessedData();
+          const row = tbody.children[idx];
+          if (row && data.scenes[idx]) {
+            const badge = row.querySelector(".score-badge");
+            if (badge) {
+              const s = data.scenes[idx];
+              badge.textContent = s.tension10.toFixed(1);
+              let scoreBg = "var(--primary)";
+              if (s.tension10 >= 7.5) scoreBg = "var(--danger)";
+              else if (s.tension10 <= 3.5) scoreBg = "var(--accent)";
+              else scoreBg = "var(--warning)";
+              badge.style.backgroundColor = scoreBg;
+            }
+          }
+
+          renderSummaryKPIs(data);
+          renderCanvas(data);
+          renderDiagnostics(data);
+          renderTableFooter(data);
+        });
+      });
+
+      tbody.querySelectorAll(".btn-move-up").forEach((b) => {
+        b.addEventListener("click", (e) => {
+          const idx = parseInt(e.currentTarget.dataset.idx, 10);
+          if (idx > 0) {
+            const temp = scenes[idx];
+            scenes[idx] = scenes[idx - 1];
+            scenes[idx - 1] = temp;
+            saveData();
+            renderAll();
+          }
+        });
+      });
+
+      tbody.querySelectorAll(".btn-move-down").forEach((b) => {
+        b.addEventListener("click", (e) => {
+          const idx = parseInt(e.currentTarget.dataset.idx, 10);
+          if (idx < scenes.length - 1) {
+            const temp = scenes[idx];
+            scenes[idx] = scenes[idx + 1];
+            scenes[idx + 1] = temp;
+            saveData();
+            renderAll();
+          }
+        });
+      });
+
+      tbody.querySelectorAll(".btn-del-scene").forEach((b) => {
+        b.addEventListener("click", (e) => {
+          const idx = parseInt(e.currentTarget.dataset.idx, 10);
+          if (scenes.length <= 1) {
+            showToast("Cannot delete the only scene.");
+            return;
+          }
+          scenes.splice(idx, 1);
+          saveData();
+          renderAll();
+        });
+      });
+
+      renderTableFooter(data);
+    }
+
+    function renderTableFooter(dataObj) {
+      const data = dataObj || getProcessedData();
+      if (data.scenes.length === 0) return;
+
+      document.getElementById("foot-scene-count").textContent = `${data.scenes.length} Scenes`;
+      document.getElementById("foot-total-words").textContent = data.totalWords.toLocaleString();
+
+      const avgValence = (data.scenes.reduce((acc, s) => acc + s.valence, 0) / data.scenes.length).toFixed(1);
+      const avgConflict = (data.scenes.reduce((acc, s) => acc + s.conflict, 0) / data.scenes.length).toFixed(1);
+      const avgMystery = (data.scenes.reduce((acc, s) => acc + s.mystery, 0) / data.scenes.length).toFixed(1);
+      const avgTension = (data.scenes.reduce((acc, s) => acc + s.tension10, 0) / data.scenes.length).toFixed(1);
+
+      document.getElementById("foot-avg-valence").textContent = avgValence;
+      document.getElementById("foot-avg-conflict").textContent = avgConflict;
+      document.getElementById("foot-avg-mystery").textContent = avgMystery;
+      document.getElementById("foot-avg-tension").textContent = avgTension;
+    }
+
+    // --- RENDER SUMMARY KPIS ---
+    function renderSummaryKPIs(dataObj) {
+      const data = dataObj || getProcessedData();
+      document.getElementById("kpi-total-words").textContent = data.totalWords.toLocaleString();
+      document.getElementById("kpi-scene-count").textContent = `${data.scenes.length} Scenes`;
+
+      const hrs = Math.floor(data.totalReadTimeMin / 60);
+      const mins = data.totalReadTimeMin % 60;
+      const timeStr = hrs > 0 ? `${hrs}h ${mins}m` : `${mins} min`;
+      document.getElementById("kpi-total-time").textContent = timeStr;
+      document.getElementById("kpi-wpm-display").textContent = `@ ${readingWPM} WPM`;
+
+      // Find peak tension
+      let peakT = 0;
+      let peakLoc = 0;
+      data.scenes.forEach((s) => {
+        if (s.tension10 > peakT) {
+          peakT = s.tension10;
+          peakLoc = Math.round(s.posPct);
+        }
+      });
+      document.getElementById("kpi-peak-tension").textContent = `${peakT.toFixed(1)} / 10`;
+      document.getElementById("kpi-peak-location").textContent = `Position: ${peakLoc}% mark`;
+
+      // Structural fit score
+      const fitScore = calculateStructuralFit(data.scenes);
+      document.getElementById("kpi-fit-score").textContent = selectedStructure === "none" ? "N/A" : `${fitScore}%`;
+      document.getElementById("kpi-template-name").textContent = selectedStructure === "none" ? "No Template" : (ARCHETYPES[selectedStructure]?.name || "");
+    }
+
+    // --- RENDER CANVAS (SVG Visualizer) ---
+    function renderCanvas(dataObj) {
+      const data = dataObj || getProcessedData();
+      const svg = document.getElementById("tension-svg");
+      svg.innerHTML = "";
+
+      const W = 900;
+      const H = 380;
+      const padL = 50;
+      const padR = 30;
+      const padT = 40;
+      const padB = 40;
+      const graphW = W - padL - padR;
+      const graphH = H - padT - padB;
+
+      // Coordinate transformers
+      function getX(scene) {
+        if (xAxisMode === "sequence" || data.totalWords === 0) {
+          if (data.scenes.length === 1) return padL + graphW / 2;
+          return padL + (scene.index / (data.scenes.length - 1)) * graphW;
+        } else {
+          return padL + (scene.posPct / 100) * graphW;
+        }
+      }
+
+      function getY(tension100Val) {
+        return (padT + graphH) - (tension100Val / 100) * graphH;
+      }
+
+      // 1. Gridlines & Axes
+      let gridHTML = `<g class="grid-lines" stroke="var(--card-border)" stroke-width="1" stroke-dasharray="3,3">`;
+      [0, 25, 50, 75, 100].forEach((level) => {
+        const y = getY(level);
+        gridHTML += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" />`;
+        gridHTML += `<text x="${padL - 8}" y="${y + 4}" fill="var(--text-muted)" font-size="10" text-anchor="end">${level / 10}</text>`;
+      });
+      gridHTML += `</g>`;
+      svg.insertAdjacentHTML("beforeend", gridHTML);
+
+      if (data.scenes.length === 0) return;
+
+      // 2. Heatmap Overlay
+      if (showHeatmap) {
+        let heatmapHTML = `<g class="heatmap-overlay">`;
+        data.scenes.forEach((s) => {
+          let startX, endX;
+          if (xAxisMode === "sequence" || data.totalWords === 0) {
+            const step = graphW / Math.max(1, data.scenes.length);
+            startX = padL + s.index * step;
+            endX = startX + step;
+          } else {
+            const startPct = ((s.cumWords - s.words) / data.totalWords) * 100;
+            const endPct = (s.cumWords / data.totalWords) * 100;
+            startX = padL + (startPct / 100) * graphW;
+            endX = padL + (endPct / 100) * graphW;
+          }
+
+          // Color interpolator (Slate blue to Crimson)
+          const opacity = 0.08 + (s.tension100 / 100) * 0.25;
+          const hue = 220 - (s.tension100 / 100) * 220; // 220 (Blue) to 0 (Red)
+          heatmapHTML += `<rect x="${startX}" y="${padT}" width="${Math.max(1, endX - startX)}" height="${graphH}" fill="hsla(${hue}, 80%, 50%, ${opacity})" />`;
+        });
+        heatmapHTML += `</g>`;
+        svg.insertAdjacentHTML("beforeend", heatmapHTML);
+      }
+
+      // 3. Reader Fatigue Risk Zones Highlight (>15,000 words high tension)
+      if (showFatigue && xAxisMode === "words" && data.totalWords > 0) {
+        let fatigueHTML = `<g class="fatigue-zones">`;
+        let continuousWords = 0;
+        let zoneStartPct = 0;
+
+        data.scenes.forEach((s, i) => {
+          if (s.conflict >= 7 || s.tension10 >= 7.0) {
+            if (continuousWords === 0) {
+              zoneStartPct = ((s.cumWords - s.words) / data.totalWords) * 100;
+            }
+            continuousWords += s.words;
+          } else {
+            if (continuousWords >= 15000 && i > 0 && data.scenes[i - 1]) {
+              const zoneEndPct = (data.scenes[i - 1].cumWords / data.totalWords) * 100;
+              const x1 = padL + (zoneStartPct / 100) * graphW;
+              const x2 = padL + (zoneEndPct / 100) * graphW;
+              fatigueHTML += `<rect x="${x1}" y="${padT}" width="${Math.max(1, x2 - x1)}" height="${graphH}" fill="rgba(239, 68, 68, 0.2)" stroke="var(--danger)" stroke-dasharray="4,4" />`;
+              fatigueHTML += `<text x="${(x1 + x2) / 2}" y="${padT + 16}" fill="var(--danger)" font-size="11" font-weight="bold" text-anchor="middle">FATIGUE ZONE (${continuousWords.toLocaleString()}w)</text>`;
+            }
+            continuousWords = 0;
+          }
+        });
+
+        // Check if last zone reaches end
+        if (continuousWords >= 15000) {
+          const zoneEndPct = 100;
+          const x1 = padL + (zoneStartPct / 100) * graphW;
+          const x2 = padL + (zoneEndPct / 100) * graphW;
+          fatigueHTML += `<rect x="${x1}" y="${padT}" width="${Math.max(1, x2 - x1)}" height="${graphH}" fill="rgba(239, 68, 68, 0.2)" stroke="var(--danger)" stroke-dasharray="4,4" />`;
+          fatigueHTML += `<text x="${(x1 + x2) / 2}" y="${padT + 16}" fill="var(--danger)" font-size="11" font-weight="bold" text-anchor="middle">FATIGUE ZONE (${continuousWords.toLocaleString()}w)</text>`;
+        }
+
+        fatigueHTML += `</g>`;
+        svg.insertAdjacentHTML("beforeend", fatigueHTML);
+      }
+
+      // 4. Structure Overlay Template Line & Markers
+      if (selectedStructure !== "none" && ARCHETYPES[selectedStructure]) {
+        const archetype = ARCHETYPES[selectedStructure];
+        if (archetype.points && archetype.points.length > 0) {
+          let tmplPathD = "";
+          let overlayHTML = `<g class="archetype-overlay">`;
+
+          archetype.points.forEach((pt, i) => {
+            const x = padL + (pt.p / 100) * graphW;
+            const y = getY(pt.t);
+            tmplPathD += (i === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
+
+            // Dotted milestone lines, anchor node & labels
+            overlayHTML += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${padT + graphH}" stroke="var(--accent)" stroke-opacity="0.4" stroke-dasharray="2,2" />`;
+            overlayHTML += `<circle cx="${x}" cy="${y}" r="4" fill="var(--accent)" />`;
+            overlayHTML += `<text x="${x}" y="${padT - 12}" fill="var(--accent)" font-size="9" font-weight="600" text-anchor="middle">${escapeHtml(pt.name || '')}</text>`;
+          });
+
+          overlayHTML += `<path d="${tmplPathD}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6,4" opacity="0.75" />`;
+          overlayHTML += `</g>`;
+          svg.insertAdjacentHTML("beforeend", overlayHTML);
+        }
+      }
+
+      // 5. Composite Tension Curve Path
+      const points = data.scenes.map((s) => ({ x: getX(s), y: getY(s.tension100) }));
+      let curveD = "";
+
+      if (points.length === 1) {
+        curveD = `M ${padL} ${points[0].y} L ${W - padR} ${points[0].y}`;
+      } else {
+        // Smooth Bezier Curve Path
+        curveD = `M ${points[0].x} ${points[0].y}`;
+        for (let i = 0; i < points.length - 1; i++) {
+          const p0 = points[i];
+          const p1 = points[i + 1];
+          const cpX1 = p0.x + (p1.x - p0.x) / 2;
+          const cpY1 = p0.y;
+          const cpX2 = p0.x + (p1.x - p0.x) / 2;
+          const cpY2 = p1.y;
+          curveD += ` C ${cpX1} ${cpY1}, ${cpX2} ${cpY2}, ${p1.x} ${p1.y}`;
+        }
+      }
+
+      // Area fill beneath curve
+      const areaD = `${curveD} L ${points[points.length - 1].x} ${padT + graphH} L ${points[0].x} ${padT + graphH} Z`;
+      svg.insertAdjacentHTML("beforeend", `<path d="${areaD}" fill="url(#curve-gradient)" opacity="0.25" />`);
+
+      // SVG Gradient Definition
+      const defs = `
+        <defs>
+          <linearGradient id="curve-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--primary)" />
+            <stop offset="100%" stop-color="var(--primary)" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+      `;
+      svg.insertAdjacentHTML("afterbegin", defs);
+
+      // Curve Stroke
+      svg.insertAdjacentHTML("beforeend", `<path d="${curveD}" fill="none" stroke="var(--primary)" stroke-width="3.5" stroke-linecap="round" />`);
+
+      if (cmpActive && draftBData && draftBData.scenes.length > 0) {
+        const ptsB = draftBData.scenes.map(s => ({
+          x: xAxisMode === "sequence" || draftBData.totalWords === 0
+            ? (draftBData.scenes.length === 1 ? padL + graphW / 2 : padL + (s.index / (draftBData.scenes.length - 1)) * graphW)
+            : padL + (s.posPct / 100) * graphW,
+          y: (padT + graphH) - (s.tension100 / 100) * graphH
+        }));
+        let curveDB = `M ${ptsB[0].x} ${ptsB[0].y}`;
+        for (let i = 0; i < ptsB.length - 1; i++) {
+          const p0 = ptsB[i], p1 = ptsB[i + 1];
+          curveDB += ` C ${p0.x + (p1.x - p0.x) / 2} ${p0.y}, ${p0.x + (p1.x - p0.x) / 2} ${p1.y}, ${p1.x} ${p1.y}`;
+        }
+        svg.insertAdjacentHTML("beforeend", `<path d="${curveDB}" fill="none" stroke="var(--warning)" stroke-width="3" stroke-dasharray="6,3" opacity="0.8" />`);
+      }
+
+      // 6. Interactive Data Circles
+      let nodesHTML = `<g class="data-nodes">`;
+      data.scenes.forEach((s) => {
+        const x = getX(s);
+        const y = getY(s.tension100);
+        const isSelected = s.index === activeRowIndex;
+        const radius = isSelected ? 8 : 5.5;
+        const strokeW = isSelected ? 3 : 2;
+
+        nodesHTML += `
+          <circle cx="${x}" cy="${y}" r="${radius}" 
+                  fill="${isSelected ? 'var(--highlight)' : 'var(--card-bg)'}" 
+                  stroke="${isSelected ? '#fff' : 'var(--primary)'}" 
+                  stroke-width="${strokeW}" 
+                  class="node-circle" 
+                  data-idx="${s.index}" 
+                  style="cursor: pointer; transition: all 0.15s ease;" />
+        `;
+      });
+      nodesHTML += `</g>`;
+      svg.insertAdjacentHTML("beforeend", nodesHTML);
+
+      // Bind node interactions
+      const tooltip = document.getElementById("graph-tooltip");
+      const container = document.getElementById("svg-container");
+
+      svg.querySelectorAll(".node-circle").forEach((circle) => {
+        circle.addEventListener("mouseenter", (e) => {
+          const idx = parseInt(e.target.dataset.idx, 10);
+          const scene = data.scenes[idx];
+          highlightNode(idx);
+
+          // Position Tooltip
+          const rect = container.getBoundingClientRect();
+          const circleX = parseFloat(e.target.getAttribute("cx"));
+          const circleY = parseFloat(e.target.getAttribute("cy"));
+
+          tooltip.innerHTML = `
+            <div class="tooltip-title">Beat ${idx + 1}: ${escapeHtml(scene.title)}</div>
+            <div>Word Count: <b>${scene.words.toLocaleString()}</b> (${scene.readTimeMin} min)</div>
+            <div>Pos %: <b>${Math.round(scene.posPct)}%</b></div>
+            <div>Conflict: <b>${scene.conflict}/10</b> | Mystery: <b>${scene.mystery}/10</b> | Valence: <b>${scene.valence}</b></div>
+            <div>Composite Tension Score: <b>${scene.tension10.toFixed(1)} / 10</b></div>
+            <div>Pacing Velocity: <b>${scene.velocity}</b> ΔT/1kW</div>
+          `;
+
+          tooltip.style.left = `${Math.min(rect.width - 200, Math.max(10, (circleX / W) * rect.width - 90))}px`;
+          tooltip.style.top = `${Math.max(10, (circleY / H) * rect.height - 110)}px`;
+          tooltip.classList.add("visible");
+        });
+
+        circle.addEventListener("mouseleave", () => {
+          tooltip.classList.remove("visible");
+          clearHighlight();
+        });
+
+        circle.addEventListener("click", (e) => {
+          const idx = parseInt(e.target.dataset.idx, 10);
+          activeRowIndex = idx;
+          renderTable();
+          const tr = tbody.children[idx];
+          if (tr) tr.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+      });
+    }
+
+    function highlightNode(idx) {
+      activeRowIndex = idx;
+      const circles = document.querySelectorAll(".node-circle");
+      circles.forEach((c) => {
+        if (parseInt(c.dataset.idx, 10) === idx) {
+          c.setAttribute("r", "8");
+          c.setAttribute("fill", "var(--highlight)");
+        }
+      });
+    }
+
+    function clearHighlight() {
+      activeRowIndex = -1;
+      const circles = document.querySelectorAll(".node-circle");
+      circles.forEach((c) => {
+        c.setAttribute("r", "5.5");
+        c.setAttribute("fill", "var(--card-bg)");
+      });
+    }
+
+    // --- AUTOMATED PACING DIAGNOSTICS & FEEDBACK ---
+    function renderDiagnostics(dataObj) {
+      const data = dataObj || getProcessedData();
+      const listEl = document.getElementById("diagnostics-list");
+      const insightsEl = document.getElementById("insights-list");
+      listEl.innerHTML = "";
+      insightsEl.innerHTML = "";
+
+      if (!data.scenes || data.scenes.length === 0) {
+        listEl.innerHTML = `
+          <div class="alert-card info">
+            <div class="alert-title">No Scenes</div>
+            <div class="alert-desc">Add scenes to start analyzing narrative pacing and tension.</div>
+          </div>
+        `;
+        return;
+      }
+
+      const alerts = [];
+      const insights = [];
+
+      // 1. Low-Conflict Slump (>3 consecutive low intensity scenes C <= 3)
+      let lowConflictCount = 0;
+      let slumpWords = 0;
+      let slumpStartIdx = -1;
+
+      data.scenes.forEach((s, idx) => {
+        if (s.conflict <= 3) {
+          if (lowConflictCount === 0) slumpStartIdx = idx;
+          lowConflictCount++;
+          slumpWords += s.words;
+        } else {
+          if (lowConflictCount >= 3) {
+            alerts.push({
+              type: "warning",
+              title: "Low-Conflict Slump Detected",
+              desc: `Scenes ${slumpStartIdx + 1} to ${idx} (${slumpWords.toLocaleString()} words) have continuous low conflict (Intensity ≤ 3).`,
+              action: "Inject immediate narrative obstacles, stakes, or active character resistance in this section."
+            });
+          }
+          lowConflictCount = 0;
+          slumpWords = 0;
+        }
+      });
+      if (lowConflictCount >= 3) {
+        alerts.push({
+          type: "warning",
+          title: "Low-Conflict Slump / Saggy Middle",
+          desc: `Scenes ${slumpStartIdx + 1} to ${data.scenes.length} (${slumpWords.toLocaleString()} consecutive words) have continuous low conflict.`,
+          action: "Introduce a subplot twist, active antagonist pressure, or external deadline."
+        });
+      }
+
+      // 2. Reader Fatigue Zone (>15,000 continuous high tension words)
+      let highTensionWords = 0;
+      let fatigueStartIdx = -1;
+      data.scenes.forEach((s, idx) => {
+        if (s.conflict >= 7 || s.tension10 >= 7.0) {
+          if (highTensionWords === 0) fatigueStartIdx = idx;
+          highTensionWords += s.words;
+        } else {
+          if (highTensionWords >= 15000) {
+            alerts.push({
+              type: "danger",
+              title: "Reader Fatigue Risk Zone",
+              desc: `Scenes ${fatigueStartIdx + 1} to ${idx} span ${highTensionWords.toLocaleString()} words without a narrative breather or tension dip.`,
+              action: "Add a breather beat or processing scene to allow readers to assimilate emotional impact."
+            });
+          }
+          highTensionWords = 0;
+        }
+      });
+      if (highTensionWords >= 15000) {
+        alerts.push({
+          type: "danger",
+          title: "Reader Fatigue Risk Zone",
+          desc: `Scenes ${fatigueStartIdx + 1} to ${data.scenes.length} span ${highTensionWords.toLocaleString()} continuous words of high intensity.`,
+          action: "Introduce momentary quiet reflection or humor before the final climax peak."
+        });
+      }
+
+      // 3. Saggy Middle (Plot position 35% to 65% average tension < 4.5)
+      const middleScenes = data.scenes.filter((s) => s.posPct >= 35 && s.posPct <= 65);
+      if (middleScenes.length > 0) {
+        const avgMidTension = middleScenes.reduce((acc, s) => acc + s.tension10, 0) / middleScenes.length;
+        if (avgMidTension < 4.5) {
+          alerts.push({
+            type: "warning",
+            title: "Saggy Middle Warning",
+            desc: `Midpoint narrative tension averages only ${avgMidTension.toFixed(1)}/10 between 35% and 65% plot position.`,
+            action: "Shift your Midpoint twist earlier or elevate stakes in middle chapters."
+          });
+        }
+      }
+
+      // 4. Climax Location & Unearned Climax
+      let maxTensionScene = data.scenes[0];
+      data.scenes.forEach((s) => {
+        if (s.tension10 > maxTensionScene.tension10) maxTensionScene = s;
+      });
+
+      if (maxTensionScene.posPct < 60) {
+        alerts.push({
+          type: "warning",
+          title: "Early Peak Tension Location",
+          desc: `Highest tension occurs early at Scene ${maxTensionScene.index + 1} (${Math.round(maxTensionScene.posPct)}% plot position).`,
+          action: "Ensure your main climax exceeds or equals this earlier peak to avoid anticlimax."
+        });
+      }
+
+      // 5. Abrupt Resolution (Ending at peak tension without cool down)
+      const lastScene = data.scenes[data.scenes.length - 1];
+      if (data.scenes.length > 1 && lastScene.conflict >= 6 && lastScene.tension10 >= 6.5) {
+        alerts.push({
+          type: "info",
+          title: "Abrupt Resolution Alert",
+          desc: `The manuscript ends on Scene ${data.scenes.length} with high conflict (${lastScene.conflict}/10) and score ${lastScene.tension10.toFixed(1)}.`,
+          action: "If this is not a cliffhanger, consider adding an epilogue scene to resolve emotional arcs."
+        });
+      }
+
+      // Render Alert Cards
+      if (alerts.length === 0) {
+        listEl.innerHTML = `
+          <div class="alert-card success">
+            <div class="alert-title">Optimal Pacing &amp; Balance</div>
+            <div class="alert-desc">No severe pacing slumps or fatigue zones detected! Narrative flow shows rhythmic tension variations.</div>
+          </div>
+        `;
+      } else {
+        alerts.forEach((alt) => {
+          const card = document.createElement("div");
+          card.className = `alert-card ${alt.type}`;
+          card.innerHTML = `
+            <div class="alert-title"><span>${escapeHtml(alt.title)}</span></div>
+            <div class="alert-desc">${escapeHtml(alt.desc)}</div>
+            <div class="alert-action">💡 ${escapeHtml(alt.action)}</div>
+          `;
+          listEl.appendChild(card);
+        });
+      }
+
+      // Render Dynamic "What this means / What to do next"
+      const fitScore = calculateStructuralFit(data.scenes);
+      insights.push(`Manuscript length is <b>${data.totalWords.toLocaleString()} words</b> (~${data.totalReadTimeMin} minutes read time at ${readingWPM} WPM).`);
+      
+      if (selectedStructure !== "none") {
+        insights.push(`Structural Alignment fit score with <b>${ARCHETYPES[selectedStructure].name}</b> is <b>${fitScore}%</b>.`);
+      }
+
+      insights.push(`Peak narrative intensity occurs at <b>Scene ${maxTensionScene.index + 1} (${escapeHtml(maxTensionScene.title)})</b> at the <b>${Math.round(maxTensionScene.posPct)}%</b> mark.`);
+
+      if (alerts.length > 0) {
+        insights.push(`Priority focus: Resolve the <b>${alerts[0].title}</b> around Scene ${alerts[0].desc.match(/\d+/)?.[0] || 'midpoint'}.`);
+      } else {
+        insights.push(`Pacing is well-balanced. Next step: Fine-tune word counts per scene to polish chapter reading flow.`);
+      }
+
+      insights.forEach((ins) => {
+        const li = document.createElement("li");
+        li.innerHTML = ins;
+        insightsEl.appendChild(li);
+      });
+    }
+
+    // --- PRO & UTILITY ACTIONS ---
+    function checkPro(actionName, callback) {
+      if (!PRO) {
+        showToast(`Available in the full version <a href="${PRO_LINK}">Upgrade</a>`);
+        return;
+      }
+      callback();
+    }
+
+    function executeBeatExporter(format) {
+      checkPro("Export Arc", () => {
+        const data = getProcessedData();
+        if (format === "csv") {
+          let csv = "Scene Index,Chapter Title,Words,Valence,Conflict,Mystery,Composite Tension,Act\n";
+          data.scenes.forEach((s, idx) => {
+            const act = s.posPct <= 25 ? "Act 1" : s.posPct <= 75 ? "Act 2" : "Act 3";
+            csv += `${idx + 1},"${s.title.replace(/"/g, '""')}",${s.words},${s.valence},${s.conflict},${s.mystery},${s.tension10.toFixed(2)},${act}\n`;
+          });
+          downloadFile(csv, "text/csv", "story_pacing_arc.csv");
+          showToast("CSV Exported successfully");
+        } else if (format === "json") {
+          const exportData = { version: 1, readingWPM, selectedStructure, totalWords: data.totalWords, scenes: data.scenes };
+          downloadFile(JSON.stringify(exportData, null, 2), "application/json", "story_pacing_arc.json");
+          showToast("JSON Exported successfully");
+        } else if (format === "svg") {
+          const svgEl = document.getElementById("tension-svg");
+          const clone = svgEl.cloneNode(true);
+          clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+          clone.setAttribute("width", "1800");
+          clone.setAttribute("height", "760");
+          clone.setAttribute("style", "background:#0f172a; color:#f8fafc; font-family:sans-serif;");
+          const content = `<?xml version="1.0" encoding="UTF-8"?>\n` + clone.outerHTML;
+          downloadFile(content, "image/svg+xml", "story_pacing_arc.svg");
+          showToast("SVG Graphic Exported");
+        } else if (format === "markdown") {
+          let md = `# Narrative Beat Sheet & Pacing Analysis\n\n- **Total Words**: ${data.totalWords.toLocaleString()}\n- **Est. Read Time**: ${data.totalReadTimeMin} min\n\n| Scene Index | Chapter Title | Words | Valence | Conflict | Mystery | Composite Tension | Act |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n`;
+          data.scenes.forEach((s, idx) => {
+            const act = s.posPct <= 25 ? "Act 1" : s.posPct <= 75 ? "Act 2" : "Act 3";
+            md += `| ${idx + 1} | ${s.title.replace(/\|/g, '\\|')} | ${s.words} | ${s.valence} | ${s.conflict} | ${s.mystery} | ${s.tension10.toFixed(2)} | ${act} |\n`;
+          });
+          downloadFile(md, "text/markdown", "story_beat_sheet.md");
+          showToast("Markdown Beat Sheet Exported");
+        }
+      });
+    }
+
+    function exportCSV() {
+      executeBeatExporter("csv");
+    }
+
+    function exportJSON() {
+      checkPro("Export JSON", () => {
+        const exportData = {
+          version: 1,
+          readingWPM,
+          selectedStructure,
+          scenes
+        };
+        const jsonStr = JSON.stringify(exportData, null, 2);
+        downloadFile(jsonStr, "application/json", "story_pacing_arc.json");
+        showToast("JSON Exported successfully");
+      });
+    }
+
+    function loadSamplePrompt() {
+      checkPro("Load Sample", () => {
+        const sampleData = PRESETS[2]; // Fantasy preset
+        scenes = JSON.parse(JSON.stringify(sampleData.scenes));
+        presetSelect.value = "2";
+        saveData();
+        renderAll();
+        showToast("Loaded Epic Fantasy Sample");
+      });
+    }
+
+    function copySummaryReport() {
+      const data = getProcessedData();
+      const fitScore = calculateStructuralFit(data.scenes);
+      let report = `NARRATIVE PACING & TENSION ARC REPORT\n`;
+      report += `====================================\n`;
+      report += `Total Words: ${data.totalWords.toLocaleString()} | Total Reading Time: ${data.totalReadTimeMin} min\n`;
+      report += `Scenes Count: ${data.scenes.length} | WPM: ${readingWPM}\n`;
+      report += `Structural Overlay: ${ARCHETYPES[selectedStructure]?.name || 'None'} (Fit Score: ${fitScore}%)\n\n`;
+      report += `SCENE TENSION BREAKDOWN:\n`;
+      data.scenes.forEach((s, i) => {
+        report += `${i + 1}. [${s.title}] ${s.words}w | Conflict: ${s.conflict}/10 | Mystery: ${s.mystery}/10 | Valence: ${s.valence} => Composite Tension: ${s.tension10.toFixed(1)}/10\n`;
+      });
+
+      navigator.clipboard.writeText(report).then(() => {
+        showToast("Summary report copied to clipboard!");
+      }).catch(() => {
+        showToast("Failed to copy report.");
+      });
+    }
+
+    function downloadFile(content, contentType, filename) {
+      const blob = new Blob([content], { type: contentType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function showToast(msg) {
+      toastEl.innerHTML = msg;
+      toastEl.style.display = "block";
+      setTimeout(() => {
+        toastEl.style.display = "none";
+      }, 3000);
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // --- STORAGE ---
+    function saveData() {
+      try {
+        localStorage.setItem("story_pacing_mapper_data", JSON.stringify({
+          scenes,
+          readingWPM,
+          selectedStructure
+        }));
+      } catch (e) {
+        // Safe fallback if localStorage is blocked
+      }
+    }
+
+    function loadSavedData() {
+      try {
+        const raw = localStorage.getItem("story_pacing_mapper_data");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed.scenes) && parsed.scenes.length > 0) {
+            scenes = parsed.scenes.map((s, idx) => ({
+              title: s && s.title !== undefined ? String(s.title) : `Beat ${idx + 1}`,
+              words: s && s.words !== undefined ? (parseInt(s.words, 10) || 0) : 1000,
+              valence: s && s.valence !== undefined ? (parseFloat(s.valence) || 0) : 0,
+              conflict: s && s.conflict !== undefined ? (parseFloat(s.conflict) || 0) : 5,
+              mystery: s && s.mystery !== undefined ? (parseFloat(s.mystery) || 0) : 5
+            }));
+          }
+          if (parsed.readingWPM) readingWPM = parseInt(parsed.readingWPM, 10) || 250;
+          if (parsed.selectedStructure) selectedStructure = parsed.selectedStructure;
+
+          wpmInput.value = readingWPM;
+          structureSelect.value = selectedStructure;
+        }
+      } catch (e) {
+        // Safe fallback
+      }
+    }
+
+    // Initialize on load
+    window.addEventListener("DOMContentLoaded", init);
+
+    // Comparator State
+    let cmpActive = false;
+    let draftBData = null;
+
+    function getProcessedDataFor(sceneList) {
+      const origScenes = scenes;
+      scenes = sceneList;
+      const res = getProcessedData();
+      scenes = origScenes;
+      return res;
+    }
+
+    function generateDraftB(type) {
+      return scenes.map((s, idx) => {
+        const b = { ...s };
+        if (type === "tight") {
+          b.words = Math.round(s.words * 0.85);
+          b.conflict = Math.min(10, s.conflict + (idx % 2 === 0 ? 1 : 0));
+        } else if (type === "expanded") {
+          b.words = Math.round(s.words * 1.20);
+          b.conflict = Math.max(1, s.conflict - 1);
+        } else if (type === "climax_shift") {
+          if (idx === Math.floor(scenes.length * 0.85)) b.conflict = 10;
+          if (idx === Math.floor(scenes.length * 0.5)) b.conflict = Math.max(1, s.conflict - 3);
+        }
+        return b;
+      });
+    }
+
+    const btnOpenCmp = document.getElementById("btn-open-cmp");
+    const btnCloseCmp = document.getElementById("btn-close-cmp");
+    const btnRunCmp = document.getElementById("btn-run-cmp");
+    const btnClearCmp = document.getElementById("btn-clear-cmp");
+    const modalCmp = document.getElementById("pacing-comparator-modal");
+    const cmpProMsg = document.getElementById("cmp-pro-msg");
+    const cmpResults = document.getElementById("cmp-results");
+
+    if (btnOpenCmp) {
+      btnOpenCmp.addEventListener("click", () => {
+        modalCmp.style.display = "block";
+        modalCmp.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+    if (btnCloseCmp) {
+      btnCloseCmp.addEventListener("click", () => { modalCmp.style.display = "none"; });
+    }
+
+    if (btnRunCmp) {
+      btnRunCmp.addEventListener("click", () => {
+        if (!PRO) {
+          cmpProMsg.innerHTML = `Available in the full version <a href="${PRO_LINK}">Upgrade</a>`;
+          cmpProMsg.style.display = "block";
+          cmpResults.style.display = "none";
+          return;
+        }
+        cmpProMsg.style.display = "none";
+        const presetType = document.getElementById("cmp-draft-b-preset").value;
+        const scenesB = generateDraftB(presetType);
+        draftBData = getProcessedDataFor(scenesB);
+        const dataA = getProcessedData();
+        cmpActive = true;
+
+        renderCanvas(dataA);
+
+        // Render Delta Metrics Table
+        const tbodyCmp = document.getElementById("cmp-metrics-tbody");
+        const wDelta = draftBData.totalWords - dataA.totalWords;
+        const wPct = dataA.totalWords > 0 ? ((wDelta / dataA.totalWords) * 100).toFixed(1) : "0";
+        
+        let peakA = 0, peakB = 0, peakLocA = 0, peakLocB = 0;
+        dataA.scenes.forEach(s => { if (s.tension10 > peakA) { peakA = s.tension10; peakLocA = Math.round(s.posPct); } });
+        draftBData.scenes.forEach(s => { if (s.tension10 > peakB) { peakB = s.tension10; peakLocB = Math.round(s.posPct); } });
+
+        const fatA = dataA.scenes.filter(s => s.tension10 >= 7.0).reduce((a, b) => a + b.words, 0);
+        const fatB = draftBData.scenes.filter(s => s.tension10 >= 7.0).reduce((a, b) => a + b.words, 0);
+        const fatDelta = fatB - fatA;
+
+        tbodyCmp.innerHTML = `
+          <tr>
+            <td><b>Total Word Count</b></td>
+            <td>${dataA.totalWords.toLocaleString()} w</td>
+            <td>${draftBData.totalWords.toLocaleString()} w</td>
+            <td class="${wDelta <= 0 ? 'delta-pos' : 'delta-neg'}">${wDelta > 0 ? '+' : ''}${wDelta.toLocaleString()} w (${wPct}%)</td>
+          </tr>
+          <tr>
+            <td><b>Est. Reading Time</b></td>
+            <td>${dataA.totalReadTimeMin} min</td>
+            <td>${draftBData.totalReadTimeMin} min</td>
+            <td class="${draftBData.totalReadTimeMin <= dataA.totalReadTimeMin ? 'delta-pos' : 'delta-neg'}">${draftBData.totalReadTimeMin - dataA.totalReadTimeMin} min</td>
+          </tr>
+          <tr>
+            <td><b>Peak Tension Score & Position</b></td>
+            <td>${peakA.toFixed(1)} @ ${peakLocA}%</td>
+            <td>${peakB.toFixed(1)} @ ${peakLocB}%</td>
+            <td class="delta-neu">Shift: ${peakLocB - peakLocA > 0 ? '+' : ''}${peakLocB - peakLocA}% pos</td>
+          </tr>
+          <tr>
+            <td><b>High Tension Fatigue Volume (Score ≥ 7)</b></td>
+            <td>${fatA.toLocaleString()} w</td>
+            <td>${fatB.toLocaleString()} w</td>
+            <td class="${fatDelta <= 0 ? 'delta-pos' : 'delta-neg'}">${fatDelta > 0 ? '+' : ''}${fatDelta.toLocaleString()} w</td>
+          </tr>
+        `;
+
+        cmpResults.style.display = "block";
+        showToast("Draft B overlay rendered on canvas!");
+      });
+    }
+
+    if (btnClearCmp) {
+      btnClearCmp.addEventListener("click", () => {
+        cmpActive = false;
+        draftBData = null;
+        cmpResults.style.display = "none";
+        renderCanvas();
+        showToast("Comparison cleared.");
+      });
+    }
+
+    const btnRunExporter = document.getElementById("btn-run-exporter");
+    if (btnRunExporter) {
+      btnRunExporter.addEventListener("click", () => {
+        const fmt = document.getElementById("export-format-select")?.value || "csv";
+        executeBeatExporter(fmt);
+      });
+    }
+    // --- CUSTOM STRUCTURE BUILDER FEATURE ---
+    let customMilestones = [
+      { p: 0, t: 20, name: "Exposition Start" },
+      { p: 100, t: 20, name: "Resolution End" }
+    ];
+
+    function updateCustomStructure() {
+      customMilestones.sort((a, b) => a.p - b.p);
+      ARCHETYPES["custom"] = {
+        name: "Custom Structure",
+        points: customMilestones
+      };
+
+      const sel = document.getElementById("structure-select");
+      if (sel) {
+        let opt = sel.querySelector('option[value="custom"]');
+        if (!opt) {
+          opt = document.createElement("option");
+          opt.value = "custom";
+          opt.textContent = "Custom Structure";
+          sel.appendChild(opt);
+        }
+      }
+
+      renderCSBTable();
+    }
+
+    function renderCSBTable() {
+      const tbodyCSB = document.getElementById("csb-tbody");
+      if (!tbodyCSB) return;
+      tbodyCSB.innerHTML = "";
+
+      customMilestones.forEach((m, idx) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><b>${escapeHtml(m.name)}</b></td>
+          <td>${m.p}%</td>
+          <td>${(m.t / 10).toFixed(1)} / 10</td>
+          <td>
+            <button class="btn btn-sm btn-danger btn-del-csb" data-idx="${idx}">✕ Delete</button>
+          </td>
+        `;
+        tbodyCSB.appendChild(tr);
+      });
+
+      tbodyCSB.querySelectorAll(".btn-del-csb").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const idx = parseInt(e.currentTarget.dataset.idx, 10);
+          customMilestones.splice(idx, 1);
+          updateCustomStructure();
+          if (selectedStructure === "custom") {
+            renderCanvas();
+            renderSummaryKPIs();
+            renderDiagnostics();
+          }
+        });
+      });
+    }
+
+    const btnCSBAdd = document.getElementById("btn-csb-add");
+    const btnCSBClear = document.getElementById("btn-csb-clear");
+
+    if (btnCSBAdd) {
+      btnCSBAdd.addEventListener("click", () => {
+        const lblInp = document.getElementById("csb-label");
+        const posInp = document.getElementById("csb-pos");
+        const tenInp = document.getElementById("csb-tension");
+
+        const label = (lblInp?.value || "Milestone").trim();
+        let pos = parseFloat(posInp?.value);
+        let ten = parseFloat(tenInp?.value);
+
+        if (isNaN(pos)) pos = 50;
+        pos = Math.min(100, Math.max(0, pos));
+
+        if (isNaN(ten)) ten = 5;
+        ten = Math.min(10, Math.max(0, ten));
+
+        const targetTension100 = ten * 10;
+
+        customMilestones.push({ p: pos, t: targetTension100, name: label });
+        updateCustomStructure();
+
+        const sel = document.getElementById("structure-select");
+        if (sel) sel.value = "custom";
+        selectedStructure = "custom";
+
+        renderCanvas();
+        renderSummaryKPIs();
+        renderDiagnostics();
+        showToast(`Added anchor: ${label} @ ${pos}%`);
+      });
+    }
+
+    if (btnCSBClear) {
+      btnCSBClear.addEventListener("click", () => {
+        customMilestones = [];
+        updateCustomStructure();
+        if (selectedStructure === "custom") {
+          renderCanvas();
+          renderSummaryKPIs();
+          renderDiagnostics();
+        }
+        showToast("Custom template cleared");
+      });
+    }
+
+    updateCustomStructure();
+
+    function formatDuration(mins) {
+      const h = Math.floor(mins / 60);
+      const m = Math.round(mins % 60);
+      if (h === 0) return `${m} minute${m !== 1 ? 's' : ''}`;
+      if (m === 0) return `${h} hour${h !== 1 ? 's' : ''}`;
+      return `${h} hour${h !== 1 ? 's' : ''} ${m} minute${m !== 1 ? 's' : ''}`;
+    }
+
+    function updateFatigueSimulator(dataObj) {
+      const data = dataObj || getProcessedData();
+      const simMedEl = document.getElementById("sim-medium");
+      const simBreakEl = document.getElementById("sim-break-interval");
+      const durEl = document.getElementById("sim-total-duration");
+      const sessEl = document.getElementById("sim-session-count");
+      const riskEl = document.getElementById("sim-risk-score");
+      const descEl = document.getElementById("sim-risk-desc");
+      const breaksEl = document.getElementById("sim-break-positions");
+
+      if (!simMedEl || !durEl) return;
+
+      if ([150, 250, 350].includes(readingWPM)) {
+        simMedEl.value = String(readingWPM);
+      }
+
+      const wpm = parseInt(simMedEl.value, 10) || 250;
+      const breakMins = parseInt(simBreakEl?.value, 10) || 45;
+
+      const totalMins = data.totalWords > 0 ? (data.totalWords / wpm) : 0;
+      durEl.textContent = formatDuration(totalMins);
+
+      const sessionCount = totalMins > 0 ? Math.max(1, Math.ceil(totalMins / breakMins)) : 0;
+      sessEl.textContent = `${sessionCount} session${sessionCount !== 1 ? 's' : ''} (@ ~${breakMins}m each)`;
+
+      const breaks = [];
+      let cumTime = 0;
+      let nextTarget = breakMins;
+      data.scenes.forEach((s) => {
+        const sceneMins = s.words / wpm;
+        cumTime += sceneMins;
+        if (cumTime >= nextTarget) {
+          breaks.push(`Scene ${s.index + 1} (${escapeHtml(s.title)} @ ~${Math.round(cumTime)}m)`);
+          nextTarget += breakMins;
+        }
+      });
+
+      breaksEl.textContent = breaks.length > 0 ? breaks.join(" • ") : "No extra break needed (short manuscript)";
+
+      let continuousHighTensionWords = 0;
+      let maxContinuousHighTensionWords = 0;
+      data.scenes.forEach(s => {
+        if (s.tension10 >= 7.0 || s.conflict >= 7) {
+          continuousHighTensionWords += s.words;
+          if (continuousHighTensionWords > maxContinuousHighTensionWords) {
+            maxContinuousHighTensionWords = continuousHighTensionWords;
+          }
+        } else {
+          continuousHighTensionWords = 0;
+        }
+      });
+
+      const fatigueMins = maxContinuousHighTensionWords / wpm;
+      const riskScore = Math.min(100, Math.round((fatigueMins / breakMins) * 40 + (totalMins > 180 ? 20 : 0)));
+
+      if (riskScore >= 65) {
+        riskEl.textContent = `${riskScore} / 100 (High Risk)`;
+        riskEl.style.color = "var(--danger)";
+        descEl.textContent = "High continuous tension or long duration without fatigue breaks.";
+      } else if (riskScore >= 35) {
+        riskEl.textContent = `${riskScore} / 100 (Moderate Risk)`;
+        riskEl.style.color = "var(--warning)";
+        descEl.textContent = "Moderate session length. Minor pacing adjustments recommended.";
+      } else {
+        riskEl.textContent = `${riskScore} / 100 (Low Risk)`;
+        riskEl.style.color = "var(--success)";
+        descEl.textContent = "Balanced pacing across estimated reading sessions.";
+      }
+    }
+
+    const simMedInp = document.getElementById("sim-medium");
+    const simBreakInp = document.getElementById("sim-break-interval");
+
+    if (simMedInp) {
+      simMedInp.addEventListener("change", (e) => {
+        const val = parseInt(e.target.value, 10);
+        if (!isNaN(val)) {
+          readingWPM = val;
+          const mainWpmInp = document.getElementById("wpm-input");
+          if (mainWpmInp) mainWpmInp.value = val;
+          saveData();
+          renderAll();
+        }
+      });
+    }
+
+    if (simBreakInp) {
+      simBreakInp.addEventListener("change", () => {
+        renderAll();
+      });
+    }
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Interactive Story Pacing &amp; Tension Arc Mapper is an open-access visualization tool designed for fiction writers, screenwriters, and narrative designers. It lets you plot chapter tension, identify narrative dead zones, and benchmark your progress against established narrative archetypes. Use it directly in your browser for free, or grab the offline single-file edition for disconnected writing sessions.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Add your story scenes or beats with brief summaries and assign a tension score from 1 to 10.</li><li>Select an archetype overlay (3-Act, Save the Cat, Hero&#39;s Journey, or Freytag&#39;s Pyramid) to compare your narrative trajectory.</li><li>Review the automated velocity heatmap and reader fatigue alerts to spot slump zones.</li><li>Export your finished pacing chart and beat sheet as Markdown, CSV, JSON, or vector SVG.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">Where are my story&#39;s pacing slumps or reader fatigue zones, and how does my scene tension arc compare to a classic 3-Act Structure template?</h4><p style="margin:0">You enter: List of scenes/chapters in order · Word counts per scene · Emotional valence rating for each beat (-5 heartbreak to +5 joy) · Conflict intensity score for each beat (1 to 10) · Narrative mystery level for each beat (0 to 10).<br>You get: A composite tension curve visualization mapped against target structure templates (e.g. 3-Act Structure), highlighting low-conflict slumps (&gt;3 consecutive low-intensity scenes) and reader fatigue zones (&gt;15,000 words without tension dip).</p><h4 style="font-size:16px;margin:16px 0 4px">If I reorder my scenes or adjust word counts and tension scores, how will my overall reading duration, pacing density, and tension curve change?</h4><p style="margin:0">You enter: Current scene sequence and parameter scores · Target reading speed (wpm) · Proposed scene reordering (e.g., move Scene 9 to Midpoint position).<br>You get: Recalculated manuscript reading duration in minutes/hours, revised pacing density (words per tension unit change), instant SVG tension curve refresh, and updated diagnostic warnings.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free online version and the paid Gumroad product?</h4><p style="margin:0">The free web version includes the complete pacing engine, archetype overlays, and export features. The $9 Gumroad purchase provides a standalone, single-file offline HTML package with lifetime updates, zero dependencies, and no need for an internet connection.</p><h4 style="font-size:16px;margin:16px 0 4px">Where is my manuscript data stored?</h4><p style="margin:0">All scene titles, tension ratings, and notes are processed entirely client-side in your local browser storage. No narrative data is ever sent to an external server or used for model training.</p><h4 style="font-size:16px;margin:16px 0 4px">Can I compare two different drafts of the same story?</h4><p style="margin:0">Yes. The Dual Draft Scenario Comparator allows you to load two pacing profiles side-by-side, making it easy to confirm whether developmental rewrites actually resolved flat spots in your narrative arc.</p><h4 style="font-size:16px;margin:16px 0 4px">Which export formats are supported?</h4><p style="margin:0">You can export your raw scene list and scores to Markdown, CSV, and JSON, or download publication-ready vector charts in SVG format for printing and visual reference binders.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/bqjvdn" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../greenhouse-thermal-loss-and-glazing-simulator/" style="color:inherit;font-weight:600">Greenhouse Thermal Loss &amp; Glazing Simulator</a>: Calculate heat loss, thermal mass needs, fuel costs, and freeze risks in a single offline HTML simulator.</li><li><a href="../burst-action-sequence-multi-exposure-compositor/" style="color:inherit;font-weight:600">Burst Action Sequence Compositor</a>: Generate multi-exposure burst action composites offline in your browser with automated background subtraction.</li><li><a href="../logic-level-shifter-and-divider-network-designer/" style="color:inherit;font-weight:600">Microcontroller Voltage Divider &amp; Level Shifter Designer</a>: Design E24/E96 dividers and MOSFET level shifters with live RC rise-time simulation and eye diagrams.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
