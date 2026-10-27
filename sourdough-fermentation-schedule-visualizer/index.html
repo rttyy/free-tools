@@ -1,0 +1,2878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #f8f6f0;
+      --card-bg: #ffffff;
+      --card-border: #e2dbce;
+      --text: #231f1d;
+      --text-muted: #6e675f;
+      --primary: #c25e1a;
+      --primary-hover: #a84e12;
+      --primary-light: #fbeee4;
+      --accent: #2e6b56;
+      --accent-light: #e8f3ee;
+      --warning: #b45309;
+      --warning-light: #fef3c7;
+      --danger: #b91c1c;
+      --danger-light: #fee2e2;
+      --cambro-plastic: rgba(220, 235, 245, 0.45);
+      --cambro-mark: #d9483b;
+      --dough-color: #eeddb7;
+      --dough-bubble: #dfca9a;
+      --dough-crust: #c59b63;
+      --timeline-track: #e8e2d5;
+      --shadow: 0 4px 14px rgba(40, 30, 20, 0.06);
+      --radius: 10px;
+      --radius-sm: 6px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #141312;
+        --card-bg: #1e1c1a;
+        --card-border: #332f2b;
+        --text: #f0ebe4;
+        --text-muted: #a39c93;
+        --primary: #e07328;
+        --primary-hover: #f08339;
+        --primary-light: #2c1e14;
+        --accent: #3da482;
+        --accent-light: #162620;
+        --warning: #f59e0b;
+        --warning-light: #2d2412;
+        --danger: #ef4444;
+        --danger-light: #2e1515;
+        --cambro-plastic: rgba(40, 60, 75, 0.4);
+        --cambro-mark: #ff6b5b;
+        --dough-color: #d1b88a;
+        --dough-bubble: #9f885e;
+        --dough-crust: #946f3e;
+        --timeline-track: #2e2b27;
+        --shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.45;
+      padding: 16px;
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-titles h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-titles p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button, .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      font-family: inherit;
+    }
+
+    button:hover, .btn:hover {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    button.btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    button.btn-primary:hover {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+      color: #fff;
+    }
+
+    .preset-selector-bar {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .preset-label {
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-right: 4px;
+    }
+
+    .preset-chip {
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text);
+      max-width: 100%;
+      text-align: left;
+      white-space: normal;
+    }
+
+    .preset-chip.active {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Layout Grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .panel-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 10px;
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .unit-switch {
+      display: inline-flex;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .unit-btn {
+      padding: 3px 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .unit-btn.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    input[type="number"],
+    input[type="time"],
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--card-border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    .input-suffix {
+      position: absolute;
+      right: 10px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    /* Formulas & Breakdown Table */
+    .formula-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+
+    .formula-table th, .formula-table td {
+      padding: 6px 4px;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .formula-table th {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+    }
+
+    .formula-table td.num {
+      text-align: right;
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .formula-table tr.total-row {
+      border-top: 2px solid var(--card-border);
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* Central & Right Columns */
+    .content-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Thermal Model Summary Cards */
+    .thermal-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .metric-card {
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .metric-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .metric-value {
+      font-size: 1.35rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--primary);
+    }
+
+    .metric-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Interpretation Block */
+    .interpretation-card {
+      background: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 12px 14px;
+      font-size: 0.84rem;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .interpretation-title {
+      font-weight: 700;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Canvas Cambro Rise Simulator */
+    .rise-sim-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cambro-canvas-wrap {
+      position: relative;
+      background: var(--bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--card-border);
+      padding: 8px;
+      display: flex;
+      justify-content: center;
+    }
+
+    canvas#doughCanvas {
+      background: transparent;
+      border-radius: 6px;
+    }
+
+    .sim-controls {
+      flex: 1;
+      min-width: 250px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .stage-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: var(--primary-light);
+      color: var(--primary);
+      width: fit-content;
+    }
+
+    /* Timeline Swimlane */
+    .timeline-mode-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .mode-toggle-group {
+      display: inline-flex;
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .mode-btn {
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      border: none;
+      background: var(--bg);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .mode-btn.active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .swimlane-container {
+      position: relative;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .swimlane-event {
+      display: grid;
+      grid-template-columns: 85px 24px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-sm);
+      position: relative;
+      transition: all 0.15s ease;
+    }
+
+    .swimlane-event.active-event {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px var(--primary);
+      background: var(--primary-light);
+    }
+
+    .event-time {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .event-node {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--card-border);
+      border: 2px solid var(--card-bg);
+      box-shadow: 0 0 0 1px var(--card-border);
+      margin: 0 auto;
+    }
+
+    .swimlane-event.mix .event-node { background: #3b82f6; }
+    .swimlane-event.fold .event-node { background: #f59e0b; }
+    .swimlane-event.peak .event-node { background: var(--accent); }
+    .swimlane-event.shape .event-node { background: #8b5cf6; }
+    .swimlane-event.fridge .event-node { background: #06b6d4; }
+    .swimlane-event.bake .event-node { background: var(--primary); }
+
+    .event-body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .event-title {
+      font-weight: 700;
+      font-size: 0.84rem;
+    }
+
+    .event-desc {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+    }
+
+    .event-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+    }
+
+    /* Modal / Alert for Pro */
+    .pro-alert {
+      display: none;
+      padding: 10px 14px;
+      background: var(--warning-light);
+      border: 1px solid var(--warning);
+      color: var(--text);
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      margin-top: 8px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pro-alert.show {
+      display: flex;
+    }
+
+    .pro-alert a {
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    /* Engineering & Disclaimer Footer */
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 16px 0 10px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .disclaimer-badge {
+      display: inline-block;
+      font-weight: 600;
+      color: var(--warning);
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+        padding: 0;
+      }
+      .header-actions, .preset-selector-bar, .sim-controls, input[type="range"], .unit-switch, .mode-toggle-group button:not(.active) {
+        display: none !important;
+      }
+      .main-grid {
+        display: block;
+      }
+      .panel {
+        border: 1px solid #ccc;
+        box-shadow: none;
+        margin-bottom: 16px;
+        page-break-inside: avoid;
+      }
+    }
+
+    .input-error-alert {
+      display: none;
+      background: var(--danger-light);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 8px;
+      }
+      .panel {
+        padding: 12px;
+      }
+      header {
+        padding: 12px;
+      }
+      .header-titles h1 {
+        font-size: 1.15rem;
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+      .mode-toggle-group {
+        display: flex;
+        width: 100%;
+      }
+      .mode-btn {
+        flex: 1;
+        text-align: center;
+        padding: 6px 4px;
+        font-size: 0.74rem;
+        white-space: normal;
+      }
+      .swimlane-event {
+        grid-template-columns: 70px 16px 1fr;
+        gap: 6px;
+        padding: 8px;
+      }
+      .event-badge {
+        grid-column: 1 / -1;
+        justify-self: start;
+        margin-top: 2px;
+      }
+      .cambro-canvas-wrap {
+        width: 100%;
+        overflow-x: auto;
+      }
+    }
+    /* Reverse Schedule Solver */
+    .solver-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .solver-milestone {
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .solver-milestone.highlight {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .solver-milestone .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .solver-milestone .val {
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--text);
+    }
+    .solver-milestone.highlight .val {
+      color: var(--primary);
+    }
+    .solver-schedule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .solver-row {
+      display: grid;
+      grid-template-columns: 140px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 12px;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+    }
+    .solver-row.prime {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      font-weight: 600;
+    }
+    .solver-row-time {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--primary);
+    }
+    @media (max-width: 580px) {
+      .solver-row {
+        grid-template-columns: 1fr;
+        gap: 3px;
+      }
+    }
+    .drift-editor {
+      margin-top: 8px;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+    }
+    .drift-editor summary {
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      list-style: none;
+    }
+    .drift-editor summary::-webkit-details-marker { display: none; }
+    .drift-editor summary::after { content: '▸'; font-size: 0.9rem; }
+    .drift-editor[open] summary::after { content: '▾'; }
+    .drift-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--card-border);
+    }
+    .drift-toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .bench-sheet-preview {
+      background: var(--bg);
+      border: 1px dashed var(--card-border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-size: 0.82rem;
+      margin-top: 10px;
+    }
+    @media print {
+      .bench-sheet-printable {
+        background: #fff !important;
+        border: 1px solid #000 !important;
+        color: #000 !important;
+      }
+    }
+    /* FEATURE-CSS */
+  </style>
+<title>Sourdough &amp; Fermentation Schedule Visualizer</title>
+<meta name="description" content="Plan sourdough bake times accurately. Dynamic baker&#39;s percentages, ambient temperature drift prediction, and interactive dough rise simulation.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/sourdough-fermentation-schedule-visualizer/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/sourdough-fermentation-schedule-visualizer/">
+<meta property="og:title" content="Sourdough &amp; Fermentation Schedule Visualizer"><meta property="og:description" content="Plan sourdough bake times accurately. Dynamic baker&#39;s percentages, ambient temperature drift prediction, and interactive dough rise simulation.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/sourdough-fermentation-schedule-visualizer/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Sourdough & Fermentation Schedule Visualizer","description":"Plan sourdough bake times accurately. Dynamic baker's percentages, ambient temperature drift prediction, and interactive dough rise simulation.","url":"https://rttyy.github.io/free-tools/sourdough-fermentation-schedule-visualizer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How does the tool estimate bulk fermentation duration?","acceptedAnswer":{"@type":"Answer","text":"The algorithm applies basic thermal kinetics derived from standard sourdough fermentation rates between 18°C and 28°C. It adjusts the projected duration based on starter inoculation percentage, dough hydration, and expected ambient temperature drift in your kitchen."}},{"@type":"Question","name":"What is the difference between the free web page and the $9 Gumroad pack?","acceptedAnswer":{"@type":"Answer","text":"The online visualizer is completely free to use in any modern web browser. The $9 Gumroad offline pack provides a standalone, self-hosted build that runs without an internet connection, along with printable PDF bench sheet templates and JSON recipe export presets."}},{"@type":"Question","name":"Can I use this for pizza dough or commercial yeast recipes?","acceptedAnswer":{"@type":"Answer","text":"Yes. While tuned primarily for wild sourdough starter kinetics, you can adjust starter percentages and hydration settings to fit direct yeasted doughs or poolish-based pizza dough schedules."}},{"@type":"Question","name":"Why does the tool schedule backward from the bake time?","acceptedAnswer":{"@type":"Answer","text":"Working backward prevents the common issue of dough peaking at inconvenient hours, such as 2:00 AM. By fixing your final oven time first, the visualizer tells you precisely when to build your levain, mix dough, and begin cold retarding."}}]}</script>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Top Navigation & Title Bar -->
+  <header>
+    <div class="header-titles">
+      <h1>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12c0 3.5 1.8 6.6 4.6 8.3.4.2.9.3 1.4.3h8c.5 0 1-.1 1.4-.3C20.2 18.6 22 15.5 22 12c0-5.5-4.5-10-10-10z"/><path d="M7 11c1-2 3-3 5-3s4 1 5 3"/><path d="M9 16c1-1 2-1.5 3-1.5s2 .5 3 1.5"/></svg>
+        Sourdough & Artisan Fermentation Schedule Visualizer
+      </h1>
+      <p>Thermal kinetic proofing engine, fold alarm scheduler, and dynamic volume expansion predictor</p>
+    </div>
+    <div class="header-actions">
+      <button id="btnReset" title="Reset all inputs to default settings">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset
+      </button>
+      <button id="btnExportJson" title="Export formula & timeline as JSON">Export JSON</button>
+      <button id="btnExportCsv" title="Export timeline to CSV">Export CSV</button>
+      <button id="btnPrint" class="btn-primary" title="Print baker's work ticket">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print Schedule
+      </button>
+    </div>
+  </header>
+
+  <!-- PRO Gate Message Container -->
+  <div id="proAlert" class="pro-alert">
+    <span id="proAlertText">Available in the full version. Visit <a href="https://example.com/pro" id="proAlertLink">our website</a> to upgrade.</span>
+    <button type="button" onclick="document.getElementById('proAlert').classList.remove('show')" style="border:none;background:transparent;cursor:pointer;font-weight:700;">&times;</button>
+  </div>
+
+  <!-- Scenario Presets Bar -->
+  <div class="preset-selector-bar">
+    <span class="preset-label">Standard Scenarios:</span>
+    <button class="preset-chip active" id="preset1">Classic Overnight Boule (Warm 24°C / Summer)</button>
+    <button class="preset-chip" id="preset2">Slow Winter Kitchen Loaf (Cool 19°C Ambient)</button>
+    <button class="preset-chip" id="preset3">High-Hydration Open-Crumb Ciabatta (26°C Proofer)</button>
+  </div>
+
+  <!-- Main Multi-Column Layout -->
+  <div class="main-grid">
+
+    <!-- LEFT COLUMN: Baker's Formula Engine -->
+    <div class="panel" data-feature="bakers-percentage-engine">
+      <div class="panel-header">
+        <span class="panel-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Baker's Formula Engine
+        </span>
+        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">% Based on Total Flour</span>
+      </div>
+
+      <div id="inputErrorAlert" class="input-error-alert" role="alert"></div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inpTotalFlour">Total Flour Weight</label>
+          <div class="input-wrap">
+            <input type="number" id="inpTotalFlour" value="500" min="50" max="25000" step="10">
+            <span class="input-suffix">g</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inpHydration">Overall Hydration</label>
+          <div class="input-wrap">
+            <input type="number" id="inpHydration" value="74" min="50" max="110" step="0.5">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inpStarterInoc">Starter Inoculation</label>
+          <div class="input-wrap">
+            <input type="number" id="inpStarterInoc" value="20" min="1" max="60" step="1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inpStarterHydr">Starter Hydration</label>
+          <div class="input-wrap">
+            <input type="number" id="inpStarterHydr" value="100" min="50" max="200" step="5">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inpSalt">Salt Percentage</label>
+          <div class="input-wrap">
+            <input type="number" id="inpSalt" value="2.0" min="0" max="5" step="0.1">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inpProtein">Flour Protein Content</label>
+          <div class="input-wrap">
+            <input type="number" id="inpProtein" value="12.5" min="8" max="18" step="0.5">
+            <span class="input-suffix">%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Calculated Formula Breakdown Table -->
+      <table class="formula-table" aria-label="Baker's Percentage Mass Breakdown">
+        <thead>
+          <tr>
+            <th>Ingredient Component</th>
+            <th>Formula %</th>
+            <th style="text-align:right">Weight</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Flour (Main Dough Mix)</td>
+            <td id="tdPctDoughFlour">90.0%</td>
+            <td class="num" id="tdDoughFlour">450 g</td>
+          </tr>
+          <tr>
+            <td>Water (Added to Bowl)</td>
+            <td id="tdPctDoughWater">64.0%</td>
+            <td class="num" id="tdDoughWater">320 g</td>
+          </tr>
+          <tr>
+            <td>Active Sourdough Starter</td>
+            <td id="tdPctStarter">20.0%</td>
+            <td class="num" id="tdStarter">100 g</td>
+          </tr>
+          <tr>
+            <td style="padding-left:14px; font-size:0.75rem; color:var(--text-muted);">&bull; Flour in Starter</td>
+            <td style="font-size:0.75rem; color:var(--text-muted);" id="tdPctStarterFlour">10.0%</td>
+            <td class="num" style="font-size:0.75rem; color:var(--text-muted);" id="tdStarterFlour">50 g</td>
+          </tr>
+          <tr>
+            <td style="padding-left:14px; font-size:0.75rem; color:var(--text-muted);">&bull; Water in Starter</td>
+            <td style="font-size:0.75rem; color:var(--text-muted);" id="tdPctStarterWater">10.0%</td>
+            <td class="num" style="font-size:0.75rem; color:var(--text-muted);" id="tdStarterWater">50 g</td>
+          </tr>
+          <tr>
+            <td>Salt</td>
+            <td id="tdPctSalt">2.0%</td>
+            <td class="num" id="tdSalt">10 g</td>
+          </tr>
+          <tr class="total-row">
+            <td>Total Dough Mass</td>
+            <td>176.0%</td>
+            <td class="num" id="tdTotalDough">880 g</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Quick Dough Hydration summary card -->
+      <div style="background:var(--bg); border:1px solid var(--card-border); border-radius:var(--radius-sm); padding:8px 10px; font-size:0.76rem; display:flex; justify-content:space-between;">
+        <span>Total Flour: <strong id="lblTotalFlour">500g</strong></span>
+        <span>Total Water: <strong id="lblTotalWater">370g</strong></span>
+        <span>True Hydration: <strong id="lblTrueHydr">74.0%</strong></span>
+      </div>
+    </div>
+
+    <!-- CENTER & RIGHT COLUMN: Thermal Model, Simulator, Schedule -->
+    <div class="content-column">
+
+      <!-- THERMAL MODEL PANEL -->
+      <div class="panel" data-feature="thermal-fermentation-model">
+        <div class="panel-header">
+          <span class="panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+            Thermal Kinetic Fermentation Duration Calculator
+          </span>
+          <div class="unit-switch" id="tempUnitSwitch">
+            <button class="unit-btn active" id="btnUnitC">°C</button>
+            <button class="unit-btn" id="btnUnitF">°F</button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="inpAmbientTemp">Kitchen Ambient Temp</label>
+            <div class="input-wrap">
+              <input type="number" id="inpAmbientTemp" value="24" min="10" max="38" step="0.5">
+              <span class="input-suffix" id="lblUnitAmbient">°C</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inpDoughTemp">Initial Mixed Dough (DDT)</label>
+            <div class="input-wrap">
+              <input type="number" id="inpDoughTemp" value="24" min="10" max="38" step="0.5">
+              <span class="input-suffix" id="lblUnitDough">°C</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculated Thermal Metrics Grid -->
+        <div class="thermal-metrics-grid">
+          <div class="metric-card">
+            <span class="metric-label">Predicted Bulk Duration</span>
+            <span class="metric-value" id="valBulkHours">4.8h</span>
+            <span class="metric-sub" id="valBulkSub">~4h 48m elapsed time</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Target Bulk Rise</span>
+            <span class="metric-value" id="valTargetRise">+60%</span>
+            <span class="metric-sub" id="valTargetRiseSub">meniscus volume mark</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Effective Kinetic Rate</span>
+            <span class="metric-value" id="valKineticRate">1.00x</span>
+            <span class="metric-sub">microbial Q₁₀ ≈ 2.10</span>
+          </div>
+        </div>
+
+        <!-- Dynamic What this means / What to do next Block -->
+        <div class="interpretation-card" id="interpBox">
+          <div class="interpretation-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            What this means &amp; what to do next
+          </div>
+          <p id="interpText">
+            At 24.0°C effective dough temp, fermentation progresses at a moderate balanced rate. Stop bulk fermentation when the dough expands by +60% (lightly domed, aerated, shaking like custard) before shaping.
+          </p>
+        </div>
+      </div>
+
+      <!-- DOUGH EXPANSION & MENISCUS CANVAS SIMULATOR -->
+      <div class="panel" data-feature="canvas-rise-simulator">
+        <div class="panel-header">
+          <span class="panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            Graduated Container Meniscus &amp; Aeration Simulator
+          </span>
+          <span class="stage-badge" id="simStageBadge">Active Rise</span>
+        </div>
+
+        <div class="rise-sim-container">
+          <div class="cambro-canvas-wrap">
+            <canvas id="doughCanvas" width="260" height="230"></canvas>
+          </div>
+          <div class="sim-controls">
+            <div class="slider-group">
+              <div class="slider-header">
+                <span>Fermentation Progress Simulator</span>
+                <span id="lblSimProgress" style="font-family:var(--font-mono); font-weight:700; color:var(--primary);">100% of Bulk Target</span>
+              </div>
+              <input type="range" id="inpSimProgress" min="0" max="150" value="100" step="1">
+            </div>
+
+            <div style="font-size:0.78rem; color:var(--text-muted); display:flex; flex-direction:column; gap:4px;">
+              <div>Current Simulated Volume Rise: <strong id="lblSimVolume" style="color:var(--text);">+60%</strong> (Baseline 1000ml &rarr; <span id="lblSimMl">1600ml</span>)</div>
+              <div>Estimated Alveoli Porosity: <strong id="lblSimPorosity" style="color:var(--text);">Balanced open structure</strong></div>
+              <div>Gas Retention State: <strong id="lblSimGluten" style="color:var(--text);">Elastic &amp; Domed</strong></div>
+            </div>
+
+            <div style="display:flex; gap:8px;">
+              <button id="btnSyncClock" style="flex:1;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Sync Slider to Real-time Clock
+              </button>
+              <button id="btnSet100" style="padding:6px 10px;">Jump to Target Peak</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE PRODUCTION SCHEDULE & TIMELINE SWIMLANE -->
+      <div class="panel" data-feature="visual-interactive-timeline">
+        <div class="panel-header">
+          <span class="panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Interactive Production Schedule &amp; Fold Alarm Timeline
+          </span>
+          <div class="mode-toggle-group">
+            <button class="mode-btn active" id="btnModeForward">Forward from Mix</button>
+            <button class="mode-btn" id="btnModeBackward">Target Bake Time</button>
+            <button class="mode-btn" id="btnModeSolver">Reverse Solver</button>
+          </div>
+        </div>
+
+        <div class="timeline-mode-bar">
+          <!-- Forward Mode Inputs -->
+          <div id="forwardInputs" style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; width:100%;">
+            <div class="form-group" style="min-width:130px;">
+              <label for="inpStartTime">Mix Start Time</label>
+              <input type="time" id="inpStartTime" value="10:00">
+            </div>
+            <div class="form-group" style="min-width:120px;">
+              <label for="inpNumFolds">Stretch &amp; Folds</label>
+              <select id="inpNumFolds">
+                <option value="0">0 sets (No fold)</option>
+                <option value="2">2 sets</option>
+                <option value="3">3 sets</option>
+                <option value="4" selected>4 sets</option>
+                <option value="5">5 sets</option>
+                <option value="6">6 sets</option>
+              </select>
+            </div>
+            <div class="form-group" style="min-width:130px;">
+              <label for="inpFoldInterval">Fold Spacing</label>
+              <select id="inpFoldInterval">
+                <option value="20">Every 20 min</option>
+                <option value="30" selected>Every 30 min</option>
+                <option value="45">Every 45 min</option>
+                <option value="60">Every 60 min</option>
+              </select>
+            </div>
+            <div class="form-group" style="min-width:140px;">
+              <label for="inpRetardType">Proofing Route</label>
+              <select id="inpRetardType">
+                <option value="cold" selected>Overnight Cold Retard (4°C)</option>
+                <option value="ambient">Same-Day Ambient Proof</option>
+              </select>
+            </div>
+            <div class="form-group" id="wrapRetardHours" style="min-width:110px;">
+              <label for="inpRetardHours">Retard Duration</label>
+              <div class="input-wrap">
+                <input type="number" id="inpRetardHours" value="14" min="2" max="72" step="1">
+                <span class="input-suffix">hrs</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Backward Mode Inputs -->
+          <div id="backwardInputs" style="display:none; flex-wrap:wrap; gap:10px; align-items:center; width:100%;">
+            <div class="form-group" style="min-width:140px;">
+              <label for="inpBakeTime">Desired Bake Time</label>
+              <input type="time" id="inpBakeTime" value="08:00">
+            </div>
+            <div class="form-group" style="min-width:140px;">
+              <label for="inpBakeDay">Bake Day</label>
+              <select id="inpBakeDay">
+                <option value="Sunday" selected>Sunday Morning</option>
+                <option value="Saturday">Saturday Morning</option>
+                <option value="SameDay">Same Day Afternoon</option>
+              </select>
+            </div>
+            <div class="form-group" style="min-width:120px;">
+              <label for="inpBwRetardHours">Cold Retard</label>
+              <div class="input-wrap">
+                <input type="number" id="inpBwRetardHours" value="14" min="4" max="48" step="1">
+                <span class="input-suffix">hrs</span>
+              </div>
+            </div>
+            <div class="form-group" style="min-width:130px;">
+              <label for="inpBwFolds">Fold Sets</label>
+              <select id="inpBwFolds">
+                <option value="3">3 folds (30m)</option>
+                <option value="4" selected>4 folds (30m)</option>
+                <option value="4-45">4 folds (45m)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Swimlane Events List -->
+        <div class="swimlane-container" id="timelineSwimlane">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+      </div>
+
+      <!-- REVERSE SCHEDULE SOLVER -->
+      <div class="panel" data-feature="reverse-scheduler-solver" id="reverse-scheduler-solver">
+        <div class="panel-header">
+          <span class="panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 8 14"/><path d="M4 12a8 8 0 0 1 8-8"/></svg>
+            Target-Bake Reverse Schedule Solver
+          </span>
+          <span class="event-badge" style="color:var(--accent);">Over-Proofing Guard Active</span>
+        </div>
+
+        <div class="form-row" style="grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));">
+          <div class="form-group">
+            <label for="revBakeDateTime">Target Bake Date &amp; Time</label>
+            <input type="datetime-local" id="revBakeDateTime" value="2025-05-18T08:00">
+          </div>
+          <div class="form-group">
+            <label for="revFridgeTemp">Overnight Fridge Temp</label>
+            <div class="input-wrap">
+              <input type="number" id="revFridgeTemp" value="4.0" min="1" max="10" step="0.5">
+              <span class="input-suffix">°C</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="revRetardHours">Overnight Retard Duration</label>
+            <div class="input-wrap">
+              <input type="number" id="revRetardHours" value="14" min="4" max="72" step="1">
+              <span class="input-suffix">hrs</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="solver-grid">
+          <div class="solver-milestone highlight">
+            <span class="label">Recommended Prior Mix Time</span>
+            <span class="val" id="revMixDisplay">Saturday 12:45</span>
+            <span class="metric-sub" id="revMixSub">Saturday 12:45 PM (Starter mix &amp; bulk begin)</span>
+          </div>
+          <div class="solver-milestone highlight">
+            <span class="label">Fridge Entry Deadline</span>
+            <span class="val" id="revFridgeDisplay">Saturday 18:00</span>
+            <span class="metric-sub" id="revFridgeSub">Saturday 18:00 (6:00 PM) into cold retard</span>
+          </div>
+          <div class="solver-milestone">
+            <span class="label">Room Bulk + Pre-Shape Window</span>
+            <span class="val" id="revWindowDisplay">5h 15m</span>
+            <span class="metric-sub" id="revWindowSub">4h 30m Bulk + 45m Shape &amp; Basket</span>
+          </div>
+        </div>
+
+        <div class="solver-schedule-list" id="revScheduleRows" aria-label="Inverted Step Schedule">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- AMBIENT TEMPERATURE DRIFT PROFILE EDITOR -->
+      <details class="panel drift-editor" data-feature="temp-drift-multi-stage-editor" id="temp-drift-multi-stage-editor" open>
+        <summary>
+          <span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Ambient Temperature Drift Profile (3-Stage Diurnal)
+          </span>
+        </summary>
+        <div style="margin-top:8px;">
+          <label class="drift-toggle-wrap">
+            <input type="checkbox" id="chkEnableDrift">
+            <span>Enable 24h Temperature Drift Simulation</span>
+          </label>
+          <div class="drift-grid" id="driftInputGrid">
+            <div class="form-group">
+              <label for="inpDriftMorningTemp">Morning Temp</label>
+              <div class="input-wrap">
+                <input type="number" id="inpDriftMorningTemp" value="18" min="10" max="38" step="0.5">
+                <span class="input-suffix lblDriftUnit">°C</span>
+              </div>
+              <input type="time" id="inpDriftMorningTime" value="06:00" style="margin-top:4px;">
+            </div>
+            <div class="form-group">
+              <label for="inpDriftAfternoonTemp">Afternoon Peak</label>
+              <div class="input-wrap">
+                <input type="number" id="inpDriftAfternoonTemp" value="25" min="10" max="38" step="0.5">
+                <span class="input-suffix lblDriftUnit">°C</span>
+              </div>
+              <input type="time" id="inpDriftAfternoonTime" value="14:00" style="margin-top:4px;">
+            </div>
+            <div class="form-group">
+              <label for="inpDriftNightTemp">Night Cooling</label>
+              <div class="input-wrap">
+                <input type="number" id="inpDriftNightTemp" value="19" min="10" max="38" step="0.5">
+                <span class="input-suffix lblDriftUnit">°C</span>
+              </div>
+              <input type="time" id="inpDriftNightTime" value="22:00" style="margin-top:4px;">
+            </div>
+          </div>
+          <div id="driftStatusNote" style="font-size:0.75rem; color:var(--text-muted); margin-top:6px; display:none;">
+            Arrhenius kinetic curve integrating variable diurnal ambient drift between <span id="lblDriftRange">18°C - 25°C</span>.
+          </div>
+        </div>
+      </details>
+
+      <div class="panel" data-feature="recipe-printable-summary" id="recipe-printable-summary">
+        <div class="panel-header">
+          <span class="panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Bake-Sheet Print &amp; JSON Recipe Snapshot Exporter
+          </span>
+        </div>
+        <div class="form-group">
+          <label for="inpBenchNotes">Baker's Bench Notes &amp; Instructions</label>
+          <textarea id="inpBenchNotes" rows="2" placeholder="e.g. 100% Organic Bread Flour, coil fold at 45m, bake in Dutch oven..." style="width:100%; padding:8px; border-radius:var(--radius-sm); border:1px solid var(--card-border); background:var(--bg); color:var(--text); font-family:inherit; font-size:0.82rem; resize:vertical;"></textarea>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+          <button id="btnDownloadRecipeJson" class="btn-primary" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Recipe JSON
+          </button>
+          <button id="btnPrintBenchSheet" class="btn" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print Bench Sheet
+          </button>
+        </div>
+        <div id="recipeSnapshotNotice" style="display:none; color:var(--warning); font-size:0.8rem; font-weight:600; margin-top:6px;"></div>
+        <div class="bench-sheet-preview bench-sheet-printable" id="benchSheetPreview"></div>
+      </div>
+
+      <!-- FEATURES -->
+
+    </div>
+  </div>
+
+  <!-- Engineering & Safety Margin Disclaimer Footer -->
+  <footer>
+    <div>
+      <span class="disclaimer-badge">Technical Note:</span>
+      Estimate only - verify with a qualified professional before relying on it. Fermentation rates depend on starter vitality, flour enzymatic falling number, and ambient micro-climates. Always verify with physical dough cues before baking.
+    </div>
+    <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">
+      Sourdough Kinetic Model Q₁₀ = 2.1 | Meniscus Algorithm Cambro Standard 6L/12L | Single-File Universal Edition
+    </div>
+  </footer>
+</div>
+
+<script>
+  // PRO toggle constant required by specification
+  const PRO = false;
+  const PRO_LINK = "https://ferrywave73.gumroad.com/l/gcstzj";
+
+  // State Store
+  const state = {
+    unit: 'C', // 'C' or 'F'
+    mode: 'forward', // 'forward' or 'backward'
+    flour: 500,
+    hydration: 74,
+    starterInoc: 20,
+    starterHydr: 100,
+    salt: 2.0,
+    protein: 12.5,
+    ambientTempC: 24.0,
+    doughTempC: 24.0,
+    startTime: '10:00',
+    numFolds: 4,
+    foldInterval: 30, // mins
+    retardType: 'cold',
+    retardHours: 14,
+    bakeTime: '08:00',
+    bakeDay: 'Sunday',
+    bwRetardHours: 14,
+    bwFoldsMode: '4',
+    simPercent: 100, // 0 to 150%
+    calculated: {
+      bulkHours: 4.8,
+      targetRisePct: 60,
+      kineticRate: 1.0,
+      doughFlour: 450,
+      doughWater: 320,
+      starterWeight: 100,
+      starterFlour: 50,
+      starterWater: 50,
+      saltWeight: 10,
+      totalMass: 880
+    }
+  };
+
+  // Safe localStorage helper
+  function saveStateToStorage() {
+    try {
+      localStorage.setItem('sourdough_visualizer_state', JSON.stringify({
+        flour: state.flour,
+        hydration: state.hydration,
+        starterInoc: state.starterInoc,
+        starterHydr: state.starterHydr,
+        salt: state.salt,
+        protein: state.protein,
+        ambientTempC: state.ambientTempC,
+        doughTempC: state.doughTempC,
+        unit: state.unit,
+        startTime: state.startTime,
+        numFolds: state.numFolds,
+        foldInterval: state.foldInterval,
+        retardType: state.retardType,
+        retardHours: state.retardHours
+      }));
+    } catch (e) {
+      // Storage unavailable or blocked
+    }
+  }
+
+  function loadStateFromStorage() {
+    try {
+      const data = localStorage.getItem('sourdough_visualizer_state');
+      if (data) {
+        const p = JSON.parse(data);
+        if (p.flour) state.flour = Number(p.flour);
+        if (p.hydration) state.hydration = Number(p.hydration);
+        if (p.starterInoc) state.starterInoc = Number(p.starterInoc);
+        if (p.starterHydr) state.starterHydr = Number(p.starterHydr);
+        if (p.salt) state.salt = Number(p.salt);
+        if (p.protein) state.protein = Number(p.protein);
+        if (p.ambientTempC) state.ambientTempC = Number(p.ambientTempC);
+        if (p.doughTempC) state.doughTempC = Number(p.doughTempC);
+        if (p.unit) state.unit = p.unit;
+        if (p.startTime) state.startTime = p.startTime;
+        if (p.numFolds !== undefined) state.numFolds = Number(p.numFolds);
+        if (p.foldInterval) state.foldInterval = Number(p.foldInterval);
+        if (p.retardType) state.retardType = p.retardType;
+        if (p.retardHours) state.retardHours = Number(p.retardHours);
+      }
+    } catch (e) {
+      // Storage unavailable
+    }
+  }
+
+  // Unit conversion helpers
+  function cToF(c) { return (c * 9/5) + 32; }
+  function fToC(f) { return (f - 32) * 5/9; }
+
+  // Calculation 1: Baker's Percentages
+  function computeFormulas() {
+    const F_total = Math.max(1, Number(state.flour) || 500);
+    const hydr = Math.max(1, Number(state.hydration) || 74);
+    const inoc = Math.max(0.1, Number(state.starterInoc) || 20);
+    const s_hydr = Math.max(10, Number(state.starterHydr) || 100);
+    const salt_pct = Math.max(0, Number(state.salt) || 0);
+
+    // Starter weight = Total Flour * (inoc / 100)
+    const starterMass = F_total * (inoc / 100);
+    // Starter hydration breakdown: mass = F_starter + W_starter, where W_starter = F_starter * (s_hydr/100)
+    const F_starter = starterMass / (1 + (s_hydr / 100));
+    const W_starter = starterMass - F_starter;
+
+    // Dough flour & dough water
+    const F_dough = F_total - F_starter;
+    const W_total = F_total * (hydr / 100);
+    const W_dough = Math.max(0, W_total - W_starter);
+    const saltMass = F_total * (salt_pct / 100);
+    const totalMass = F_dough + W_dough + starterMass + saltMass;
+
+    state.calculated.doughFlour = Math.round(F_dough * 10) / 10;
+    state.calculated.doughWater = Math.round(W_dough * 10) / 10;
+    state.calculated.starterWeight = Math.round(starterMass * 10) / 10;
+    state.calculated.starterFlour = Math.round(F_starter * 10) / 10;
+    state.calculated.starterWater = Math.round(W_starter * 10) / 10;
+    state.calculated.saltWeight = Math.round(saltMass * 10) / 10;
+    state.calculated.totalMass = Math.round(totalMass * 10) / 10;
+
+    // Render Formula Engine UI
+    document.getElementById('tdPctDoughFlour').textContent = ((F_dough / F_total) * 100).toFixed(1) + '%';
+    document.getElementById('tdDoughFlour').textContent = Math.round(F_dough) + ' g';
+
+    document.getElementById('tdPctDoughWater').textContent = ((W_dough / F_total) * 100).toFixed(1) + '%';
+    document.getElementById('tdDoughWater').textContent = Math.round(W_dough) + ' g';
+
+    document.getElementById('tdPctStarter').textContent = inoc.toFixed(1) + '%';
+    document.getElementById('tdStarter').textContent = Math.round(starterMass) + ' g';
+
+    document.getElementById('tdPctStarterFlour').textContent = ((F_starter / F_total) * 100).toFixed(1) + '%';
+    document.getElementById('tdStarterFlour').textContent = Math.round(F_starter) + ' g';
+
+    document.getElementById('tdPctStarterWater').textContent = ((W_starter / F_total) * 100).toFixed(1) + '%';
+    document.getElementById('tdStarterWater').textContent = Math.round(W_starter) + ' g';
+
+    document.getElementById('tdPctSalt').textContent = salt_pct.toFixed(1) + '%';
+    document.getElementById('tdSalt').textContent = (saltMass >= 10 ? Math.round(saltMass) : saltMass.toFixed(1)) + ' g';
+
+    const totalPct = 100 + hydr + salt_pct;
+    document.querySelector('.total-row td:nth-child(2)').textContent = totalPct.toFixed(1) + '%';
+    document.getElementById('tdTotalDough').textContent = Math.round(totalMass) + ' g';
+
+    document.getElementById('lblTotalFlour').textContent = Math.round(F_total) + 'g';
+    document.getElementById('lblTotalWater').textContent = Math.round(W_total) + 'g';
+    document.getElementById('lblTrueHydr').textContent = hydr.toFixed(1) + '%';
+  }
+
+  // Calculation 2: Thermal Kinetics & Target Volume Rise
+  function computeThermalModel() {
+    const ambC = Number(state.ambientTempC) || 24;
+    const doughC = Number(state.doughTempC) || 24;
+    const inoc = Math.max(0.1, Number(state.starterInoc) || 20);
+    const protein = Math.max(5, Number(state.protein) || 12.5);
+
+    // Effective weighted dough temperature over the bulk fermentation period
+    // Dough cools or warms gradually toward ambient room temperature
+    const effTempC = (doughC * 0.55) + (ambC * 0.45);
+
+    // Q10 microbial expansion rate: baseline reference is 24°C
+    // Q10 = 2.10 for sourdough yeast and lactic acid bacteria consortia
+    const Q10 = 2.10;
+    const rateMultiplier = Math.pow(Q10, (effTempC - 24.0) / 10.0);
+    state.calculated.kineticRate = rateMultiplier;
+
+    // Inoculation scaling relative to 20% standard
+    const inocFactor = Math.pow(inoc / 20.0, 0.82);
+
+    // Protein buffering adjustment
+    const proteinFactor = 1.0 + ((protein - 12.5) * 0.02);
+
+    // Base bulk hours at 24°C with 20% starter = 4.8 hours
+    let bulkHours = (4.8 / (rateMultiplier * inocFactor)) * proteinFactor;
+    bulkHours = Math.max(1.5, Math.min(24.0, bulkHours));
+    state.calculated.bulkHours = bulkHours;
+
+    // Target Volume Expansion % (Empirical sourdough science:
+    // Cooler doughs (18-20°C) ferment much slower and lose less gas in cold retard; need 75-90% rise.
+    // Warmer doughs (26-28°C) are hyper-active and retain less gas at room temp; need 35-50% rise).
+    let targetRise = 90 - ((effTempC - 18.0) * 5.0);
+    targetRise = Math.max(30, Math.min(100, Math.round(targetRise / 5) * 5));
+    state.calculated.targetRisePct = targetRise;
+
+    // Update UI elements
+    const h = Math.floor(bulkHours);
+    const m = Math.round((bulkHours - h) * 60);
+    document.getElementById('valBulkHours').textContent = bulkHours.toFixed(1) + 'h';
+    document.getElementById('valBulkSub').textContent = `~${h}h ${m < 10 ? '0' + m : m}m at ${effTempC.toFixed(1)}°C eff.`;
+    document.getElementById('valTargetRise').textContent = `+${targetRise}%`;
+    document.getElementById('valTargetRiseSub').textContent = `Meniscus target rise at ${effTempC.toFixed(1)}°C`;
+    document.getElementById('valKineticRate').textContent = rateMultiplier.toFixed(2) + 'x';
+
+    // Update interpretation advice
+    updateInterpretation(effTempC, targetRise, bulkHours);
+  }
+
+  function updateInterpretation(effTemp, targetRise, bulkHours) {
+    const interp = document.getElementById('interpText');
+    let text = "";
+    if (effTemp < 21) {
+      text = `Cool environment alert (${effTemp.toFixed(1)}°C): Yeast fermentation is slow. Target an expansive volume rise of +${targetRise}% before shaping. Because the dough cools quickly, under-proofing is the main risk. Bulk will require roughly ${bulkHours.toFixed(1)} hours. Maintain dough warmth if possible.`;
+    } else if (effTemp > 25.5) {
+      text = `Warm kitchen alert (${effTemp.toFixed(1)}°C): Enzymatic activity and acid accumulation run fast. Shape early at only +${targetRise}% volume expansion! Do not let it double in volume, or gluten structure will degrade and loaves will flatten during baking.`;
+    } else {
+      text = `Ideal artisanal zone (${effTemp.toFixed(1)}°C): Fermentation progresses cleanly. Target +${targetRise}% volume rise. Watch for rounded dome edges, noticeable aeration bubbles under the skin, and a distinct wobble when gently shaken.`;
+    }
+    interp.textContent = text;
+  }
+
+  // Calculation 3: Interactive Timeline Builder
+  function formatClock(totalMinutes) {
+    let dayOffset = Math.floor(totalMinutes / (24 * 60));
+    let minsInDay = ((totalMinutes % (24 * 60)) + (24 * 60)) % (24 * 60);
+    let hh = Math.floor(minsInDay / 60);
+    let mm = Math.floor(minsInDay % 60);
+    const period = hh >= 12 ? 'PM' : 'AM';
+    let displayH = hh % 12;
+    if (displayH === 0) displayH = 12;
+    const strH = displayH < 10 ? '' + displayH : '' + displayH;
+    const strM = mm < 10 ? '0' + mm : '' + mm;
+    const dayTag = dayOffset === 1 ? ' (+1d)' : dayOffset === 2 ? ' (+2d)' : dayOffset < 0 ? ' (-1d)' : '';
+    return `${strH}:${strM} ${period}${dayTag}`;
+  }
+
+  function parseTimeToMinutes(timeStr) {
+    if (!timeStr || typeof timeStr !== 'string' || !timeStr.includes(':')) return 10 * 60;
+    const parts = timeStr.split(':');
+    const h = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10);
+    if (isNaN(h) || isNaN(m)) return 10 * 60;
+    return (h * 60) + m;
+  }
+
+  function renderTimeline() {
+    const swimlane = document.getElementById('timelineSwimlane');
+    swimlane.innerHTML = '';
+    const events = [];
+
+    if (state.mode === 'forward') {
+      const startMin = parseTimeToMinutes(state.startTime);
+      const bulkMinutes = Math.round(state.calculated.bulkHours * 60);
+
+      // Event: Mix
+      events.push({
+        time: startMin,
+        type: 'mix',
+        title: 'Initial Mix & Inoculation',
+        desc: `Incorporate ${state.calculated.starterWeight}g starter and autolysed dough. Begin bulk timer.`,
+        badge: 'T+0:00'
+      });
+
+      // Events: Stretch & Folds
+      const folds = state.numFolds;
+      const interval = state.foldInterval;
+      for (let i = 1; i <= folds; i++) {
+        const foldMin = startMin + (i * interval);
+        events.push({
+          time: foldMin,
+          type: 'fold',
+          title: `Stretch & Fold Set #${i}`,
+          desc: `Aeration & gluten alignment set ${i} of ${folds}. Rest at room temp.`,
+          badge: `T+${Math.floor((i * interval)/60)}h${(i*interval)%60 < 10 ? '0' : ''}${(i*interval)%60}m`
+        });
+      }
+
+      // Event: Bulk Peak & Shape
+      const bulkEndMin = startMin + bulkMinutes;
+      events.push({
+        time: bulkEndMin,
+        type: 'peak',
+        title: `Peak Bulk Fermentation (+${state.calculated.targetRisePct}% Volume)`,
+        desc: `Dough is billowy with rounded meniscus. Tip onto floured bench and pre-shape.`,
+        badge: `T+${Math.floor(bulkMinutes/60)}h${bulkMinutes%60 < 10 ? '0' : ''}${bulkMinutes%60}m`
+      });
+
+      // Event: Bench Rest & Final Shape
+      const benchRestEnd = bulkEndMin + 25;
+      events.push({
+        time: benchRestEnd,
+        type: 'shape',
+        title: 'Final Shaping into Banneton',
+        desc: 'Build surface tension, coat in rice flour, place seam-side up in basket.',
+        badge: '+25m'
+      });
+
+      // Cold Retard or Ambient Proof
+      if (state.retardType === 'cold') {
+        const fridgeIn = benchRestEnd + 20;
+        const retardMins = Math.round(state.retardHours * 60);
+        const fridgeOut = fridgeIn + retardMins;
+
+        events.push({
+          time: fridgeIn,
+          type: 'fridge',
+          title: 'Transfer to Refrigerator (Cold Retard at 4°C)',
+          desc: `Bag banneton airtight. Slow fermentation develops lactic & acetic acidity.`,
+          badge: 'Fridge In'
+        });
+
+        // Oven Preheat
+        const preheat = fridgeOut - 45;
+        events.push({
+          time: preheat,
+          type: 'bake',
+          title: 'Pre-heat Oven & Dutch Oven (250°C / 485°F)',
+          desc: 'Thoroughly heat baking steel or combo cooker for minimum 45 minutes.',
+          badge: 'Pre-heat'
+        });
+
+        // Bake
+        events.push({
+          time: fridgeOut,
+          type: 'bake',
+          title: 'Score & Bake Cold Loaf',
+          desc: 'Direct from fridge: score cold dough, load with steam. Bake 20m covered, 22m uncovered.',
+          badge: 'Bake'
+        });
+      } else {
+        // Same day ambient proof
+        const finalProofEnd = benchRestEnd + 90;
+        events.push({
+          time: finalProofEnd - 45,
+          type: 'bake',
+          title: 'Pre-heat Oven & Dutch Oven',
+          desc: 'Thoroughly heat baking cloche or stone to 250°C.',
+          badge: 'Pre-heat'
+        });
+        events.push({
+          time: finalProofEnd,
+          type: 'bake',
+          title: 'Finger Poke Test & Bake',
+          desc: 'Loaf springs back slowly leaving gentle indentation. Score and bake immediately.',
+          badge: 'Bake'
+        });
+      }
+    } else {
+      // BACKWARD MODE: Target Sunday Bake Time
+      const bakeMin = parseTimeToMinutes(state.bakeTime);
+      const retardMins = Math.round(state.bwRetardHours * 60);
+      const bulkMinutes = Math.round(state.calculated.bulkHours * 60);
+
+      const fridgeOut = bakeMin;
+      const preheat = fridgeOut - 45;
+      const fridgeIn = fridgeOut - retardMins;
+      const finalShape = fridgeIn - 20;
+      const bulkEnd = finalShape - 25;
+      const mixMin = bulkEnd - bulkMinutes;
+
+      // Event 1: Saturday Mix
+      events.push({
+        time: mixMin,
+        type: 'mix',
+        title: 'Saturday Dough Mix & Starter Inoculation',
+        desc: `Mix flour, water, salt, and ${state.calculated.starterWeight}g starter to hit Sunday morning bake.`,
+        badge: 'Mix'
+      });
+
+      // Events: Saturday Folds
+      const numFolds = state.bwFoldsMode.startsWith('3') ? 3 : 4;
+      const foldSpacing = state.bwFoldsMode.includes('45') ? 45 : 30;
+      for (let i = 1; i <= numFolds; i++) {
+        events.push({
+          time: mixMin + (i * foldSpacing),
+          type: 'fold',
+          title: `Saturday Stretch & Fold #${i}`,
+          desc: `Fold set ${i} of ${numFolds} at kitchen ambient temp.`,
+          badge: `Fold #${i}`
+        });
+      }
+
+      // Bulk End & Shaping
+      events.push({
+        time: bulkEnd,
+        type: 'peak',
+        title: `Saturday Bulk Peak (+${state.calculated.targetRisePct}% Target)`,
+        desc: 'Ready for pre-shape and 25 min bench rest.',
+        badge: 'Bulk End'
+      });
+
+      events.push({
+        time: finalShape,
+        type: 'shape',
+        title: 'Final Shape & Dusting',
+        desc: 'Place dough into banneton proofing basket.',
+        badge: 'Shaping'
+      });
+
+      events.push({
+        time: fridgeIn,
+        type: 'fridge',
+        title: `Saturday Evening Fridge Entry (4°C Retard)`,
+        desc: `Into refrigerator for ${state.bwRetardHours}h overnight proof. Dough stabilizes safely.`,
+        badge: 'Overnight In'
+      });
+
+      events.push({
+        time: preheat,
+        type: 'bake',
+        title: 'Sunday Morning Oven Pre-heat (250°C)',
+        desc: 'Heat cast iron combo cooker or baking stone.',
+        badge: 'Pre-heat'
+      });
+
+      events.push({
+        time: bakeMin,
+        type: 'bake',
+        title: 'Sunday Morning Bake Time',
+        desc: 'Turn cold loaf directly onto parchment, score expansion slash, bake under steam.',
+        badge: 'Target Bake'
+      });
+    }
+
+    // Sort chronologically
+    events.sort((a, b) => a.time - b.time);
+
+    // Render HTML nodes
+    events.forEach(ev => {
+      const row = document.createElement('div');
+      row.className = `swimlane-event ${ev.type}`;
+      row.innerHTML = `
+        <div class="event-time">${formatClock(ev.time)}</div>
+        <div class="event-node"></div>
+        <div class="event-body">
+          <div class="event-title">${ev.title}</div>
+          <div class="event-desc">${ev.desc}</div>
+        </div>
+        <div class="event-badge">${ev.badge}</div>
+      `;
+      swimlane.appendChild(row);
+    });
+  }
+
+  // Calculation 4: Canvas Dough Meniscus & Alveolar Graphics
+  function renderCanvasSimulator() {
+    const canvas = document.getElementById('doughCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+
+    ctx.clearRect(0, 0, width, height);
+
+    // Cambro container bounds
+    const boxX = 35;
+    const boxY = 25;
+    const boxW = width - 70;
+    const boxH = height - 50;
+
+    // Simulation progress calculations
+    const simRatio = state.simPercent / 100; // 0 to 1.5
+    const targetExpansion = state.calculated.targetRisePct / 100; // e.g. 0.60
+    const actualRise = targetExpansion * simRatio; // 0 to target*1.5
+
+    // Base meniscus baseline height (empty container bottom is boxY + boxH)
+    const baseDoughH = boxH * 0.38;
+    const currentDoughH = Math.min(boxH * 0.92, baseDoughH * (1 + actualRise));
+    const doughTopY = (boxY + boxH) - currentDoughH;
+
+    // Container Background & Gradient (Clear Polycarbonate look)
+    ctx.fillStyle = "rgba(235, 243, 248, 0.4)";
+    ctx.fillRect(boxX, boxY, boxW, boxH);
+
+    // Cambro graduation lines & numbers
+    ctx.strokeStyle = "#d9483b";
+    ctx.fillStyle = "#d9483b";
+    ctx.lineWidth = 1;
+    ctx.font = "9px ui-monospace, sans-serif";
+    for (let mark = 1; mark <= 4; mark++) {
+      const my = (boxY + boxH) - (mark * (boxH / 4.5));
+      ctx.beginPath();
+      ctx.moveTo(boxX, my);
+      ctx.lineTo(boxX + 12, my);
+      ctx.stroke();
+      ctx.fillText(`${mark}L`, boxX + 15, my + 3);
+    }
+
+    // Target Meniscus Guideline (Dotted line where bulk should stop)
+    const targetY = (boxY + boxH) - (baseDoughH * (1 + targetExpansion));
+    ctx.save();
+    ctx.setLineDash([4, 3]);
+    ctx.strokeStyle = "#10b981";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(boxX, targetY);
+    ctx.lineTo(boxX + boxW, targetY);
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.fillStyle = "#10b981";
+    ctx.font = "bold 9px ui-monospace, sans-serif";
+    ctx.fillText(`TARGET (+${state.calculated.targetRisePct}%)`, boxX + boxW - 85, targetY - 4);
+
+    // Dough Meniscus Body Drawing
+    ctx.save();
+    ctx.beginPath();
+    // Curved dome at the top of the dough
+    const domeBulge = Math.min(16, currentDoughH * 0.12);
+    ctx.moveTo(boxX + 2, (boxY + boxH));
+    ctx.lineTo(boxX + 2, doughTopY + domeBulge);
+    // Smooth quadratic curve for natural dough meniscus
+    ctx.quadraticCurveTo(boxX + (boxW / 2), doughTopY - domeBulge, boxX + boxW - 2, doughTopY + domeBulge);
+    ctx.lineTo(boxX + boxW - 2, (boxY + boxH));
+    ctx.closePath();
+
+    // Dough creamy gradient fill
+    const doughGrad = ctx.createLinearGradient(0, doughTopY, 0, boxY + boxH);
+    doughGrad.addColorStop(0, '#e8d8b5');
+    doughGrad.addColorStop(0.7, '#f4e9d0');
+    doughGrad.addColorStop(1, '#ebd7ae');
+    ctx.fillStyle = doughGrad;
+    ctx.fill();
+
+    // Meniscus top skin highlight
+    ctx.strokeStyle = '#c5a975';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(boxX + 2, doughTopY + domeBulge);
+    ctx.quadraticCurveTo(boxX + (boxW / 2), doughTopY - domeBulge, boxX + boxW - 2, doughTopY + domeBulge);
+    ctx.stroke();
+
+    // Clip to dough area for internal alveolar bubbles simulation
+    ctx.clip();
+
+    // Dynamic Micro-bubbles and Alveoli Generation based on pseudo-random seeds
+    const bubbleCount = Math.floor(10 + (actualRise * 80));
+    ctx.fillStyle = 'rgba(215, 190, 145, 0.55)';
+    ctx.strokeStyle = 'rgba(180, 150, 105, 0.4)';
+
+    // Deterministic pseudo-random generation
+    let seed = 42;
+    function rand() {
+      seed = (seed * 9301 + 49297) % 233280;
+      return seed / 233280;
+    }
+
+    for (let i = 0; i < bubbleCount; i++) {
+      const rx = boxX + 6 + (rand() * (boxW - 12));
+      const ry = doughTopY + 10 + (rand() * (currentDoughH - 14));
+      // Bubble size grows dramatically as fermentation proceeds
+      const maxBubbleR = 1.2 + (actualRise * 8.5 * rand());
+      const br = Math.max(0.8, maxBubbleR);
+
+      ctx.beginPath();
+      ctx.arc(rx, ry, br, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // For larger bubbles, draw internal web/struts
+      if (br > 4.5 && actualRise > 0.4) {
+        ctx.beginPath();
+        ctx.moveTo(rx - br * 0.6, ry);
+        ctx.lineTo(rx + br * 0.6, ry);
+        ctx.strokeStyle = 'rgba(160, 130, 90, 0.35)';
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // Draw translucent Cambro Polycarbonate borders & lip
+    ctx.strokeStyle = "#8da3b5";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(boxX, boxY, boxW, boxH);
+
+    // Container top handles / rim
+    ctx.fillStyle = "#8da3b5";
+    ctx.fillRect(boxX - 6, boxY - 3, boxW + 12, 6);
+
+    // Update Simulator Labels & Badges
+    const curRisePct = Math.round(actualRise * 100);
+    const badge = document.getElementById('simStageBadge');
+    const lblPorosity = document.getElementById('lblSimPorosity');
+    const lblGluten = document.getElementById('lblSimGluten');
+    const lblVolume = document.getElementById('lblSimVolume');
+    const lblMl = document.getElementById('lblSimMl');
+
+    lblVolume.textContent = `+${curRisePct}%`;
+    lblMl.textContent = `${Math.round(1000 * (1 + actualRise))}ml`;
+
+    if (simRatio < 0.25) {
+      badge.textContent = "Lag Phase (Yeast Awakening)";
+      badge.style.background = "var(--bg)";
+      badge.style.color = "var(--text-muted)";
+      lblPorosity.textContent = "Dense, uniform, tiny micro-nucleations";
+      lblGluten.textContent = "Tightly wound, low elasticity";
+    } else if (simRatio < 0.85) {
+      badge.textContent = "Active Rise (Aeration Developing)";
+      badge.style.background = "var(--primary-light)";
+      badge.style.color = "var(--primary)";
+      lblPorosity.textContent = "Expanding air pockets, bubbly texture forming";
+      lblGluten.textContent = "Building structural tension from folds";
+    } else if (simRatio <= 1.05) {
+      badge.textContent = "Peak Fermentation: Ready to Shape";
+      badge.style.background = "var(--accent-light)";
+      badge.style.color = "var(--accent)";
+      lblPorosity.textContent = "Balanced open honeycomb structure";
+      lblGluten.textContent = "Domed top, elastic wobble, peak gas capacity";
+    } else {
+      badge.textContent = "Overproofing Risk (Degrading Structure)";
+      badge.style.background = "var(--danger-light)";
+      badge.style.color = "var(--danger)";
+      lblPorosity.textContent = "Oversized ragged caverns, gluten strands weakening";
+      lblGluten.textContent = "Flattening dome, sticky surface, tearing easily";
+    }
+  }
+
+  function validateAndSetInputs() {
+    const errorAlert = document.getElementById('inputErrorAlert');
+    let errors = [];
+
+    function checkField(id, label, min, max, allowZero = false) {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const raw = el.value.trim();
+      el.style.borderColor = '';
+      if (raw === '' || isNaN(Number(raw))) {
+        el.style.borderColor = 'var(--danger)';
+        errors.push(`${label}: please enter a valid number.`);
+        return null;
+      }
+      const val = parseFloat(raw);
+      if (!allowZero && val <= 0) {
+        el.style.borderColor = 'var(--danger)';
+        errors.push(`${label} must be greater than 0.`);
+        return null;
+      }
+      if (allowZero && val < 0) {
+        el.style.borderColor = 'var(--danger)';
+        errors.push(`${label} cannot be negative.`);
+        return null;
+      }
+      if (min !== undefined && val < min) {
+        el.style.borderColor = 'var(--danger)';
+        errors.push(`${label} must be at least ${min}.`);
+        return null;
+      }
+      if (max !== undefined && val > max) {
+        el.style.borderColor = 'var(--danger)';
+        errors.push(`${label} cannot exceed ${max}.`);
+        return null;
+      }
+      return val;
+    }
+
+    const flour = checkField('inpTotalFlour', 'Total Flour', 10, 50000);
+    if (flour !== null) state.flour = flour;
+
+    const hydr = checkField('inpHydration', 'Hydration', 20, 150);
+    if (hydr !== null) state.hydration = hydr;
+
+    const inoc = checkField('inpStarterInoc', 'Starter Inoculation', 0.5, 100);
+    if (inoc !== null) state.starterInoc = inoc;
+
+    const sHydr = checkField('inpStarterHydr', 'Starter Hydration', 20, 300);
+    if (sHydr !== null) state.starterHydr = sHydr;
+
+    const salt = checkField('inpSalt', 'Salt Percentage', 0, 10, true);
+    if (salt !== null) state.salt = salt;
+
+    const protein = checkField('inpProtein', 'Flour Protein', 5, 25);
+    if (protein !== null) state.protein = protein;
+
+    const retHrs = checkField('inpRetardHours', 'Retard Duration', 0, 96, true);
+    if (retHrs !== null) state.retardHours = retHrs;
+
+    const bwRetHrs = checkField('inpBwRetardHours', 'Cold Retard', 0, 96, true);
+    if (bwRetHrs !== null) state.bwRetardHours = bwRetHrs;
+
+    const ambEl = document.getElementById('inpAmbientTemp');
+    if (ambEl) {
+      const raw = ambEl.value.trim();
+      ambEl.style.borderColor = '';
+      if (raw === '' || isNaN(Number(raw))) {
+        ambEl.style.borderColor = 'var(--danger)';
+        errors.push('Kitchen Ambient Temp: please enter a valid number.');
+      } else {
+        const val = parseFloat(raw);
+        const minT = state.unit === 'C' ? 10 : 50;
+        const maxT = state.unit === 'C' ? 38 : 100;
+        if (val < minT || val > maxT) {
+          ambEl.style.borderColor = 'var(--danger)';
+          errors.push(`Ambient Temp must be between ${minT}° and ${maxT}°.`);
+        } else {
+          state.ambientTempC = state.unit === 'C' ? val : fToC(val);
+        }
+      }
+    }
+
+    const doughEl = document.getElementById('inpDoughTemp');
+    if (doughEl) {
+      const raw = doughEl.value.trim();
+      doughEl.style.borderColor = '';
+      if (raw === '' || isNaN(Number(raw))) {
+        doughEl.style.borderColor = 'var(--danger)';
+        errors.push('Initial Mixed Dough Temp: please enter a valid number.');
+      } else {
+        const val = parseFloat(raw);
+        const minT = state.unit === 'C' ? 10 : 50;
+        const maxT = state.unit === 'C' ? 38 : 100;
+        if (val < minT || val > maxT) {
+          doughEl.style.borderColor = 'var(--danger)';
+          errors.push(`Dough Temp must be between ${minT}° and ${maxT}°.`);
+        } else {
+          state.doughTempC = state.unit === 'C' ? val : fToC(val);
+        }
+      }
+    }
+
+    if (errorAlert) {
+      if (errors.length > 0) {
+        errorAlert.style.display = 'block';
+        errorAlert.innerHTML = errors.join('<br>');
+      } else {
+        errorAlert.style.display = 'none';
+        errorAlert.innerHTML = '';
+      }
+    }
+  }
+
+  // Synchronize state and trigger redraw
+  function recalculateAll() {
+    validateAndSetInputs();
+    computeFormulas();
+    computeThermalModel();
+    renderTimeline();
+    renderCanvasSimulator();
+    saveStateToStorage();
+  }
+
+  // Handle Preset Selection
+  const presets = [
+    {
+      btnId: 'preset1',
+      name: "Classic Overnight Artisanal Boule (Standard Summer/Warm Kitchen)",
+      flour: 500,
+      hydr: 74,
+      starterInoc: 20,
+      starterHydr: 100,
+      salt: 2.0,
+      ambientC: 24,
+      doughC: 24,
+      protein: 12.5,
+      folds: 4,
+      foldInt: 30,
+      retardType: 'cold',
+      retardHours: 14,
+      startTime: '10:00'
+    },
+    {
+      btnId: 'preset2',
+      name: "Slow Winter Kitchen Loaf (Cool 19°C Ambient)",
+      flour: 500,
+      hydr: 70,
+      starterInoc: 22,
+      starterHydr: 100,
+      salt: 2.0,
+      ambientC: 19,
+      doughC: 20,
+      protein: 13.0,
+      folds: 4,
+      foldInt: 45,
+      retardType: 'ambient',
+      retardHours: 0,
+      startTime: '07:30'
+    },
+    {
+      btnId: 'preset3',
+      name: "High-Hydration Open-Crumb Ciabatta (26°C Warm Proofer)",
+      flour: 600,
+      hydr: 82,
+      starterInoc: 15,
+      starterHydr: 100,
+      salt: 2.2,
+      ambientC: 26,
+      doughC: 26,
+      protein: 13.5,
+      folds: 5,
+      foldInt: 30,
+      retardType: 'cold',
+      retardHours: 16,
+      startTime: '11:00'
+    }
+  ];
+
+  function loadPreset(idx) {
+    const p = presets[idx];
+    state.flour = p.flour;
+    state.hydration = p.hydr;
+    state.starterInoc = p.starterInoc;
+    state.starterHydr = p.starterHydr;
+    state.salt = p.salt;
+    state.ambientTempC = p.ambientC;
+    state.doughTempC = p.doughC;
+    state.protein = p.protein;
+    state.numFolds = p.folds;
+    state.foldInterval = p.foldInt;
+    state.retardType = p.retardType;
+    state.retardHours = p.retardHours;
+    state.startTime = p.startTime;
+
+    // Update form controls
+    document.getElementById('inpTotalFlour').value = state.flour;
+    document.getElementById('inpHydration').value = state.hydration;
+    document.getElementById('inpStarterInoc').value = state.starterInoc;
+    document.getElementById('inpStarterHydr').value = state.starterHydr;
+    document.getElementById('inpSalt').value = state.salt;
+    document.getElementById('inpProtein').value = state.protein;
+    updateTempInputsDisplay();
+    document.getElementById('inpNumFolds').value = state.numFolds;
+    document.getElementById('inpFoldInterval').value = state.foldInterval;
+    document.getElementById('inpRetardType').value = state.retardType;
+    document.getElementById('inpRetardHours').value = state.retardHours;
+    document.getElementById('inpStartTime').value = state.startTime;
+
+    // Toggle active preset chip UI
+    presets.forEach((item, i) => {
+      const el = document.getElementById(item.btnId);
+      if (el) el.classList.toggle('active', i === idx);
+    });
+
+    recalculateAll();
+  }
+
+  function updateTempInputsDisplay() {
+    const inpAmb = document.getElementById('inpAmbientTemp');
+    const inpDough = document.getElementById('inpDoughTemp');
+    const lblAmb = document.getElementById('lblUnitAmbient');
+    const lblDough = document.getElementById('lblUnitDough');
+
+    if (state.unit === 'C') {
+      inpAmb.value = state.ambientTempC.toFixed(1);
+      inpDough.value = state.doughTempC.toFixed(1);
+      inpAmb.min = 10;
+      inpAmb.max = 38;
+      inpAmb.step = 0.5;
+      inpDough.min = 10;
+      inpDough.max = 38;
+      inpDough.step = 0.5;
+      lblAmb.textContent = '°C';
+      lblDough.textContent = '°C';
+    } else {
+      inpAmb.value = cToF(state.ambientTempC).toFixed(1);
+      inpDough.value = cToF(state.doughTempC).toFixed(1);
+      inpAmb.min = 50;
+      inpAmb.max = 100;
+      inpAmb.step = 1;
+      inpDough.min = 50;
+      inpDough.max = 100;
+      inpDough.step = 1;
+      lblAmb.textContent = '°F';
+      lblDough.textContent = '°F';
+    }
+  }
+
+  // PRO feature handler
+  function triggerProGate(featureName) {
+    if (!PRO) {
+      const alertBox = document.getElementById('proAlert');
+      const alertText = document.getElementById('proAlertText');
+      alertText.innerHTML = `Available in the full version. <a href="${PRO_LINK}" target="_blank" rel="noopener">Upgrade to Full Version</a> to use ${featureName}.`;
+      alertBox.classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return false;
+    }
+    return true;
+  }
+
+  // Export handlers
+  function exportScheduleJson() {
+    if (!triggerProGate('JSON Export')) return;
+    const exportData = {
+      title: "Sourdough Fermentation Schedule",
+      dateGenerated: new Date().toISOString(),
+      formula: {
+        totalFlourGrams: state.flour,
+        hydrationPercent: state.hydration,
+        starterInoculationPercent: state.starterInoc,
+        saltPercent: state.salt,
+        flourInDough: state.calculated.doughFlour,
+        waterInDough: state.calculated.doughWater,
+        starterWeight: state.calculated.starterWeight,
+        totalMassGrams: state.calculated.totalMass
+      },
+      thermalKinetics: {
+        ambientTempC: state.ambientTempC,
+        initialDoughTempC: state.doughTempC,
+        predictedBulkHours: state.calculated.bulkHours,
+        targetMeniscusRisePercent: state.calculated.targetRisePct
+      },
+      mode: state.mode
+    };
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sourdough-schedule-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function exportScheduleCsv() {
+    if (!triggerProGate('CSV Export')) return;
+    const events = [];
+    document.querySelectorAll('.swimlane-event').forEach(el => {
+      const time = el.querySelector('.event-time')?.textContent.trim() || '';
+      const title = el.querySelector('.event-title')?.textContent.trim() || '';
+      const desc = el.querySelector('.event-desc')?.textContent.trim() || '';
+      const badge = el.querySelector('.event-badge')?.textContent.trim() || '';
+      events.push(`"${time}","${title.replace(/"/g, '""')}","${desc.replace(/"/g, '""')}","${badge}"`);
+    });
+
+    const csvContent = "Time,Phase,Action,Tag\n" + events.join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sourdough-schedule-${Date.now()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function printSchedule() {
+    if (!triggerProGate('Printing')) return;
+    window.print();
+  }
+
+  // Setup Event Listeners
+  function initListeners() {
+    // Number Inputs
+    const bindNum = (id, prop, min, max) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', () => {
+        let val = parseFloat(el.value);
+        if (isNaN(val)) return;
+        if (min !== undefined) val = Math.max(min, val);
+        if (max !== undefined) val = Math.min(max, val);
+        state[prop] = val;
+        recalculateAll();
+      });
+    };
+
+    bindNum('inpTotalFlour', 'flour', 10, 50000);
+    bindNum('inpHydration', 'hydration', 20, 150);
+    bindNum('inpStarterInoc', 'starterInoc', 0.5, 100);
+    bindNum('inpStarterHydr', 'starterHydr', 20, 300);
+    bindNum('inpSalt', 'salt', 0, 10);
+    bindNum('inpProtein', 'protein', 7, 25);
+    bindNum('inpRetardHours', 'retardHours', 0, 96);
+    bindNum('inpBwRetardHours', 'bwRetardHours', 0, 96);
+
+    // Temperature inputs with Unit awareness
+    const inpAmb = document.getElementById('inpAmbientTemp');
+    inpAmb.addEventListener('input', () => {
+      const val = parseFloat(inpAmb.value);
+      if (isNaN(val)) return;
+      state.ambientTempC = state.unit === 'C' ? val : fToC(val);
+      recalculateAll();
+    });
+
+    const inpDough = document.getElementById('inpDoughTemp');
+    inpDough.addEventListener('input', () => {
+      const val = parseFloat(inpDough.value);
+      if (isNaN(val)) return;
+      state.doughTempC = state.unit === 'C' ? val : fToC(val);
+      recalculateAll();
+    });
+
+    // Unit toggle buttons
+    document.getElementById('btnUnitC').addEventListener('click', () => {
+      if (state.unit === 'C') return;
+      state.unit = 'C';
+      document.getElementById('btnUnitC').classList.add('active');
+      document.getElementById('btnUnitF').classList.remove('active');
+      updateTempInputsDisplay();
+    });
+    document.getElementById('btnUnitF').addEventListener('click', () => {
+      if (state.unit === 'F') return;
+      state.unit = 'F';
+      document.getElementById('btnUnitF').classList.add('active');
+      document.getElementById('btnUnitC').classList.remove('active');
+      updateTempInputsDisplay();
+    });
+
+    // Timeline Controls
+    document.getElementById('inpStartTime').addEventListener('change', (e) => {
+      state.startTime = e.target.value;
+      renderTimeline();
+      saveStateToStorage();
+    });
+    document.getElementById('inpNumFolds').addEventListener('change', (e) => {
+      state.numFolds = parseInt(e.target.value, 10);
+      renderTimeline();
+      saveStateToStorage();
+    });
+    document.getElementById('inpFoldInterval').addEventListener('change', (e) => {
+      state.foldInterval = parseInt(e.target.value, 10);
+      renderTimeline();
+      saveStateToStorage();
+    });
+    document.getElementById('inpRetardType').addEventListener('change', (e) => {
+      state.retardType = e.target.value;
+      const wrap = document.getElementById('wrapRetardHours');
+      if (wrap) wrap.style.display = state.retardType === 'cold' ? 'flex' : 'none';
+      renderTimeline();
+      saveStateToStorage();
+    });
+
+    // Backward mode inputs
+    document.getElementById('inpBakeTime').addEventListener('change', (e) => {
+      state.bakeTime = e.target.value;
+      renderTimeline();
+    });
+    document.getElementById('inpBakeDay').addEventListener('change', (e) => {
+      state.bakeDay = e.target.value;
+      renderTimeline();
+    });
+    document.getElementById('inpBwFolds').addEventListener('change', (e) => {
+      state.bwFoldsMode = e.target.value;
+      renderTimeline();
+    });
+
+    // Forward vs Backward mode switch
+    document.getElementById('btnModeForward').addEventListener('click', () => {
+      state.mode = 'forward';
+      document.getElementById('btnModeForward').classList.add('active');
+      document.getElementById('btnModeBackward').classList.remove('active');
+      document.getElementById('forwardInputs').style.display = 'flex';
+      document.getElementById('backwardInputs').style.display = 'none';
+      renderTimeline();
+    });
+    document.getElementById('btnModeBackward').addEventListener('click', () => {
+      state.mode = 'backward';
+      document.getElementById('btnModeBackward').classList.add('active');
+      document.getElementById('btnModeForward').classList.remove('active');
+      document.getElementById('forwardInputs').style.display = 'none';
+      document.getElementById('backwardInputs').style.display = 'flex';
+      renderTimeline();
+    });
+
+    // Simulator range slider
+    const simSlider = document.getElementById('inpSimProgress');
+    simSlider.addEventListener('input', () => {
+      state.simPercent = parseInt(simSlider.value, 10);
+      document.getElementById('lblSimProgress').textContent = `${state.simPercent}% of Bulk Target`;
+      renderCanvasSimulator();
+    });
+
+    document.getElementById('btnSet100').addEventListener('click', () => {
+      simSlider.value = 100;
+      state.simPercent = 100;
+      document.getElementById('lblSimProgress').textContent = `100% of Bulk Target`;
+      renderCanvasSimulator();
+    });
+
+    document.getElementById('btnSyncClock').addEventListener('click', () => {
+      // Calculate where we are relative to start time and bulk duration
+      const now = new Date();
+      const currentMin = (now.getHours() * 60) + now.getMinutes();
+      const startMin = parseTimeToMinutes(state.startTime);
+      let diff = currentMin - startMin;
+      if (diff < 0) diff += 24 * 60; // next day cycle
+      const totalBulkMins = state.calculated.bulkHours * 60;
+      let ratio = Math.min(150, Math.max(0, Math.round((diff / totalBulkMins) * 100)));
+      simSlider.value = ratio;
+      state.simPercent = ratio;
+      document.getElementById('lblSimProgress').textContent = `${ratio}% of Bulk Target (Real-time Clock)`;
+      renderCanvasSimulator();
+    });
+
+    // Preset Chip Buttons
+    presets.forEach((p, idx) => {
+      const btn = document.getElementById(p.btnId);
+      if (btn) {
+        btn.addEventListener('click', () => {
+          if (idx > 0 && !triggerProGate('Additional Scenarios')) return;
+          loadPreset(idx);
+        });
+      }
+    });
+
+    // Header buttons
+    document.getElementById('btnReset').addEventListener('click', () => {
+      loadPreset(0);
+    });
+    document.getElementById('btnExportJson').addEventListener('click', exportScheduleJson);
+    document.getElementById('btnExportCsv').addEventListener('click', exportScheduleCsv);
+    document.getElementById('btnPrint').addEventListener('click', printSchedule);
+  }
+
+  // Initialize application on DOM ready
+  window.addEventListener('DOMContentLoaded', () => {
+    loadStateFromStorage();
+    initListeners();
+    updateTempInputsDisplay();
+    recalculateAll();
+  });
+
+  // REVERSE SCHEDULE SOLVER MODULE (reverse-scheduler-solver)
+  function formatSolverDayTime(d) {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const day = days[d.getDay()];
+    const hh = d.getHours();
+    const mm = d.getMinutes();
+    const strH = hh < 10 ? '0' + hh : '' + hh;
+    const strM = mm < 10 ? '0' + mm : '' + mm;
+    return `${day} ${strH}:${strM}`;
+  }
+
+  function formatSolverClock12(d) {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const day = days[d.getDay()];
+    let hh = d.getHours();
+    const mm = d.getMinutes();
+    const ampm = hh >= 12 ? 'PM' : 'AM';
+    hh = hh % 12 || 12;
+    const strM = mm < 10 ? '0' + mm : '' + mm;
+    return `${day} ${hh}:${strM} ${ampm}`;
+  }
+
+  function recalculateReverseSolver() {
+    const bakeInput = document.getElementById('revBakeDateTime');
+    const fridgeTempInput = document.getElementById('revFridgeTemp');
+    const retardHoursInput = document.getElementById('revRetardHours');
+    if (!bakeInput || !fridgeTempInput || !retardHoursInput) return;
+
+    let bakeVal = bakeInput.value;
+    if (!bakeVal) {
+      bakeVal = "2025-05-18T08:00";
+      bakeInput.value = bakeVal;
+    }
+    const targetBakeDate = new Date(bakeVal);
+    if (isNaN(targetBakeDate.getTime())) return;
+
+    const fridgeTemp = Math.min(10, Math.max(1, parseFloat(fridgeTempInput.value) || 4.0));
+    const retardHours = Math.min(72, Math.max(2, parseFloat(retardHoursInput.value) || 14.0));
+
+    // 1. Fridge Entry Deadline = Target Bake Time minus Cold Retard Duration
+    const retardMs = retardHours * 3600 * 1000;
+    const fridgeInDate = new Date(targetBakeDate.getTime() - retardMs);
+
+    // 2. Pre-fridge Shaping & Bench Rest: 45 min (25m bench rest + 20m banneton shaping)
+    const shapingMs = 45 * 60 * 1000;
+    const bulkEndDate = new Date(fridgeInDate.getTime() - shapingMs);
+
+    // 3. Thermal Kinetic compensation for fridge cooling lag:
+    // At baseline 4°C, cooling takes ~90 mins, contributing ~0.3h room-temp equivalent fermentation.
+    // Above 4°C, dough ferments more overnight; bulk duration must be trimmed to prevent over-proofing.
+    const coolingCompensation = 0.3 + Math.max(0, (fridgeTemp - 4.0) * 0.15);
+    const roomBulkHours = Math.max(1.5, (state.calculated.bulkHours || 4.8) - coolingCompensation);
+    const bulkMs = roomBulkHours * 3600 * 1000;
+
+    // 4. Inverted Mix Start Time
+    const mixStartDate = new Date(bulkEndDate.getTime() - bulkMs);
+
+    // Update Header Metric Displays
+    const mixFormatted = formatSolverDayTime(mixStartDate);
+    const fridgeFormatted = formatSolverDayTime(fridgeInDate);
+    const totalAmbientMins = Math.round((roomBulkHours * 60) + 45);
+    const ambH = Math.floor(totalAmbientMins / 60);
+    const ambM = totalAmbientMins % 60;
+
+    document.getElementById('revMixDisplay').textContent = mixFormatted;
+    document.getElementById('revMixSub').textContent = `${formatSolverClock12(mixStartDate)} (Mix flour, water & starter)`;
+    document.getElementById('revFridgeDisplay').textContent = fridgeFormatted;
+    document.getElementById('revFridgeSub').textContent = `${formatSolverClock12(fridgeInDate)} into ${fridgeTemp.toFixed(1)}°C fridge`;
+    document.getElementById('revWindowDisplay').textContent = `${ambH}h ${ambM < 10 ? '0' + ambM : ambM}m`;
+    document.getElementById('revWindowSub').textContent = `${Math.floor(roomBulkHours)}h ${Math.round((roomBulkHours % 1) * 60)}m Bulk + 45m Bench Rest`;
+
+    // 5. Inverted Chronological Step Schedule
+    const rowsContainer = document.getElementById('revScheduleRows');
+    rowsContainer.innerHTML = '';
+
+    const steps = [
+      { date: mixStartDate, title: 'Saturday Mix & Inoculation', desc: `Incorporate active starter at ambient kitchen temp.`, prime: true, badge: 'Mix Time' },
+    ];
+
+    const folds = state.numFolds || 4;
+    const foldSpacing = state.foldInterval || 30;
+    for (let f = 1; f <= folds; f++) {
+      const fDate = new Date(mixStartDate.getTime() + (f * foldSpacing * 60 * 1000));
+      steps.push({ date: fDate, title: `Stretch & Fold Set #${f}`, desc: `Aeration and gluten development set ${f} of ${folds}.`, prime: false, badge: `Fold #${f}` });
+    }
+
+    steps.push({ date: bulkEndDate, title: `Bulk Peak Reached (+${state.calculated.targetRisePct}%)`, desc: 'Pre-shape dough, rest on bench 25 mins.', prime: false, badge: 'Pre-shape' });
+    const finalShapeDate = new Date(bulkEndDate.getTime() + (25 * 60 * 1000));
+    steps.push({ date: finalShapeDate, title: 'Final Shape & Place in Banneton', desc: 'Build surface tension, dust with rice flour, seal in bag.', prime: false, badge: 'Shaped' });
+    steps.push({ date: fridgeInDate, title: `Fridge Entry Deadline (${fridgeTemp.toFixed(1)}°C)`, desc: `Place banneton into cold retard for ${retardHours}h. Dough growth stabilizes.`, prime: true, badge: 'Fridge In' });
+    const preheatDate = new Date(targetBakeDate.getTime() - (45 * 60 * 1000));
+    steps.push({ date: preheatDate, title: 'Preheat Oven & Dutch Oven (250°C)', desc: 'Preheat combo cooker thoroughly for 45 minutes.', prime: false, badge: 'Preheat' });
+    steps.push({ date: targetBakeDate, title: 'Target Bake Time', desc: 'Score cold loaf directly from fridge, load with steam.', prime: true, badge: 'Target Bake' });
+
+    steps.forEach(s => {
+      const row = document.createElement('div');
+      row.className = `solver-row ${s.prime ? 'prime' : ''}`;
+      row.innerHTML = `
+        <div class="solver-row-time">${formatSolverDayTime(s.date)}</div>
+        <div>
+          <div style="font-weight:700;">${s.title}</div>
+          <div style="font-size:0.75rem; color:var(--text-muted);">${s.desc}</div>
+        </div>
+        <span class="event-badge">${s.badge}</span>
+      `;
+      rowsContainer.appendChild(row);
+    });
+  }
+
+  // Hook reverse solver listeners and sync
+  function initReverseSolver() {
+    const bakeEl = document.getElementById('revBakeDateTime');
+    const fridgeEl = document.getElementById('revFridgeTemp');
+    const retardEl = document.getElementById('revRetardHours');
+    const btnSolver = document.getElementById('btnModeSolver');
+
+    if (bakeEl) bakeEl.addEventListener('input', recalculateReverseSolver);
+    if (fridgeEl) fridgeEl.addEventListener('input', recalculateReverseSolver);
+    if (retardEl) retardEl.addEventListener('input', recalculateReverseSolver);
+
+    if (btnSolver) {
+      btnSolver.addEventListener('click', () => {
+        document.querySelectorAll('.mode-toggle-group .mode-btn').forEach(b => b.classList.remove('active'));
+        btnSolver.classList.add('active');
+        const solverPanel = document.getElementById('reverse-scheduler-solver');
+        if (solverPanel) solverPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    recalculateReverseSolver();
+  }
+
+  // Chain solver into standard calculation lifecycle
+  const origRecalculateAll = recalculateAll;
+  recalculateAll = function() {
+    origRecalculateAll();
+    recalculateReverseSolver();
+  };
+
+  initReverseSolver();
+
+  // AMBIENT TEMPERATURE DRIFT PROFILE EDITOR (temp-drift-multi-stage-editor)
+  state.drift = {
+    enabled: false,
+    morningTempC: 18.0,
+    morningTime: '06:00',
+    afternoonTempC: 25.0,
+    afternoonTime: '14:00',
+    nightTempC: 19.0,
+    nightTime: '22:00'
+  };
+
+  function getAmbientAtTime(clockMins) {
+    const parseMin = (str) => {
+      if (!str || !str.includes(':')) return 0;
+      const [h, m] = str.split(':').map(Number);
+      return (h * 60) + m;
+    };
+    const tm = parseMin(state.drift.morningTime);
+    const ta = parseMin(state.drift.afternoonTime);
+    const tn = parseMin(state.drift.nightTime);
+    const Tm = state.drift.morningTempC;
+    const Ta = state.drift.afternoonTempC;
+    const Tn = state.drift.nightTempC;
+    const t = ((clockMins % 1440) + 1440) % 1440;
+
+    if (tm <= ta && t >= tm && t <= ta) {
+      return Tm + ((t - tm) / (ta - tm || 1)) * (Ta - Tm);
+    }
+    if (ta <= tn && t >= ta && t <= tn) {
+      return Ta + ((t - ta) / (tn - ta || 1)) * (Tn - Ta);
+    }
+    let segLen = (1440 - tn) + tm;
+    if (segLen <= 0) segLen = 1440;
+    let dist = t >= tn ? (t - tn) : ((1440 - tn) + t);
+    return Tn + (dist / segLen) * (Tm - Tn);
+  }
+
+  function calculateDriftThermalModel() {
+    if (!state.drift || !state.drift.enabled) return;
+
+    const inoc = Math.max(0.1, Number(state.starterInoc) || 20);
+    const protein = Math.max(5, Number(state.protein) || 12.5);
+    const inocFactor = Math.pow(inoc / 20.0, 0.82);
+    const proteinFactor = 1.0 + ((protein - 12.5) * 0.02);
+    const reqProgress = (4.8 / inocFactor) * proteinFactor;
+
+    const startMins = parseTimeToMinutes(state.startTime);
+    let elapsedHours = 0;
+    let accumulatedProgress = 0;
+    let curDoughTemp = state.doughTempC;
+    let sumEffTemp = 0;
+    const dt = 0.05;
+
+    while (accumulatedProgress < reqProgress && elapsedHours < 48) {
+      const clockMins = startMins + Math.round(elapsedHours * 60);
+      const ambTemp = getAmbientAtTime(clockMins);
+      curDoughTemp += (ambTemp - curDoughTemp) * 0.25 * dt;
+      const rate = Math.pow(2.10, (curDoughTemp - 24.0) / 10.0);
+      accumulatedProgress += rate * dt;
+      sumEffTemp += curDoughTemp * dt;
+      elapsedHours += dt;
+    }
+
+    const bulkHours = Math.max(1.5, Math.min(24.0, elapsedHours));
+    const avgEffTemp = sumEffTemp / elapsedHours;
+    state.calculated.bulkHours = bulkHours;
+    state.calculated.kineticRate = Math.pow(2.10, (avgEffTemp - 24.0) / 10.0);
+
+    let targetRise = 90 - ((avgEffTemp - 18.0) * 5.0);
+    targetRise = Math.max(30, Math.min(100, Math.round(targetRise / 5) * 5));
+    state.calculated.targetRisePct = targetRise;
+
+    const h = Math.floor(bulkHours);
+    const m = Math.round((bulkHours - h) * 60);
+    document.getElementById('valBulkHours').textContent = bulkHours.toFixed(1) + 'h';
+    document.getElementById('valBulkSub').textContent = `~${h}h ${m < 10 ? '0' + m : m}m (Drift avg ${avgEffTemp.toFixed(1)}°C)`;
+    document.getElementById('valKineticRate').textContent = state.calculated.kineticRate.toFixed(2) + 'x';
+
+    const statusNote = document.getElementById('driftStatusNote');
+    const rangeLbl = document.getElementById('lblDriftRange');
+    if (statusNote) statusNote.style.display = 'block';
+    if (rangeLbl) {
+      const u = state.unit === 'C' ? '°C' : '°F';
+      const mVal = state.unit === 'C' ? state.drift.morningTempC : cToF(state.drift.morningTempC);
+      const aVal = state.unit === 'C' ? state.drift.afternoonTempC : cToF(state.drift.afternoonTempC);
+      rangeLbl.textContent = `${mVal.toFixed(1)}${u} - ${aVal.toFixed(1)}${u}`;
+    }
+  }
+
+  function updateDriftTempInputsDisplay() {
+    const mInput = document.getElementById('inpDriftMorningTemp');
+    const aInput = document.getElementById('inpDriftAfternoonTemp');
+    const nInput = document.getElementById('inpDriftNightTemp');
+    const units = document.querySelectorAll('.lblDriftUnit');
+    if (!mInput || !aInput || !nInput) return;
+
+    if (state.unit === 'C') {
+      mInput.value = state.drift.morningTempC.toFixed(1);
+      aInput.value = state.drift.afternoonTempC.toFixed(1);
+      nInput.value = state.drift.nightTempC.toFixed(1);
+      units.forEach(u => u.textContent = '°C');
+    } else {
+      mInput.value = cToF(state.drift.morningTempC).toFixed(1);
+      aInput.value = cToF(state.drift.afternoonTempC).toFixed(1);
+      nInput.value = cToF(state.drift.nightTempC).toFixed(1);
+      units.forEach(u => u.textContent = '°F');
+    }
+  }
+
+  const _origComputeThermalModel = computeThermalModel;
+  computeThermalModel = function() {
+    _origComputeThermalModel();
+    if (state.drift && state.drift.enabled) {
+      calculateDriftThermalModel();
+    } else {
+      const statusNote = document.getElementById('driftStatusNote');
+      if (statusNote) statusNote.style.display = 'none';
+    }
+  };
+
+  function initDriftFeature() {
+    const chk = document.getElementById('chkEnableDrift');
+    if (!chk) return;
+
+    chk.addEventListener('change', (e) => {
+      state.drift.enabled = e.target.checked;
+      recalculateAll();
+    });
+
+    const bindDriftTemp = (id, prop) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('input', () => {
+        const val = parseFloat(el.value);
+        if (isNaN(val)) return;
+        state.drift[prop] = state.unit === 'C' ? val : fToC(val);
+        recalculateAll();
+      });
+    };
+
+    bindDriftTemp('inpDriftMorningTemp', 'morningTempC');
+    bindDriftTemp('inpDriftAfternoonTemp', 'afternoonTempC');
+    bindDriftTemp('inpDriftNightTemp', 'nightTempC');
+
+    const bindDriftTime = (id, prop) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener('change', () => {
+        state.drift[prop] = el.value;
+        recalculateAll();
+      });
+    };
+
+    bindDriftTime('inpDriftMorningTime', 'morningTime');
+    bindDriftTime('inpDriftAfternoonTime', 'afternoonTime');
+    bindDriftTime('inpDriftNightTime', 'nightTime');
+
+    const btnC = document.getElementById('btnUnitC');
+    const btnF = document.getElementById('btnUnitF');
+    if (btnC) btnC.addEventListener('click', updateDriftTempInputsDisplay);
+    if (btnF) btnF.addEventListener('click', updateDriftTempInputsDisplay);
+  }
+
+  initDriftFeature();
+
+  // BAKE-SHEET PRINT & JSON SNAPSHOT EXPORTER
+  (function initRecipePrintableSummary() {
+    const notesInput = document.getElementById('inpBenchNotes');
+    const jsonBtn = document.getElementById('btnDownloadRecipeJson');
+    const printBtn = document.getElementById('btnPrintBenchSheet');
+    const preview = document.getElementById('benchSheetPreview');
+    const notice = document.getElementById('recipeSnapshotNotice');
+
+    function getRecipeSnapshot() {
+      return {
+        recipeName: "Sourdough Artisan Loaf",
+        timestamp: new Date().toISOString(),
+        notes: notesInput ? notesInput.value : '',
+        formula: {
+          totalFlourGrams: state.flour,
+          hydrationPercent: state.hydration,
+          starterInocPercent: state.starterInoc,
+          starterHydrPercent: state.starterHydr,
+          saltPercent: state.salt,
+          proteinPercent: state.protein,
+          doughFlourGrams: state.calculated.doughFlour,
+          doughWaterGrams: state.calculated.doughWater,
+          starterGrams: state.calculated.starterWeight,
+          saltGrams: state.calculated.saltWeight,
+          totalMassGrams: state.calculated.totalMass
+        },
+        thermalKinetics: {
+          ambientTempC: state.ambientTempC,
+          doughTempC: state.doughTempC,
+          bulkHours: state.calculated.bulkHours,
+          targetRisePct: state.calculated.targetRisePct,
+          kineticRate: state.calculated.kineticRate
+        },
+        timeline: {
+          startTime: state.startTime,
+          numFolds: state.numFolds,
+          foldIntervalMins: state.foldInterval,
+          retardType: state.retardType,
+          retardHours: state.retardHours
+        }
+      };
+    }
+
+    function renderBenchSheetPreview() {
+      if (!preview) return;
+      const snap = getRecipeSnapshot();
+      const notesHtml = snap.notes ? `<div style="margin-top:6px; padding-top:4px; border-top:1px dashed var(--card-border); font-style:italic;">Notes: ${snap.notes}</div>` : '';
+      preview.innerHTML = `
+        <div style="font-weight:700; font-size:0.9rem; border-bottom:1px solid var(--card-border); padding-bottom:4px; margin-bottom:6px; display:flex; justify-content:space-between;">
+          <span>🍞 BAKER'S BENCH SHEET</span>
+          <span>${snap.formula.totalMassGrams}g Total Mass</span>
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:0.78rem;">
+          <div>
+            <strong>Formula Breakdown:</strong><br>
+            Flour: ${snap.formula.doughFlourGrams}g | Water: ${snap.formula.doughWaterGrams}g<br>
+            Starter: ${snap.formula.starterGrams}g | Salt: ${snap.formula.saltGrams}g
+          </div>
+          <div>
+            <strong>Schedule Targets:</strong><br>
+            Bulk: ~${snap.thermalKinetics.bulkHours.toFixed(1)}h (+${snap.thermalKinetics.targetRisePct}% Rise)<br>
+            Folds: ${snap.timeline.numFolds} sets @ ${snap.timeline.foldIntervalMins}m
+          </div>
+        </div>
+        ${notesHtml}
+      `;
+    }
+
+    if (notesInput) {
+      notesInput.addEventListener('input', renderBenchSheetPreview);
+    }
+
+    const prevRecalculate = recalculateAll;
+    recalculateAll = function() {
+      prevRecalculate();
+      renderBenchSheetPreview();
+    };
+
+    if (jsonBtn) {
+      jsonBtn.addEventListener('click', () => {
+        if (!PRO) {
+          if (notice) {
+            notice.style.display = 'block';
+            notice.innerHTML = `Available in the full version. <a href="${PRO_LINK}" target="_blank">Upgrade here</a>`;
+          }
+          return;
+        }
+        if (notice) notice.style.display = 'none';
+        const blob = new Blob([JSON.stringify(getRecipeSnapshot(), null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'recipe-schedule.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    if (printBtn) {
+      printBtn.addEventListener('click', () => {
+        if (!PRO) {
+          if (notice) {
+            notice.style.display = 'block';
+            notice.innerHTML = `Available in the full version. <a href="${PRO_LINK}" target="_blank">Upgrade here</a>`;
+          }
+          return;
+        }
+        if (notice) notice.style.display = 'none';
+        window.print();
+      });
+    }
+
+    renderBenchSheetPreview();
+  })();
+  // FEATURE-JS
+</script>
+
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Sourdough &amp; Fermentation Schedule Visualizer is a free web tool built for home bakers who want reliable bread timing without over-proofing. It combines a dynamic baker&#39;s percentage calculator with temperature-based fermentation modeling so you can plan schedules backward from your target bake time.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Enter your target flour weight, hydration, and starter percentage to generate your ingredient bench sheet.</li><li>Set your ambient kitchen temperature and target bake time to let the engine project your fermentation timeline.</li><li>Check the container canvas to preview expected dough volume expansion and porosity.</li><li>Export your custom schedule to JSON or print an offline bench sheet to track your bake by hand.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">My kitchen is 20°C (68°F) in winter instead of 26°C (78°F) in summer. If I mix my dough at 9:00 AM with 20% starter, when will bulk fermentation actually peak, and at what clock times should I perform my 4 stretch-and-folds?</h4><p style="margin:0">You enter: Mix start time (09:00 AM) · Ambient room temperature (20°C) · Dough initial water temperature / mixed dough temperature (21°C) · Starter inoculation percentage (20% of total flour) · Planned number of stretch-and-fold sets (4 sets, spaced every 30 minutes at start).<br>You get: Exact predicted clock times for each stretch-and-fold set, the estimated peak bulk fermentation end time (and target volume increase percentage before shaping), and the total elapsed hours of bulk proofing.</p><h4 style="font-size:16px;margin:16px 0 4px">I want to bake a sourdough loaf on Sunday at 8:00 AM using an overnight refrigerator cold retard. What time on Saturday must I mix my dough and when must it go into the fridge so it does not over-proof?</h4><p style="margin:0">You enter: Target bake day and time (Sunday 08:00 AM) · Refrigerator temperature (4°C) · Ambient kitchen temperature on Saturday (22°C) · Starter inoculation (20%) · Planned cold retard duration (e.g. 14 hours).<br>You get: A backward-calculated schedule showing Saturday mix time, Saturday bulk end/shaping time, Saturday fridge entry time, and Sunday preheat/bake time with estimated total proofing progression percentage.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">How does the tool estimate bulk fermentation duration?</h4><p style="margin:0">The algorithm applies basic thermal kinetics derived from standard sourdough fermentation rates between 18°C and 28°C. It adjusts the projected duration based on starter inoculation percentage, dough hydration, and expected ambient temperature drift in your kitchen.</p><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free web page and the $9 Gumroad pack?</h4><p style="margin:0">The online visualizer is completely free to use in any modern web browser. The $9 Gumroad offline pack provides a standalone, self-hosted build that runs without an internet connection, along with printable PDF bench sheet templates and JSON recipe export presets.</p><h4 style="font-size:16px;margin:16px 0 4px">Can I use this for pizza dough or commercial yeast recipes?</h4><p style="margin:0">Yes. While tuned primarily for wild sourdough starter kinetics, you can adjust starter percentages and hydration settings to fit direct yeasted doughs or poolish-based pizza dough schedules.</p><h4 style="font-size:16px;margin:16px 0 4px">Why does the tool schedule backward from the bake time?</h4><p style="margin:0">Working backward prevents the common issue of dough peaking at inconvenient hours, such as 2:00 AM. By fixing your final oven time first, the visualizer tells you precisely when to build your levain, mix dough, and begin cold retarding.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/gcstzj" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../narrative-pacing-tension-arc-mapper/" style="color:inherit;font-weight:600">Interactive Story Pacing &amp; Tension Arc Mapper</a>: Offline single-file HTML tool to visualize story tension, detect saggy middles, and export beat sheets.</li><li><a href="../greenhouse-thermal-loss-and-glazing-simulator/" style="color:inherit;font-weight:600">Greenhouse Thermal Loss &amp; Glazing Simulator</a>: Calculate heat loss, thermal mass needs, fuel costs, and freeze risks in a single offline HTML simulator.</li><li><a href="../burst-action-sequence-multi-exposure-compositor/" style="color:inherit;font-weight:600">Burst Action Sequence Compositor</a>: Generate multi-exposure burst action composites offline in your browser with automated background subtraction.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
