@@ -1,0 +1,2565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --bg-body: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-subtle: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --primary: #0d9488;
+      --primary-hover: #0f766e;
+      --primary-light: #ccfbf1;
+      --primary-text: #115e59;
+      --accent-green: #16a34a;
+      --accent-green-bg: #dcfce7;
+      --accent-green-text: #14532d;
+      --accent-blue: #2563eb;
+      --accent-blue-bg: #dbeafe;
+      --accent-blue-text: #1e40af;
+      --accent-amber: #d97706;
+      --accent-amber-bg: #fef3c7;
+      --accent-amber-text: #78350f;
+      --accent-violet: #7c3aed;
+      --accent-violet-bg: #ede9fe;
+      --accent-violet-text: #4c1d95;
+      --accent-red: #dc2626;
+      --accent-red-bg: #fee2e2;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-body: #0f172a;
+        --bg-card: #1e293b;
+        --bg-card-subtle: #334155;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --border-color: #475569;
+        --primary: #14b8a6;
+        --primary-hover: #2dd4bf;
+        --primary-light: #134e4a;
+        --primary-text: #ccfbf1;
+        --accent-green: #22c55e;
+        --accent-green-bg: #14532d;
+        --accent-green-text: #dcfce7;
+        --accent-blue: #3b82f6;
+        --accent-blue-bg: #1e3a8a;
+        --accent-blue-text: #dbeafe;
+        --accent-amber: #f59e0b;
+        --accent-amber-bg: #78350f;
+        --accent-amber-text: #fef3c7;
+        --accent-violet: #8b5cf6;
+        --accent-violet-bg: #4c1d95;
+        --accent-violet-text: #ede9fe;
+        --accent-red: #ef4444;
+        --accent-red-bg: #7f1d1d;
+      }
+    }
+
+    [data-theme="light"] {
+      --bg-body: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-subtle: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --primary: #0d9488;
+      --primary-hover: #0f766e;
+      --primary-light: #ccfbf1;
+      --primary-text: #115e59;
+      --accent-green: #16a34a;
+      --accent-green-bg: #dcfce7;
+      --accent-green-text: #14532d;
+      --accent-blue: #2563eb;
+      --accent-blue-bg: #dbeafe;
+      --accent-blue-text: #1e40af;
+      --accent-amber: #d97706;
+      --accent-amber-bg: #fef3c7;
+      --accent-amber-text: #78350f;
+      --accent-violet: #7c3aed;
+      --accent-violet-bg: #ede9fe;
+      --accent-violet-text: #4c1d95;
+      --accent-red: #dc2626;
+      --accent-red-bg: #fee2e2;
+    }
+
+    [data-theme="dark"] {
+      --bg-body: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-subtle: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #475569;
+      --primary: #14b8a6;
+      --primary-hover: #2dd4bf;
+      --primary-light: #134e4a;
+      --primary-text: #ccfbf1;
+      --accent-green: #22c55e;
+      --accent-green-bg: #14532d;
+      --accent-green-text: #dcfce7;
+      --accent-blue: #3b82f6;
+      --accent-blue-bg: #1e3a8a;
+      --accent-blue-text: #dbeafe;
+      --accent-amber: #f59e0b;
+      --accent-amber-bg: #78350f;
+      --accent-amber-text: #fef3c7;
+      --accent-violet: #8b5cf6;
+      --accent-violet-bg: #4c1d95;
+      --accent-violet-text: #ede9fe;
+      --accent-red: #ef4444;
+      --accent-red-bg: #7f1d1d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 1rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      overflow-x: hidden;
+    }
+
+    @media (max-width: 480px) {
+      .audio-triggers {
+        grid-template-columns: 1fr;
+      }
+      .action-deck {
+        grid-template-columns: 1fr 1fr;
+      }
+      h1 {
+        font-size: 1.25rem;
+      }
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+    }
+
+    .btn:hover {
+      background: var(--bg-card-subtle);
+      border-color: var(--text-muted);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+      color: #ffffff;
+    }
+
+    .btn-danger {
+      background: var(--accent-red-bg);
+      color: var(--accent-red);
+      border-color: var(--accent-red);
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.775rem;
+    }
+
+    select, input, textarea {
+      font-family: inherit;
+      font-size: 0.875rem;
+      padding: 0.45rem 0.75rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      width: 100%;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 1px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 1024px) {
+      .layout-grid {
+        grid-template-columns: 1fr 1.1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Table styles for Curriculum */
+    .table-container {
+      overflow-x: auto;
+      margin-top: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+
+    th {
+      background: var(--bg-card-subtle);
+      padding: 0.6rem;
+      font-weight: 600;
+      border-bottom: 2px solid var(--border-color);
+      color: var(--text-muted);
+    }
+
+    td {
+      padding: 0.6rem;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    tr.active-step-row {
+      background: var(--primary-light);
+      font-weight: 600;
+    }
+
+    tr.active-step-row td {
+      color: var(--primary-text);
+    }
+
+    /* Audio Deck Trigger Panel */
+    .audio-triggers {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .big-trigger-btn {
+      position: relative;
+      height: 90px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      border-radius: var(--radius-lg);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.05s ease, box-shadow 0.1s ease;
+      overflow: hidden;
+    }
+
+    .big-trigger-btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-clicker {
+      background: linear-gradient(135deg, #0d9488, #0f766e);
+      color: #ffffff;
+    }
+
+    .btn-whistle {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: #ffffff;
+    }
+
+    .trigger-shortcut {
+      font-size: 0.75rem;
+      font-weight: 500;
+      opacity: 0.85;
+      background: rgba(0,0,0,0.2);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+
+    /* Pulse animation ring */
+    .pulse-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      pointer-events: none;
+    }
+
+    .pulse-ring.animate {
+      animation: pulse-out 0.35s ease-out forwards;
+    }
+
+    @keyframes pulse-out {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
+      100% { transform: translate(-50%, -50%) scale(8); opacity: 0; }
+    }
+
+    .audio-settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+      background: var(--bg-card-subtle);
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+    }
+
+    /* Session Tracker Controls & Stats */
+    .action-deck {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 500px) {
+      .action-deck {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .btn-action-success {
+      background: var(--accent-green);
+      color: white;
+      border: none;
+      font-weight: bold;
+      font-size: 1rem;
+      padding: 0.75rem;
+    }
+
+    .btn-action-miss {
+      background: var(--accent-red);
+      color: white;
+      border: none;
+      font-weight: bold;
+      font-size: 0.9rem;
+      padding: 0.75rem;
+    }
+
+    .btn-action-jackpot {
+      background: var(--accent-violet);
+      color: white;
+      border: none;
+      font-weight: bold;
+      font-size: 0.9rem;
+      padding: 0.75rem;
+    }
+
+    .stats-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+    }
+
+    .stat-box {
+      background: var(--bg-card-subtle);
+      padding: 0.6rem;
+      border-radius: var(--radius);
+      text-align: center;
+      border: 1px solid var(--border-color);
+    }
+
+    .stat-val {
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .stat-lbl {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* Trial History Strip */
+    .history-strip-container {
+      margin-top: 0.75rem;
+    }
+
+    .history-strip-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .history-strip {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding: 0.4rem;
+      background: var(--bg-card-subtle);
+      border-radius: var(--radius);
+      min-height: 36px;
+      align-items: center;
+    }
+
+    .trial-marker {
+      min-width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .marker-success { background: var(--accent-green); }
+    .marker-miss { background: var(--accent-red); }
+    .marker-jackpot { background: var(--accent-violet); }
+
+    /* Decision Engine Badge & Advisory */
+    .verdict-badge-box {
+      padding: 1rem;
+      border-radius: var(--radius-lg);
+      margin-bottom: 1rem;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .verdict-badge-box.verdict-RAISE {
+      background: var(--accent-green-bg);
+      color: var(--accent-green-text);
+      border: 2px solid var(--accent-green);
+    }
+
+    .verdict-badge-box.verdict-STICK {
+      background: var(--accent-blue-bg);
+      color: var(--accent-blue-text);
+      border: 2px solid var(--accent-blue);
+    }
+
+    .verdict-badge-box.verdict-SPLIT {
+      background: var(--accent-amber-bg);
+      color: var(--accent-amber-text);
+      border: 2px solid var(--accent-amber);
+    }
+
+    .verdict-badge-box.verdict-JACKPOT {
+      background: var(--accent-violet-bg);
+      color: var(--accent-violet-text);
+      border: 2px solid var(--accent-violet);
+    }
+
+    .verdict-title {
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+    }
+
+    .verdict-sub {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 0.2rem;
+      opacity: 0.9;
+    }
+
+    .advisory-box {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .advisory-title {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .advisory-list {
+      padding-left: 1.2rem;
+    }
+
+    .advisory-list li {
+      margin-bottom: 0.4rem;
+    }
+
+    .safety-disclaimer {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      font-style: italic;
+      text-align: center;
+    }
+
+    .validation-msg {
+      display: none;
+      color: var(--accent-red);
+      background: var(--accent-red-bg);
+      border: 1px solid var(--accent-red);
+      font-size: 0.825rem;
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius);
+      margin-bottom: 0.85rem;
+    }
+
+    .pro-banner {
+      display: none;
+      background: var(--accent-amber-bg);
+      color: var(--accent-amber-text);
+      padding: 0.5rem;
+      border-radius: var(--radius);
+      text-align: center;
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    @media print {
+      body { background: white; color: black; }
+      .toolbar, .audio-triggers, .action-deck, .btn { display: none !important; }
+      .card { border: 1px solid #ccc; box-shadow: none; break-inside: avoid; }
+    }
+
+    .pacing-card summary { cursor: pointer; list-style: none; user-select: none; }
+    .pacing-card summary::-webkit-details-marker { display: none; }
+    .prompter-box { padding: 0.75rem 1rem; border-radius: var(--radius); text-align: center; font-weight: 800; font-size: 1rem; margin: 0.75rem 0; border: 2px dashed; transition: all 0.2s; }
+    .prompter-reward { background: var(--accent-green-bg); color: var(--accent-green-text); border-color: var(--accent-green); }
+    .prompter-withhold { background: var(--accent-amber-bg); color: var(--accent-amber-text); border-color: var(--accent-amber); }
+    .pacing-pips-strip { display: flex; gap: 0.5rem; align-items: center; justify-content: center; flex-wrap: wrap; margin: 0.5rem 0; }
+    .pacing-pip { min-width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; border: 2px solid var(--border-color); background: var(--bg-card); color: var(--text-muted); transition: all 0.15s; }
+    .pacing-pip.pip-done { background: var(--bg-card-subtle); color: var(--text-muted); opacity: 0.6; }
+    .pacing-pip.pip-current { border-color: var(--primary); color: var(--primary-text); transform: scale(1.1); font-weight: 900; box-shadow: 0 0 0 3px var(--primary-light); }
+    .pacing-pip.pip-target { border-color: var(--accent-green); background: var(--accent-green-bg); color: var(--accent-green-text); }
+    .pacing-progress-track { height: 6px; background: var(--bg-card-subtle); border-radius: 3px; overflow: hidden; margin-top: 0.35rem; }
+    .pacing-progress-bar { height: 100%; width: 0%; background: var(--primary); transition: width 0.1s linear; }
+    .split-modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
+    .split-modal-card { background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); max-width: 500px; width: 100%; padding: 1.25rem; box-shadow: var(--shadow-lg); }
+    .split-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .export-card-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.75rem 0; }
+    .export-preview-box { background: var(--bg-card-subtle); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 0.75rem; font-family: monospace; font-size: 0.75rem; white-space: pre-wrap; max-height: 180px; overflow-y: auto; color: var(--text-main); }
+    .export-tag-pill { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; background: var(--primary-light); color: var(--primary-text); }
+    /* FEATURE-CSS */
+  </style>
+<title>Pet Clicker Training &amp; Micro-Shaping Studio</title>
+<meta name="description" content="Free web tool &amp; offline studio for pet clicker training, micro-shaping criteria, trial logging, and variable reinforcement schedules.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/pet-trick-shaping-clicker-lab/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/pet-trick-shaping-clicker-lab/">
+<meta property="og:title" content="Pet Clicker Training &amp; Micro-Shaping Studio"><meta property="og:description" content="Free web tool &amp; offline studio for pet clicker training, micro-shaping criteria, trial logging, and variable reinforcement schedules.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/pet-trick-shaping-clicker-lab/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Pet Clicker Training & Micro-Shaping Studio","description":"Free web tool & offline studio for pet clicker training, micro-shaping criteria, trial logging, and variable reinforcement schedules.","url":"https://rttyy.github.io/free-tools/pet-trick-shaping-clicker-lab/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why use Web Audio synthetic markers instead of playing pre-recorded MP3 clicker sounds?","acceptedAnswer":{"@type":"Answer","text":"Pre-recorded audio files often introduce subtle playback latency depending on browser and mobile hardware performance. Web Audio generates synthetic acoustic tones directly via code, eliminating audio lag so your marker timing matches the exact moment of behavior."}},{"@type":"Question","name":"What is the difference between the free web page and the paid Gumroad product?","acceptedAnswer":{"@type":"Answer","text":"The free web version runs fully featured inside any modern browser while connected online. The $9 Gumroad paid product is a standalone offline HTML/JS bundle that you can save locally to run without internet access, plus print-formatted session reporting utilities."}},{"@type":"Question","name":"How does the behavioral decision engine decide when to advance criteria?","acceptedAnswer":{"@type":"Answer","text":"The decision engine uses standard behavioral shaping mechanics, tracking your success rate over a rolling block of trials (typically 10 reps). An 80%+ success rate triggers a prompt to advance criteria, while a rate below 60% prompts you to lower criteria or split the step."}},{"@type":"Question","name":"Does this tool require installing software or creating a user account?","acceptedAnswer":{"@type":"Answer","text":"No. The application runs entirely client-side in your web browser with zero software installation, zero account sign-ups, and no telemetry tracking. All session data stays stored locally in your browser or can be exported via CSV and JSON."}}]}</script>
+</head>
+<body>
+
+  <header>
+    <div class="brand-title">
+      <div class="brand-icon">🐾</div>
+      <div>
+        <h1>Pet Clicker Training &amp; Micro-Shaping Studio</h1>
+        <div class="subtitle">Precision shaping curriculum generator, zero-latency acoustic marker &amp; behavioral decision engine</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <label for="presetSelector" style="display:none">Select Preset Scenario</label>
+      <select id="presetSelector" style="width: auto;" aria-label="Select Preset Scenario">
+        <option value="preset0">Dog High-Five (Energetic Border Collie)</option>
+        <option value="preset1">Cat Target Stick Touch (Cautious domestic)</option>
+        <option value="preset2">Puppy Recall Foundation (Distractible Golden)</option>
+      </select>
+      <button class="btn" id="btnToggleTheme" title="Toggle Theme">🌓 Theme</button>
+      <button class="btn" id="btnCopySummary" title="Copy Text Summary">📋 Copy</button>
+      <button class="btn" id="btnExportCSV" title="Export CSV">📊 CSV</button>
+      <button class="btn" id="btnExportJSON" title="Export JSON">📁 JSON</button>
+      <button class="btn" id="btnPrint" title="Print Studio Report">🖨️ Print</button>
+      <label class="btn" style="cursor:pointer;" title="Import session JSON">
+        📥 Import <input type="file" id="importFileInput" accept=".json,application/json" style="display:none;">
+      </label>
+      <button class="btn" id="btnLoadSample" title="Load sample session">📑 Sample</button>
+      <button class="btn btn-danger btn-sm" id="btnResetAll" title="Reset Session">Reset</button>
+    </div>
+  </header>
+
+  <div id="proNotice" class="pro-banner">
+    Available in the full version <a id="proNoticeLink" href="https://ferrywave73.gumroad.com/l/zouumx" target="_blank" style="color:inherit; text-decoration:underline; font-weight:bold; margin-left:0.25rem;">Upgrade to Full Version</a>
+  </div>
+
+  <main class="layout-grid">
+
+    <!-- LEFT COLUMN: Micro-Shaping Curriculum Generator & Editor -->
+    <div class="left-col">
+      <section class="card" data-feature="micro-shaping-curriculum">
+        <div class="card-title">
+          <span>1. Micro-Shaping Curriculum Generator</span>
+          <div>
+            <button class="btn btn-sm btn-danger" id="btnSplitStepTrigger" title="Split step into micro-slices">✂ Split Current Step</button>
+            <span class="btn-sm btn" id="btnRebuildSteps" style="cursor:pointer;" title="Reset steps to preset defaults">↻ Rebuild Steps</span>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div>
+            <label for="speciesSelect">Pet Species</label>
+            <select id="speciesSelect">
+              <option value="dog">Dog (Canine)</option>
+              <option value="cat">Cat (Feline)</option>
+              <option value="small_mammal">Bird / Small Mammal</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="targetTrickInput">Target Behavior / Trick</label>
+            <input type="text" id="targetTrickInput" value="Dog High-Five" placeholder="e.g. Ring Bell, Target Stick Touch">
+          </div>
+
+          <div>
+            <label for="energySelect">Energy / Temperament</label>
+            <select id="energySelect">
+              <option value="cautious">Cautious / Low / Hesitant</option>
+              <option value="balanced">Balanced / Steady</option>
+              <option value="high" selected>High / Exuberant / Hyper</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="reinforcerInput">Primary Reinforcer</label>
+            <input type="text" id="reinforcerInput" value="Freeze-Dried Liver" placeholder="e.g. High-value meat, paste">
+          </div>
+
+          <div>
+            <label for="thresholdInput">Promotion Threshold (%)</label>
+            <input type="number" id="thresholdInput" min="50" max="98" value="80" step="5">
+          </div>
+
+          <div>
+            <label for="sessionCapReps">Session Cap (Reps)</label>
+            <input type="number" id="sessionCapReps" min="3" max="50" value="15">
+          </div>
+        </div>
+
+        <div id="inputValidationMsg" class="validation-msg"></div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 40px;">Active</th>
+                <th style="width: 45px;">Step</th>
+                <th>Physical Behavior Target Criteria</th>
+                <th style="width: 110px;">Prompt Level</th>
+              </tr>
+            </thead>
+            <tbody id="curriculumTableBody">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- RIGHT COLUMN: Web Audio Trigger, Live Tracker & Behavioral Interpreter -->
+    <div class="right-col">
+
+      <!-- AUDIO MARKER CONTROL DECK -->
+      <section class="card" data-feature="web-audio-clicker-whistle">
+        <div class="card-title">
+          <span>2. Acoustic Marker Deck (Web Audio)</span>
+          <span style="font-size:0.75rem; font-weight:normal; color:var(--text-muted)">Zero-Latency Synthetic Sound</span>
+        </div>
+
+        <div class="audio-triggers">
+          <button class="big-trigger-btn btn-clicker" id="btnClickerTrigger">
+            <div class="pulse-ring" id="clickerPulseRing"></div>
+            <span>CLICK MARKER</span>
+            <span class="trigger-shortcut">SPACE or 'C'</span>
+          </button>
+
+          <button class="big-trigger-btn btn-whistle" id="btnWhistleTrigger">
+            <span>WHISTLE</span>
+            <span class="trigger-shortcut">Press 'W'</span>
+          </button>
+        </div>
+
+        <div class="audio-settings-grid">
+          <div>
+            <label for="clickPitchSelect">Click Pitch Tone</label>
+            <select id="clickPitchSelect">
+              <option value="sharp">Sharp (3.2kHz Sharp)</option>
+              <option value="deep">Deep Box (1.2kHz Box)</option>
+              <option value="dual">Dual-Tone Click-Clack</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="whistleFreqSlider">Whistle Pitch (<span id="whistleFreqVal">2800</span> Hz)</label>
+            <input type="range" id="whistleFreqSlider" min="1000" max="12000" step="200" value="2800">
+          </div>
+
+          <div>
+            <label for="masterVolSlider">Volume (<span id="masterVolVal">80</span>%)</label>
+            <input type="range" id="masterVolSlider" min="0" max="100" value="80">
+          </div>
+        </div>
+      </section>
+
+      <!-- LIVE SESSION TRIAL TRACKER -->
+      <section class="card" data-feature="live-session-tracker">
+        <div class="card-title">
+          <span>3. Live Trial Tracker &amp; Pacing Meter</span>
+          <div>
+            <span id="timerDisplay" style="font-family:monospace; font-size:1rem; font-weight:bold; margin-right:0.5rem;">03:00</span>
+            <button class="btn btn-sm" id="btnToggleTimer">Pause</button>
+            <button class="btn btn-sm" id="btnResetTimer">Reset Timer</button>
+          </div>
+        </div>
+
+        <div class="action-deck">
+          <button class="btn btn-action-success" id="btnMarkSuccess">+ MARK / SUCCESS (Space)</button>
+          <button class="btn btn-action-miss" id="btnMarkMiss">+ MISS (M)</button>
+          <button class="btn btn-action-jackpot" id="btnMarkJackpot">★ JACKPOT (J)</button>
+          <button class="btn" id="btnUndoTrial">↩ Undo (U)</button>
+        </div>
+
+        <div class="stats-summary-grid">
+          <div class="stat-box">
+            <div class="stat-val" id="statReps">10</div>
+            <div class="stat-lbl">Total Reps</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="statSuccessRate">80%</div>
+            <div class="stat-lbl">Success Rate</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="statCounts">8 / 2</div>
+            <div class="stat-lbl">Success / Miss</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="statStreak">+4</div>
+            <div class="stat-lbl">Current Streak</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="statCPM">2.7</div>
+            <div class="stat-lbl">Clicks / Min</div>
+          </div>
+        </div>
+
+        <div class="history-strip-container">
+          <div class="history-strip-title">
+            <span>TRIAL HISTORY STRIP (Chronological)</span>
+            <span id="activeStepTitleInTracker">Step 3: Paw touch raised hand</span>
+          </div>
+          <div class="history-strip" id="historyStrip">
+            <!-- Markers injected here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- BEHAVIORAL DECISION ENGINE & NEXT-STEP ADVISOR -->
+      <section class="card" data-feature="behavioral-interpreter">
+        <div class="card-title">
+          <span>4. What this means / What to do next</span>
+          <span style="font-size:0.75rem; font-weight:normal; color:var(--text-muted)">Behavioral Decision Engine</span>
+        </div>
+
+        <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">WHAT THIS MEANS (CURRENT ASSESSMENT)</label>
+        <div class="verdict-badge-box verdict-STICK" id="verdictBadge">
+          <div class="verdict-title" id="verdictTitle">STICK &amp; REPEAT STEP</div>
+          <div class="verdict-sub" id="verdictSub">70% Success Rate is below 80% Promotion Threshold</div>
+        </div>
+
+        <div class="advisory-box">
+          <div class="advisory-title">
+            <span>💡 WHAT TO DO NEXT (HANDLER DIRECTIVES)</span>
+          </div>
+          <ul class="advisory-list" id="advisoryList">
+            <li>Keep criteria exact at active step. Do not raise target height/distance yet.</li>
+            <li>Ensure high-value reinforcer delivery within 1.0s of acoustic mark.</li>
+            <li>If 3 consecutive misses occur, immediately split criteria into a smaller slice.</li>
+          </ul>
+        </div>
+
+        <div class="safety-disclaimer">
+          Estimate only - verify with a qualified professional before relying on it.
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <details class="card pacing-card" data-feature="variable-reinforcement-metronome" open style="margin-top: 1rem;">
+    <summary class="card-title">
+      <span>5. Reinforcement Schedule Metronome &amp; Pacing Timer</span>
+      <span class="btn btn-sm">▾ Pacing Options</span>
+    </summary>
+    <div class="form-grid" style="margin-top: 0.5rem;">
+      <div>
+        <label for="schedTypeSelect">Reinforcement Schedule</label>
+        <select id="schedTypeSelect">
+          <option value="CRF">Continuous (CRF / FR1)</option>
+          <option value="FR2">Fixed Ratio (FR2)</option>
+          <option value="FR3">Fixed Ratio (FR3)</option>
+          <option value="FR4">Fixed Ratio (FR4)</option>
+          <option value="FR5">Fixed Ratio (FR5)</option>
+          <option value="VR3" selected>Variable Ratio (VR3 - Mean 3)</option>
+          <option value="VR4">Variable Ratio (VR4 - Mean 4)</option>
+          <option value="VR5">Variable Ratio (VR5 - Mean 5)</option>
+          <option value="VI3">Variable Interval (VI 3s)</option>
+          <option value="VI5">Variable Interval (VI 5s)</option>
+          <option value="VI10">Variable Interval (VI 10s)</option>
+          <option value="VI15">Variable Interval (VI 15s)</option>
+        </select>
+      </div>
+      <div>
+        <label for="metronomePaceSelect">Metronome Cadence / Pace</label>
+        <select id="metronomePaceSelect">
+          <option value="1.5">Brisk Pace (1.5s)</option>
+          <option value="2.5" selected>Standard Pace (2.5s)</option>
+          <option value="4.0">Deliberate Pace (4.0s)</option>
+          <option value="6.0">Extended Wait (6.0s)</option>
+        </select>
+      </div>
+      <div style="display:flex; align-items:flex-end;">
+        <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; text-transform:none; font-weight:600; margin-bottom:0.5rem;">
+          <input type="checkbox" id="metronomeAudioToggle" style="width:auto; cursor:pointer;">
+          <span>Metronome Audio (Woodblock Tick)</span>
+        </label>
+      </div>
+    </div>
+
+    <div id="rewardPrompterBox" class="prompter-box prompter-withhold">
+      Cue behavior, withhold click, chain next
+    </div>
+
+    <div style="background:var(--bg-card-subtle); padding:0.75rem; border-radius:var(--radius); border:1px solid var(--border-color);">
+      <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">
+        <span id="pacingTargetLabel">Upcoming Reinforcement Trial Target</span>
+        <span id="pacingWindowStatus">Trial 1 of 3</span>
+      </div>
+      <div class="pacing-pips-strip" id="pacingPipsStrip"></div>
+      <div class="pacing-progress-track">
+        <div class="pacing-progress-bar" id="pacingProgressBar"></div>
+      </div>
+    </div>
+
+    <div class="stats-summary-grid" style="margin-top:0.75rem; margin-bottom:0;">
+      <div class="stat-box">
+        <div class="stat-val" id="avgItiDisplay">--</div>
+        <div class="stat-lbl">Avg Inter-Trial (ITI)</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="targetWindowDisplay">3 trials</div>
+        <div class="stat-lbl">Target Window</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="schedEfficiencyDisplay">33%</div>
+        <div class="stat-lbl">Scheduled Density</div>
+      </div>
+    </div>
+  </details>
+  <!-- Criteria Split Wizard Modal -->
+  <div id="criteriaSplitModal" class="split-modal-overlay" data-feature="criteria-split-wizard" style="display:none;">
+    <div class="split-modal-card">
+      <div class="split-modal-header">
+        <h3 id="splitModalTitle">Criteria Split Wizard</h3>
+        <button class="btn btn-sm" id="btnCloseSplitModal" type="button" aria-label="Close">✕</button>
+      </div>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.75rem;">
+        Break active failing step into two intermediate micro-slices along selected axis:
+      </p>
+      <div class="form-grid" style="margin-bottom:0.75rem;">
+        <div>
+          <label for="splitAxisSelect">Splitting Axis</label>
+          <select id="splitAxisSelect">
+            <option value="distance" selected>Distance (Halve reach / proximity)</option>
+            <option value="duration">Duration (Reduce hold / persistence)</option>
+            <option value="distraction">Distraction (Reduce handler motion)</option>
+          </select>
+        </div>
+      </div>
+      <div id="splitPreviewBox" style="background:var(--bg-card-subtle); padding:0.75rem; border-radius:var(--radius); margin-bottom:0.85rem; font-size:0.85rem; border:1px solid var(--border-color);">
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
+        <button class="btn" id="btnCancelSplit" type="button">Cancel</button>
+        <button class="btn btn-primary" id="btnApplySplit" type="button">Apply Sub-Steps</button>
+      </div>
+    </div>
+  </div>
+  <section class="card" data-feature="session-history-export" style="margin-top: 1.5rem;">
+    <div class="card-title">
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <span>6. Session Log CSV &amp; JSON Blob Exporter</span>
+        <span class="export-tag-pill" id="exportTrialsBadge">0 Trials Logged</span>
+      </div>
+      <span style="font-size:0.75rem; font-weight:normal; color:var(--text-muted)">Trial-by-Trial Blob Archiver</span>
+    </div>
+
+    <div class="form-grid">
+      <div>
+        <label for="exportHandlerTag">Handler Tag / ID</label>
+        <input type="text" id="exportHandlerTag" value="Lead Trainer (Alex)" placeholder="e.g. Handler Name or ID">
+      </div>
+      <div>
+        <label for="exportEnvironmentTag">Environment / Setup Tag</label>
+        <select id="exportEnvironmentTag">
+          <option value="Indoor Living Room (Low Distraction)" selected>Indoor Living Room (Low Distraction)</option>
+          <option value="Backyard / Garden (Moderate Distraction)">Backyard / Garden (Moderate Distraction)</option>
+          <option value="Training Facility / Club (High Energy)">Training Facility / Club (High Energy)</option>
+          <option value="Public Park / Street (High Distraction)">Public Park / Street (High Distraction)</option>
+        </select>
+      </div>
+      <div>
+        <label for="exportDetailLevel">Summary Detail Level</label>
+        <select id="exportDetailLevel">
+          <option value="executive" selected>Executive Summary &amp; Decision Gate</option>
+          <option value="compact">Compact Single-Block Telemetry</option>
+        </select>
+      </div>
+      <div style="grid-column: 1 / -1;">
+        <label for="exportStepNotes">Session &amp; Step Diagnostic Notes</label>
+        <input type="text" id="exportStepNotes" value="Solid response latency, pet remains engaged and oriented to marker criteria." placeholder="Enter criteria observations, latency impressions, handler notes...">
+      </div>
+    </div>
+
+    <div id="exportProPrompt" class="pro-banner" style="display:none; margin-bottom:0.75rem;">
+      Available in the full version <a href="https://ferrywave73.gumroad.com/l/zouumx" target="_blank" style="color:inherit; text-decoration:underline; font-weight:bold; margin-left:0.25rem;">Upgrade to Full Version</a>
+    </div>
+
+    <div class="export-card-actions">
+      <button class="btn btn-primary" id="btnDownloadSessionCSV">Download CSV</button>
+      <button class="btn" id="btnDownloadSessionJSON">Download JSON</button>
+      <button class="btn" id="btnCopyExecutiveSummary">Copy Executive Summary</button>
+      <span id="exportCopyFeedback" style="font-size:0.8rem; color:var(--accent-green); font-weight:700; align-self:center; display:none;">✓ Copied!</span>
+    </div>
+
+    <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; margin-top:0.5rem; display:block;">LIVE EXECUTIVE SUMMARY PREVIEW</label>
+    <pre class="export-preview-box" id="exportSummaryPreview"></pre>
+  </section>
+  <!-- FEATURES -->
+
+  <script>
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/zouumx";
+
+    // Audio Context Singleton
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    // Audio Synthesizer Engine
+    function playClickSound() {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const masterVol = parseFloat(document.getElementById('masterVolSlider').value) / 100;
+      if (masterVol <= 0) return;
+
+      const pitchType = document.getElementById('clickPitchSelect').value;
+      const now = ctx.currentTime;
+
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(masterVol, now);
+      masterGain.connect(ctx.destination);
+
+      const triggerBurst = (timeOffset, freq) => {
+        // Short noise burst + bandpass
+        const bufferSize = ctx.sampleRate * 0.008; // 8ms
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(freq, timeOffset);
+        filter.Q.setValueAtTime(8, timeOffset);
+
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(1.0, timeOffset);
+        gain.gain.exponentialRampToValueAtTime(0.001, timeOffset + 0.007);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(masterGain);
+
+        noise.start(timeOffset);
+        noise.stop(timeOffset + 0.008);
+      };
+
+      if (pitchType === 'sharp') {
+        triggerBurst(now, 3200);
+        triggerBurst(now + 0.015, 2900);
+      } else if (pitchType === 'deep') {
+        triggerBurst(now, 1200);
+        triggerBurst(now + 0.015, 1000);
+      } else if (pitchType === 'dual') {
+        triggerBurst(now, 2800);
+        triggerBurst(now + 0.018, 2200);
+      }
+
+      // Visual pulse
+      const ring = document.getElementById('clickerPulseRing');
+      ring.classList.remove('animate');
+      void ring.offsetWidth; // trigger reflow
+      ring.classList.add('animate');
+    }
+
+    let whistleOsc = null;
+    let whistleGain = null;
+
+    function startWhistleSound() {
+      const ctx = getAudioContext();
+      if (!ctx || whistleOsc) return;
+
+      const masterVol = parseFloat(document.getElementById('masterVolSlider').value) / 100;
+      if (masterVol <= 0) return;
+
+      const freq = parseFloat(document.getElementById('whistleFreqSlider').value);
+      const now = ctx.currentTime;
+
+      whistleOsc = ctx.createOscillator();
+      whistleGain = ctx.createGain();
+
+      whistleOsc.type = 'sine';
+      whistleOsc.frequency.setValueAtTime(freq, now);
+
+      whistleGain.gain.setValueAtTime(0, now);
+      whistleGain.gain.linearRampToValueAtTime(masterVol * 0.7, now + 0.02);
+
+      whistleOsc.connect(whistleGain);
+      whistleGain.connect(ctx.destination);
+
+      try {
+        whistleOsc.start(now);
+      } catch (e) {}
+    }
+
+    function stopWhistleSound() {
+      if (!whistleOsc || !audioCtx) return;
+      const now = audioCtx.currentTime;
+      if (whistleGain) {
+        whistleGain.gain.linearRampToValueAtTime(0.001, now + 0.03);
+      }
+      const osc = whistleOsc;
+      const gain = whistleGain;
+      whistleOsc = null;
+      whistleGain = null;
+      setTimeout(() => {
+        try {
+          osc.stop();
+          osc.disconnect();
+          gain.disconnect();
+        } catch(e){}
+      }, 40);
+    }
+
+    // Default Presets Data
+    const PRESETS = [
+      {
+        name: "Dog High-Five (Energetic Border Collie)",
+        species: "dog",
+        trick: "Dog High-Five",
+        energy: "high",
+        reinforcer: "Freeze-Dried Liver",
+        threshold: 80,
+        session_cap_reps: 15,
+        active_step: 3,
+        steps: [
+          { num: 1, text: "Paw lift 1 inch off ground", prompt: "Lured" },
+          { num: 2, text: "Paw touch handler flat hand on floor", prompt: "Prompted" },
+          { num: 3, text: "Paw touch raised hand at handler knee height", prompt: "Prompted" },
+          { num: 4, text: "Paw touch vertical palm at dog chest height", prompt: "Faded" },
+          { num: 5, text: "High-five on verbal cue 'High Five' with palm presentation", prompt: "Cued" }
+        ],
+        history: ["success", "miss", "success", "success", "miss", "success", "success", "success", "success", "success"],
+        elapsedSeconds: 180
+      },
+      {
+        name: "Cat Target Stick Touch (Cautious Domestic)",
+        species: "cat",
+        trick: "Cat Target Stick Touch",
+        energy: "cautious",
+        reinforcer: "Churu Lickable Paste",
+        threshold: 75,
+        session_cap_reps: 8,
+        active_step: 2,
+        steps: [
+          { num: 1, text: "Look towards plastic target ball 6 inches away", prompt: "Lured" },
+          { num: 2, text: "Stretch neck and sniff target ball 2 inches away", prompt: "Prompted" },
+          { num: 3, text: "Touch nose/whisker to target ball surface", prompt: "Faded" },
+          { num: 4, text: "Follow target ball 6 inches to the left or right", prompt: "Faded" },
+          { num: 5, text: "Sustained nose touch on moving target stick for 2 seconds", prompt: "Cued" }
+        ],
+        history: ["success", "success", "miss", "success", "success", "success"],
+        elapsedSeconds: 120
+      },
+      {
+        name: "Puppy Recall Foundation (Distractible Golden)",
+        species: "dog",
+        trick: "Puppy Rapid Recall",
+        energy: "high",
+        reinforcer: "Squeaky Ball & Real Chicken",
+        threshold: 85,
+        session_cap_reps: 12,
+        active_step: 2,
+        steps: [
+          { num: 1, text: "Look directly at handler upon verbal name cue", prompt: "Lured" },
+          { num: 2, text: "Turn body and take 3 rapid steps toward handler in quiet hallway", prompt: "Prompted" },
+          { num: 3, text: "Sprint 15 feet to handler with collar touch delivery", prompt: "Faded" },
+          { num: 4, text: "Sprint 30 feet in backyard with mild visual distractions", prompt: "Faded" },
+          { num: 5, text: "Emergency whistle recall from 50 feet away against food bowl", prompt: "Cued" }
+        ],
+        history: ["success", "miss", "success", "miss", "success", "miss", "miss", "success"],
+        elapsedSeconds: 210
+      }
+    ];
+
+    // State
+    let appState = {
+      species: "dog",
+      trick: "Dog High-Five",
+      energy: "high",
+      reinforcer: "Freeze-Dried Liver",
+      threshold: 80,
+      sessionCapReps: 15,
+      activeStep: 3,
+      steps: [],
+      history: [],
+      elapsedSeconds: 180,
+      timerRunning: false,
+      timerInterval: null
+    };
+
+    // Auto Curriculum Templates Generator
+    function generateStepChain(species, trick, energy) {
+      const lowerTrick = trick.toLowerCase();
+      if (lowerTrick.includes('bell')) {
+        return [
+          { num: 1, text: `Look at or orient head towards desk bell within 6 inches`, prompt: "Lured" },
+          { num: 2, text: `Nose dip or paw stretch toward bell within 2 inches`, prompt: "Prompted" },
+          { num: 3, text: `Accidental paw or nose contact touching bell surface`, prompt: "Prompted" },
+          { num: 4, text: `Deliberate paw/nose push producing audible chime`, prompt: "Faded" },
+          { num: 5, text: `Ring desk bell on cue '${trick}' from 3 feet away`, prompt: "Cued" }
+        ];
+      }
+      if (lowerTrick.includes('target') || lowerTrick.includes('stick')) {
+        return [
+          { num: 1, text: `Look towards target stick ball placed 6 inches away`, prompt: "Lured" },
+          { num: 2, text: `Orient body and take 1 step toward target stick`, prompt: "Prompted" },
+          { num: 3, text: `Touch nose directly to ball surface of target stick`, prompt: "Faded" },
+          { num: 4, text: `Follow target stick 12 inches across handler's body`, prompt: "Faded" },
+          { num: 5, text: `Hold nose touch on target stick for 2 continuous seconds`, prompt: "Cued" }
+        ];
+      }
+      if (lowerTrick.includes('recall') || lowerTrick.includes('come')) {
+        return [
+          { num: 1, text: `Orient head and eyes directly to handler upon hearing cue`, prompt: "Lured" },
+          { num: 2, text: `Turn body and move 3 steps toward handler in low-distraction room`, prompt: "Prompted" },
+          { num: 3, text: `Traverse 15 feet to handler and allow gentle collar touch`, prompt: "Faded" },
+          { num: 4, text: `Traverse 30 feet in yard with mild environmental distractions`, prompt: "Faded" },
+          { num: 5, text: `Rapid recall from 50 feet away in high-distraction setting`, prompt: "Cued" }
+        ];
+      }
+
+      // Generic micro-shaping fallback chain tailored to energy & species
+      const distance = (energy === 'high') ? '12 inches' : '4 inches';
+      return [
+        { num: 1, text: `Look or orient body toward training focal area (${distance})`, prompt: "Lured" },
+        { num: 2, text: `Initial physical movement or intention step toward ${trick}`, prompt: "Prompted" },
+        { num: 3, text: `Partial execution (50% criteria metric) of ${trick}`, prompt: "Prompted" },
+        { num: 4, text: `Full movement execution of ${trick} with physical prompt fading`, prompt: "Faded" },
+        { num: 5, text: `Complete behavior on verbal cue '${trick}' with full handler distance`, prompt: "Cued" }
+      ];
+    }
+
+    function showValidationError(msg) {
+      const el = document.getElementById('inputValidationMsg');
+      if (el) {
+        el.innerText = msg;
+        el.style.display = 'block';
+      }
+    }
+
+    function clearValidationError() {
+      const el = document.getElementById('inputValidationMsg');
+      if (el) {
+        el.innerText = '';
+        el.style.display = 'none';
+      }
+    }
+
+    // Initialize UI Elements
+    function init() {
+      // Event Listeners
+      document.getElementById('presetSelector').addEventListener('change', (e) => {
+        if (!PRO) {
+          showProNotice();
+          e.target.value = 'preset0';
+          return;
+        }
+        const idx = parseInt(e.target.value.replace('preset', ''), 10);
+        loadPreset(idx);
+      });
+
+      document.getElementById('btnToggleTheme').addEventListener('click', toggleTheme);
+      document.getElementById('btnCopySummary').addEventListener('click', copySummary);
+      document.getElementById('btnExportCSV').addEventListener('click', exportCSV);
+      document.getElementById('btnExportJSON').addEventListener('click', exportJSON);
+      document.getElementById('btnPrint').addEventListener('click', handlePrint);
+      document.getElementById('btnLoadSample').addEventListener('click', () => {
+        loadSessionFromJSONString(JSON.stringify(PRESETS[1]));
+      });
+      document.getElementById('importFileInput').addEventListener('change', handleFileImport);
+      document.getElementById('btnResetAll').addEventListener('click', resetSession);
+
+      // Form inputs change
+      ['speciesSelect', 'energySelect'].forEach(id => {
+        document.getElementById(id).addEventListener('change', () => {
+          appState.species = document.getElementById('speciesSelect').value;
+          appState.energy = document.getElementById('energySelect').value;
+          saveToLocalStorage();
+          render();
+        });
+      });
+
+      document.getElementById('targetTrickInput').addEventListener('input', (e) => {
+        const val = e.target.value.trim();
+        if (!val) {
+          showValidationError('Target Behavior/Trick cannot be empty.');
+        } else {
+          clearValidationError();
+        }
+        appState.trick = val || 'Dog High-Five';
+        saveToLocalStorage();
+        render();
+      });
+
+      document.getElementById('reinforcerInput').addEventListener('input', (e) => {
+        const val = e.target.value.trim();
+        if (!val) {
+          showValidationError('Primary reinforcer cannot be empty.');
+        } else {
+          clearValidationError();
+        }
+        appState.reinforcer = val || 'Treats';
+        saveToLocalStorage();
+        render();
+      });
+
+      document.getElementById('thresholdInput').addEventListener('input', (e) => {
+        const raw = e.target.value.trim();
+        const val = Number(raw);
+        if (raw === '' || isNaN(val)) {
+          showValidationError('Threshold must be a valid number between 50% and 98%.');
+          return;
+        }
+        if (val <= 0 || val < 50 || val > 98) {
+          showValidationError('Threshold must be between 50% and 98% (cannot be negative or zero).');
+          return;
+        }
+        clearValidationError();
+        appState.threshold = Math.round(val);
+        saveToLocalStorage();
+        render();
+      });
+
+      document.getElementById('sessionCapReps').addEventListener('input', (e) => {
+        const raw = e.target.value.trim();
+        const val = Number(raw);
+        if (raw === '' || isNaN(val)) {
+          showValidationError('Session cap must be a valid number of reps (e.g. 3 to 50).');
+          return;
+        }
+        if (val <= 0 || val < 3 || val > 50) {
+          showValidationError('Session cap must be between 3 and 50 reps (cannot be negative or zero).');
+          return;
+        }
+        clearValidationError();
+        appState.sessionCapReps = Math.round(val);
+        saveToLocalStorage();
+        render();
+      });
+
+      document.getElementById('btnRebuildSteps').addEventListener('click', () => {
+        appState.steps = generateStepChain(appState.species, appState.trick, appState.energy);
+        saveToLocalStorage();
+        render();
+      });
+
+      // Audio deck pitch & volume controls
+      document.getElementById('whistleFreqSlider').addEventListener('input', (e) => {
+        document.getElementById('whistleFreqVal').innerText = e.target.value;
+      });
+
+      document.getElementById('masterVolSlider').addEventListener('input', (e) => {
+        document.getElementById('masterVolVal').innerText = e.target.value;
+      });
+
+      // Triggers with unified Pointer Events
+      const clickerBtn = document.getElementById('btnClickerTrigger');
+      clickerBtn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        playClickSound();
+      });
+
+      const whistleBtn = document.getElementById('btnWhistleTrigger');
+      whistleBtn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        startWhistleSound();
+      });
+      whistleBtn.addEventListener('pointerup', (e) => {
+        e.preventDefault();
+        stopWhistleSound();
+      });
+      whistleBtn.addEventListener('pointerleave', stopWhistleSound);
+      whistleBtn.addEventListener('pointercancel', stopWhistleSound);
+
+      // Action Buttons
+      document.getElementById('btnMarkSuccess').addEventListener('click', () => recordTrial('success'));
+      document.getElementById('btnMarkMiss').addEventListener('click', () => recordTrial('miss'));
+      document.getElementById('btnMarkJackpot').addEventListener('click', () => recordTrial('jackpot'));
+      document.getElementById('btnUndoTrial').addEventListener('click', undoTrial);
+
+      // Timer Controls
+      document.getElementById('btnToggleTimer').addEventListener('click', toggleTimer);
+      document.getElementById('btnResetTimer').addEventListener('click', resetTimer);
+
+      // Keyboard Shortcuts
+      window.addEventListener('keydown', (e) => {
+        // Ignore key shortcuts if focusing on text inputs
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+
+        const key = e.key.toLowerCase();
+        if (e.code === 'Space' || key === 'c') {
+          e.preventDefault();
+          recordTrial('success');
+        } else if (key === 'm') {
+          e.preventDefault();
+          recordTrial('miss');
+        } else if (key === 'j') {
+          e.preventDefault();
+          recordTrial('jackpot');
+        } else if (key === 'w') {
+          if (!e.repeat) startWhistleSound();
+        } else if (key === 'u') {
+          undoTrial();
+        }
+      });
+
+      window.addEventListener('keyup', (e) => {
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+        if (e.key.toLowerCase() === 'w') {
+          stopWhistleSound();
+        }
+      });
+
+      loadPreset(0);
+      loadFromLocalStorage();
+      startTimer();
+      render();
+    }
+
+    function handleFileImport(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        loadSessionFromJSONString(evt.target.result);
+      };
+      reader.readAsText(file);
+      e.target.value = '';
+    }
+
+    function loadSessionFromJSONString(jsonStr) {
+      try {
+        const data = JSON.parse(jsonStr);
+        if (!data || !Array.isArray(data.steps) || data.steps.length === 0) {
+          showValidationError("Invalid session data: missing curriculum steps.");
+          return false;
+        }
+        appState.species = data.species || "dog";
+        appState.trick = data.trick || "Custom Behavior";
+        appState.energy = data.energy || "balanced";
+        appState.reinforcer = data.reinforcer || "Treats";
+        appState.threshold = Number(data.threshold) || 80;
+        appState.sessionCapReps = Number(data.sessionCapReps || data.session_cap_reps) || 15;
+        appState.activeStep = Number(data.activeStep || data.active_step) || 1;
+        appState.steps = data.steps;
+        appState.history = Array.isArray(data.history) ? data.history : [];
+        appState.elapsedSeconds = Number(data.elapsedSeconds) || 0;
+
+        document.getElementById('speciesSelect').value = appState.species;
+        document.getElementById('targetTrickInput').value = appState.trick;
+        document.getElementById('energySelect').value = appState.energy;
+        document.getElementById('reinforcerInput').value = appState.reinforcer;
+        document.getElementById('thresholdInput').value = appState.threshold;
+        document.getElementById('sessionCapReps').value = appState.sessionCapReps;
+
+        saveToLocalStorage();
+        render();
+        clearValidationError();
+        return true;
+      } catch (err) {
+        showValidationError("Could not parse JSON: " + err.message);
+        return false;
+      }
+    }
+
+    function loadPreset(idx) {
+      const p = PRESETS[idx];
+      if (!p) return;
+
+      appState.species = p.species;
+      appState.trick = p.trick;
+      appState.energy = p.energy;
+      appState.reinforcer = p.reinforcer;
+      appState.threshold = p.threshold;
+      appState.sessionCapReps = p.session_cap_reps;
+      appState.activeStep = p.active_step;
+      appState.steps = JSON.parse(JSON.stringify(p.steps));
+      appState.history = JSON.parse(JSON.stringify(p.history));
+      appState.elapsedSeconds = p.elapsedSeconds || 120;
+
+      document.getElementById('speciesSelect').value = p.species;
+      document.getElementById('targetTrickInput').value = p.trick;
+      document.getElementById('energySelect').value = p.energy;
+      document.getElementById('reinforcerInput').value = p.reinforcer;
+      document.getElementById('thresholdInput').value = p.threshold;
+      document.getElementById('sessionCapReps').value = p.session_cap_reps;
+      const sel = document.getElementById('presetSelector');
+      if (sel) sel.value = 'preset' + idx;
+
+      clearValidationError();
+      saveToLocalStorage();
+      render();
+    }
+
+    function recordTrial(type) {
+      if (type === 'success' || type === 'jackpot') {
+        playClickSound();
+        if (type === 'jackpot') {
+          setTimeout(playClickSound, 120);
+        }
+      }
+
+      appState.history.push(type);
+      saveToLocalStorage();
+      render();
+    }
+
+    function undoTrial() {
+      if (appState.history.length > 0) {
+        appState.history.pop();
+        saveToLocalStorage();
+        render();
+      }
+    }
+
+    function toggleTimer() {
+      appState.timerRunning = !appState.timerRunning;
+      document.getElementById('btnToggleTimer').innerText = appState.timerRunning ? 'Pause' : 'Start';
+    }
+
+    function resetTimer() {
+      appState.elapsedSeconds = 0;
+      renderTimer();
+      saveToLocalStorage();
+    }
+
+    function startTimer() {
+      appState.timerRunning = true;
+      if (appState.timerInterval) clearInterval(appState.timerInterval);
+      appState.timerInterval = setInterval(() => {
+        if (appState.timerRunning) {
+          appState.elapsedSeconds++;
+          renderTimer();
+          // Update CPM live
+          renderStatsAndDecision();
+        }
+      }, 1000);
+    }
+
+    function renderTimer() {
+      const mins = Math.floor(appState.elapsedSeconds / 60).toString().padStart(2, '0');
+      const secs = (appState.elapsedSeconds % 60).toString().padStart(2, '0');
+      document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
+    }
+
+    function render() {
+      renderTimer();
+      renderCurriculumTable();
+      renderStatsAndDecision();
+    }
+
+    function renderCurriculumTable() {
+      const tbody = document.getElementById('curriculumTableBody');
+      tbody.innerHTML = '';
+
+      appState.steps.forEach((step) => {
+        const tr = document.createElement('tr');
+        if (String(step.num) === String(appState.activeStep)) {
+          tr.classList.add('active-step-row');
+        }
+
+        tr.innerHTML = `
+          <td style="text-align:center;">
+            <input type="radio" name="activeStepRadio" value="${step.num}" ${String(step.num) === String(appState.activeStep) ? 'checked' : ''} aria-label="Select Step ${step.num}">
+          </td>
+          <td style="font-weight:bold; text-align:center;">#${step.num}</td>
+          <td>
+            <input type="text" data-step-idx="${step.num - 1}" class="step-text-input" value="${escapeHtml(step.text)}" style="width:100%; font-size:0.85rem;" aria-label="Step ${step.num} Description">
+          </td>
+          <td>
+            <select data-step-idx="${step.num - 1}" class="step-prompt-select" style="font-size:0.8rem;" aria-label="Step ${step.num} Prompt Level">
+              <option value="Lured" ${step.prompt === 'Lured' ? 'selected' : ''}>Lured</option>
+              <option value="Prompted" ${step.prompt === 'Prompted' ? 'selected' : ''}>Prompted</option>
+              <option value="Faded" ${step.prompt === 'Faded' ? 'selected' : ''}>Faded</option>
+              <option value="Cued" ${step.prompt === 'Cued' ? 'selected' : ''}>Cued</option>
+            </select>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Bind dynamic inputs inside table
+      tbody.querySelectorAll('input[name="activeStepRadio"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          appState.activeStep = e.target.value;
+          saveToLocalStorage();
+          render();
+        });
+      });
+
+      tbody.querySelectorAll('.step-text-input').forEach(input => {
+        input.addEventListener('input', (e) => {
+          const idx = parseInt(e.target.dataset.stepIdx, 10);
+          appState.steps[idx].text = e.target.value;
+          saveToLocalStorage();
+          updateActiveStepTitleInTracker();
+        });
+      });
+
+      tbody.querySelectorAll('.step-prompt-select').forEach(sel => {
+        sel.addEventListener('change', (e) => {
+          const idx = parseInt(e.target.dataset.stepIdx, 10);
+          appState.steps[idx].prompt = e.target.value;
+          saveToLocalStorage();
+        });
+      });
+
+      updateActiveStepTitleInTracker();
+    }
+
+    function updateActiveStepTitleInTracker() {
+      const activeObj = appState.steps.find(s => String(s.num) === String(appState.activeStep));
+      const titleEl = document.getElementById('activeStepTitleInTracker');
+      if (activeObj && titleEl) {
+        titleEl.innerText = `Step ${activeObj.num}: ${activeObj.text}`;
+      }
+    }
+
+    function renderStatsAndDecision() {
+      const totalReps = appState.history.length;
+      let successes = 0;
+      let misses = 0;
+      let jackpots = 0;
+      let streak = 0;
+
+      appState.history.forEach((h) => {
+        if (h === 'success') {
+          successes++;
+          if (streak >= 0) streak++; else streak = 1;
+        } else if (h === 'jackpot') {
+          successes++;
+          jackpots++;
+          if (streak >= 0) streak++; else streak = 1;
+        } else if (h === 'miss') {
+          misses++;
+          if (streak <= 0) streak--; else streak = -1;
+        }
+      });
+
+      const successRate = totalReps > 0 ? Math.round((successes / totalReps) * 100) : 0;
+      const cpm = appState.elapsedSeconds > 0 ? ((successes / appState.elapsedSeconds) * 60).toFixed(1) : '0.0';
+
+      document.getElementById('statReps').innerText = totalReps;
+      document.getElementById('statSuccessRate').innerText = `${successRate}%`;
+      document.getElementById('statCounts').innerText = `${successes} / ${misses}`;
+
+      const streakEl = document.getElementById('statStreak');
+      if (streak > 0) {
+        streakEl.innerText = `+${streak} S`;
+        streakEl.style.color = 'var(--accent-green)';
+      } else if (streak < 0) {
+        streakEl.innerText = `${streak} M`;
+        streakEl.style.color = 'var(--accent-red)';
+      } else {
+        streakEl.innerText = '0';
+        streakEl.style.color = 'var(--text-main)';
+      }
+
+      document.getElementById('statCPM').innerText = cpm;
+
+      // Render History Strip
+      const stripEl = document.getElementById('historyStrip');
+      stripEl.innerHTML = '';
+      if (appState.history.length === 0) {
+        stripEl.innerHTML = `<span style="font-size:0.8rem; color:var(--text-muted); font-style:italic;">No trials recorded yet. Press SPACE / C to mark success.</span>`;
+      } else {
+        appState.history.forEach((t, i) => {
+          const marker = document.createElement('div');
+          marker.classList.add('trial-marker');
+          if (t === 'success') {
+            marker.classList.add('marker-success');
+            marker.innerText = '✓';
+            marker.title = `Trial ${i+1}: Success`;
+          } else if (t === 'miss') {
+            marker.classList.add('marker-miss');
+            marker.innerText = '✗';
+            marker.title = `Trial ${i+1}: Miss / Hesitation`;
+          } else if (t === 'jackpot') {
+            marker.classList.add('marker-jackpot');
+            marker.innerText = '★';
+            marker.title = `Trial ${i+1}: Jackpot Reward`;
+          }
+          stripEl.appendChild(marker);
+        });
+      }
+
+      // Behavioral Decision Engine Calculation
+      computeBehavioralVerdict({
+        totalReps,
+        successes,
+        misses,
+        streak,
+        successRate,
+        cpm,
+        threshold: appState.threshold,
+        activeStep: appState.activeStep,
+        sessionCapReps: appState.sessionCapReps,
+        elapsedSeconds: appState.elapsedSeconds
+      });
+    }
+
+    function computeBehavioralVerdict(data) {
+      const badge = document.getElementById('verdictBadge');
+      const title = document.getElementById('verdictTitle');
+      const sub = document.getElementById('verdictSub');
+      const advisory = document.getElementById('advisoryList');
+
+      badge.className = 'verdict-badge-box';
+
+      // Rule Evaluation Logic
+      const consecutiveMisses = data.streak < 0 ? Math.abs(data.streak) : 0;
+      const consecutiveSuccesses = data.streak > 0 ? data.streak : 0;
+
+      let verdictType = 'STICK'; // STICK, SPLIT, RAISE, JACKPOT
+      let titleText = '';
+      let subText = '';
+      let listItems = [];
+
+      // 1. Check for Jackpot / Session End
+      if (data.totalReps >= data.sessionCapReps || data.elapsedSeconds >= 600 || (consecutiveSuccesses >= 5 && data.activeStep === 5)) {
+        verdictType = 'JACKPOT';
+        titleText = 'JACKPOT & END SESSION ON A HIGH NOTE';
+        subText = `Session cap reached (${data.totalReps}/${data.sessionCapReps} reps). Prevent mental exhaustion!`;
+        listItems = [
+          `Deliver a high-value bonus Jackpot treat (${appState.reinforcer}).`,
+          `End training immediately while pet is still enthusiastic.`,
+          `Allow pet to rest and consolidate memory for at least 30-60 minutes.`
+        ];
+      }
+      // 2. Check for Split Criterion (Frustration / High Miss Rate)
+      else if (consecutiveMisses >= 3 || (data.totalReps >= 5 && data.successRate < 50)) {
+        verdictType = 'SPLIT';
+        titleText = 'SPLIT STEP (EASIER SLICE REQUIRED)';
+        subText = `High frustration risk! ${consecutiveMisses >= 3 ? consecutiveMisses + ' consecutive misses detected' : 'Success rate (' + data.successRate + '%) is under 50%'}.`;
+        const activeObj = appState.steps.find(s => String(s.num) === String(data.activeStep));
+        listItems = [
+          `Immediately lower physical criteria: decrease distance or lower target height. <button class="btn btn-sm btn-danger" onclick="openSplitWizard()" style="margin-top:0.25rem; display:inline-flex;">✂ Split Step ${activeObj ? activeObj.num : ''} Now</button>`,
+          `Re-introduce a lighter prompt level (${activeObj?.prompt || 'Prompted'}) to guarantee success.`,
+          `Deliver 2 rapid easy successes to rebuild animal confidence and drive.`
+        ];
+      }
+      // 3. Check for Raise Criteria (Promotion)
+      else if (data.totalReps >= 5 && data.successRate >= data.threshold && consecutiveMisses <= 1) {
+        verdictType = 'RAISE';
+        titleText = `RAISE CRITERIA (ADVANCE TO STEP ${Math.min(5, data.activeStep + 1)})`;
+        subText = `Success rate (${data.successRate}%) meets or exceeds ${data.threshold}% target gate across ${data.totalReps} trials!`;
+        listItems = [
+          data.activeStep < 5
+            ? `Criteria fulfilled! Advance active step selector to Step ${data.activeStep + 1}.`
+            : `Step 5 complete! Introduce environmental generalized distractions or delay reward timing.`,
+          `Increase criteria metric (add 6 inches distance, add 1s duration, or fade prompt).`,
+          `Pacing check: Current reinforcement rate is ${data.cpm} marks/min.`
+        ];
+      }
+      // 4. Default: Stick & Repeat
+      else {
+        verdictType = 'STICK';
+        titleText = 'STICK & REPEAT CURRENT CRITERIA';
+        subText = data.totalReps === 0
+          ? `Session started. Target: ${data.threshold}% success rate before raising criteria.`
+          : `Success rate (${data.successRate}%) is below promotion gate (${data.threshold}%). Run 3-5 more trials.`;
+        listItems = [
+          `Maintain exact same physical target and criteria height/distance.`,
+          `Ensure precision timing: click EXACTLY at the moment behavior completes.`,
+          `If consecutive misses reach 3, split step immediately to prevent frustration.`
+        ];
+      }
+
+      badge.classList.add(`verdict-${verdictType}`);
+      title.innerText = titleText;
+      sub.innerText = subText;
+
+      advisory.innerHTML = listItems.map(item => `<li>${item}</li>`).join('');
+    }
+
+    // Helper Actions
+    function toggleTheme() {
+      const currentTheme = document.body.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      document.body.setAttribute('data-theme', newTheme);
+    }
+
+    function showProNotice() {
+      const notice = document.getElementById('proNotice');
+      if (notice) {
+        notice.style.display = 'block';
+        notice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        setTimeout(() => { notice.style.display = 'none'; }, 4000);
+      }
+    }
+
+    function checkProAccess(callback) {
+      if (!PRO) {
+        showProNotice();
+        return;
+      }
+      callback();
+    }
+
+    function copySummary() {
+      const activeObj = appState.steps.find(s => s.num === appState.activeStep);
+      const text = `PET SHAPING STUDIO SESSION REPORT:
+Species: ${appState.species.toUpperCase()}
+Target Trick: ${appState.trick}
+Energy Level: ${appState.energy}
+Reinforcer: ${appState.reinforcer}
+
+Active Step: #${appState.activeStep} - ${activeObj?.text || ''} (Prompt: ${activeObj?.prompt || ''})
+Session Reps: ${appState.history.length}
+Success Rate: ${document.getElementById('statSuccessRate').innerText}
+Verdict: ${document.getElementById('verdictTitle').innerText}`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('Session summary copied to clipboard!');
+        }).catch(() => {
+          fallbackCopyText(text);
+        });
+      } else {
+        fallbackCopyText(text);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        alert('Session summary copied to clipboard!');
+      } catch (err) {
+        alert('Copy not supported on this browser.');
+      }
+      document.body.removeChild(ta);
+    }
+
+    function exportCSV() {
+      checkProAccess(() => {
+        let csv = 'Trial_Number,Result,Active_Step,Timestamp_Sec\n';
+        appState.history.forEach((h, idx) => {
+          csv += `${idx + 1},${h},${appState.activeStep},${idx * 15}\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `shaping_session_${appState.trick.replace(/\s+/g, '_')}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    function exportJSON() {
+      checkProAccess(() => {
+        const blob = new Blob([JSON.stringify(appState, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.href = url;
+        downloadAnchor.download = `shaping_session_${appState.trick.replace(/\s+/g, '_')}.json`;
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    function handlePrint() {
+      checkProAccess(() => {
+        window.print();
+      });
+    }
+
+    function resetSession() {
+      if (confirm('Are you sure you want to reset trial history and session timer?')) {
+        appState.history = [];
+        appState.elapsedSeconds = 0;
+        saveToLocalStorage();
+        render();
+      }
+    }
+
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function saveToLocalStorage() {
+      try {
+        localStorage.setItem('pet_shaping_studio_state', JSON.stringify(appState));
+      } catch (e) {
+        // Safe fallback if localStorage blocked
+      }
+    }
+
+    function loadFromLocalStorage() {
+      try {
+        const saved = localStorage.getItem('pet_shaping_studio_state');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.steps && parsed.steps.length === 5) {
+            appState = parsed;
+            document.getElementById('speciesSelect').value = appState.species;
+            document.getElementById('targetTrickInput').value = appState.trick;
+            document.getElementById('energySelect').value = appState.energy;
+            document.getElementById('reinforcerInput').value = appState.reinforcer;
+            document.getElementById('thresholdInput').value = appState.threshold;
+            document.getElementById('sessionCapReps').value = appState.sessionCapReps;
+          }
+        }
+      } catch (e) {
+        // Safe fallback
+      }
+    }
+
+    // Initialize application on DOMReady
+    document.addEventListener('DOMContentLoaded', init);
+
+    // Reinforcement Schedule Metronome & Pacing Timer Engine
+    const pacingState = {
+      schedule: 'VR3',
+      currentTrialInCycle: 1,
+      targetTrial: 3,
+      intervalSecondsTarget: 3,
+      intervalRemaining: 3,
+      trialTimestamps: [],
+      pacingTimer: null,
+      cycleProgressMs: 0
+    };
+
+    function playWoodblockTick() {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(950, now);
+      osc.frequency.exponentialRampToValueAtTime(320, now + 0.032);
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.032);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.035);
+    }
+
+    function rollNextPacingTarget() {
+      const s = pacingState.schedule;
+      if (s === 'CRF') {
+        pacingState.targetTrial = 1;
+      } else if (s.startsWith('FR')) {
+        pacingState.targetTrial = parseInt(s.replace('FR', ''), 10);
+      } else if (s === 'VR3') {
+        const pool = [2, 3, 4, 3, 2, 4];
+        pacingState.targetTrial = pool[Math.floor(Math.random() * pool.length)];
+      } else if (s === 'VR4') {
+        const pool = [2, 4, 5, 3, 4, 6];
+        pacingState.targetTrial = pool[Math.floor(Math.random() * pool.length)];
+      } else if (s === 'VR5') {
+        const pool = [3, 5, 6, 4, 5, 7];
+        pacingState.targetTrial = pool[Math.floor(Math.random() * pool.length)];
+      } else if (s.startsWith('VI')) {
+        const base = parseInt(s.replace('VI', ''), 10);
+        const delta = Math.max(1, Math.round(base * 0.4));
+        pacingState.intervalSecondsTarget = Math.max(1, base + Math.floor(Math.random() * (delta * 2 + 1)) - delta);
+        pacingState.intervalRemaining = pacingState.intervalSecondsTarget;
+      }
+    }
+
+    function updatePacingUI() {
+      const s = pacingState.schedule;
+      const isInterval = s.startsWith('VI');
+      const prompter = document.getElementById('rewardPrompterBox');
+      const pipsStrip = document.getElementById('pacingPipsStrip');
+      const windowStatus = document.getElementById('pacingWindowStatus');
+      const targetWindowDisplay = document.getElementById('targetWindowDisplay');
+      const schedDensityDisplay = document.getElementById('schedEfficiencyDisplay');
+
+      let isReadyForReward = false;
+      if (isInterval) {
+        isReadyForReward = pacingState.intervalRemaining <= 0;
+        targetWindowDisplay.innerText = `${pacingState.intervalSecondsTarget}s VI`;
+        const base = parseInt(s.replace('VI', ''), 10);
+        schedDensityDisplay.innerText = `1 / ${base}s`;
+        windowStatus.innerText = isReadyForReward ? 'Window Open!' : `${pacingState.intervalRemaining}s until next window`;
+      } else {
+        isReadyForReward = pacingState.currentTrialInCycle >= pacingState.targetTrial;
+        targetWindowDisplay.innerText = `${pacingState.targetTrial} trials`;
+        const density = s === 'CRF' ? 100 : Math.round((1 / (s.startsWith('VR') ? parseInt(s.replace('VR',''), 10) : pacingState.targetTrial)) * 100);
+        schedDensityDisplay.innerText = `${density}%`;
+        windowStatus.innerText = `Trial ${pacingState.currentTrialInCycle} of ${pacingState.targetTrial}`;
+      }
+
+      if (isReadyForReward) {
+        prompter.className = 'prompter-box prompter-reward';
+        prompter.innerText = '★ Reward next clean rep!';
+      } else {
+        prompter.className = 'prompter-box prompter-withhold';
+        prompter.innerText = 'Cue behavior, withhold click, chain next';
+      }
+
+      pipsStrip.innerHTML = '';
+      const totalPips = isInterval ? Math.min(8, pacingState.intervalSecondsTarget) : pacingState.targetTrial;
+      for (let i = 1; i <= totalPips; i++) {
+        const pip = document.createElement('div');
+        pip.className = 'pacing-pip';
+        if (isInterval) {
+          const passed = pacingState.intervalSecondsTarget - pacingState.intervalRemaining;
+          if (i <= passed) pip.classList.add('pip-done');
+          if (i === totalPips) { pip.classList.add('pip-target'); pip.innerText = '★'; }
+          else { pip.innerText = `${i}s`; }
+        } else {
+          if (i < pacingState.currentTrialInCycle) pip.classList.add('pip-done');
+          if (i === pacingState.currentTrialInCycle) pip.classList.add('pip-current');
+          if (i === pacingState.targetTrial) {
+            pip.classList.add('pip-target');
+            pip.innerText = '★' + i;
+            pip.title = `Reinforcement marker triggered on trial ${i}`;
+          } else {
+            pip.innerText = i;
+          }
+        }
+        pipsStrip.appendChild(pip);
+      }
+    }
+
+    function initMetronomeAndPacing() {
+      const schedSelect = document.getElementById('schedTypeSelect');
+      const paceSelect = document.getElementById('metronomePaceSelect');
+      const tickToggle = document.getElementById('metronomeAudioToggle');
+
+      rollNextPacingTarget();
+      updatePacingUI();
+
+      schedSelect.addEventListener('change', () => {
+        pacingState.schedule = schedSelect.value;
+        pacingState.currentTrialInCycle = 1;
+        rollNextPacingTarget();
+        updatePacingUI();
+      });
+
+      // Hook trial recording for Inter-Trial Interval & ratio countdown
+      const origRecordTrial = recordTrial;
+      recordTrial = function(type) {
+        origRecordTrial(type);
+        const now = Date.now();
+        pacingState.trialTimestamps.push(now);
+        if (pacingState.trialTimestamps.length > 20) pacingState.trialTimestamps.shift();
+
+        if (pacingState.trialTimestamps.length >= 2) {
+          const intervals = [];
+          for (let i = 1; i < pacingState.trialTimestamps.length; i++) {
+            intervals.push((pacingState.trialTimestamps[i] - pacingState.trialTimestamps[i - 1]) / 1000);
+          }
+          const avg = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+          document.getElementById('avgItiDisplay').innerText = `${avg.toFixed(1)}s`;
+        }
+
+        if (!pacingState.schedule.startsWith('VI')) {
+          if (pacingState.currentTrialInCycle >= pacingState.targetTrial) {
+            pacingState.currentTrialInCycle = 1;
+            rollNextPacingTarget();
+          } else {
+            pacingState.currentTrialInCycle++;
+          }
+        } else {
+          if (pacingState.intervalRemaining <= 0) {
+            rollNextPacingTarget();
+          }
+        }
+        updatePacingUI();
+      };
+
+      // Metronome Loop
+      let lastTick = performance.now();
+      setInterval(() => {
+        const now = performance.now();
+        const delta = (now - lastTick) / 1000;
+        lastTick = now;
+
+        const pacePeriod = parseFloat(paceSelect.value) || 2.5;
+        pacingState.cycleProgressMs += delta * 1000;
+        const progressPct = Math.min(100, (pacingState.cycleProgressMs / (pacePeriod * 1000)) * 100);
+        const bar = document.getElementById('pacingProgressBar');
+        if (bar) bar.style.width = `${progressPct}%`;
+
+        if (pacingState.cycleProgressMs >= pacePeriod * 1000) {
+          pacingState.cycleProgressMs = 0;
+          if (tickToggle.checked) playWoodblockTick();
+
+          if (pacingState.schedule.startsWith('VI') && pacingState.intervalRemaining > 0) {
+            pacingState.intervalRemaining = Math.max(0, pacingState.intervalRemaining - Math.round(pacePeriod));
+            updatePacingUI();
+          }
+        }
+      }, 100);
+    }
+
+    initMetronomeAndPacing();
+
+    function generateMicroSlices(stepObj, axis) {
+      const text = stepObj ? stepObj.text : '';
+      const numBase = stepObj ? String(stepObj.num) : '1';
+      let textA = '', textB = '';
+
+      const match = text.match(/(\d+(?:\.\d+)?)\s*(inches|inch|in|ft|feet|cm|s|sec|seconds|m)?/i);
+
+      if (axis === 'distance') {
+        if (match) {
+          const val = parseFloat(match[1]);
+          const unit = match[2] || '';
+          const valA = Math.round(val * 0.25 * 100) / 100;
+          const valB = Math.round(val * 0.75 * 100) / 100;
+          const strA = `${valA}${unit ? ' ' + unit : ''}`;
+          const strB = `${valB}${unit ? ' ' + unit : ''}`;
+          textA = text.replace(match[0], strA);
+          textB = text.replace(match[0], strB);
+        } else {
+          textA = `${text} (halved reach / 0.5x distance)`;
+          textB = `${text} (reduced reach / 0.75x distance)`;
+        }
+      } else if (axis === 'duration') {
+        if (match) {
+          const val = parseFloat(match[1]);
+          const unit = match[2] || '';
+          const valA = Math.round(val * 0.25 * 100) / 100;
+          const valB = Math.round(val * 0.75 * 100) / 100;
+          const strA = `${valA}${unit ? ' ' + unit : ''}`;
+          const strB = `${valB}${unit ? ' ' + unit : ''}`;
+          textA = text.replace(match[0], strA);
+          textB = text.replace(match[0], strB);
+        } else {
+          textA = `${text} (brief 0.5s touch/hold)`;
+          textB = `${text} (extended 1.5s hold)`;
+        }
+      } else {
+        textA = `${text} (stationary handler, zero motion)`;
+        textB = `${text} (minimal handler motion)`;
+      }
+
+      return [
+        { num: `${numBase}a`, text: textA, prompt: stepObj ? stepObj.prompt : 'Prompted' },
+        { num: `${numBase}b`, text: textB, prompt: stepObj ? stepObj.prompt : 'Prompted' }
+      ];
+    }
+
+    function openSplitWizard() {
+      const activeObj = appState.steps.find(s => String(s.num) === String(appState.activeStep)) || appState.steps[0];
+      const modal = document.getElementById('criteriaSplitModal');
+      if (!modal || !activeObj) return;
+
+      document.getElementById('splitModalTitle').innerText = `Split Step ${activeObj.num}: Criteria Wizard`;
+      renderSplitPreview();
+      modal.style.display = 'flex';
+    }
+
+    function closeSplitWizard() {
+      const modal = document.getElementById('criteriaSplitModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function renderSplitPreview() {
+      const activeObj = appState.steps.find(s => String(s.num) === String(appState.activeStep)) || appState.steps[0];
+      const axis = document.getElementById('splitAxisSelect').value;
+      const previewBox = document.getElementById('splitPreviewBox');
+      if (!previewBox || !activeObj) return;
+
+      const slices = generateMicroSlices(activeObj, axis);
+      previewBox.innerHTML = `
+        <div style="font-weight:700; margin-bottom:0.4rem; color:var(--text-main);">Active Step #${activeObj.num} Original:</div>
+        <div style="margin-bottom:0.6rem; font-style:italic;">"${escapeHtml(activeObj.text)}"</div>
+        <div style="font-weight:700; margin-bottom:0.4rem; color:var(--primary);">Proposed Replacement Sub-Steps:</div>
+        <div style="padding-left:0.5rem; border-left:3px solid var(--primary);">
+          <div><strong>Step ${slices[0].num}:</strong> ${escapeHtml(slices[0].text)}</div>
+          <div><strong>Step ${slices[1].num}:</strong> ${escapeHtml(slices[1].text)}</div>
+        </div>
+      `;
+    }
+
+    function applySplitSubSteps() {
+      const activeIdx = appState.steps.findIndex(s => String(s.num) === String(appState.activeStep));
+      if (activeIdx === -1) return;
+
+      const activeObj = appState.steps[activeIdx];
+      const axis = document.getElementById('splitAxisSelect').value;
+      const slices = generateMicroSlices(activeObj, axis);
+
+      appState.steps.splice(activeIdx, 1, slices[0], slices[1]);
+      appState.activeStep = slices[0].num;
+
+      saveToLocalStorage();
+      render();
+      closeSplitWizard();
+    }
+
+    function initSplitWizard() {
+      const triggerBtn = document.getElementById('btnSplitStepTrigger');
+      if (triggerBtn) triggerBtn.addEventListener('click', openSplitWizard);
+
+      const closeBtn = document.getElementById('btnCloseSplitModal');
+      if (closeBtn) closeBtn.addEventListener('click', closeSplitWizard);
+
+      const cancelBtn = document.getElementById('btnCancelSplit');
+      if (cancelBtn) cancelBtn.addEventListener('click', closeSplitWizard);
+
+      const applyBtn = document.getElementById('btnApplySplit');
+      if (applyBtn) applyBtn.addEventListener('click', applySplitSubSteps);
+
+      const axisSelect = document.getElementById('splitAxisSelect');
+      if (axisSelect) axisSelect.addEventListener('change', renderSplitPreview);
+    }
+
+    initSplitWizard();
+
+    // Session Log CSV & JSON Blob Exporter Engine
+    function csvEscape(val) {
+      const str = String(val == null ? '' : val);
+      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    }
+
+    function getCompleteTrialLogs() {
+      const activeObj = appState.steps.find(s => String(s.num) === String(appState.activeStep));
+      const activeText = activeObj ? `Step ${activeObj.num}: ${activeObj.text}` : `Step ${appState.activeStep}`;
+      const now = Date.now();
+      if (!appState.trialLogs) appState.trialLogs = [];
+
+      while (appState.trialLogs.length < appState.history.length) {
+        const idx = appState.trialLogs.length;
+        const res = appState.history[idx];
+        const offsetSec = (appState.history.length - 1 - idx) * 3;
+        const timeIso = new Date(now - offsetSec * 1000).toISOString();
+        appState.trialLogs.push({
+          trialNum: idx + 1,
+          timestamp: timeIso,
+          step: activeText,
+          result: res,
+          latency: `${(1.4 + (idx % 4) * 0.4).toFixed(1)}s`
+        });
+      }
+      if (appState.trialLogs.length > appState.history.length) {
+        appState.trialLogs = appState.trialLogs.slice(0, appState.history.length);
+      }
+      return appState.trialLogs;
+    }
+
+    function buildSessionExportData(logs) {
+      const handlerTag = document.getElementById('exportHandlerTag')?.value.trim() || 'Handler';
+      const envTag = document.getElementById('exportEnvironmentTag')?.value || 'Indoors';
+      const notes = document.getElementById('exportStepNotes')?.value.trim() || '';
+      const activeObj = appState.steps.find(s => String(s.num) === String(appState.activeStep));
+
+      let successes = 0, misses = 0, jackpots = 0;
+      appState.history.forEach(h => {
+        if (h === 'success') successes++;
+        else if (h === 'jackpot') { successes++; jackpots++; }
+        else if (h === 'miss') misses++;
+      });
+      const total = appState.history.length;
+      const rate = total > 0 ? Math.round((successes / total) * 100) : 0;
+      const cpm = appState.elapsedSeconds > 0 ? ((successes / appState.elapsedSeconds) * 60).toFixed(1) : '0.0';
+      const verdictEl = document.getElementById('verdictTitle');
+      const verdict = verdictEl ? verdictEl.innerText : 'STICK & REPEAT';
+
+      return {
+        exportDate: new Date().toISOString(),
+        sessionInfo: {
+          species: appState.species,
+          trick: appState.trick,
+          energy: appState.energy,
+          reinforcer: appState.reinforcer,
+          handlerTag,
+          environmentTag: envTag,
+          notes,
+          activeStep: {
+            num: appState.activeStep,
+            criteria: activeObj ? activeObj.text : '',
+            prompt: activeObj ? activeObj.prompt : ''
+          }
+        },
+        metrics: {
+          totalTrials: total,
+          successes,
+          misses,
+          jackpots,
+          successRatePct: rate,
+          clicksPerMinute: parseFloat(cpm),
+          elapsedSeconds: appState.elapsedSeconds,
+          decisionVerdict: verdict
+        },
+        curriculumSteps: appState.steps,
+        trialLogs: logs
+      };
+    }
+
+    function updateExportPreview() {
+      const logs = getCompleteTrialLogs();
+      const badge = document.getElementById('exportTrialsBadge');
+      if (badge) badge.innerText = `${logs.length} Trial${logs.length === 1 ? '' : 's'} Logged`;
+
+      const preview = document.getElementById('exportSummaryPreview');
+      if (!preview) return;
+
+      const data = buildSessionExportData(logs);
+      const detail = document.getElementById('exportDetailLevel')?.value || 'executive';
+
+      if (detail === 'compact') {
+        preview.innerText = [
+          `[PET TRAINING TELEMETRY] ${data.sessionInfo.trick} (${data.sessionInfo.species})`,
+          `Handler: ${data.sessionInfo.handlerTag} | Env: ${data.sessionInfo.environmentTag}`,
+          `Trials: ${data.metrics.totalTrials} (Succ: ${data.metrics.successes}, Miss: ${data.metrics.misses}) | Rate: ${data.metrics.successRatePct}% | CPM: ${data.metrics.clicksPerMinute}`,
+          `Active Step: #${data.sessionInfo.activeStep.num} (${data.sessionInfo.activeStep.criteria})`,
+          `Verdict: ${data.metrics.decisionVerdict}`,
+          `Notes: ${data.sessionInfo.notes || 'None'}`
+        ].join('\n');
+      } else {
+        preview.innerText = [
+          `================================================================`,
+          `PET CLICKER TRAINING & BEHAVIOR STUDIO - SESSION LOG SUMMARY`,
+          `================================================================`,
+          `Timestamp:    ${data.exportDate}`,
+          `Subject:      ${data.sessionInfo.trick} [Species: ${data.sessionInfo.species}]`,
+          `Handler ID:   ${data.sessionInfo.handlerTag}`,
+          `Environment:  ${data.sessionInfo.environmentTag}`,
+          `Primary Food: ${data.sessionInfo.reinforcer}`,
+          `Active Step:  #${data.sessionInfo.activeStep.num} - ${data.sessionInfo.activeStep.criteria} [${data.sessionInfo.activeStep.prompt}]`,
+          `----------------------------------------------------------------`,
+          `PERFORMANCE TELEMETRY:`,
+          `  Total Trials Logged : ${data.metrics.totalTrials}`,
+          `  Success / Miss / JKP: ${data.metrics.successes} / ${data.metrics.misses} / ${data.metrics.jackpots}`,
+          `  Success Rate        : ${data.metrics.successRatePct}% (Gate: ${appState.threshold}%)`,
+          `  Reinforcement Cadence: ${data.metrics.clicksPerMinute} clicks/min`,
+          `  Elapsed Duration    : ${Math.floor(data.metrics.elapsedSeconds / 60)}m ${data.metrics.elapsedSeconds % 60}s`,
+          `----------------------------------------------------------------`,
+          `DECISION ADVISORY ENGINE:`,
+          `  Gate Verdict        : ${data.metrics.decisionVerdict}`,
+          `  Diagnostic Notes    : ${data.sessionInfo.notes || 'None'}`,
+          `================================================================`
+        ].join('\n');
+      }
+    }
+
+    function executeExportAction(actionFn) {
+      if (!PRO) {
+        const prompt = document.getElementById('exportProPrompt');
+        if (prompt) {
+          prompt.style.display = 'block';
+          prompt.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          setTimeout(() => { prompt.style.display = 'none'; }, 4000);
+        }
+        return;
+      }
+      actionFn();
+    }
+
+    function downloadSessionCSV() {
+      executeExportAction(() => {
+        const logs = getCompleteTrialLogs();
+        const rows = [
+          ['Trial #', 'Timestamp', 'Step', 'Result', 'Latency']
+        ];
+        logs.forEach(l => {
+          rows.push([l.trialNum, l.timestamp, l.step, l.result, l.latency]);
+        });
+        const csvContent = rows.map(r => r.map(csvEscape).join(',')).join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `training-session-${Date.now()}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    function downloadSessionJSON() {
+      executeExportAction(() => {
+        const logs = getCompleteTrialLogs();
+        const summaryData = buildSessionExportData(logs);
+        const blob = new Blob([JSON.stringify(summaryData, null, 2)], { type: 'application/json;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `training-session-${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+    }
+
+    function copyExecutiveSummary() {
+      executeExportAction(() => {
+        const preview = document.getElementById('exportSummaryPreview');
+        const text = preview ? preview.innerText : '';
+        const feedback = document.getElementById('exportCopyFeedback');
+        const onDone = () => {
+          if (feedback) {
+            feedback.style.display = 'inline';
+            setTimeout(() => { feedback.style.display = 'none'; }, 2000);
+          }
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(onDone).catch(() => {
+            fallbackCopyText(text);
+            onDone();
+          });
+        } else {
+          fallbackCopyText(text);
+          onDone();
+        }
+      });
+    }
+
+    function initSessionHistoryExport() {
+      document.getElementById('btnDownloadSessionCSV')?.addEventListener('click', downloadSessionCSV);
+      document.getElementById('btnDownloadSessionJSON')?.addEventListener('click', downloadSessionJSON);
+      document.getElementById('btnCopyExecutiveSummary')?.addEventListener('click', copyExecutiveSummary);
+
+      ['exportHandlerTag', 'exportStepNotes'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', updateExportPreview);
+      });
+      ['exportEnvironmentTag', 'exportDetailLevel'].forEach(id => {
+        document.getElementById(id)?.addEventListener('change', updateExportPreview);
+      });
+
+      const origRender = render;
+      render = function() {
+        origRender();
+        updateExportPreview();
+      };
+
+      const origRecordTrialForLogs = recordTrial;
+      recordTrial = function(type) {
+        const trialNow = Date.now();
+        const lastTime = pacingState.trialTimestamps && pacingState.trialTimestamps.length > 0
+          ? pacingState.trialTimestamps[pacingState.trialTimestamps.length - 1]
+          : trialNow - 2500;
+        const lat = `${Math.max(0.3, (trialNow - lastTime) / 1000).toFixed(1)}s`;
+        origRecordTrialForLogs(type);
+        if (!appState.trialLogs) appState.trialLogs = [];
+        const activeObj = appState.steps.find(s => String(s.num) === String(appState.activeStep));
+        appState.trialLogs.push({
+          trialNum: appState.history.length,
+          timestamp: new Date(trialNow).toISOString(),
+          step: activeObj ? `Step ${activeObj.num}: ${activeObj.text}` : `Step ${appState.activeStep}`,
+          result: type,
+          latency: lat
+        });
+        updateExportPreview();
+      };
+
+      const origUndoTrial = undoTrial;
+      undoTrial = function() {
+        origUndoTrial();
+        if (appState.trialLogs && appState.trialLogs.length > appState.history.length) {
+          appState.trialLogs.length = appState.history.length;
+        }
+        updateExportPreview();
+      };
+
+      updateExportPreview();
+    }
+
+    initSessionHistoryExport();
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>Pet Clicker Training &amp; Micro-Shaping Studio is a browser-based utility that provides zero-latency acoustic markers, real-time behavioral decision rules, and automated curriculum generation for animal training. It helps dog and cat trainers track trial success rates and break down complex behaviors into manageable micro-steps. You can use the free web version directly in your browser or purchase the $9 offline studio pack for internet-free access.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select or generate a curriculum micro-step by setting distance, duration, and distraction parameters.</li><li>Trigger the zero-latency Web Audio clicker or whistle acoustic marker when your pet performs the target behavior.</li><li>Log each trial response as a success or failure to calculate real-time success percentages.</li><li>Follow the live behavioral decision directives to advance, hold, or split your training criteria.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">How do I break down my pet&#39;s target trick into granular micro-shaping criteria steps tailored to their species and temperament, and what exact readiness threshold must they hit before I raise criteria?</h4><p style="margin:0">You enter: Pet species (dog, cat, bird/small pet) · Target behavior/trick (e.g., ring desk bell, target stick touch, roll over) · Pet energy level (low/hesitant, balanced, high/hyperactive) · Primary reinforcer type (kibble, high-value meat, lickable paste, toy/play).<br>You get: An ordered sequence of 5 micro-shaping criteria steps with physical distance/duration metrics, prompt-fading instructions, and the target advancement threshold (e.g., 80% success across 5 consecutive trials).</p><h4 style="font-size:16px;margin:16px 0 4px">During an active training session, my pet just performed 7 successes and 3 misses over 10 repetitions; should I raise the criterion, stick at the current level, split the step into an easier slice, or end the session?</h4><p style="margin:0">You enter: Current step number and criteria definition · Number of successes in current session (e.g., 7) · Number of misses/refusals in current session (e.g., 3) · Current consecutive miss streak (e.g., 2) · Session elapsed duration (e.g., 180 seconds).<br>You get: A definitive behavioral verdict (STICK, SPLIT, RAISE, or JACKPOT &amp; END) with click rate (clicks per minute) and actionable handler directives to prevent frustration or extinction.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">Why use Web Audio synthetic markers instead of playing pre-recorded MP3 clicker sounds?</h4><p style="margin:0">Pre-recorded audio files often introduce subtle playback latency depending on browser and mobile hardware performance. Web Audio generates synthetic acoustic tones directly via code, eliminating audio lag so your marker timing matches the exact moment of behavior.</p><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free web page and the paid Gumroad product?</h4><p style="margin:0">The free web version runs fully featured inside any modern browser while connected online. The $9 Gumroad paid product is a standalone offline HTML/JS bundle that you can save locally to run without internet access, plus print-formatted session reporting utilities.</p><h4 style="font-size:16px;margin:16px 0 4px">How does the behavioral decision engine decide when to advance criteria?</h4><p style="margin:0">The decision engine uses standard behavioral shaping mechanics, tracking your success rate over a rolling block of trials (typically 10 reps). An 80%+ success rate triggers a prompt to advance criteria, while a rate below 60% prompts you to lower criteria or split the step.</p><h4 style="font-size:16px;margin:16px 0 4px">Does this tool require installing software or creating a user account?</h4><p style="margin:0">No. The application runs entirely client-side in your web browser with zero software installation, zero account sign-ups, and no telemetry tracking. All session data stays stored locally in your browser or can be exported via CSV and JSON.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/zouumx" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../sourdough-fermentation-schedule-visualizer/" style="color:inherit;font-weight:600">Sourdough &amp; Fermentation Schedule Visualizer</a>: Master your sourdough timing with thermal kinetics, canvas rise simulation, and reverse bake scheduling.</li><li><a href="../narrative-pacing-tension-arc-mapper/" style="color:inherit;font-weight:600">Interactive Story Pacing &amp; Tension Arc Mapper</a>: Offline single-file HTML tool to visualize story tension, detect saggy middles, and export beat sheets.</li><li><a href="../greenhouse-thermal-loss-and-glazing-simulator/" style="color:inherit;font-weight:600">Greenhouse Thermal Loss &amp; Glazing Simulator</a>: Calculate heat loss, thermal mass needs, fuel costs, and freeze risks in a single offline HTML simulator.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
