@@ -1,0 +1,2204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-sidebar: #f1f5f9;
+      --border-color: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --accent-cardboard: #d97706;
+      --accent-cardboard-bg: #fef3c7;
+      --color-green: #10b981;
+      --color-green-bg: #d1fae5;
+      --color-amber: #f59e0b;
+      --color-amber-bg: #fef3c7;
+      --color-red: #ef4444;
+      --color-red-bg: #fee2e2;
+      --color-blue: #3b82f6;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --radius: 8px;
+      --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-main: #0f172a;
+        --bg-card: #1e293b;
+        --bg-sidebar: #182232;
+        --border-color: #334155;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --primary: #3b82f6;
+        --primary-hover: #60a5fa;
+        --primary-light: #1e3a8a;
+        --accent-cardboard: #f59e0b;
+        --accent-cardboard-bg: #451a03;
+        --color-green: #34d399;
+        --color-green-bg: #064e3b;
+        --color-amber: #fbbf24;
+        --color-amber-bg: #78350f;
+        --color-red: #f87171;
+        --color-red-bg: #7f1d1d;
+        --color-blue: #60a5fa;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.5;
+      font-size: 14px;
+      padding-bottom: 40px;
+    }
+
+    header {
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--accent-cardboard-bg);
+      color: var(--accent-cardboard);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .brand h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button, select, input {
+      font-family: inherit;
+      font-size: 0.875rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      background-color: var(--bg-sidebar);
+      border-color: var(--text-muted);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      border-color: var(--primary-hover);
+    }
+
+    .btn-sm {
+      padding: 4px 10px;
+      font-size: 0.775rem;
+    }
+
+    .pro-badge {
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .app-layout {
+      max-width: 1400px;
+      margin: 20px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 340px 1fr 340px;
+      gap: 20px;
+    }
+
+    @media (max-width: 1100px) {
+      .app-layout {
+        grid-template-columns: 320px 1fr;
+      }
+      .right-column {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .app-layout {
+        grid-template-columns: 1fr;
+      }
+      .right-column {
+        grid-column: span 1;
+      }
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 500;
+      margin-bottom: 4px;
+      font-size: 0.825rem;
+      color: var(--text-main);
+    }
+
+    .form-group label .unit {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      transition: border-color 0.15s ease;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .range-input-wrap {
+      display: grid;
+      grid-template-columns: 1fr 64px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .metric-box {
+      background-color: var(--bg-sidebar);
+      padding: 10px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .metric-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Visualizer styling */
+    .workspace-visualizer {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .viz-canvas-container {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .viz-controls {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .viz-controls > * {
+      pointer-events: auto;
+    }
+
+    .viz-badge-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .viz-badge {
+      background: rgba(0, 0, 0, 0.65);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .playback-bar {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .playback-bar .scrubber {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    /* Motion Graph styling */
+    .graph-card svg {
+      width: 100%;
+      height: 180px;
+      overflow: visible;
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      font-size: 0.75rem;
+      justify-content: flex-end;
+      margin-bottom: 6px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 3px;
+      border-radius: 2px;
+    }
+
+    /* Clearance diagnostics */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+
+    .status-badge.smooth {
+      background-color: var(--color-green-bg);
+      color: var(--color-green);
+    }
+
+    .status-badge.caution {
+      background-color: var(--color-amber-bg);
+      color: var(--color-amber);
+    }
+
+    .status-badge.jam {
+      background-color: var(--color-red-bg);
+      color: var(--color-red);
+    }
+
+    .advice-list {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+
+    .advice-list li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 6px;
+      font-size: 0.825rem;
+    }
+
+    .advice-list li::before {
+      content: "•";
+      position: absolute;
+      left: 6px;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .disclaimer-note {
+      font-size: 0.725rem;
+      color: var(--text-muted);
+      border-top: 1px dashed var(--border-color);
+      padding-top: 8px;
+      margin-top: 12px;
+      font-style: italic;
+    }
+
+    .pro-msg-banner {
+      background-color: var(--primary-light);
+      border: 1px solid var(--primary);
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      font-size: 0.8rem;
+      display: none;
+      margin-top: 10px;
+    }
+
+    .pro-msg-banner.active {
+      display: block;
+    }
+
+    .template-print-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      background: var(--bg-sidebar);
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 1px dashed var(--border-color);
+    }
+
+    .qa-box {
+      background-color: var(--bg-sidebar);
+      border-radius: var(--radius);
+      padding: 12px;
+      margin-top: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .qa-box h4 {
+      font-size: 0.85rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .qa-box p {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .qa-example {
+      font-size: 0.75rem;
+      background-color: var(--bg-card);
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      font-family: monospace;
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 12px 16px;
+      }
+      .app-layout {
+        padding: 0 8px;
+        margin: 10px auto;
+      }
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Print styling */
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+      header, .header-actions, .playback-bar, .left-column, .right-column, .graph-card {
+        display: none !important;
+      }
+      .app-layout {
+        display: block;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .viz-canvas-container {
+        border: none;
+        box-shadow: none;
+      }
+      .print-only-template {
+        display: block !important;
+        page-break-before: always;
+      }
+    }
+
+    .print-only-template {
+      display: none;
+    }
+
+    .puppet-lib-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+    .puppet-preview-badge {
+      display: inline-block;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .exporter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+    .exporter-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .multi-cam-grid {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .multi-cam-grid { grid-template-columns: 1fr; }
+    }
+    /* FEATURE-CSS */
+  </style>
+<title>Cardboard Automata &amp; Cam Mechanism Studio</title>
+<meta name="description" content="Design mechanical cardboard toys with live motion graphs, jam diagnostics, and vector exports. Runs free online or as a $9 offline HTML file.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/cardboard-automata-motion-designer/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/cardboard-automata-motion-designer/">
+<meta property="og:title" content="Cardboard Automata &amp; Cam Mechanism Studio"><meta property="og:description" content="Design mechanical cardboard toys with live motion graphs, jam diagnostics, and vector exports. Runs free online or as a $9 offline HTML file.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/cardboard-automata-motion-designer/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Cardboard Automata & Cam Mechanism Studio","description":"Design mechanical cardboard toys with live motion graphs, jam diagnostics, and vector exports. Runs free online or as a $9 offline HTML file.","url":"https://rttyy.github.io/free-tools/cardboard-automata-motion-designer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Do I need to install any software to use the offline version?","acceptedAnswer":{"@type":"Answer","text":"No installation is needed. The offline pack is delivered as a single self-contained HTML file that opens and runs in any modern web browser without internet access."}},{"@type":"Question","name":"What is the difference between the free web version and the $9 offline product?","acceptedAnswer":{"@type":"Answer","text":"The free web version lets you design and test mechanisms online. The $9 paid pack allows fully offline desktop use, unlocks 1:1 SVG and DXF vector exports for cutting machines, and includes motion CSV export options."}},{"@type":"Question","name":"How does the jam diagnostic feature work?","acceptedAnswer":{"@type":"Answer","text":"The simulator calculates cardboard friction coefficients and follower pressure angles across the 360-degree rotation. If the angle exceeds safe limits where friction would lock the mechanism, it highlights the problem zone so you can adjust the cam curve."}},{"@type":"Question","name":"Can I use this for laser cutting and craft machines like Cricut?","acceptedAnswer":{"@type":"Answer","text":"Yes. The tool exports precise SVG and DXF vector files scaled 1:1, making it easy to send designs directly to laser cutters, vinyl cutters, or craft plotters."}}]}</script>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">⚙️</div>
+      <div>
+        <h1>Cardboard Automata &amp; Cam Studio</h1>
+        <p>Mechanism Motion Physics, Binding Diagnostics &amp; Cutout Templates</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <label for="presetSelect" style="font-size: 0.8rem; font-weight: 600;">Preset Rig:</label>
+      <select id="presetSelect" class="form-control" style="width: auto; font-weight: 500;">
+        <option value="pecking-bird">Pecking Bird (Drop Snail Cam)</option>
+        <option value="bobbing-turtle">Bobbing Sea Turtle (Eccentric Wheel)</option>
+        <option value="waving-astronaut">Waving Astronaut (Pear Cam)</option>
+      </select>
+      
+      <button id="btnReset" class="btn btn-sm">Reset</button>
+      <button id="btnCopySpecs" class="btn btn-sm">Copy Specs</button>
+      <button id="btnExportCSV" class="btn btn-sm">Export CSV</button>
+      <button id="btnExportJSON" class="btn btn-sm">Export JSON</button>
+      <button id="btnImportJSON" class="btn btn-sm">Import JSON</button>
+      <button id="btnLoadSample" class="btn btn-sm">Load Sample</button>
+      <input type="file" id="jsonFileInput" accept=".json" style="display:none;">
+      <button id="btnPrintTemplate" class="btn btn-sm btn-primary">Print Template</button>
+      <span class="pro-badge">PRO</span>
+    </div>
+  </header>
+
+  <div id="proBanner" class="pro-msg-banner" style="margin: 10px 24px 0 24px;">
+    Available in the full version: <a id="proLink" href="#pro-link" target="_blank" style="color: var(--primary); font-weight: bold;">Upgrade Now</a>
+  </div>
+
+  <main class="app-layout">
+    
+    <!-- LEFT SIDEBAR: PARAMETRIC CAM PROFILE ENGINE -->
+    <aside class="left-column">
+      <div class="card" data-feature="cam-profile-engine">
+        <div class="card-title">
+          <span>Cam Profile Engine</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Parametric Geometry</span>
+        </div>
+
+        <div class="form-group">
+          <label for="profileType">Cam Profile Shape</label>
+          <select id="profileType" class="form-control">
+            <option value="eccentric-circle">Eccentric Circle</option>
+            <option value="drop-snail">Drop Snail Cam</option>
+            <option value="pear-cam">Pear Cam</option>
+            <option value="dual-lobe">Dual-Lobe Ellipse</option>
+            <option value="heart-cam">Heart Cam (Uniform Velocity)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="baseRadius">Base Radius (r₀) <span class="unit">mm</span></label>
+          <div class="range-input-wrap">
+            <input type="range" id="baseRadius" min="10" max="100" step="1" value="25">
+            <input type="number" id="baseRadiusNum" class="form-control" min="10" max="100" value="25">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="eccentricity">Stroke / Lift / Eccentricity (e) <span class="unit">mm</span></label>
+          <div class="range-input-wrap">
+            <input type="range" id="eccentricity" min="0" max="50" step="1" value="10">
+            <input type="number" id="eccentricityNum" class="form-control" min="0" max="50" value="10">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="followerRadius">Follower Tip Radius (r<sub>f</sub>) <span class="unit">mm</span></label>
+          <div class="range-input-wrap">
+            <input type="range" id="followerRadius" min="1" max="10" step="0.5" value="3">
+            <input type="number" id="followerRadiusNum" class="form-control" min="1" max="10" step="0.5" value="3">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="axleDiameter">Axle Skewer Hole (d<sub>a</sub>) <span class="unit">mm</span></label>
+          <div class="range-input-wrap">
+            <input type="range" id="axleDiameter" min="1" max="10" step="0.5" value="3">
+            <input type="number" id="axleDiameterNum" class="form-control" min="1" max="10" step="0.5" value="3">
+          </div>
+        </div>
+
+        <div class="card-title" style="margin-top: 16px;">
+          <span>Guide &amp; Friction Inputs</span>
+        </div>
+
+        <div class="form-group">
+          <label for="guideLength">Guide Tube Length (L<sub>g</sub>) <span class="unit">mm</span></label>
+          <div class="range-input-wrap">
+            <input type="range" id="guideLength" min="10" max="100" step="1" value="50">
+            <input type="number" id="guideLengthNum" class="form-control" min="10" max="100" value="50">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="clearance">Pushrod Clearance <span class="unit">mm</span></label>
+          <input type="number" id="clearance" class="form-control" min="0.5" max="3.0" step="0.1" value="1.0">
+        </div>
+
+        <div class="form-group">
+          <label for="frictionFactor">Cardboard Friction (μ)</label>
+          <select id="frictionFactor" class="form-control">
+            <option value="0.35">0.35 - Raw Cardboard on Wood Skewer (Default)</option>
+            <option value="0.20">0.20 - Smooth Plastic Straw / Taped Surface</option>
+            <option value="0.50">0.50 - Rough Rough-Cut Edge Friction</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="puppetType">Puppet Character</label>
+          <select id="puppetType" class="form-control">
+            <option value="pecking-bird">Pecking Bird</option>
+            <option value="bobbing-head">Bobbing Sea Turtle</option>
+            <option value="waving-arm">Waving Astronaut</option>
+            <option value="geometric">Simple Indicator Pin</option>
+          </select>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <div class="metric-label">Calculated Stroke</div>
+            <div class="metric-value" id="calcStroke">20.0 mm</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Min Radius</div>
+            <div class="metric-value" id="calcMinRad">15.0 mm</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Max Radius</div>
+            <div class="metric-value" id="calcMaxRad">35.0 mm</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Max Pressure Angle</div>
+            <div class="metric-value" id="calcMaxAlpha">21.8°</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER WORKSPACE: ANIMATED RIG & WAVEFORM GRAPH -->
+    <section class="workspace-visualizer">
+      
+      <!-- 2D AUTOMATA RIG VISUALIZER -->
+      <div class="viz-canvas-container" data-feature="animated-2d-visualizer">
+        <div class="viz-controls">
+          <div class="viz-badge-group">
+            <span class="viz-badge" id="angleBadge">Angle: 0°</span>
+            <span class="viz-badge" id="liftBadge">Lift: 0.0 mm</span>
+          </div>
+          <div class="viz-badge-group">
+            <button id="btnToggleCutaway" class="btn btn-sm" style="background: rgba(0,0,0,0.6); color:white; border:none;">Toggle Frame View</button>
+          </div>
+        </div>
+
+        <!-- Animated Automata SVG Canvas -->
+        <svg id="automataSvg" viewBox="0 0 500 460" width="100%" height="420" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Grid Pattern -->
+            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--border-color)" stroke-width="0.5" opacity="0.4"/>
+            </pattern>
+            <!-- Cardboard Fill Pattern -->
+            <linearGradient id="cardboardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#e2b072"/>
+              <stop offset="100%" stop-color="#c58e4b"/>
+            </linearGradient>
+            <!-- Wood Skewer Pattern -->
+            <linearGradient id="woodGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#fef3c7"/>
+              <stop offset="50%" stop-color="#d97706"/>
+              <stop offset="100%" stop-color="#b45309"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Background Grid -->
+          <rect width="100%" height="100%" fill="url(#grid)" />
+
+          <!-- Center Reference Axis -->
+          <g transform="translate(250, 270)">
+            
+            <!-- Box Frame (Cardboard Container Cutaway) -->
+            <g id="boxFrameGroup">
+              <!-- Frame Backing -->
+              <rect x="-140" y="-190" width="280" height="250" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-dasharray="4,4" rx="6"/>
+              <rect x="-150" y="-200" width="300" height="270" fill="none" stroke="var(--border-color)" stroke-width="3" rx="8"/>
+              <!-- Top Box Plate -->
+              <rect x="-150" y="-120" width="300" height="12" fill="url(#cardboardGrad)" stroke="#8c5a2b" stroke-width="1.5" rx="2"/>
+              <!-- Bottom Box Plate -->
+              <rect x="-150" y="55" width="300" height="15" fill="url(#cardboardGrad)" stroke="#8c5a2b" stroke-width="1.5" rx="2"/>
+            </g>
+
+            <!-- Rotating Cam Mechanism Group -->
+            <g id="camRotationGroup">
+              <!-- Parametric Cam Polygon -->
+              <path id="svgCamPath" fill="url(#cardboardGrad)" stroke="#8c5a2b" stroke-width="2.5" filter="drop-shadow(0px 3px 3px rgba(0,0,0,0.2))"/>
+              
+              <!-- Cam Pitch / Radius Circle -->
+              <circle id="svgBaseCircle" cx="0" cy="0" r="25" fill="none" stroke="#2563eb" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
+              
+              <!-- Axle Hole -->
+              <circle id="svgAxleHole" cx="0" cy="0" r="3" fill="var(--bg-card)" stroke="#451a03" stroke-width="1.5"/>
+              <line x1="-6" y1="0" x2="6" y2="0" stroke="#451a03" stroke-width="1.5"/>
+              <line x1="0" y1="-6" x2="0" y2="6" stroke="#451a03" stroke-width="1.5"/>
+            </g>
+
+            <!-- Reciprocating Vertical Follower & Pushrod Group -->
+            <g id="followerAssemblyGroup" transform="translate(0, 0)">
+              <!-- Pushrod Wooden Skewer -->
+              <rect id="svgPushrod" x="-3" y="-230" width="6" height="230" fill="url(#woodGrad)" stroke="#78350f" stroke-width="1" rx="1"/>
+              
+              <!-- Follower Disc Tip resting on Cam -->
+              <circle id="svgFollowerTip" cx="0" cy="0" r="3" fill="#ef4444" stroke="#7f1d1d" stroke-width="1.5"/>
+              
+              <!-- Straw Guide Collar (Fixed on Top Box Plate) -->
+              <g transform="translate(0, -120)">
+                <rect id="svgGuideTube" x="-7" y="-50" width="14" height="50" fill="#3b82f6" fill-opacity="0.25" stroke="#2563eb" stroke-width="2" rx="3"/>
+                <!-- Guide Tube Mounting Flange -->
+                <rect x="-12" y="-4" width="24" height="6" fill="#1d4ed8" rx="1"/>
+              </g>
+
+              <!-- Puppet Character Mounted on Pushrod Top -->
+              <g id="puppetGroup" transform="translate(0, -225)">
+                <!-- Dynamic SVG Puppet Content Rendered via JS -->
+              </g>
+            </g>
+
+            <!-- Live Pressure Angle & Contact Vector Overlay -->
+            <g id="vectorOverlay">
+              <line id="normalVectorLine" x1="0" y1="0" x2="0" y2="0" stroke="#10b981" stroke-width="2" stroke-dasharray="2,2"/>
+              <circle id="contactPointDot" cx="0" cy="0" r="4" fill="#10b981"/>
+            </g>
+
+          </g>
+        </svg>
+      </div>
+
+      <!-- ANIMATION CONTROLS BAR -->
+      <div class="playback-bar">
+        <button id="btnPlayPause" class="btn btn-primary" style="min-width: 90px;">► Play</button>
+        
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label for="crankSpeed" style="font-weight: 600; font-size: 0.8rem;">Speed:</label>
+          <input type="range" id="crankSpeed" min="5" max="120" value="30" style="width: 100px;">
+          <span id="speedVal" style="font-size: 0.8rem; font-weight: 600; min-width: 48px;">30 RPM</span>
+        </div>
+
+        <div class="scrubber" style="display: flex; align-items: center; gap: 8px;">
+          <label for="angleScrub" style="font-weight: 600; font-size: 0.8rem;">Crank Angle:</label>
+          <input type="range" id="angleScrub" min="0" max="360" value="0" step="1">
+          <span id="angleVal" style="font-size: 0.8rem; font-weight: 600; min-width: 36px;">0°</span>
+        </div>
+      </div>
+
+      <!-- MOTION WAVEFORM GRAPH ANALYSER -->
+      <div class="card graph-card" data-feature="motion-graph-analyser">
+        <div class="card-title">
+          <span>Real-Time Motion Waveform (0°–360°)</span>
+          <div class="legend">
+            <div class="legend-item">
+              <div class="legend-color" style="background-color: var(--color-green);"></div>
+              <span>Displacement (mm)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background-color: var(--color-blue);"></div>
+              <span>Velocity (mm/rad)</span>
+            </div>
+          </div>
+        </div>
+
+        <svg id="motionGraphSvg" viewBox="0 0 600 160">
+          <!-- Background Graph Grid -->
+          <line x1="40" y1="20" x2="580" y2="20" stroke="var(--border-color)" stroke-dasharray="2,2"/>
+          <line x1="40" y1="70" x2="580" y2="70" stroke="var(--border-color)" stroke-dasharray="2,2"/>
+          <line x1="40" y1="120" x2="580" y2="120" stroke="var(--border-color)"/>
+          
+          <!-- X Axis Angle Ticks -->
+          <text x="40" y="140" fill="var(--text-muted)" font-size="10" text-anchor="middle">0°</text>
+          <text x="175" y="140" fill="var(--text-muted)" font-size="10" text-anchor="middle">90°</text>
+          <text x="310" y="140" fill="var(--text-muted)" font-size="10" text-anchor="middle">180°</text>
+          <text x="445" y="140" fill="var(--text-muted)" font-size="10" text-anchor="middle">270°</text>
+          <text x="580" y="140" fill="var(--text-muted)" font-size="10" text-anchor="middle">360°</text>
+
+          <!-- Y Axis Labels -->
+          <text x="32" y="24" fill="var(--text-muted)" font-size="9" text-anchor="end" id="graphYMax">Max</text>
+          <text x="32" y="123" fill="var(--text-muted)" font-size="9" text-anchor="end">0</text>
+
+          <!-- Graph Curve Paths -->
+          <path id="graphDisplacementPath" d="" fill="none" stroke="var(--color-green)" stroke-width="2.5"/>
+          <path id="graphVelocityPath" d="" fill="none" stroke="var(--color-blue)" stroke-width="1.5" stroke-dasharray="4,2"/>
+
+          <!-- Vertical Current Angle Indicator Line -->
+          <line id="graphScrubLine" x1="40" y1="10" x2="40" y2="130" stroke="var(--color-red)" stroke-width="2"/>
+          <circle id="graphScrubDot" cx="40" cy="120" r="4" fill="var(--color-red)"/>
+        </svg>
+      </div>
+
+    </section>
+
+    <!-- RIGHT SIDEBAR: CARDBOARD CLEARANCE & BINDING DIAGNOSTICS -->
+    <aside class="right-column">
+      
+      <!-- CARDBOARD CLEARANCE CHECKER -->
+      <div class="card" data-feature="cardboard-clearance-checker">
+        <div class="card-title">
+          <span>Jam &amp; Binding Diagnostics</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Mechanical Health</span>
+        </div>
+
+        <div id="statusBadge" class="status-badge smooth">
+          <span id="statusIcon">✓</span>
+          <span id="statusText">Smooth Operation</span>
+        </div>
+
+        <div class="metrics-grid" style="margin-top: 4px; margin-bottom: 12px;">
+          <div class="metric-box">
+            <div class="metric-label">Guide Ratio (L<sub>g</sub> / Stroke)</div>
+            <div class="metric-value" id="calcGuideRatio">2.5</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Jam Danger Level</div>
+            <div class="metric-value" id="calcJamRisk">Low</div>
+          </div>
+        </div>
+
+        <div style="font-weight: 600; font-size: 0.825rem; margin-bottom: 6px;">What this means / What to do next:</div>
+        <ul id="adviceList" class="advice-list">
+          <li>Guide aspect ratio is optimal. Pushrod won't tilt or bind.</li>
+          <li>Pressure angle is gentle (&lt;30°). Crank turns easily by hand.</li>
+        </ul>
+
+        <div class="disclaimer-note">
+          Estimate only - verify with a qualified professional before relying on it.
+        </div>
+      </div>
+
+      <!-- DESIGN & CRAFT Q&A GUIDE -->
+      <div class="card">
+        <div class="card-title">
+          <span>Cardboard Maker Tips</span>
+        </div>
+
+        <div class="qa-box">
+          <h4>How do I stop my follower from sticking?</h4>
+          <p>Ensure your straw guide length (L<sub>g</sub>) is at least 1.5× the stroke height. Coat the wooden skewer with beeswax or candle wax for lower friction!</p>
+        </div>
+
+        <div class="qa-box" style="margin-top: 8px;">
+          <h4>Worked Example: Drop Snail Cam</h4>
+          <p>Base radius 25mm + 20mm lift. Gives instant drop-down action for pecking birds or hammer toys.</p>
+          <div class="qa-example">r₀=25mm, L=20mm ⇒ Stroke: 20.0mm</div>
+        </div>
+      </div>
+
+      <!-- CUTOUT TEMPLATE PREVIEW CARD -->
+      <div class="card">
+        <div class="card-title">
+          <span>1:1 Cutout Cam Pattern</span>
+        </div>
+        <p style="font-size: 0.775rem; color: var(--text-muted); margin-bottom: 10px;">
+          Printable template for tracing onto cardboard. Includes center axle mark and pushrod track radius.
+        </p>
+
+        <div class="template-print-view">
+          <svg id="templateCamSvg" viewBox="0 0 160 160" width="140" height="140">
+            <circle cx="80" cy="80" r="75" fill="none" stroke="var(--border-color)" stroke-dasharray="2,2"/>
+            <path id="templateCamPath" fill="none" stroke="var(--accent-cardboard)" stroke-width="2"/>
+            <circle id="templateAxleHole" cx="80" cy="80" r="3" fill="none" stroke="black" stroke-width="1.5"/>
+            <!-- 10mm Scale Bar -->
+            <line x1="20" y1="145" x2="40" y2="145" stroke="black" stroke-width="2"/>
+            <text x="30" y="155" font-size="8" text-anchor="middle">10mm</text>
+          </svg>
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <div class="app-layout" style="margin-top: 0;">
+    <div class="card" data-feature="automata-puppet-library" style="grid-column: 1 / -1;">
+      <div class="card-title">
+        <span>Dynamic Puppet Motion Transformer (Puppet Library)</span>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">Kinematic Secondary Motion Transformer</span>
+      </div>
+      <div class="puppet-lib-grid">
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="puppetMechType">Puppet Mechanism Type</label>
+          <select id="puppetMechType" class="form-control">
+            <option value="angular-waving-arm">Angular Waving Arm</option>
+            <option value="vertical-bobbing-head">Vertical Bobbing Head</option>
+            <option value="double-beak-bird">Double-Beak Pecking Bird</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="puppetArmLength">Pivot Lever Radius (L<sub>p</sub>) <span class="unit">mm</span></label>
+          <input type="number" id="puppetArmLength" class="form-control" min="5" max="100" value="25">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="puppetMaxLimit">Max Limit Constraint <span class="unit">° / mm</span></label>
+          <input type="number" id="puppetMaxLimit" class="form-control" min="5" max="90" value="60">
+        </div>
+        <div class="metrics-grid" style="margin-top:0;">
+          <div class="metric-box">
+            <div class="metric-label" id="puppetOutputLabel">Calculated Angular Swing (°)</div>
+            <div class="metric-value" id="puppetOutputVal">45.0°</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Motion Transfer Ratio</div>
+            <div class="metric-value" id="puppetRatioVal">2.25 °/mm</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-layout" style="margin-top: 0;">
+    <div class="card" data-feature="cam-profile-exporter" style="grid-column: 1 / -1;">
+      <div class="card-title">
+        <span>Vector SVG/DXF &amp; Motion CSV Exporter</span>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">CNC &amp; Laser Cut Files</span>
+      </div>
+      <div class="exporter-grid">
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="exportStep">Angular Resolution</label>
+          <select id="exportStep" class="form-control">
+            <option value="1">1° Step (360 Coordinates)</option>
+            <option value="2">2° Step (180 Coordinates)</option>
+            <option value="5">5° Step (72 Coordinates)</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label for="exportScale">Cut Line Stroke Width</label>
+          <select id="exportScale" class="form-control">
+            <option value="0.2">Hairline (0.2mm - Laser)</option>
+            <option value="0.5">Medium (0.5mm - Knife)</option>
+            <option value="1.0">Thick (1.0mm - Pattern)</option>
+          </select>
+        </div>
+        <div class="metrics-grid" style="margin-top:0;">
+          <div class="metric-box">
+            <div class="metric-label">Exporter Resolution</div>
+            <div class="metric-value" id="exportPointCount">360 Points</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Bounding Envelope</div>
+            <div class="metric-value" id="exportBounds">70.0 × 70.0 mm</div>
+          </div>
+        </div>
+        <div class="exporter-actions">
+          <button id="btnExpSvg" class="btn btn-primary">Export Cut SVG</button>
+          <button id="btnExpDxf" class="btn">Export Polyline DXF</button>
+          <button id="btnExpCsvData" class="btn">Export Motion CSV</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-layout" style="margin-top: 0;">
+    <div class="card" data-feature="multi-cam-timing-designer" style="grid-column: 1 / -1;">
+      <div class="card-title">
+        <span>Dual-Cam Tandem Timing Synchronizer</span>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">Multi-Axle Phase Shift Visualizer</span>
+      </div>
+      <div id="multiCamProNotice" style="display:none;" class="pro-msg-banner active">
+        Available in the full version: <a href="#pro-link" style="color:var(--primary);font-weight:bold;">Upgrade Now</a>
+      </div>
+      <div class="multi-cam-grid">
+        <div class="multi-cam-inputs">
+          <div class="form-group">
+            <label style="display:flex;align-items:center;gap:6px;font-weight:700;">
+              <input type="checkbox" id="dualCamEnable" checked> Enable Dual-Cam Tandem
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="camAProfile">Cam A Profile (0° Phase)</label>
+            <select id="camAProfile" class="form-control">
+              <option value="drop-snail">Drop Snail Cam</option>
+              <option value="eccentric-circle" selected>Eccentric Circle</option>
+              <option value="pear-cam">Pear Cam</option>
+              <option value="dual-lobe">Dual-Lobe Ellipse</option>
+              <option value="heart-cam">Heart Cam</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="camBProfile">Cam B Profile</label>
+            <select id="camBProfile" class="form-control">
+              <option value="drop-snail">Drop Snail Cam</option>
+              <option value="eccentric-circle" selected>Eccentric Circle</option>
+              <option value="pear-cam">Pear Cam</option>
+              <option value="dual-lobe">Dual-Lobe Ellipse</option>
+              <option value="heart-cam">Heart Cam</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="camBOffset">Cam B Phase Offset: <span id="camBOffsetVal">180</span>°</label>
+            <input type="range" id="camBOffset" min="0" max="180" step="5" value="180" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="dualAxleSpeed">Shared Axle Speed: <span id="dualAxleSpeedVal">30</span> RPM</label>
+            <input type="range" id="dualAxleSpeed" min="5" max="120" step="5" value="30" class="form-control">
+          </div>
+        </div>
+        <div>
+          <svg id="dualCamSvg" viewBox="0 0 400 170" width="100%" height="170" style="background:var(--bg-main);border:1px solid var(--border-color);border-radius:var(--radius);"></svg>
+          <svg id="dualCamGraphSvg" viewBox="0 0 400 100" width="100%" height="100" style="margin-top:10px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius);"></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+
+  <script>
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/rxdpzlk";
+
+    // Application State
+    const state = {
+      profile: 'drop-snail',
+      baseRadius: 25,
+      eccentricity: 20,
+      followerRadius: 3,
+      axleDiameter: 3,
+      guideLength: 50,
+      clearance: 1.0,
+      friction: 0.35,
+      crankSpeed: 30,
+      puppetType: 'pecking-bird',
+      puppetMechType: 'angular-waving-arm',
+      puppetArmLength: 25,
+      puppetMaxLimit: 60,
+      currentAngle: 0,
+      isPlaying: false,
+      showCutaway: true
+    };
+
+    let animationFrameId = null;
+    let lastTimestamp = 0;
+
+    // Element Cache
+    const elements = {
+      presetSelect: document.getElementById('presetSelect'),
+      profileType: document.getElementById('profileType'),
+      baseRadius: document.getElementById('baseRadius'),
+      baseRadiusNum: document.getElementById('baseRadiusNum'),
+      eccentricity: document.getElementById('eccentricity'),
+      eccentricityNum: document.getElementById('eccentricityNum'),
+      followerRadius: document.getElementById('followerRadius'),
+      followerRadiusNum: document.getElementById('followerRadiusNum'),
+      axleDiameter: document.getElementById('axleDiameter'),
+      axleDiameterNum: document.getElementById('axleDiameterNum'),
+      guideLength: document.getElementById('guideLength'),
+      guideLengthNum: document.getElementById('guideLengthNum'),
+      clearance: document.getElementById('clearance'),
+      frictionFactor: document.getElementById('frictionFactor'),
+      puppetType: document.getElementById('puppetType'),
+      puppetMechType: document.getElementById('puppetMechType'),
+      puppetArmLength: document.getElementById('puppetArmLength'),
+      puppetMaxLimit: document.getElementById('puppetMaxLimit'),
+      puppetOutputLabel: document.getElementById('puppetOutputLabel'),
+      puppetOutputVal: document.getElementById('puppetOutputVal'),
+      puppetRatioVal: document.getElementById('puppetRatioVal'),
+      
+      calcStroke: document.getElementById('calcStroke'),
+      calcMinRad: document.getElementById('calcMinRad'),
+      calcMaxRad: document.getElementById('calcMaxRad'),
+      calcMaxAlpha: document.getElementById('calcMaxAlpha'),
+      
+      btnPlayPause: document.getElementById('btnPlayPause'),
+      crankSpeed: document.getElementById('crankSpeed'),
+      speedVal: document.getElementById('speedVal'),
+      angleScrub: document.getElementById('angleScrub'),
+      angleVal: document.getElementById('angleVal'),
+      angleBadge: document.getElementById('angleBadge'),
+      liftBadge: document.getElementById('liftBadge'),
+      btnToggleCutaway: document.getElementById('btnToggleCutaway'),
+      
+      statusBadge: document.getElementById('statusBadge'),
+      statusIcon: document.getElementById('statusIcon'),
+      statusText: document.getElementById('statusText'),
+      calcGuideRatio: document.getElementById('calcGuideRatio'),
+      calcJamRisk: document.getElementById('calcJamRisk'),
+      adviceList: document.getElementById('adviceList'),
+      
+      svgCamPath: document.getElementById('svgCamPath'),
+      svgBaseCircle: document.getElementById('svgBaseCircle'),
+      svgAxleHole: document.getElementById('svgAxleHole'),
+      camRotationGroup: document.getElementById('camRotationGroup'),
+      followerAssemblyGroup: document.getElementById('followerAssemblyGroup'),
+      svgFollowerTip: document.getElementById('svgFollowerTip'),
+      svgPushrod: document.getElementById('svgPushrod'),
+      svgGuideTube: document.getElementById('svgGuideTube'),
+      puppetGroup: document.getElementById('puppetGroup'),
+      boxFrameGroup: document.getElementById('boxFrameGroup'),
+      
+      graphDisplacementPath: document.getElementById('graphDisplacementPath'),
+      graphVelocityPath: document.getElementById('graphVelocityPath'),
+      graphScrubLine: document.getElementById('graphScrubLine'),
+      graphScrubDot: document.getElementById('graphScrubDot'),
+      graphYMax: document.getElementById('graphYMax'),
+      
+      templateCamPath: document.getElementById('templateCamPath'),
+      templateAxleHole: document.getElementById('templateAxleHole'),
+      
+      proBanner: document.getElementById('proBanner'),
+      proLink: document.getElementById('proLink'),
+      btnReset: document.getElementById('btnReset'),
+      btnCopySpecs: document.getElementById('btnCopySpecs'),
+      btnExportCSV: document.getElementById('btnExportCSV'),
+      btnExportJSON: document.getElementById('btnExportJSON'),
+      btnImportJSON: document.getElementById('btnImportJSON'),
+      btnLoadSample: document.getElementById('btnLoadSample'),
+      jsonFileInput: document.getElementById('jsonFileInput'),
+      btnPrintTemplate: document.getElementById('btnPrintTemplate')
+    };
+
+    // Math Cam Calculations Engine
+    function getCamRadiusAtAngle(thetaRad, config) {
+      const r0 = config.baseRadius;
+      const e = config.eccentricity;
+      const type = config.profile;
+
+      let r = r0;
+      let dr = 0; // dr/dtheta derivative
+
+      switch (type) {
+        case 'eccentric-circle': {
+          // Circle offset by e
+          // r(theta) = e*cos(theta) + sqrt(r0^2 - e^2*sin^2(theta))
+          const sinT = Math.sin(thetaRad);
+          const cosT = Math.cos(thetaRad);
+          const inner = Math.max(0, r0 * r0 - e * e * sinT * sinT);
+          r = e * cosT + Math.sqrt(inner);
+          
+          // Numerical derivative for smooth precision
+          const delta = 0.0001;
+          const rPlus = e * Math.cos(thetaRad + delta) + Math.sqrt(Math.max(0, r0 * r0 - e * e * Math.sin(thetaRad + delta) ** 2));
+          dr = (rPlus - r) / delta;
+          break;
+        }
+
+        case 'drop-snail': {
+          // Linear ramp 0 to 330 deg (11*pi/6), drop from 330 to 360
+          const dropAngle = (11 * Math.PI) / 6;
+          if (thetaRad <= dropAngle) {
+            r = r0 + e * (thetaRad / dropAngle);
+            dr = e / dropAngle;
+          } else {
+            const dropPhase = (thetaRad - dropAngle) / (2 * Math.PI - dropAngle);
+            r = r0 + e * (1 - dropPhase);
+            dr = -e / (2 * Math.PI - dropAngle);
+          }
+          break;
+        }
+
+        case 'pear-cam': {
+          // Dwell at r0 for 0 to pi, lobe over pi to 2*pi
+          if (thetaRad <= Math.PI) {
+            r = r0;
+            dr = 0;
+          } else {
+            const phase = thetaRad - Math.PI;
+            // Harmonic rise/fall peak = e
+            r = r0 + (e / 2) * (1 - Math.cos(2 * phase));
+            dr = e * Math.sin(2 * phase);
+          }
+          break;
+        }
+
+        case 'dual-lobe': {
+          // Two symmetric lobes per rotation
+          r = r0 + e * Math.pow(Math.sin(thetaRad), 2);
+          dr = e * Math.sin(2 * thetaRad);
+          break;
+        }
+
+        case 'heart-cam': {
+          // Constant velocity rise for pi, fall for pi
+          if (thetaRad <= Math.PI) {
+            r = r0 + e * (thetaRad / Math.PI);
+            dr = e / Math.PI;
+          } else {
+            r = r0 + e * (2 - thetaRad / Math.PI);
+            dr = -e / Math.PI;
+          }
+          break;
+        }
+
+        default:
+          r = r0 + e;
+          dr = 0;
+      }
+
+      // Pressure angle alpha = atan((dr/dtheta) / r)
+      const alphaRad = Math.atan2(dr, r);
+      return { r, dr, alphaRad };
+    }
+
+    // Compute metrics across full 360 degrees
+    function computeCamMetrics() {
+      // Validate bounds against invalid physical geometry
+      if (state.profile === 'eccentric-circle' && state.eccentricity >= state.baseRadius) {
+        state.eccentricity = Math.max(0, state.baseRadius - 1);
+        if (elements.eccentricity) elements.eccentricity.value = state.eccentricity;
+        if (elements.eccentricityNum) elements.eccentricityNum.value = state.eccentricity;
+      }
+
+      const samples = 360;
+      let minR = Infinity;
+      let maxR = -Infinity;
+      let maxAlphaRad = 0;
+      const profileData = [];
+
+      for (let i = 0; i < samples; i++) {
+        const thetaRad = (i * Math.PI * 2) / samples;
+        const res = getCamRadiusAtAngle(thetaRad, state);
+        minR = Math.min(minR, res.r);
+        maxR = Math.max(maxR, res.r);
+        maxAlphaRad = Math.max(maxAlphaRad, Math.abs(res.alphaRad));
+        profileData.push({ thetaDeg: i, r: res.r, dr: res.dr, alphaRad: res.alphaRad });
+      }
+
+      let stroke = maxR - minR;
+      if (state.profile === 'eccentric-circle') {
+        stroke = 2.0 * state.eccentricity;
+        minR = state.baseRadius - state.eccentricity;
+        maxR = state.baseRadius + state.eccentricity;
+      }
+
+      const maxAlphaDeg = (maxAlphaRad * 180) / Math.PI;
+
+      return { stroke, minR, maxR, maxAlphaDeg, profileData };
+    }
+
+    // Generate SVG path for Cam
+    function generateCamSVGPathString(scale = 1.0, cx = 0, cy = 0) {
+      const points = [];
+      const steps = 180;
+      for (let i = 0; i < steps; i++) {
+        const thetaRad = (i * Math.PI * 2) / steps;
+        const { r } = getCamRadiusAtAngle(thetaRad, state);
+        // Transform polar (r, theta) to Cartesian (x, y)
+        // SVG coordinate system: y increases downwards
+        const x = cx + r * scale * Math.cos(thetaRad);
+        const y = cy - r * scale * Math.sin(thetaRad);
+        points.push(`${i === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`);
+      }
+      points.push('Z');
+      return points.join(' ');
+    }
+
+    // Update UI & Calculations
+    function updateApp() {
+      const metrics = computeCamMetrics();
+      
+      // Update Metrics Sidebar
+      elements.calcStroke.textContent = `${metrics.stroke.toFixed(1)} mm`;
+      elements.calcMinRad.textContent = `${metrics.minR.toFixed(1)} mm`;
+      elements.calcMaxRad.textContent = `${metrics.maxR.toFixed(1)} mm`;
+      elements.calcMaxAlpha.textContent = `${metrics.maxAlphaDeg.toFixed(1)}°`;
+
+      // Clearance & Jam Diagnostics
+      const aspectRatio = state.guideLength / Math.max(1, metrics.stroke);
+      elements.calcGuideRatio.textContent = aspectRatio.toFixed(1);
+
+      let status = 'smooth';
+      let statusText = 'Smooth Operation';
+      let jamRisk = 'Low';
+      const advice = [];
+
+      if (state.axleDiameter / 2 >= metrics.minR) {
+        advice.unshift(`⚠️ Warning: Axle hole radius (${(state.axleDiameter/2).toFixed(1)}mm) exceeds min cam radius (${metrics.minR.toFixed(1)}mm). Increase base radius.`);
+      }
+
+      if (aspectRatio < 1.5 || metrics.maxAlphaDeg > 45) {
+        status = 'jam';
+        statusText = 'Jam Hazard';
+        jamRisk = 'High';
+        if (aspectRatio < 1.5) {
+          const recLength = Math.ceil(metrics.stroke * 1.5);
+          advice.push(`Guide tube length is too short! Increase to at least ${recLength} mm (1.5× stroke) to prevent binding.`);
+        }
+        if (metrics.maxAlphaDeg > 45) {
+          advice.push(`Maximum pressure angle (${metrics.maxAlphaDeg.toFixed(1)}°) is steep. Increase base radius r₀ or reduce stroke.`);
+        }
+      } else if (aspectRatio < 2.0 || metrics.maxAlphaDeg > 30) {
+        status = 'caution';
+        statusText = 'Caution - Friction';
+        jamRisk = 'Moderate';
+        if (aspectRatio < 2.0) {
+          advice.push(`Guide aspect ratio is fair. Coat the wooden skewer with candle wax to smooth friction.`);
+        }
+        if (metrics.maxAlphaDeg > 30) {
+          advice.push(`Pressure angle exceeds 30°. Ensure guide collar straw is securely hot-glued.`);
+        }
+      } else {
+        advice.push('Optimal guide ratio (>2.0). Pushrod glides smoothly.');
+        advice.push('Pressure angle is low (<30°). Hand crank turns effortlessly.');
+        advice.push('Tip: Use cardboard washers on the axle to keep the cam aligned.');
+      }
+
+      elements.statusBadge.className = `status-badge ${status}`;
+      elements.statusIcon.textContent = status === 'smooth' ? '✓' : (status === 'caution' ? '⚠️' : '🚨');
+      elements.statusText.textContent = statusText;
+      elements.calcJamRisk.textContent = jamRisk;
+
+      elements.adviceList.innerHTML = advice.map(item => `<li>${item}</li>`).join('');
+
+      // Render Cam SVG Visualizer
+      elements.svgCamPath.setAttribute('d', generateCamSVGPathString(1.0, 0, 0));
+      elements.svgBaseCircle.setAttribute('r', state.baseRadius);
+      elements.svgAxleHole.setAttribute('r', state.axleDiameter / 2);
+
+      // Render 1:1 Print Template SVG
+      const templateScale = 70 / Math.max(60, metrics.maxR);
+      elements.templateCamPath.setAttribute('d', generateCamSVGPathString(templateScale, 80, 80));
+      elements.templateAxleHole.setAttribute('r', (state.axleDiameter / 2) * templateScale);
+
+      // Render Visualizer Rig Position
+      updateRigPosition(metrics);
+
+      // Render Graph Curves
+      renderMotionGraph(metrics);
+    }
+
+    function updatePuppetLibraryMetrics(stroke, lift) {
+      const mech = state.puppetMechType || 'angular-waving-arm';
+      const Lp = Math.max(1, state.puppetArmLength || 25);
+      const maxLim = state.puppetMaxLimit || 60;
+      
+      let swingDeg = 0;
+      let gapMm = 0;
+      let labelText = 'Calculated Angular Swing (°)';
+      let valText = '0.0°';
+      let ratioText = '0 °/mm';
+
+      if (mech === 'angular-waving-arm' || mech === 'waving-arm') {
+        const maxSwing = Math.min(maxLim, (stroke / Lp) * 56.25);
+        const currSwing = stroke > 0 ? (lift / stroke) * maxSwing : 0;
+        labelText = 'Calculated Angular Swing (°)';
+        valText = `${maxSwing.toFixed(1)}° (Now: ${currSwing.toFixed(1)}°)`;
+        ratioText = `${(maxSwing / Math.max(1, stroke)).toFixed(2)} °/mm`;
+        swingDeg = currSwing;
+      } else if (mech === 'vertical-bobbing-head' || mech === 'bobbing-head') {
+        const maxLift = stroke;
+        labelText = 'Calculated Head Lift (mm)';
+        valText = `${maxLift.toFixed(1)} mm (Now: ${lift.toFixed(1)} mm)`;
+        ratioText = '1.00 mm/mm';
+      } else if (mech === 'double-beak-bird' || mech === 'double-beak-pecking-bird' || mech === 'pecking-bird') {
+        const maxGap = Math.min(maxLim, stroke * 0.75);
+        const currGap = stroke > 0 ? (lift / stroke) * maxGap : 0;
+        labelText = 'Calculated Mouth Opening Gap (mm)';
+        valText = `${maxGap.toFixed(1)} mm (Now: ${currGap.toFixed(1)} mm)`;
+        ratioText = `${(maxGap / Math.max(1, stroke)).toFixed(2)} mm/mm`;
+        gapMm = currGap;
+      }
+
+      if (elements.puppetOutputLabel) elements.puppetOutputLabel.textContent = labelText;
+      if (elements.puppetOutputVal) elements.puppetOutputVal.textContent = valText;
+      if (elements.puppetRatioVal) elements.puppetRatioVal.textContent = ratioText;
+
+      return { swingDeg, gapMm, mech };
+    }
+
+    // Update Puppet SVG Rendering
+    function renderPuppetGraphics(lift) {
+      const metrics = computeCamMetrics();
+      const pData = updatePuppetLibraryMetrics(metrics.stroke, lift);
+      const type = pData.mech;
+      let html = '';
+
+      if (type === 'double-beak-bird' || type === 'double-beak-pecking-bird' || type === 'pecking-bird') {
+        const gap = pData.gapMm || Math.min(25, (lift / Math.max(1, metrics.stroke)) * 20);
+        const topRot = -gap * 1.2;
+        const botRot = gap * 1.2;
+        html = `
+          <g transform="translate(0, -10)">
+            <ellipse cx="-5" cy="-20" rx="18" ry="14" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1.5"/>
+            <circle cx="-12" cy="-24" r="3" fill="white"/><circle cx="-13" cy="-24" r="1.5" fill="black"/>
+            <polygon points="-22,-20 -38,-24 -22,-14" fill="#f59e0b" stroke="#b45309" stroke-width="1.2" transform="rotate(${topRot}, -22, -18)"/>
+            <polygon points="-22,-16 -38,-8 -22,-10" fill="#d97706" stroke="#b45309" stroke-width="1.2" transform="rotate(${botRot}, -22, -13)"/>
+            <polygon points="12,-24 25,-32 18,-18" fill="#ef4444"/>
+            <path d="M -8 -20 Q 2 -32 8 -18 Z" fill="#60a5fa" stroke="#1d4ed8"/>
+          </g>
+        `;
+      } else if (type === 'vertical-bobbing-head' || type === 'bobbing-head') {
+        const headOffsetY = -(lift * 0.4);
+        const tilt = Math.sin((state.currentAngle * Math.PI) / 180) * 10;
+        html = `
+          <g transform="translate(0, -15)">
+            <ellipse cx="0" cy="-15" rx="24" ry="18" fill="#10b981" stroke="#047857" stroke-width="2"/>
+            <path d="M -12 -15 L 12 -15 M 0 -30 L 0 0" stroke="#065f46" stroke-width="1.5"/>
+            <g transform="translate(0, ${headOffsetY}) rotate(${tilt})">
+              <circle cx="0" cy="-34" r="11" fill="#34d399" stroke="#047857" stroke-width="1.5"/>
+              <circle cx="-4" cy="-36" r="1.5" fill="black"/><circle cx="4" cy="-36" r="1.5" fill="black"/>
+            </g>
+            <path d="M -20 -15 C -35 -25 -30 -5 -20 -10 Z" fill="#34d399"/>
+            <path d="M 20 -15 C 35 -25 30 -5 20 -10 Z" fill="#34d399"/>
+          </g>
+        `;
+      } else if (type === 'angular-waving-arm' || type === 'waving-arm') {
+        const armAngle = pData.swingDeg;
+        const Lp = state.puppetArmLength || 25;
+        html = `
+          <g transform="translate(0, -20)">
+            <circle cx="0" cy="-20" r="16" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+            <ellipse cx="0" cy="-20" rx="11" ry="8" fill="#0284c7" opacity="0.8"/>
+            <rect x="-14" y="-4" width="28" height="24" fill="#f8fafc" stroke="#64748b" stroke-width="2" rx="4"/>
+            <rect x="-6" y="2" width="12" height="8" fill="#ef4444" rx="1"/>
+            <g transform="translate(14, 0) rotate(${-armAngle})">
+              <rect x="0" y="-4" width="${Lp}" height="8" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5" rx="3"/>
+              <circle cx="${Lp}" cy="0" r="4" fill="#ef4444"/>
+            </g>
+          </g>
+        `;
+      } else {
+        html = `
+          <g transform="translate(0, -10)">
+            <circle cx="0" cy="0" r="12" fill="#8b5cf6" stroke="#6d28d9" stroke-width="2"/>
+            <text x="0" y="4" font-size="10" fill="white" font-weight="bold" text-anchor="middle">TOP</text>
+          </g>
+        `;
+      }
+
+      elements.puppetGroup.innerHTML = html;
+    }
+
+    // Update Rig Graphics for current angle
+    function updateRigPosition(metrics) {
+      const angleDeg = state.currentAngle;
+      const angleRad = (angleDeg * Math.PI) / 180;
+      
+      // Rotate Cam (SVG degrees)
+      elements.camRotationGroup.setAttribute('transform', `rotate(${-angleDeg})`);
+
+      // Calculate current radius at point of contact (top of cam, theta = +90 deg in cam frame)
+      // When cam rotates by angleDeg, contact is at theta = angleDeg + 90 deg
+      const contactThetaRad = ((angleDeg + 90) * Math.PI) / 180;
+      const { r, alphaRad } = getCamRadiusAtAngle(contactThetaRad, state);
+      
+      const lift = r - metrics.minR;
+
+      // Move Follower vertically (Y is negative upwards in SVG)
+      // Base contact point is at Y = -r
+      elements.followerAssemblyGroup.setAttribute('transform', `translate(0, ${-r})`);
+      
+      // Update Pushrod & Guide Tube Sizes
+      elements.svgFollowerTip.setAttribute('r', state.followerRadius);
+      elements.svgPushrod.setAttribute('x', -state.followerRadius / 2);
+      elements.svgPushrod.setAttribute('width', state.followerRadius);
+      
+      elements.svgGuideTube.setAttribute('height', state.guideLength);
+      elements.svgGuideTube.setAttribute('y', -state.guideLength);
+      elements.svgGuideTube.setAttribute('width', state.followerRadius * 2 + state.clearance * 2);
+      elements.svgGuideTube.setAttribute('x', -(state.followerRadius + state.clearance));
+
+      // Cutaway Visibility
+      elements.boxFrameGroup.style.opacity = state.showCutaway ? '1' : '0.15';
+
+      // Update Badges
+      elements.angleBadge.textContent = `Angle: ${Math.round(angleDeg)}°`;
+      elements.liftBadge.textContent = `Lift: ${lift.toFixed(1)} mm`;
+      elements.angleVal.textContent = `${Math.round(angleDeg)}°`;
+      elements.angleScrub.value = Math.round(angleDeg);
+
+      // Render Puppet Character
+      renderPuppetGraphics(lift);
+
+      // Scrub indicator on graph
+      const graphX = 40 + (angleDeg / 360) * 540;
+      elements.graphScrubLine.setAttribute('x1', graphX);
+      elements.graphScrubLine.setAttribute('x2', graphX);
+      
+      const dispY = 120 - (lift / Math.max(1, metrics.stroke)) * 100;
+      elements.graphScrubDot.setAttribute('cx', graphX);
+      elements.graphScrubDot.setAttribute('cy', dispY);
+    }
+
+    // Render SVG Displacement & Velocity Waveform Graph
+    function renderMotionGraph(metrics) {
+      const profile = metrics.profileData;
+      const stroke = Math.max(1, metrics.stroke);
+
+      elements.graphYMax.textContent = `${metrics.stroke.toFixed(0)}mm`;
+
+      const dispPoints = [];
+      const velPoints = [];
+
+      for (let i = 0; i < profile.length; i++) {
+        const item = profile[i];
+        const x = 40 + (item.thetaDeg / 360) * 540;
+        
+        // Displacement curve (0 to stroke mapped to Y: 120 to 20)
+        const lift = item.r - metrics.minR;
+        const yDisp = 120 - (lift / stroke) * 100;
+        dispPoints.push(`${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${yDisp.toFixed(1)}`);
+
+        // Velocity curve (dr/dtheta derivative mapped around Y: 70 zero line)
+        const yVel = 70 - Math.max(-45, Math.min(45, item.dr * 2.5));
+        velPoints.push(`${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${yVel.toFixed(1)}`);
+      }
+
+      elements.graphDisplacementPath.setAttribute('d', dispPoints.join(' '));
+      elements.graphVelocityPath.setAttribute('d', velPoints.join(' '));
+    }
+
+    // Animation Loop
+    function animationStep(timestamp) {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const deltaTime = (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
+
+      if (state.isPlaying) {
+        // crankSpeed RPM = revolutions per minute
+        // deg per sec = RPM * 360 / 60 = RPM * 6
+        const degPerSec = state.crankSpeed * 6;
+        state.currentAngle = (state.currentAngle + degPerSec * deltaTime) % 360;
+        
+        const metrics = computeCamMetrics();
+        updateRigPosition(metrics);
+        
+        animationFrameId = requestAnimationFrame(animationStep);
+      }
+    }
+
+    function togglePlay() {
+      state.isPlaying = !state.isPlaying;
+      elements.btnPlayPause.textContent = state.isPlaying ? '❚❚ Pause' : '► Play';
+      if (state.isPlaying) {
+        lastTimestamp = 0;
+        animationFrameId = requestAnimationFrame(animationStep);
+      } else if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    }
+
+    // Storage Safety Wrappers
+    function saveToStorage() {
+      try {
+        localStorage.setItem('cardboard_automata_studio_state', JSON.stringify(state));
+      } catch (e) {}
+    }
+
+    function loadFromStorage() {
+      try {
+        const stored = localStorage.getItem('cardboard_automata_studio_state');
+        if (stored) {
+          parseAndApplyJSON(stored, false);
+          return true;
+        }
+      } catch (e) {}
+      return false;
+    }
+
+    // PRO Feature Guard Banner
+    function showProBanner(msg) {
+      if (!PRO) {
+        elements.proBanner.innerHTML = `${msg ? msg + ' ' : ''}Available in the full version: <a href="${PRO_LINK}" style="color: var(--primary); font-weight: bold; text-decoration: underline;">Upgrade to PRO</a>`;
+        elements.proBanner.classList.add('active');
+        setTimeout(() => {
+          elements.proBanner.classList.remove('active');
+        }, 4000);
+        return false;
+      }
+      return true;
+    }
+
+    // JSON Parser for Import & Load Sample
+    function parseAndApplyJSON(jsonText, showNotification = true) {
+      try {
+        const data = JSON.parse(jsonText);
+        if (typeof data !== 'object' || data === null) throw new Error('Invalid JSON data format.');
+        if (data.profile) state.profile = data.profile;
+        if (typeof data.baseRadius === 'number') state.baseRadius = data.baseRadius;
+        if (typeof data.eccentricity === 'number') state.eccentricity = data.eccentricity;
+        if (typeof data.followerRadius === 'number') state.followerRadius = data.followerRadius;
+        if (typeof data.axleDiameter === 'number') state.axleDiameter = data.axleDiameter;
+        if (typeof data.guideLength === 'number') state.guideLength = data.guideLength;
+        if (typeof data.clearance === 'number') state.clearance = data.clearance;
+        if (typeof data.friction === 'number') state.friction = data.friction;
+        if (typeof data.puppetType === 'string') state.puppetType = data.puppetType;
+        if (typeof data.crankSpeed === 'number') state.crankSpeed = data.crankSpeed;
+
+        elements.profileType.value = state.profile;
+        elements.baseRadius.value = state.baseRadius;
+        elements.baseRadiusNum.value = state.baseRadius;
+        elements.eccentricity.value = state.eccentricity;
+        elements.eccentricityNum.value = state.eccentricity;
+        elements.followerRadius.value = state.followerRadius;
+        elements.followerRadiusNum.value = state.followerRadius;
+        elements.axleDiameter.value = state.axleDiameter;
+        elements.axleDiameterNum.value = state.axleDiameter;
+        elements.guideLength.value = state.guideLength;
+        elements.guideLengthNum.value = state.guideLength;
+        if (elements.clearance) elements.clearance.value = state.clearance;
+        if (elements.frictionFactor) elements.frictionFactor.value = state.friction;
+        if (elements.puppetType) elements.puppetType.value = state.puppetType;
+        if (elements.puppetMechType) elements.puppetMechType.value = state.puppetType;
+        state.puppetMechType = state.puppetType;
+        if (elements.crankSpeed) {
+          elements.crankSpeed.value = state.crankSpeed;
+          elements.speedVal.textContent = `${state.crankSpeed} RPM`;
+        }
+
+        updateApp();
+        saveToStorage();
+        if (showNotification) alert('Configuration loaded successfully!');
+      } catch (err) {
+        if (showNotification) alert('Error parsing configuration: ' + err.message);
+      }
+    }
+
+    // Preset Scenarios Loader
+    function loadPreset(presetKey) {
+      if (presetKey === 'pecking-bird') {
+        state.profile = 'drop-snail';
+        state.baseRadius = 25;
+        state.eccentricity = 20;
+        state.axleDiameter = 3;
+        state.followerRadius = 3;
+        state.guideLength = 50;
+        state.crankSpeed = 30;
+        state.puppetType = 'pecking-bird';
+      } else if (presetKey === 'bobbing-turtle') {
+        state.profile = 'eccentric-circle';
+        state.baseRadius = 30;
+        state.eccentricity = 12;
+        state.axleDiameter = 3;
+        state.followerRadius = 4;
+        state.guideLength = 60;
+        state.crankSpeed = 40;
+        state.puppetType = 'bobbing-head';
+      } else if (presetKey === 'waving-astronaut') {
+        state.profile = 'pear-cam';
+        state.baseRadius = 22;
+        state.eccentricity = 18;
+        state.axleDiameter = 3;
+        state.followerRadius = 3;
+        state.guideLength = 55;
+        state.crankSpeed = 25;
+        state.puppetType = 'waving-arm';
+      }
+
+      // Sync Controls
+      elements.profileType.value = state.profile;
+      elements.baseRadius.value = state.baseRadius;
+      elements.baseRadiusNum.value = state.baseRadius;
+      elements.eccentricity.value = state.eccentricity;
+      elements.eccentricityNum.value = state.eccentricity;
+      elements.followerRadius.value = state.followerRadius;
+      elements.followerRadiusNum.value = state.followerRadius;
+      elements.axleDiameter.value = state.axleDiameter;
+      elements.axleDiameterNum.value = state.axleDiameter;
+      elements.guideLength.value = state.guideLength;
+      elements.guideLengthNum.value = state.guideLength;
+      elements.crankSpeed.value = state.crankSpeed;
+      elements.speedVal.textContent = `${state.crankSpeed} RPM`;
+      elements.puppetType.value = state.puppetType;
+      if (elements.puppetMechType) elements.puppetMechType.value = state.puppetType;
+      state.puppetMechType = state.puppetType;
+
+      updateApp();
+    }
+
+    // Input Wiring Helper with safe numeric bounds
+    function bindNumberRangePair(rangeElem, numElem, key, minVal, maxVal) {
+      const update = (val, forceValid = false) => {
+        let n = parseFloat(val);
+        if (isNaN(n) || !isFinite(n)) {
+          if (!forceValid) return;
+          n = minVal;
+        }
+        n = Math.max(minVal, Math.min(maxVal, n));
+        state[key] = n;
+        rangeElem.value = n;
+        numElem.value = n;
+        updateApp();
+        saveToStorage();
+      };
+
+      rangeElem.addEventListener('input', (e) => update(e.target.value, true));
+      numElem.addEventListener('input', (e) => update(e.target.value, false));
+      numElem.addEventListener('change', (e) => update(e.target.value, true));
+    }
+
+    // Event Listeners Registration
+    function initEventListeners() {
+      // Preset Selector
+      elements.presetSelect.addEventListener('change', (e) => {
+        loadPreset(e.target.value);
+      });
+
+      // Profile Select
+      elements.profileType.addEventListener('change', (e) => {
+        state.profile = e.target.value;
+        updateApp();
+      });
+
+      // Parameter Sliders & Number Pairs
+      bindNumberRangePair(elements.baseRadius, elements.baseRadiusNum, 'baseRadius', 10, 100);
+      bindNumberRangePair(elements.eccentricity, elements.eccentricityNum, 'eccentricity', 0, 50);
+      bindNumberRangePair(elements.followerRadius, elements.followerRadiusNum, 'followerRadius', 1, 10);
+      bindNumberRangePair(elements.axleDiameter, elements.axleDiameterNum, 'axleDiameter', 1, 10);
+      bindNumberRangePair(elements.guideLength, elements.guideLengthNum, 'guideLength', 10, 100);
+
+      // Clearance & Friction
+      elements.clearance.addEventListener('change', (e) => {
+        let v = parseFloat(e.target.value);
+        if (isNaN(v) || v < 0.5) v = 0.5;
+        state.clearance = v;
+        updateApp();
+      });
+
+      elements.frictionFactor.addEventListener('change', (e) => {
+        state.friction = parseFloat(e.target.value);
+        updateApp();
+      });
+
+      elements.puppetType.addEventListener('change', (e) => {
+        state.puppetType = e.target.value;
+        if (elements.puppetMechType) elements.puppetMechType.value = e.target.value;
+        state.puppetMechType = e.target.value;
+        updateApp();
+      });
+
+      if (elements.puppetMechType) {
+        elements.puppetMechType.addEventListener('change', (e) => {
+          state.puppetMechType = e.target.value;
+          state.puppetType = e.target.value;
+          if (elements.puppetType) elements.puppetType.value = e.target.value;
+          updateApp();
+        });
+      }
+
+      if (elements.puppetArmLength) {
+        elements.puppetArmLength.addEventListener('input', (e) => {
+          let v = parseFloat(e.target.value);
+          if (!isNaN(v) && v >= 1) {
+            state.puppetArmLength = v;
+            updateApp();
+          }
+        });
+      }
+
+      if (elements.puppetMaxLimit) {
+        elements.puppetMaxLimit.addEventListener('input', (e) => {
+          let v = parseFloat(e.target.value);
+          if (!isNaN(v) && v >= 1) {
+            state.puppetMaxLimit = v;
+            updateApp();
+          }
+        });
+      }
+
+      // Playback Controls
+      elements.btnPlayPause.addEventListener('click', togglePlay);
+
+      elements.crankSpeed.addEventListener('input', (e) => {
+        state.crankSpeed = parseInt(e.target.value, 10);
+        elements.speedVal.textContent = `${state.crankSpeed} RPM`;
+      });
+
+      elements.angleScrub.addEventListener('input', (e) => {
+        if (state.isPlaying) togglePlay();
+        state.currentAngle = parseInt(e.target.value, 10);
+        const metrics = computeCamMetrics();
+        updateRigPosition(metrics);
+      });
+
+      elements.btnToggleCutaway.addEventListener('click', () => {
+        state.showCutaway = !state.showCutaway;
+        updateApp();
+      });
+
+      // Reset Button
+      elements.btnReset.addEventListener('click', () => {
+        loadPreset('pecking-bird');
+      });
+
+      // Copy Specs to Clipboard
+      elements.btnCopySpecs.addEventListener('click', () => {
+        const metrics = computeCamMetrics();
+        const text = `Cardboard Automata Mechanism Specs:
+- Profile: ${state.profile}
+- Base Radius (r0): ${state.baseRadius} mm
+- Stroke / Lift (e): ${metrics.stroke.toFixed(1)} mm
+- Min/Max Radius: ${metrics.minR.toFixed(1)} mm / ${metrics.maxR.toFixed(1)} mm
+- Max Pressure Angle: ${metrics.maxAlphaDeg.toFixed(1)}°
+- Axle Diameter: ${state.axleDiameter} mm
+- Guide Tube Length: ${state.guideLength} mm
+- Guide Aspect Ratio: ${(state.guideLength / metrics.stroke).toFixed(1)}
+- Jam Risk: ${elements.calcJamRisk.textContent}`;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            alert('Mechanism specifications copied to clipboard!');
+          }).catch(() => {
+            alert(text);
+          });
+        } else {
+          alert(text);
+        }
+      });
+
+      // Export CSV Data
+      elements.btnExportCSV.addEventListener('click', exportCamCSV);
+
+      // Export JSON Config
+      elements.btnExportJSON.addEventListener('click', () => {
+        if (!showProBanner('JSON Export feature.')) return;
+
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", `cam-mechanism-config.json`);
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+      });
+
+      // Import JSON Config
+      elements.btnImportJSON.addEventListener('click', () => {
+        if (!showProBanner('JSON Import feature.')) return;
+        elements.jsonFileInput.click();
+      });
+
+      elements.jsonFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => parseAndApplyJSON(evt.target.result, true);
+        reader.readAsText(file);
+        e.target.value = '';
+      });
+
+      // Load Sample Data (feeds sample through same parser)
+      elements.btnLoadSample.addEventListener('click', () => {
+        const sampleConfig = {
+          profile: 'drop-snail',
+          baseRadius: 28,
+          eccentricity: 22,
+          followerRadius: 3.5,
+          axleDiameter: 3,
+          guideLength: 55,
+          clearance: 1.0,
+          friction: 0.35,
+          puppetType: 'pecking-bird',
+          crankSpeed: 35
+        };
+        parseAndApplyJSON(JSON.stringify(sampleConfig), true);
+      });
+
+      // Print Template
+      elements.btnPrintTemplate.addEventListener('click', () => {
+        if (!showProBanner('1:1 Print Template feature.')) return;
+        window.print();
+      });
+    }
+
+    // Initialize App
+    function init() {
+      initEventListeners();
+      const loaded = loadFromStorage();
+      if (!loaded) {
+        loadPreset('pecking-bird');
+      }
+    }
+
+    // Run on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    function downloadBlob(content, filename, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportCamCSV() {
+      if (!showProBanner('CSV Export feature.')) return;
+      const metrics = computeCamMetrics();
+      const step = parseInt(document.getElementById('exportStep')?.value || '1', 10);
+      let csv = 'Angle_deg,Radius_mm,Stroke_mm,Velocity_mm_per_rad\n';
+      for (let i = 0; i < 360; i += step) {
+        const thetaRad = (i * Math.PI) / 180;
+        const res = getCamRadiusAtAngle(thetaRad, state);
+        const strokeMm = res.r - metrics.minR;
+        csv += `${i},${res.r.toFixed(3)},${strokeMm.toFixed(3)},${res.dr.toFixed(3)}\n`;
+      }
+      downloadBlob(csv, `cam-profile-${state.profile}.csv`, 'text/csv');
+    }
+
+    function exportCamSVG() {
+      if (!showProBanner('SVG Cut File feature.')) return;
+      const step = parseInt(document.getElementById('exportStep')?.value || '1', 10);
+      const sw = document.getElementById('exportScale')?.value || '0.2';
+      const metrics = computeCamMetrics();
+      const pad = 10;
+      const size = Math.ceil((metrics.maxR + pad) * 2);
+      const cx = size / 2, cy = size / 2;
+      let d = '';
+      for (let i = 0; i < 360; i += step) {
+        const rad = (i * Math.PI) / 180;
+        const { r } = getCamRadiusAtAngle(rad, state);
+        const x = cx + r * Math.cos(rad);
+        const y = cy - r * Math.sin(rad);
+        d += `${i === 0 ? 'M' : 'L'} ${x.toFixed(3)} ${y.toFixed(3)} `;
+      }
+      d += 'Z';
+      const axleR = state.axleDiameter / 2;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}mm" height="${size}mm" viewBox="0 0 ${size} ${size}">` +
+        `<path d="${d}" fill="none" stroke="black" stroke-width="${sw}"/>` +
+        `<circle cx="${cx}" cy="${cy}" r="${axleR.toFixed(3)}" fill="none" stroke="red" stroke-width="${sw}"/>` +
+        `</svg>`;
+      downloadBlob(svg, `cam-cutfile-${state.profile}.svg`, 'image/svg+xml');
+    }
+
+    function exportCamDXF() {
+      if (!showProBanner('DXF Polyline feature.')) return;
+      const step = parseInt(document.getElementById('exportStep')?.value || '1', 10);
+      const numPoints = Math.floor(360 / step);
+      let pts = '';
+      for (let i = 0; i < 360; i += step) {
+        const rad = (i * Math.PI) / 180;
+        const { r } = getCamRadiusAtAngle(rad, state);
+        const x = r * Math.cos(rad);
+        const y = r * Math.sin(rad);
+        pts += `10\n${x.toFixed(4)}\n20\n${y.toFixed(4)}\n`;
+      }
+      const dxf = `0\nSECTION\n2\nENTITIES\n0\nLWPOLYLINE\n100\nAcDbEntity\n8\nCAM_PROFILE\n100\nAcDbPolyline\n90\n${numPoints}\n70\n1\n${pts}0\nENDSEC\n0\nEOF\n`;
+      downloadBlob(dxf, `cam-profile-${state.profile}.dxf`, 'application/dxf');
+    }
+
+    function updateExporterInfo() {
+      const stepSelect = document.getElementById('exportStep');
+      if (!stepSelect) return;
+      const step = parseInt(stepSelect.value, 10);
+      const count = Math.floor(360 / step);
+      const metrics = computeCamMetrics();
+      const dim = (metrics.maxR * 2).toFixed(1);
+      const pElem = document.getElementById('exportPointCount');
+      const bElem = document.getElementById('exportBounds');
+      if (pElem) pElem.textContent = `${count} Points (${step}° step)`;
+      if (bElem) bElem.textContent = `${dim} × ${dim} mm`;
+    }
+
+    // Attach Exporter listeners
+    document.getElementById('btnExpCsvData')?.addEventListener('click', exportCamCSV);
+    document.getElementById('btnExpSvg')?.addEventListener('click', exportCamSVG);
+    document.getElementById('btnExpDxf')?.addEventListener('click', exportCamDXF);
+    document.getElementById('exportStep')?.addEventListener('change', updateExporterInfo);
+    document.getElementById('exportScale')?.addEventListener('change', updateExporterInfo);
+
+    // Wire exporter updates into main update loop
+    const _origUpdateApp = updateApp;
+    updateApp = function() {
+      _origUpdateApp();
+      updateExporterInfo();
+    };
+    updateExporterInfo();
+
+    // Dual-Cam Tandem Timing Synchronizer JS
+    const dualCamState = {
+      enabled: true,
+      camAProfile: 'eccentric-circle',
+      camBProfile: 'eccentric-circle',
+      camBOffset: 180,
+      speed: 30
+    };
+
+    function generatePathForProfile(profile, scale = 1, cx = 0, cy = 0) {
+      const pts = [];
+      for (let i = 0; i < 120; i++) {
+        const rad = (i * Math.PI * 2) / 120;
+        const { r } = getCamRadiusAtAngle(rad, { profile, baseRadius: state.baseRadius, eccentricity: state.eccentricity });
+        const x = cx + r * scale * Math.cos(rad);
+        const y = cy - r * scale * Math.sin(rad);
+        pts.push(`${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`);
+      }
+      pts.push('Z');
+      return pts.join(' ');
+    }
+
+    function updateDualCam() {
+      if (!PRO) {
+        const notice = document.getElementById('multiCamProNotice');
+        if (notice) notice.style.display = 'block';
+        return;
+      } else {
+        const notice = document.getElementById('multiCamProNotice');
+        if (notice) notice.style.display = 'none';
+      }
+
+      const svg = document.getElementById('dualCamSvg');
+      const gSvg = document.getElementById('dualCamGraphSvg');
+      if (!svg || !gSvg) return;
+
+      if (!dualCamState.enabled) {
+        svg.innerHTML = '<text x="200" y="90" fill="var(--text-muted)" text-anchor="middle" font-size="14">Dual-Cam Tandem Disabled</text>';
+        gSvg.innerHTML = '';
+        return;
+      }
+
+      const angA = state.currentAngle;
+      const angB = (state.currentAngle + dualCamState.camBOffset) % 360;
+
+      const pathA = generatePathForProfile(dualCamState.camAProfile, 0.8, 0, 0);
+      const pathB = generatePathForProfile(dualCamState.camBProfile, 0.8, 0, 0);
+
+      const rA = getCamRadiusAtAngle(((angA + 90) * Math.PI) / 180, { profile: dualCamState.camAProfile, baseRadius: state.baseRadius, eccentricity: state.eccentricity }).r * 0.8;
+      const rB = getCamRadiusAtAngle(((angB + 90) * Math.PI) / 180, { profile: dualCamState.camBProfile, baseRadius: state.baseRadius, eccentricity: state.eccentricity }).r * 0.8;
+
+      const yFolA = 110 - rA;
+      const yFolB = 110 - rB;
+
+      svg.innerHTML = `
+        <line x1="40" y1="110" x2="360" y2="110" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
+        <path d="M 360 110 L 380 110 L 380 130" fill="none" stroke="#78350f" stroke-width="4" stroke-linecap="round"/>
+        <g transform="translate(120, 110) rotate(${-angA})">
+          <path d="${pathA}" fill="#3b82f6" fill-opacity="0.3" stroke="#1d4ed8" stroke-width="2"/>
+          <circle cx="0" cy="0" r="4" fill="#1d4ed8"/>
+        </g>
+        <g transform="translate(280, 110) rotate(${-angB})">
+          <path d="${pathB}" fill="#f59e0b" fill-opacity="0.3" stroke="#b45309" stroke-width="2"/>
+          <circle cx="0" cy="0" r="4" fill="#b45309"/>
+        </g>
+        <rect x="117" y="${yFolA - 50}" width="6" height="50" fill="#2563eb" rx="2"/>
+        <circle cx="120" cy="${yFolA}" r="5" fill="#1d4ed8"/>
+        <rect x="277" y="${yFolB - 50}" width="6" height="50" fill="#d97706" rx="2"/>
+        <circle cx="280" cy="${yFolB}" r="5" fill="#b45309"/>
+        <text x="120" y="160" font-size="11" fill="var(--text-muted)" text-anchor="middle" font-weight="bold">Cam A (0°)</text>
+        <text x="280" y="160" font-size="11" fill="var(--text-muted)" text-anchor="middle" font-weight="bold">Cam B (+${dualCamState.camBOffset}°)</text>
+      `;
+
+      let dA = '', dB = '';
+      for (let i = 0; i <= 360; i += 5) {
+        const x = 30 + (i / 360) * 340;
+        const radI_A = ((i + 90) * Math.PI) / 180;
+        const radI_B = ((i + dualCamState.camBOffset + 90) * Math.PI) / 180;
+        const curRA = getCamRadiusAtAngle(radI_A, { profile: dualCamState.camAProfile, baseRadius: state.baseRadius, eccentricity: state.eccentricity }).r;
+        const curRB = getCamRadiusAtAngle(radI_B, { profile: dualCamState.camBProfile, baseRadius: state.baseRadius, eccentricity: state.eccentricity }).r;
+        const yA = 85 - ((curRA - 10) / 50) * 65;
+        const yB = 85 - ((curRB - 10) / 50) * 65;
+        dA += `${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${yA.toFixed(1)} `;
+        dB += `${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${yB.toFixed(1)} `;
+      }
+
+      const scrubX = 30 + (angA / 360) * 340;
+      gSvg.innerHTML = `
+        <line x1="30" y1="85" x2="370" y2="85" stroke="var(--border-color)"/>
+        <path d="${dA}" fill="none" stroke="#2563eb" stroke-width="2"/>
+        <path d="${dB}" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="4,2"/>
+        <line x1="${scrubX}" y1="10" x2="${scrubX}" y2="90" stroke="var(--color-red)" stroke-width="1.5"/>
+        <text x="30" y="100" fill="var(--text-muted)" font-size="9">0°</text>
+        <text x="200" y="100" fill="var(--text-muted)" font-size="9" text-anchor="middle">180°</text>
+        <text x="370" y="100" fill="var(--text-muted)" font-size="9" text-anchor="end">360°</text>
+      `;
+    }
+
+    function initDualCamEvents() {
+      document.getElementById('dualCamEnable')?.addEventListener('change', (e) => {
+        dualCamState.enabled = e.target.checked;
+        updateDualCam();
+      });
+      document.getElementById('camAProfile')?.addEventListener('change', (e) => {
+        dualCamState.camAProfile = e.target.value;
+        updateDualCam();
+      });
+      document.getElementById('camBProfile')?.addEventListener('change', (e) => {
+        dualCamState.camBProfile = e.target.value;
+        updateDualCam();
+      });
+      document.getElementById('camBOffset')?.addEventListener('input', (e) => {
+        dualCamState.camBOffset = parseInt(e.target.value, 10);
+        document.getElementById('camBOffsetVal').textContent = dualCamState.camBOffset;
+        updateDualCam();
+      });
+      document.getElementById('dualAxleSpeed')?.addEventListener('input', (e) => {
+        dualCamState.speed = parseInt(e.target.value, 10);
+        document.getElementById('dualAxleSpeedVal').textContent = dualCamState.speed;
+        state.crankSpeed = dualCamState.speed;
+        if (elements.crankSpeed) elements.crankSpeed.value = dualCamState.speed;
+        if (elements.speedVal) elements.speedVal.textContent = `${dualCamState.speed} RPM`;
+        updateDualCam();
+      });
+    }
+
+    const _prevUpdateRig = updateRigPosition;
+    updateRigPosition = function(metrics) {
+      _prevUpdateRig(metrics);
+      updateDualCam();
+    };
+
+    initDualCamEvents();
+    updateDualCam();
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Cardboard Automata &amp; Cam Mechanism Studio is a browser-based tool that lets makers, teachers, and papercraft enthusiasts design and simulate kinetic cardboard toys. It provides live motion graphs, pressure angle jam diagnostics, and dual-axle timing synchronization directly in your browser. You can use the basic simulator online for free or get the full offline pack to export vector files and work without an internet connection.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your cam profile type (pear, eccentric, drop, or custom shape) and set axle parameters.</li><li>Adjust friction coefficients and check the live pressure angle graph to detect potential mechanism jams.</li><li>Add secondary linkages using the Dynamic Puppet Motion Transformer or align a second axle with the Tandem Timing Synchronizer.</li><li>Print 1:1 scale paper templates or export SVG/DXF cut files for laser and craft cutters.</li></ol>
+
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">Do I need to install any software to use the offline version?</h4><p style="margin:0">No installation is needed. The offline pack is delivered as a single self-contained HTML file that opens and runs in any modern web browser without internet access.</p><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free web version and the $9 offline product?</h4><p style="margin:0">The free web version lets you design and test mechanisms online. The $9 paid pack allows fully offline desktop use, unlocks 1:1 SVG and DXF vector exports for cutting machines, and includes motion CSV export options.</p><h4 style="font-size:16px;margin:16px 0 4px">How does the jam diagnostic feature work?</h4><p style="margin:0">The simulator calculates cardboard friction coefficients and follower pressure angles across the 360-degree rotation. If the angle exceeds safe limits where friction would lock the mechanism, it highlights the problem zone so you can adjust the cam curve.</p><h4 style="font-size:16px;margin:16px 0 4px">Can I use this for laser cutting and craft machines like Cricut?</h4><p style="margin:0">Yes. The tool exports precise SVG and DXF vector files scaled 1:1, making it easy to send designs directly to laser cutters, vinyl cutters, or craft plotters.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/rxdpzlk" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../chladni-cymatics-resonance-lab/" style="color:inherit;font-weight:600">Chladni Plate Cymatics &amp; Resonance Sandbox</a>: Offline interactive modal vibration solver, granular sand physics simulator, and dual-tone interference sandbox.</li><li><a href="../generative-geometry-breath-sync-studio/" style="color:inherit;font-weight:600">Generative Sacred Geometry &amp; Breath Sync Studio</a>: Engaging breathwork engine with sacred geometry visuals, binaural audio, and full offline session logging.</li><li><a href="../pet-trick-shaping-clicker-lab/" style="color:inherit;font-weight:600">Pet Clicker Training &amp; Micro-Shaping Studio</a>: Offline acoustic marker, trial tracker, curriculum generator, and behavioral decision engine for precision pet training.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
