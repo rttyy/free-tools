@@ -1,0 +1,3171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #090c15;
+      --surface: #121726;
+      --surface-elevated: #1a2238;
+      --surface-border: #273454;
+      --text-main: #f0f4fc;
+      --text-muted: #95a3c2;
+      --accent: #5eead4;
+      --accent-glow: rgba(94, 234, 212, 0.25);
+      --accent-warm: #f6ad55;
+      --accent-violet: #a78bfa;
+      --accent-cyan: #38bdf8;
+      --danger: #f87171;
+      --success: #34d399;
+      --radius: 12px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f5f7fb;
+        --surface: #ffffff;
+        --surface-elevated: #ebf0f9;
+        --surface-border: #cbd5e1;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --accent: #0d9488;
+        --accent-glow: rgba(13, 148, 136, 0.15);
+        --accent-warm: #ea580c;
+        --accent-violet: #7c3aed;
+        --accent-cyan: #0284c7;
+        --danger: #dc2626;
+        --success: #059669;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font);
+      min-height: 100vh;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--surface-border);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-title svg {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 2;
+    }
+
+    .brand-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    button, select, input {
+      font-family: inherit;
+      font-size: 0.875rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      background: var(--surface-elevated);
+      color: var(--text-main);
+    }
+
+    .btn:hover {
+      background: var(--surface-border);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #042f2e;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .btn-active {
+      background: var(--accent-warm);
+      color: #3e1600;
+    }
+
+    .btn-sm {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.8rem;
+    }
+
+    .select-input {
+      background: var(--surface-elevated);
+      color: var(--text-main);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      padding: 0.45rem 0.75rem;
+      font-weight: 500;
+      outline: none;
+      max-width: 100%;
+    }
+
+    .select-input:focus {
+      border-color: var(--accent);
+    }
+
+    main {
+      flex: 1;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.25rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: 1.5rem;
+    }
+
+    main > div {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 0.75rem 1rem;
+      }
+      .brand-title h1 {
+        font-size: 1rem;
+      }
+      main {
+        padding: 0.75rem;
+        gap: 1rem;
+      }
+      .card {
+        padding: 0.85rem;
+      }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+      position: relative;
+    }
+
+    .card-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-title svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--accent);
+      stroke-width: 2;
+      fill: none;
+    }
+
+    /* Generative Canvas Feature */
+    [data-feature="generative-geometry-canvas"] {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      max-width: 540px;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+      background: radial-gradient(circle at center, #111a33 0%, var(--bg) 95%);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--surface-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .canvas-overlay {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      right: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .phase-badge {
+      background: rgba(18, 23, 38, 0.85);
+      border: 1px solid var(--surface-border);
+      backdrop-filter: blur(8px);
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .timer-badge {
+      background: rgba(18, 23, 38, 0.85);
+      border: 1px solid var(--surface-border);
+      backdrop-filter: blur(8px);
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    .canvas-center-info {
+      position: absolute;
+      text-align: center;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .center-phase-name {
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #ffffff;
+      text-shadow: 0 0 20px rgba(0,0,0,0.8);
+      margin-bottom: 0.2rem;
+    }
+
+    .center-phase-countdown {
+      font-size: 2.5rem;
+      font-weight: 300;
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+      text-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .geometry-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+    }
+
+    /* Sound Synthesizer Feature */
+    [data-feature="polyphonic-binaural-synth"] {
+      margin-top: 1rem;
+      background: var(--surface-elevated);
+      border-radius: 10px;
+      padding: 1rem;
+      border: 1px solid var(--surface-border);
+    }
+
+    .synth-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-top: 0.75rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .control-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-group label span.val {
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      background: var(--surface-border);
+      border-radius: 4px;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 6px var(--accent-glow);
+    }
+
+    /* Breath Cycle Architect */
+    [data-feature="breath-cycle-architect"] {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .cycle-inputs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.85rem;
+    }
+
+    @media (max-width: 480px) {
+      .cycle-inputs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .input-box {
+      background: var(--surface-elevated);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .input-box:focus-within {
+      border-color: var(--accent);
+    }
+
+    .input-box label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .input-box-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .input-box input[type="number"] {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 1.15rem;
+      font-weight: 700;
+      width: 100%;
+      outline: none;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .unit-tag {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .metrics-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+    }
+
+    @media (max-width: 580px) {
+      .metrics-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .metric-pill {
+      background: var(--surface-elevated);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem;
+    }
+
+    .metric-pill-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .metric-pill-value {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .metric-pill-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    .meaning-card {
+      background: rgba(94, 234, 212, 0.06);
+      border: 1px solid rgba(94, 234, 212, 0.2);
+      border-radius: 8px;
+      padding: 0.85rem;
+      font-size: 0.825rem;
+      line-height: 1.45;
+    }
+
+    .meaning-card strong {
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.85rem;
+    }
+
+    /* Autonomic Insight Panel */
+    [data-feature="autonomic-insight-panel"] {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .gauge-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      background: var(--surface-elevated);
+      border-radius: 8px;
+      padding: 1rem;
+      border: 1px solid var(--surface-border);
+    }
+
+    @media (max-width: 440px) {
+      .gauge-wrapper {
+        flex-direction: column;
+        text-align: center;
+      }
+      .gauge-details {
+        align-items: center;
+      }
+    }
+
+    .input-error-msg {
+      display: none;
+      color: var(--danger);
+      background: rgba(248, 113, 113, 0.12);
+      border: 1px solid rgba(248, 113, 113, 0.35);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .gauge-svg-container {
+      width: 100px;
+      height: 100px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .gauge-svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    .gauge-bg {
+      fill: none;
+      stroke: var(--surface-border);
+      stroke-width: 8;
+    }
+
+    .gauge-bar {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 251.2;
+      stroke-dashoffset: 75.36;
+      transition: stroke-dashoffset 0.4s ease;
+    }
+
+    .gauge-inner-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.15rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .gauge-inner-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .gauge-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .gauge-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      width: fit-content;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-parasympathetic {
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .badge-balanced {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .badge-sympathetic {
+      background: rgba(246, 173, 85, 0.15);
+      color: var(--accent-warm);
+      border: 1px solid rgba(246, 173, 85, 0.3);
+    }
+
+    .co2-meter-box {
+      background: var(--surface-elevated);
+      border: 1px solid var(--surface-border);
+      border-radius: 8px;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .co2-bar-bg {
+      height: 8px;
+      background: var(--surface-border);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .co2-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-warm), var(--danger));
+      width: 30%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .safety-disclaimer {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      border-left: 2px solid var(--surface-border);
+      padding-left: 0.5rem;
+      font-style: italic;
+    }
+
+    .pro-banner-inline {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: rgba(248, 113, 113, 0.1);
+      border: 1px solid rgba(248, 113, 113, 0.3);
+      color: var(--text-main);
+      border-radius: 6px;
+      font-size: 0.78rem;
+      display: none;
+    }
+
+    .pro-banner-inline a {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    .session-footer-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .btn-icon svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    /* Print styling */
+    @media print {
+      body {
+        background: #ffffff;
+        color: #000000;
+      }
+      .canvas-container, .header-actions, .session-footer-actions, #playBtn, #soundToggleBtn {
+        display: none !important;
+      }
+      main {
+        display: block;
+      }
+      .card {
+        border: 1px solid #ccc;
+        box-shadow: none;
+        margin-bottom: 1.5rem;
+        page-break-inside: avoid;
+      }
+    }
+    /* Session Timeline & Ambient Lighting Dimmer */
+    [data-feature="session-haptic-ambient-dimmer"] {
+      max-width: 1440px;
+      margin: 0.75rem auto 0;
+      width: calc(100% - 2.5rem);
+      padding: 0.75rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      z-index: 40;
+    }
+    .dimmer-wheel-col {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .dimmer-progress-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    .dimmer-progress-bg {
+      fill: none;
+      stroke: var(--surface-border);
+      stroke-width: 5;
+    }
+    .dimmer-progress-bar {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 5;
+      stroke-linecap: round;
+      stroke-dasharray: 163.36;
+      stroke-dashoffset: 163.36;
+      transition: stroke-dashoffset 0.25s ease;
+    }
+    .dimmer-pct {
+      position: absolute;
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+    .dimmer-stats-col {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .dimmer-stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .dimmer-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .dimmer-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+    }
+    .dimmer-actions-col {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    body.theater-active header,
+    body.theater-active [data-feature="breath-cycle-architect"],
+    body.theater-active [data-feature="autonomic-insight-panel"],
+    body.theater-active [data-feature="polyphonic-binaural-synth"] {
+      opacity: 0.05 !important;
+      pointer-events: none !important;
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    body.theater-active [data-feature="session-haptic-ambient-dimmer"] {
+      background: rgba(18, 23, 38, 0.75);
+      border-color: rgba(94, 234, 212, 0.35);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(12px);
+    }
+    /* Reverse Ratio Target Solver Feature */
+    [data-feature="reverse-ratio-target-solver"] {
+      max-width: 1440px;
+      margin: 0.75rem auto 0;
+      width: calc(100% - 2.5rem);
+    }
+    .solver-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    .solver-results-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.85rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--surface-border);
+    }
+    .solver-pill {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .solver-pill strong {
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+  /* Session Log History & Export */
+  [data-feature="session-log-analytics-export"] {
+    max-width: 1440px;
+    margin: 0.75rem auto 0;
+    width: calc(100% - 2.5rem);
+  }
+  .history-table-container {
+    overflow-x: auto;
+    margin-top: 0.85rem;
+    border: 1px solid var(--surface-border);
+    border-radius: 8px;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    text-align: left;
+  }
+  .history-table th, .history-table td {
+    padding: 0.55rem 0.75rem;
+    border-bottom: 1px solid var(--surface-border);
+    white-space: nowrap;
+  }
+  .history-table th {
+    background: var(--surface-elevated);
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  .history-table tr:hover td {
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .history-stats-bar {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    padding: 0.65rem 0.85rem;
+    background: var(--surface-elevated);
+    border-radius: 8px;
+    border: 1px solid var(--surface-border);
+  }
+  /* Custom Breath Profile Bank & Multi-Scenario Compare */
+  [data-feature="custom-preset-manager"] {
+    max-width: 1440px;
+    margin: 0.75rem auto 0;
+    width: calc(100% - 2.5rem);
+  }
+  .preset-input-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 0.4rem;
+  }
+  .preset-chip-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0.75rem 0;
+    min-height: 32px;
+    align-items: center;
+  }
+  .profile-chip {
+    background: var(--surface-elevated);
+    border: 1px solid var(--surface-border);
+    color: var(--text-main);
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    transition: all 0.2s ease;
+  }
+  .profile-chip:hover, .profile-chip.chip-active {
+    background: rgba(94, 234, 212, 0.16);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .profile-chip-del {
+    opacity: 0.6;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .profile-chip-del:hover {
+    opacity: 1;
+    color: var(--danger);
+  }
+  /* FEATURE-CSS */
+  </style>
+<title>Generative Sacred Geometry &amp; Breath Sync Studio</title>
+<meta name="description" content="Interactive visual breathwork engine with sacred geometry pacers, binaural audio, reverse ratio calculation, and offline session logging.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/generative-geometry-breath-sync-studio/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/generative-geometry-breath-sync-studio/">
+<meta property="og:title" content="Generative Sacred Geometry &amp; Breath Sync Studio"><meta property="og:description" content="Interactive visual breathwork engine with sacred geometry pacers, binaural audio, reverse ratio calculation, and offline session logging.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/generative-geometry-breath-sync-studio/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Generative Sacred Geometry & Breath Sync Studio","description":"Interactive visual breathwork engine with sacred geometry pacers, binaural audio, reverse ratio calculation, and offline session logging.","url":"https://rttyy.github.io/free-tools/generative-geometry-breath-sync-studio/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between the free web page and the $9 Gumroad product?","acceptedAnswer":{"@type":"Answer","text":"The free web page provides full access to the interactive geometry visualizers, audio generator, and pacing controls directly in your browser. The $9 Gumroad product is a standalone, single-file HTML package that runs entirely offline with no internet connection required, and it permanently unlocks local JSON/CSV session logging for facilitators and personal archives."}},{"@type":"Question","name":"How does the reverse-solve breath timing feature work?","acceptedAnswer":{"@type":"Answer","text":"Instead of forcing you to mentally divide seconds, the studio lets you input your target breathing rate (such as 5.5 breaths per minute for resonance) alongside your preferred ratio (such as 1:2 inhale-to-exhale). The engine instantly calculates the exact millisecond values for each phase of the breathing cycle."}},{"@type":"Question","name":"Do I need headphones to use the audio features?","acceptedAnswer":{"@type":"Answer","text":"Headphones or stereo earbuds are recommended if you want the full benefit of binaural beat frequencies, as they rely on presenting slightly different frequencies to each ear. However, the harmonic overtone sweeps and visual breathing cues work effectively over standard external speakers or in complete silence."}},{"@type":"Question","name":"How are physiological indicators like HRV potential and vagal brake engagement calculated?","acceptedAnswer":{"@type":"Answer","text":"These indicators are algorithmic estimates based on peer-reviewed autonomic research correlating respiratory rate, prolonged exhalation ratios, and breath hold durations with parasympathetic activation. They provide comparative benchmarks for your sessions rather than direct clinical ECG or optical sensor measurements."}}]}</script>
+</head>
+<body>
+
+  <header>
+    <div class="brand-title">
+      <svg viewBox="0 0 24 24">
+        <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
+        <circle cx="12" cy="12" r="4"/>
+      </svg>
+      <div>
+        <h1>Generative Sacred Geometry & Breath Sync Studio</h1>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <label for="presetSelect" style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Preset:</label>
+      <select id="presetSelect" class="select-input" aria-label="Select Breath Preset">
+        <option value="coherence">Coherence Resonance 5.5 (Vagal Reset)</option>
+        <option value="box">Box Breathing Calm (Tactical Focus)</option>
+        <option value="sleep">4-7-8 Sleep Induction (Deep Parasympathetic)</option>
+        <option value="custom">Custom Protocol</option>
+      </select>
+      <button id="playBtn" class="btn btn-primary" aria-label="Start or Pause Breath Session">
+        <svg id="playIcon" style="width:16px;height:16px;fill:currentColor;" viewBox="0 0 24 24">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        <span id="playBtnText">Start Breathwork</span>
+      </button>
+      <button id="resetSessionBtn" class="btn btn-sm" title="Reset Cycle Counter">Reset</button>
+    </div>
+  </header>
+
+  <section data-feature="session-haptic-ambient-dimmer">
+    <div class="dimmer-wheel-col">
+      <svg class="dimmer-progress-svg" viewBox="0 0 64 64">
+        <circle class="dimmer-progress-bg" cx="32" cy="32" r="26" />
+        <circle class="dimmer-progress-bar" id="dimmerProgressBar" cx="32" cy="32" r="26" />
+      </svg>
+      <span class="dimmer-pct" id="dimmerPctText">0%</span>
+    </div>
+    <div class="dimmer-stats-col">
+      <div class="dimmer-stat-item">
+        <span class="dimmer-label">Session Timeline</span>
+        <span class="dimmer-value" id="dimmerTimeProgress">00:00 / 10:00</span>
+      </div>
+      <div class="dimmer-stat-item">
+        <span class="dimmer-label">Remaining Cycles</span>
+        <span class="dimmer-value" id="dimmerRemainingCycles">54.5 left</span>
+      </div>
+    </div>
+    <div class="dimmer-actions-col">
+      <button id="theaterModeBtn" class="btn btn-sm" aria-pressed="false" title="Dim UI controls to dark glass overlay">
+        <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span id="theaterBtnText">Theater Ambient Mode</span>
+      </button>
+      <button id="hapticToggleBtn" class="btn btn-sm btn-active" aria-pressed="true" title="Vibration pulse on phase transition">
+        <svg style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;" viewBox="0 0 24 24"><path d="M6 9v6M18 9v6M10 6v12M14 6v12"/></svg>
+        <span id="hapticBtnText">Haptics: On</span>
+      </button>
+    </div>
+  </section>
+
+  <section class="card" data-feature="reverse-ratio-target-solver" style="margin: 0.75rem auto 0; max-width: 1440px; width: calc(100% - 2.5rem);">
+    <div class="card-header">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:2;"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
+        Target Respiration Rate &amp; Ratio Reverse Solver
+      </div>
+      <span class="unit-tag" style="color:var(--accent-cyan); font-weight:600;">Inverse Duration Calculator</span>
+    </div>
+    <div id="solverErrorMsg" class="input-error-msg" role="alert"></div>
+    <div class="solver-grid">
+      <div class="input-box">
+        <label for="targetBpmInput">Target Rate</label>
+        <div class="input-box-row">
+          <input type="number" id="targetBpmInput" min="1.0" max="30.0" step="0.1" value="6.0">
+          <span class="unit-tag">bpm</span>
+        </div>
+      </div>
+      <div class="input-box">
+        <label for="targetRatioInput">In:Ex Ratio (1:X)</label>
+        <div class="input-box-row">
+          <input type="number" id="targetRatioInput" min="0.1" max="10.0" step="0.1" value="1.0">
+          <span class="unit-tag">ratio</span>
+        </div>
+      </div>
+      <div class="input-box">
+        <label for="targetHoldInput">Hold Allocation</label>
+        <div class="input-box-row">
+          <input type="number" id="targetHoldInput" min="0.0" max="30.0" step="0.1" value="0.0">
+          <span class="unit-tag">sec</span>
+        </div>
+      </div>
+      <div class="input-box">
+        <label for="targetPauseInput">Pause Allocation</label>
+        <div class="input-box-row">
+          <input type="number" id="targetPauseInput" min="0.0" max="30.0" step="0.1" value="0.0">
+          <span class="unit-tag">sec</span>
+        </div>
+      </div>
+    </div>
+    <div class="solver-results-row">
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <span class="solver-pill">Computed Cycle: <strong id="solverCalcCycle">10.0s</strong></span>
+        <span class="solver-pill">Inhale: <strong id="solverCalcInhale">5.0s</strong></span>
+        <span class="solver-pill">Exhale: <strong id="solverCalcExhale">5.0s</strong></span>
+      </div>
+      <button id="applySolverBtn" class="btn btn-primary btn-sm">Apply Computed Durations</button>
+    </div>
+  </section>
+
+  <section class="card" data-feature="session-log-analytics-export">
+    <div class="card-header">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:2;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Session Log History &amp; JSON/CSV Export
+      </div>
+      <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+        <button id="logSessionBtn" class="btn btn-sm btn-primary">Log Session</button>
+        <button id="exportHistoryCsvBtn" class="btn btn-sm btn-icon">Export Session CSV</button>
+        <button id="exportHistoryJsonBtn" class="btn btn-sm btn-icon">Export Session JSON</button>
+        <button id="clearHistoryBtn" class="btn btn-sm" style="color:var(--danger);">Clear History</button>
+      </div>
+    </div>
+    <div class="history-stats-bar">
+      <div class="dimmer-stat-item">
+        <span class="dimmer-label">Logged Sessions</span>
+        <span class="dimmer-value" id="histTotalCount">0</span>
+      </div>
+      <div class="dimmer-stat-item">
+        <span class="dimmer-label">Total Time Elapsed</span>
+        <span class="dimmer-value" id="histTotalTime">00:00</span>
+      </div>
+      <div class="dimmer-stat-item">
+        <span class="dimmer-label">Avg HRV Coherence</span>
+        <span class="dimmer-value" id="histAvgHrv" style="color:var(--accent);">0%</span>
+      </div>
+    </div>
+    <div class="history-table-container">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Date &amp; Time</th>
+            <th>Preset Protocol</th>
+            <th>Durations (In/H/Ex/P)</th>
+            <th>Elapsed</th>
+            <th>Cycles</th>
+            <th>HRV Score</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="historyTableBody">
+        </tbody>
+      </table>
+    </div>
+    <div class="pro-banner-inline" id="histProBanner" style="margin-top:0.75rem;">
+      Available in the full version. <a href="https://ferrywave73.gumroad.com/l/zpoozf" target="_blank" rel="noopener">Upgrade to full version</a>.
+    </div>
+  </section>
+
+  <section class="card" data-feature="custom-preset-manager">
+    <div class="card-header">
+      <div class="card-title">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:2;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Custom Breath Profile Bank &amp; Multi-Scenario Compare
+      </div>
+      <span class="unit-tag" id="profileCountTag" style="color:var(--accent); font-weight:700;">0 / 10 Saved</span>
+    </div>
+    <div class="preset-input-row">
+      <input type="text" id="customProfileName" class="select-input" placeholder="Profile name (e.g. 4-2-7 Vagal Sigh)" style="flex:1; min-width:200px;" maxlength="32">
+      <button id="savePresetBtn" class="btn btn-primary btn-sm">Save Preset</button>
+      <button id="loadDefaultProfilesBtn" class="btn btn-sm">Load Samples</button>
+    </div>
+    <div id="profileValidationMsg" class="input-error-msg" role="alert"></div>
+    <div class="pro-banner-inline" id="customPresetProBanner">
+      Available in the full version. <a href="https://ferrywave73.gumroad.com/l/zpoozf" target="_blank" rel="noopener">Upgrade to full version</a>.
+    </div>
+    <div class="preset-chip-bar" id="presetChipBar"></div>
+    <div class="history-table-container">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Profile Name</th>
+            <th>Timing (In/H/Ex/P)</th>
+            <th>Cycle Time</th>
+            <th>Resp Rate</th>
+            <th>Est HRV</th>
+            <th>Autonomic Balance</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="compareTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+
+  <main>
+    <!-- Left Column: Canvas and Web Audio Synth -->
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      
+      <!-- Visualizer Canvas Feature -->
+      <section class="card" data-feature="generative-geometry-canvas">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            Harmonic Sacred Geometry Visualizer
+          </div>
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <label for="geometrySelect" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">GEOMETRY:</label>
+            <select id="geometrySelect" class="select-input" aria-label="Select Geometry Visualizer">
+              <option value="mandala">Sacred Mandala</option>
+              <option value="spirograph">Harmonic Spirograph</option>
+              <option value="lotus">Blooming Lotus</option>
+              <option value="wavefront">Ripple Wavefront</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="canvas-container" id="canvasContainer">
+          <canvas id="breathCanvas" width="600" height="600"></canvas>
+          <div class="canvas-overlay">
+            <span class="phase-badge" id="phaseBadge">PREPARING</span>
+            <span class="timer-badge" id="sessionTimerBadge">Session: 00:00 / 10:00</span>
+          </div>
+          <div class="canvas-center-info">
+            <div class="center-phase-name" id="centerPhaseName">Inhale</div>
+            <div class="center-phase-countdown" id="centerPhaseCountdown">5.0s</div>
+          </div>
+        </div>
+
+        <div class="geometry-toolbar">
+          <div style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.8rem;">
+            <span style="color: var(--text-muted); font-weight: 600;">Cycle:</span>
+            <span id="cycleCounterText" style="font-weight: 700; color: var(--accent);">0 / 55.0</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.8rem;">
+            <span style="color: var(--text-muted); font-weight: 600;">Expansion:</span>
+            <span id="expansionPercentText" style="font-weight: 700; color: var(--accent-cyan);">20%</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.6rem; font-size: 0.8rem;">
+            <span style="color: var(--text-muted); font-weight: 600;">Elapsed:</span>
+            <span id="elapsedTotalText" style="font-weight: 700; color: var(--text-main);">00:00</span>
+          </div>
+        </div>
+
+        <!-- Polyphonic Binaural Synth Feature -->
+        <div data-feature="polyphonic-binaural-synth">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; font-weight: 700;">
+              <svg style="width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:2;" viewBox="0 0 24 24">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+              </svg>
+              Breath-Synchronized Binaural Drone
+            </div>
+            <button id="soundToggleBtn" class="btn btn-sm" aria-label="Toggle Drone Audio">
+              <span id="soundStatusText">Sound: Off</span>
+            </button>
+          </div>
+
+          <div class="synth-grid">
+            <div class="control-group">
+              <label for="carrierFreq">Carrier Tone <span class="val" id="carrierFreqVal">136.1 Hz</span></label>
+              <input type="range" id="carrierFreq" min="55" max="432" step="0.1" value="136.1">
+            </div>
+            <div class="control-group">
+              <label for="binauralBeat">Binaural Beat <span class="val" id="binauralBeatVal">6.0 Hz</span></label>
+              <input type="range" id="binauralBeat" min="0.5" max="12.0" step="0.1" value="6.0">
+            </div>
+            <div class="control-group">
+              <label for="synthVolume">Synth Master <span class="val" id="synthVolumeVal">45%</span></label>
+              <input type="range" id="synthVolume" min="0" max="100" step="1" value="45">
+            </div>
+          </div>
+          <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.5rem;">
+            * Inhale introduces ascending 3:2 &amp; 2:1 overtone sweeps; Hold sustains warm choir shimmer; Exhale resolves downward to fundamental root drone; soft chime upon cycle completion.
+          </p>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Right Column: Timing Engine, Autonomic Panel & Export Actions -->
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      
+      <!-- Breath Cycle Architect Feature -->
+      <section class="card" data-feature="breath-cycle-architect">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Breath Cycle Architect &amp; Timing Engine
+          </div>
+          <span style="font-size:0.75rem; color:var(--accent); font-weight:700;" id="liveBpmIndicator">5.50 bpm</span>
+        </div>
+
+        <div id="inputValidationMsg" class="input-error-msg" role="alert"></div>
+
+        <div class="cycle-inputs-grid">
+          <div class="input-box">
+            <label for="inhaleDuration">1. Inhale <span style="color:var(--accent-cyan);">Expansion</span></label>
+            <div class="input-box-row">
+              <input type="number" id="inhaleDuration" min="0.5" max="30.0" step="0.1" value="5.0">
+              <span class="unit-tag">sec</span>
+            </div>
+          </div>
+
+          <div class="input-box">
+            <label for="holdDuration">2. Inhale-Hold <span style="color:var(--accent-warm);">Retention</span></label>
+            <div class="input-box-row">
+              <input type="number" id="holdDuration" min="0.0" max="30.0" step="0.1" value="0.0">
+              <span class="unit-tag">sec</span>
+            </div>
+          </div>
+
+          <div class="input-box">
+            <label for="exhaleDuration">3. Exhale <span style="color:var(--accent);">Release</span></label>
+            <div class="input-box-row">
+              <input type="number" id="exhaleDuration" min="0.5" max="30.0" step="0.1" value="6.0">
+              <span class="unit-tag">sec</span>
+            </div>
+          </div>
+
+          <div class="input-box">
+            <label for="pauseDuration">4. Post-Exhale <span style="color:var(--accent-violet);">Stillness</span></label>
+            <div class="input-box-row">
+              <input type="number" id="pauseDuration" min="0.0" max="30.0" step="0.1" value="0.0">
+              <span class="unit-tag">sec</span>
+            </div>
+          </div>
+
+          <div class="input-box">
+            <label for="sessionGoal">Session Target</label>
+            <div class="input-box-row">
+              <input type="number" id="sessionGoal" min="1" max="120" step="1" value="10">
+              <span class="unit-tag">min</span>
+            </div>
+          </div>
+
+          <div class="input-box">
+            <label for="visualSmoothing">Pace Smoothing</label>
+            <div class="input-box-row">
+              <input type="number" id="visualSmoothing" min="1" max="10" step="1" value="6">
+              <span class="unit-tag">1-10</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculated Live Metrics -->
+        <div class="metrics-summary-grid">
+          <div class="metric-pill">
+            <div class="metric-pill-label">Total Cycle</div>
+            <div class="metric-pill-value" id="calcCycleTime">11.0s</div>
+            <div class="metric-pill-sub">Per breath loop</div>
+          </div>
+          <div class="metric-pill">
+            <div class="metric-pill-label">Breath Rate</div>
+            <div class="metric-pill-value" id="calcBpm">5.45 bpm</div>
+            <div class="metric-pill-sub">Target cadence</div>
+          </div>
+          <div class="metric-pill">
+            <div class="metric-pill-label">In : Ex Ratio</div>
+            <div class="metric-pill-value" id="calcRatio">1 : 1.20</div>
+            <div class="metric-pill-sub">Ventilation shift</div>
+          </div>
+          <div class="metric-pill">
+            <div class="metric-pill-label">Ventilation Duty</div>
+            <div class="metric-pill-value" id="calcDutyCycle">100.0%</div>
+            <div class="metric-pill-sub" id="calcVentTime">600.0s active</div>
+          </div>
+          <div class="metric-pill">
+            <div class="metric-pill-label">Total Cycles</div>
+            <div class="metric-pill-value" id="calcTotalCycles">54.5</div>
+            <div class="metric-pill-sub">In 10 min session</div>
+          </div>
+          <div class="metric-pill">
+            <div class="metric-pill-label">Retention Time</div>
+            <div class="metric-pill-value" id="calcRetention">0.0s</div>
+            <div class="metric-pill-sub" id="calcRetentionPct">0.0% paused</div>
+          </div>
+        </div>
+
+        <div class="meaning-card" id="cycleMeaningCard">
+          <strong>What this means / What to do next:</strong>
+          <span id="cycleMeaningText">Resonant breathing at ~5.5 breaths per minute induces cardiorespiratory coherence, matching heart rate fluctuations to alveolar ventilation. Inhale smoothly for 5.0s, then release for 6.0s without holding.</span>
+        </div>
+      </section>
+
+      <!-- Autonomic Insight Panel Feature -->
+      <section class="card" data-feature="autonomic-insight-panel">
+        <div class="card-header">
+          <div class="card-title">
+            <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Autonomic Nervous System &amp; Physiology
+          </div>
+          <span class="status-badge badge-parasympathetic" id="autonomicBadge">Parasympathetic Dominant</span>
+        </div>
+
+        <div class="gauge-wrapper">
+          <div class="gauge-svg-container">
+            <svg class="gauge-svg" viewBox="0 0 100 100">
+              <circle class="gauge-bg" cx="50" cy="50" r="40"/>
+              <circle class="gauge-bar" id="hrvGaugeBar" cx="50" cy="50" r="40"/>
+            </svg>
+            <div class="gauge-inner-text">
+              <span id="hrvScoreText">94%</span>
+              <span class="gauge-inner-label">HRV Pot.</span>
+            </div>
+          </div>
+          <div class="gauge-details">
+            <div class="gauge-title" id="autonomicTitle">Vagal Brake Engagement: High</div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);" id="autonomicDescription">
+              Prolonged or equal exhalation relative to inhalation activates acetylcholine release via the vagus nerve, reducing resting heart rate and arterial blood pressure.
+            </p>
+          </div>
+        </div>
+
+        <div class="co2-meter-box">
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; font-weight:600;">
+            <span style="color:var(--text-muted); text-transform:uppercase;">CO2 Tolerance Strain Index</span>
+            <span id="co2IndexVal" style="color:var(--accent-cyan); font-variant-numeric: tabular-nums;">Mild (0.0s apnea)</span>
+          </div>
+          <div class="co2-bar-bg">
+            <div class="co2-bar-fill" id="co2BarFill" style="width: 5%;"></div>
+          </div>
+          <p style="font-size: 0.72rem; color: var(--text-muted);" id="co2Explanation">
+            Zero lung holds maintain steady alveolar gas exchange without transient hypercapnia accumulation.
+          </p>
+        </div>
+
+        <div class="safety-disclaimer">
+          Estimate only - verify with a qualified professional before relying on it. Discontinue if feeling faint or lightheaded.
+        </div>
+
+        <!-- Export & Session Actions -->
+        <div class="session-footer-actions">
+          <button id="copyStatsBtn" class="btn btn-sm btn-icon" title="Copy session parameters and metrics to clipboard">
+            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy Data
+          </button>
+          <button id="exportJsonBtn" class="btn btn-sm btn-icon" title="Download Session Protocol JSON">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export JSON
+          </button>
+          <button id="exportCsvBtn" class="btn btn-sm btn-icon" title="Download CSV Breakdown">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Export CSV
+          </button>
+          <button id="printBtn" class="btn btn-sm btn-icon" title="Print Breathwork Protocol Sheet">
+            <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print
+          </button>
+        </div>
+        <div class="pro-banner-inline" id="proBanner">
+          Available in the full version. <a href="https://ferrywave73.gumroad.com/l/zpoozf" target="_blank" rel="noopener">Upgrade to full version</a>.
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/zpoozf";
+
+    // Application State
+    const state = {
+      inhale: 5.0,
+      hold: 0.0,
+      exhale: 6.0,
+      pause: 0.0,
+      sessionMinutes: 10,
+      smoothing: 6,
+      geometry: 'mandala',
+      carrier: 136.1,
+      binaural: 6.0,
+      volume: 0.45,
+      soundEnabled: false,
+      isPlaying: false,
+      // Runtime session tracking
+      elapsedSeconds: 0,
+      phaseTime: 0,
+      currentPhase: 'inhale', // 'inhale' | 'hold' | 'exhale' | 'pause'
+      currentCycleFraction: 0,
+      completedCycles: 0,
+      totalSessionSeconds: 600,
+      animationFrameId: null,
+      lastTimestamp: null
+    };
+
+    // Preset Definitions
+    const PRESETS = {
+      coherence: {
+        name: "Coherence Resonance 5.5 (Vagal Reset)",
+        inhale: 5.0,
+        hold: 0.0,
+        exhale: 6.0,
+        pause: 0.0,
+        sessionMinutes: 10,
+        smoothing: 6,
+        geometry: "mandala",
+        carrier: 136.1,
+        binaural: 6.0
+      },
+      box: {
+        name: "Box Breathing Calm (Tactical Focus)",
+        inhale: 4.0,
+        hold: 4.0,
+        exhale: 4.0,
+        pause: 4.0,
+        sessionMinutes: 8,
+        smoothing: 5,
+        geometry: "lotus",
+        carrier: 108.0,
+        binaural: 10.0
+      },
+      sleep: {
+        name: "4-7-8 Sleep Induction (Deep Parasympathetic)",
+        inhale: 4.0,
+        hold: 7.0,
+        exhale: 8.0,
+        pause: 0.0,
+        sessionMinutes: 15,
+        smoothing: 8,
+        geometry: "spirograph",
+        carrier: 86.4,
+        binaural: 3.5
+      }
+    };
+
+    // DOM Elements
+    const elInhale = document.getElementById('inhaleDuration');
+    const elHold = document.getElementById('holdDuration');
+    const elExhale = document.getElementById('exhaleDuration');
+    const elPause = document.getElementById('pauseDuration');
+    const elSessionGoal = document.getElementById('sessionGoal');
+    const elVisualSmoothing = document.getElementById('visualSmoothing');
+    const elPresetSelect = document.getElementById('presetSelect');
+    const elGeometrySelect = document.getElementById('geometrySelect');
+
+    const elCarrierFreq = document.getElementById('carrierFreq');
+    const elCarrierFreqVal = document.getElementById('carrierFreqVal');
+    const elBinauralBeat = document.getElementById('binauralBeat');
+    const elBinauralBeatVal = document.getElementById('binauralBeatVal');
+    const elSynthVolume = document.getElementById('synthVolume');
+    const elSynthVolumeVal = document.getElementById('synthVolumeVal');
+    const elSoundToggleBtn = document.getElementById('soundToggleBtn');
+    const elSoundStatusText = document.getElementById('soundStatusText');
+
+    const elPlayBtn = document.getElementById('playBtn');
+    const elPlayBtnText = document.getElementById('playBtnText');
+    const elPlayIcon = document.getElementById('playIcon');
+    const elResetBtn = document.getElementById('resetSessionBtn');
+
+    // Display Elements
+    const elCalcCycleTime = document.getElementById('calcCycleTime');
+    const elCalcBpm = document.getElementById('calcBpm');
+    const elCalcRatio = document.getElementById('calcRatio');
+    const elCalcDutyCycle = document.getElementById('calcDutyCycle');
+    const elCalcVentTime = document.getElementById('calcVentTime');
+    const elCalcTotalCycles = document.getElementById('calcTotalCycles');
+    const elCalcRetention = document.getElementById('calcRetention');
+    const elCalcRetentionPct = document.getElementById('calcRetentionPct');
+    const elLiveBpmIndicator = document.getElementById('liveBpmIndicator');
+    const elCycleMeaningText = document.getElementById('cycleMeaningText');
+
+    const elHrvGaugeBar = document.getElementById('hrvGaugeBar');
+    const elHrvScoreText = document.getElementById('hrvScoreText');
+    const elAutonomicBadge = document.getElementById('autonomicBadge');
+    const elAutonomicTitle = document.getElementById('autonomicTitle');
+    const elAutonomicDescription = document.getElementById('autonomicDescription');
+    const elCo2IndexVal = document.getElementById('co2IndexVal');
+    const elCo2BarFill = document.getElementById('co2BarFill');
+    const elCo2Explanation = document.getElementById('co2Explanation');
+
+    const elPhaseBadge = document.getElementById('phaseBadge');
+    const elSessionTimerBadge = document.getElementById('sessionTimerBadge');
+    const elCenterPhaseName = document.getElementById('centerPhaseName');
+    const elCenterPhaseCountdown = document.getElementById('centerPhaseCountdown');
+    const elCycleCounterText = document.getElementById('cycleCounterText');
+    const elExpansionPercentText = document.getElementById('expansionPercentText');
+    const elElapsedTotalText = document.getElementById('elapsedTotalText');
+
+    const elCopyStatsBtn = document.getElementById('copyStatsBtn');
+    const elExportJsonBtn = document.getElementById('exportJsonBtn');
+    const elExportCsvBtn = document.getElementById('exportCsvBtn');
+    const elPrintBtn = document.getElementById('printBtn');
+    const elProBanner = document.getElementById('proBanner');
+
+    // Canvas Setup
+    const canvas = document.getElementById('breathCanvas');
+    const ctx = canvas.getContext('2d');
+    let canvasW = 600;
+    let canvasH = 600;
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvasW = Math.max(200, (rect.width || 600) * dpr);
+      canvasH = Math.max(200, (rect.height || 600) * dpr);
+      canvas.width = canvasW;
+      canvas.height = canvasH;
+    }
+
+    // Audio Synthesis Engine
+    class AudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.masterGain = null;
+        this.filter = null;
+        this.leftOsc = null;
+        this.rightOsc = null;
+        this.harmonic1Osc = null;
+        this.harmonic2Osc = null;
+        this.harmonicGain = null;
+        this.isInitialized = false;
+      }
+
+      init() {
+        if (this.isInitialized) return;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        this.ctx = new AudioCtx();
+
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.setValueAtTime(0, this.ctx.currentTime);
+
+        this.filter = this.ctx.createBiquadFilter();
+        this.filter.type = 'lowpass';
+        this.filter.frequency.setValueAtTime(250, this.ctx.currentTime);
+        this.filter.Q.setValueAtTime(2.0, this.ctx.currentTime);
+
+        const merger = this.ctx.createChannelMerger(2);
+
+        this.leftOsc = this.ctx.createOscillator();
+        this.leftOsc.type = 'sine';
+
+        this.rightOsc = this.ctx.createOscillator();
+        this.rightOsc.type = 'sine';
+
+        const leftGain = this.ctx.createGain();
+        const rightGain = this.ctx.createGain();
+        leftGain.gain.value = 0.5;
+        rightGain.gain.value = 0.5;
+
+        this.leftOsc.connect(leftGain);
+        this.rightOsc.connect(rightGain);
+        leftGain.connect(merger, 0, 0); // left ear
+        rightGain.connect(merger, 0, 1); // right ear
+
+        // Overtones
+        this.harmonic1Osc = this.ctx.createOscillator();
+        this.harmonic1Osc.type = 'sine';
+        this.harmonic2Osc = this.ctx.createOscillator();
+        this.harmonic2Osc.type = 'triangle';
+
+        this.harmonicGain = this.ctx.createGain();
+        this.harmonicGain.gain.value = 0.15;
+
+        this.harmonic1Osc.connect(this.harmonicGain);
+        this.harmonic2Osc.connect(this.harmonicGain);
+
+        this.harmonicGain.connect(this.filter);
+        merger.connect(this.filter);
+        this.filter.connect(this.masterGain);
+        this.masterGain.connect(this.ctx.destination);
+
+        this.leftOsc.start();
+        this.rightOsc.start();
+        this.harmonic1Osc.start();
+        this.harmonic2Osc.start();
+
+        this.updateFrequencies();
+        this.isInitialized = true;
+      }
+
+      updateFrequencies() {
+        if (!this.isInitialized) return;
+        const now = this.ctx.currentTime;
+        const carrier = state.carrier;
+        const beat = state.binaural;
+
+        const leftFreq = Math.max(20, carrier - beat / 2);
+        const rightFreq = Math.max(20, carrier + beat / 2);
+
+        this.leftOsc.frequency.setTargetAtTime(leftFreq, now, 0.05);
+        this.rightOsc.frequency.setTargetAtTime(rightFreq, now, 0.05);
+        this.harmonic1Osc.frequency.setTargetAtTime(carrier * 1.5, now, 0.05); // perfect 5th
+        this.harmonic2Osc.frequency.setTargetAtTime(carrier * 2.0, now, 0.05); // octave
+      }
+
+      setMasterVolume(val) {
+        if (!this.isInitialized) return;
+        const targetVol = state.soundEnabled ? val : 0;
+        this.masterGain.gain.setTargetAtTime(targetVol, this.ctx.currentTime, 0.08);
+      }
+
+      modulatePhase(phase, progress) {
+        if (!this.isInitialized || !state.soundEnabled) return;
+        const now = this.ctx.currentTime;
+        const baseCutoff = 220;
+        const maxCutoff = 1750;
+
+        if (phase === 'inhale') {
+          const cutoff = baseCutoff + (maxCutoff - baseCutoff) * Math.sin((progress * Math.PI) / 2);
+          this.filter.frequency.setTargetAtTime(cutoff, now, 0.06);
+          this.harmonicGain.gain.setTargetAtTime(0.08 + progress * 0.18, now, 0.06);
+        } else if (phase === 'hold') {
+          // Subtle shimmer: gentle 4Hz LFO emulation
+          const shimmer = maxCutoff * (0.92 + 0.08 * Math.sin(now * 8));
+          this.filter.frequency.setTargetAtTime(shimmer, now, 0.05);
+          this.harmonicGain.gain.setTargetAtTime(0.22, now, 0.06);
+        } else if (phase === 'exhale') {
+          const cutoff = maxCutoff - (maxCutoff - baseCutoff) * (1 - Math.cos(progress * Math.PI * 0.5));
+          this.filter.frequency.setTargetAtTime(cutoff, now, 0.08);
+          this.harmonicGain.gain.setTargetAtTime(0.22 * (1 - progress * 0.7), now, 0.08);
+        } else if (phase === 'pause') {
+          this.filter.frequency.setTargetAtTime(baseCutoff, now, 0.1);
+          this.harmonicGain.gain.setTargetAtTime(0.04, now, 0.1);
+        }
+      }
+
+      triggerChime() {
+        if (!this.isInitialized || !state.soundEnabled) return;
+        const now = this.ctx.currentTime;
+        const chimeOsc = this.ctx.createOscillator();
+        const chimeGain = this.ctx.createGain();
+
+        chimeOsc.type = 'sine';
+        chimeOsc.frequency.setValueAtTime(state.carrier * 3, now);
+        chimeOsc.frequency.exponentialRampToValueAtTime(state.carrier * 1.5, now + 1.8);
+
+        chimeGain.gain.setValueAtTime(0.2 * state.volume, now);
+        chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.0);
+
+        chimeOsc.connect(chimeGain);
+        chimeGain.connect(this.ctx.destination);
+
+        chimeOsc.start(now);
+        chimeOsc.stop(now + 2.1);
+      }
+    }
+
+    const soundEngine = new AudioEngine();
+
+    // Math & Formatting Helpers
+    function clamp(val, min, max) {
+      return Math.min(Math.max(val, min), max);
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function smoothEase(t, smoothingFactor) {
+      // S-curve adjusted by visual pace smoothing
+      const p = 1.0 + (smoothingFactor - 1) * 0.35;
+      if (t <= 0) return 0;
+      if (t >= 1) return 1;
+      return Math.pow(t, p) / (Math.pow(t, p) + Math.pow(1 - t, p));
+    }
+
+    // Calculations & State Synchronisation
+    function computeMetrics() {
+      const inhale = Math.max(0.1, Number(state.inhale) || 5.0);
+      const hold = Math.max(0.0, Number(state.hold) || 0.0);
+      const exhale = Math.max(0.1, Number(state.exhale) || 6.0);
+      const pause = Math.max(0.0, Number(state.pause) || 0.0);
+      const sessionM = Math.max(1, Number(state.sessionMinutes) || 10);
+
+      const cycleTime = inhale + hold + exhale + pause;
+      const bpm = 60 / cycleTime;
+      const ratio = exhale / inhale;
+      const ventilationTime = inhale + exhale;
+      const retentionTime = hold + pause;
+      const dutyCyclePct = (ventilationTime / cycleTime) * 100;
+
+      const totalSec = sessionM * 60;
+      state.totalSessionSeconds = totalSec;
+      const totalCycles = totalSec / cycleTime;
+      const cumVentTime = totalCycles * ventilationTime;
+      const cumRetentionTime = totalCycles * retentionTime;
+      const retentionPct = (retentionTime / cycleTime) * 100;
+
+      // Update Architect UI
+      elCalcCycleTime.textContent = `${cycleTime.toFixed(1)}s`;
+      elCalcBpm.textContent = `${bpm.toFixed(2)} bpm`;
+      elCalcRatio.textContent = `1 : ${ratio.toFixed(2)}`;
+      elCalcDutyCycle.textContent = `${dutyCyclePct.toFixed(1)}%`;
+      elCalcVentTime.textContent = `${cumVentTime.toFixed(0)}s active`;
+      elCalcTotalCycles.textContent = totalCycles.toFixed(1);
+      elCalcRetention.textContent = `${cumRetentionTime.toFixed(1)}s`;
+      elCalcRetentionPct.textContent = `${retentionPct.toFixed(1)}% paused`;
+      elLiveBpmIndicator.textContent = `${bpm.toFixed(2)} bpm`;
+
+      // Autonomic metrics calculation
+      // 1. HRV Coherence Potential (Gaussian peak near 5.5 bpm + exhale lengthening benefit)
+      const bpmDev = Math.abs(bpm - 5.5);
+      let hrvScore = 100 * Math.exp(-0.5 * Math.pow(bpmDev / 1.75, 2));
+      // Bonus if exhale >= inhale (vagal brake engagement)
+      if (ratio >= 1.0) {
+        hrvScore = clamp(hrvScore * (1 + Math.min(0.2, (ratio - 1) * 0.1)), 10, 99);
+      } else {
+        hrvScore = clamp(hrvScore * 0.82, 10, 95);
+      }
+
+      // 2. Sympathovagal Balance
+      let badgeClass = 'badge-balanced';
+      let badgeLabel = 'Balanced / Stabilizing';
+      let title = 'Equal Autonomic Equilibrium';
+      let desc = 'Balanced inhalation and exhalation equalizes sympathetic cardiac acceleration with vagal deceleration, cultivating steady concentration and emotional composure.';
+
+      if (bpm > 12.0) {
+        badgeClass = 'badge-sympathetic';
+        badgeLabel = 'Sympathetic Stimulating';
+        title = 'Adrenergic Tone Elevation';
+        desc = 'Fast ventilation rate (>12 bpm) stimulates the sympathetic branch, elevating alertness, core readiness, and transient arterial blood flow.';
+      } else if (ratio >= 1.25 || (exhale >= inhale + 1.5)) {
+        badgeClass = 'badge-parasympathetic';
+        badgeLabel = 'Parasympathetic Dominant';
+        title = 'Vagal Brake Engagement: High';
+        desc = 'Prolonged exhalation extends pulmonary stretch receptor relaxation, triggering cholinergic vagal signaling that slows heart rate and promotes parasympathetic recovery.';
+      } else if (ratio < 0.8) {
+        badgeClass = 'badge-sympathetic';
+        badgeLabel = 'Sympathetic Energizing';
+        title = 'Inspiratory Inflow Bias';
+        desc = 'Inhalation-dominant cadence suppresses vagal efferent firing, increasing heart rate variability power towards sympathetic activation and morning focus.';
+      }
+
+      // 3. Carbon Dioxide Tolerance Strain Index
+      const apneaFraction = retentionTime / cycleTime;
+      let co2IndexLabel = 'Mild';
+      let co2Width = 10;
+      let co2Text = 'Smooth continuous breathing prevents arterial carbon dioxide accumulation.';
+
+      if (retentionTime === 0) {
+        co2IndexLabel = 'Minimal (0.0s apnea)';
+        co2Width = 5;
+        co2Text = 'Zero lung holds maintain steady alveolar gas exchange without transient hypercapnia accumulation.';
+      } else if (retentionTime < 4.0) {
+        co2IndexLabel = `Low (${retentionTime.toFixed(1)}s retention)`;
+        co2Width = 25;
+        co2Text = 'Gentle holds permit slight PaCO2 elevation, soothing chemoreceptors and improving cellular oxygen unloading via the Bohr effect.';
+      } else if (retentionTime < 10.0) {
+        co2IndexLabel = `Moderate (${retentionTime.toFixed(1)}s retention)`;
+        co2Width = 55;
+        co2Text = 'Extended apnea challenges respiratory drive, building mental calm under physiological carbon dioxide rise.';
+      } else {
+        co2IndexLabel = `Elevated (${retentionTime.toFixed(1)}s retention)`;
+        co2Width = 85;
+        co2Text = 'High retention breathwork. Engages robust chemocontrol tolerance. Practice seated in a safe environment.';
+      }
+
+      // Update Autonomic Panel UI
+      elAutonomicBadge.className = `status-badge ${badgeClass}`;
+      elAutonomicBadge.textContent = badgeLabel;
+      elAutonomicTitle.textContent = title;
+      elAutonomicDescription.textContent = desc;
+
+      const roundedHrv = Math.round(hrvScore);
+      elHrvScoreText.textContent = `${roundedHrv}%`;
+      // SVG circle radius is 40 -> circumference is 2 * PI * 40 = 251.327
+      const circumference = 251.327;
+      const strokeOffset = circumference - (circumference * (roundedHrv / 100));
+      elHrvGaugeBar.style.strokeDasharray = circumference;
+      elHrvGaugeBar.style.strokeDashoffset = strokeOffset;
+
+      elCo2IndexVal.textContent = co2IndexLabel;
+      elCo2BarFill.style.width = `${co2Width}%`;
+      elCo2Explanation.textContent = co2Text;
+
+      // Update Meaning Box text
+      if (bpm >= 5.0 && bpm <= 6.2 && ratio >= 1.0) {
+        elCycleMeaningText.textContent = `Target ${bpm.toFixed(2)} bpm with 1:${ratio.toFixed(2)} ratio yields optimal 0.1 Hz vascular resonance. This synchronizes Mayer waves with respiratory sinus arrhythmia (RSA), maximizing autonomic resilience.`;
+      } else if (inhale === hold && hold === exhale && exhale === pause && hold > 0) {
+        elCycleMeaningText.textContent = `Equilateral 4-phase Box cycle (${inhale.toFixed(1)}s each) resets the nervous system into heightened baseline alertness without triggering flight-or-fight panic. Total cycle duration is ${cycleTime.toFixed(1)}s.`;
+      } else if (hold >= 6.0 && exhale >= 7.0) {
+        elCycleMeaningText.textContent = `Deep retention and extended exhalation (${hold.toFixed(1)}s hold, ${exhale.toFixed(1)}s exhale) shifts the body deeply into parasympathetic rest-and-digest, ideal for sleep induction and acute anxiety relief.`;
+      } else {
+        elCycleMeaningText.textContent = `Current cycle (${cycleTime.toFixed(1)}s total at ${bpm.toFixed(2)} bpm) provides active ventilatory duty of ${dutyCyclePct.toFixed(1)}% and ${(cumVentTime/60).toFixed(1)} min air-exchange time across ${totalCycles.toFixed(1)} cycles.`;
+      }
+
+      return {
+        cycleTime,
+        bpm,
+        ratio,
+        totalCycles,
+        ventilationTime,
+        retentionTime,
+        cumVentTime,
+        cumRetentionTime,
+        hrvScore: roundedHrv,
+        balance: badgeLabel
+      };
+    }
+
+    // Canvas Sacred Geometry Rendering
+    function drawMandala(progress, shimmer) {
+      const cx = canvasW / 2;
+      const cy = canvasH / 2;
+      const baseRadius = (canvasW * 0.12) + (canvasW * 0.28) * progress;
+      const petals = 12;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+
+      // Rotating glow aura
+      const grad = ctx.createRadialGradient(0, 0, baseRadius * 0.1, 0, 0, baseRadius * 1.5);
+      grad.addColorStop(0, `rgba(94, 234, 212, ${0.15 + 0.1 * shimmer})`);
+      grad.addColorStop(0.7, `rgba(167, 139, 250, ${0.08 + 0.05 * shimmer})`);
+      grad.addColorStop(1, 'rgba(9, 12, 21, 0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(0, 0, baseRadius * 1.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Outer Interlocking Circles
+      ctx.lineWidth = 1.6;
+      ctx.strokeStyle = `rgba(94, 234, 212, ${0.45 + 0.3 * shimmer})`;
+
+      for (let i = 0; i < petals; i++) {
+        const angle = (i * Math.PI * 2) / petals + (state.elapsedSeconds * 0.05);
+        const px = Math.cos(angle) * (baseRadius * 0.6);
+        const py = Math.sin(angle) * (baseRadius * 0.6);
+
+        ctx.beginPath();
+        ctx.arc(px, py, baseRadius * 0.6, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Secondary Concentric Seed Nodes
+      ctx.strokeStyle = `rgba(246, 173, 85, ${0.5 + 0.35 * shimmer})`;
+      ctx.lineWidth = 1.2;
+      for (let i = 0; i < 6; i++) {
+        const angle = (i * Math.PI * 2) / 6 - (state.elapsedSeconds * 0.03);
+        const px = Math.cos(angle) * (baseRadius * 0.35);
+        const py = Math.sin(angle) * (baseRadius * 0.35);
+
+        ctx.beginPath();
+        ctx.arc(px, py, baseRadius * 0.35, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Center Core
+      ctx.strokeStyle = `rgba(255, 255, 255, ${0.7 + 0.3 * shimmer})`;
+      ctx.beginPath();
+      ctx.arc(0, 0, baseRadius * 0.2, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function drawSpirograph(progress, shimmer) {
+      const cx = canvasW / 2;
+      const cy = canvasH / 2;
+      const scale = (canvasW * 0.15) + (canvasW * 0.28) * progress;
+
+      const R = 110;
+      const r = 40;
+      const d = 50 + 25 * progress + 5 * shimmer;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(state.elapsedSeconds * 0.1);
+
+      ctx.strokeStyle = `rgba(167, 139, 250, ${0.7 + 0.2 * shimmer})`;
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+
+      const steps = 300;
+      for (let i = 0; i <= steps; i++) {
+        const theta = (i / steps) * (Math.PI * 8);
+        const x = (scale / 100) * ((R - r) * Math.cos(theta) + d * Math.cos(((R - r) * theta) / r));
+        const y = (scale / 100) * ((R - r) * Math.sin(theta) - d * Math.sin(((R - r) * theta) / r));
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Nodal points
+      ctx.fillStyle = `rgba(94, 234, 212, ${0.8 + 0.2 * shimmer})`;
+      for (let i = 0; i < 8; i++) {
+        const ang = (i * Math.PI * 2) / 8;
+        const nx = Math.cos(ang) * (scale * 0.9);
+        const ny = Math.sin(ang) * (scale * 0.9);
+        ctx.beginPath();
+        ctx.arc(nx, ny, 3 + shimmer * 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    function drawLotus(progress, shimmer) {
+      const cx = canvasW / 2;
+      const cy = canvasH / 2;
+      const radius = (canvasW * 0.1) + (canvasW * 0.32) * progress;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+
+      const layers = [
+        { petals: 8, r: radius * 0.95, alpha: 0.45, color: '#38bdf8' },
+        { petals: 8, r: radius * 0.72, alpha: 0.65, color: '#5eead4' },
+        { petals: 6, r: radius * 0.48, alpha: 0.85, color: '#f6ad55' },
+        { petals: 6, r: radius * 0.26, alpha: 0.95, color: '#ffffff' }
+      ];
+
+      layers.forEach((layer, idx) => {
+        ctx.save();
+        ctx.rotate((idx % 2 === 0 ? 1 : -1) * state.elapsedSeconds * 0.04);
+        ctx.strokeStyle = layer.color;
+        ctx.lineWidth = 1.6;
+
+        for (let i = 0; i < layer.petals; i++) {
+          const angle = (i * Math.PI * 2) / layer.petals;
+          ctx.save();
+          ctx.rotate(angle);
+
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.quadraticCurveTo(layer.r * 0.35, layer.r * 0.5, 0, layer.r);
+          ctx.quadraticCurveTo(-layer.r * 0.35, layer.r * 0.5, 0, 0);
+          ctx.fillStyle = `rgba(94, 234, 212, ${0.04 + 0.04 * shimmer})`;
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.restore();
+        }
+        ctx.restore();
+      });
+
+      // Lotus Core Center
+      ctx.beginPath();
+      ctx.arc(0, 0, radius * 0.1, 0, Math.PI * 2);
+      ctx.fillStyle = '#f6ad55';
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawRippleWavefront(progress, shimmer) {
+      const cx = canvasW / 2;
+      const cy = canvasH / 2;
+      const maxRadius = (canvasW * 0.1) + (canvasW * 0.33) * progress;
+      const rings = 9;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+
+      for (let r = 1; r <= rings; r++) {
+        const ringRadius = (maxRadius / rings) * r;
+        const waveOffset = Math.sin(r * 0.8 - state.elapsedSeconds * 2) * (3 + shimmer * 3);
+        const currentR = Math.max(2, ringRadius + waveOffset);
+
+        const alpha = Math.max(0.1, (1 - (r / rings) * 0.7) + shimmer * 0.2);
+        ctx.strokeStyle = r % 2 === 0 ? `rgba(94, 234, 212, ${alpha})` : `rgba(56, 189, 248, ${alpha})`;
+        ctx.lineWidth = 1.4;
+
+        ctx.beginPath();
+        // Sine modulated ring
+        const segments = 60;
+        for (let s = 0; s <= segments; s++) {
+          const theta = (s / segments) * Math.PI * 2;
+          const mod = Math.sin(theta * 6 + state.elapsedSeconds * 1.5) * (2 * progress);
+          const px = Math.cos(theta) * (currentR + mod);
+          const py = Math.sin(theta) * (currentR + mod);
+          if (s === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    // Animation & Breath Session Loop
+    function renderFrame(timestamp) {
+      if (!state.lastTimestamp) state.lastTimestamp = timestamp;
+      const deltaSec = (timestamp - state.lastTimestamp) / 1000;
+      state.lastTimestamp = timestamp;
+
+      const safeDelta = Math.min(deltaSec, 0.1); // Avoid big jumps if backgrounded
+
+      if (state.isPlaying) {
+        state.elapsedSeconds += safeDelta;
+        state.phaseTime += safeDelta;
+
+        const inhaleD = state.inhale;
+        const holdD = state.hold;
+        const exhaleD = state.exhale;
+        const pauseD = state.pause;
+        const totalCycle = inhaleD + holdD + exhaleD + pauseD;
+
+        // Determine current phase and progress
+        if (state.currentPhase === 'inhale') {
+          if (state.phaseTime >= inhaleD) {
+            state.phaseTime = 0;
+            state.currentPhase = holdD > 0 ? 'hold' : 'exhale';
+          }
+        } else if (state.currentPhase === 'hold') {
+          if (state.phaseTime >= holdD) {
+            state.phaseTime = 0;
+            state.currentPhase = 'exhale';
+          }
+        } else if (state.currentPhase === 'exhale') {
+          if (state.phaseTime >= exhaleD) {
+            state.phaseTime = 0;
+            if (pauseD > 0) {
+              state.currentPhase = 'pause';
+            } else {
+              state.currentPhase = 'inhale';
+              state.completedCycles += 1;
+              soundEngine.triggerChime();
+            }
+          }
+        } else if (state.currentPhase === 'pause') {
+          if (state.phaseTime >= pauseD) {
+            state.phaseTime = 0;
+            state.currentPhase = 'inhale';
+            state.completedCycles += 1;
+            soundEngine.triggerChime();
+          }
+        }
+
+        // Check session completion
+        if (state.elapsedSeconds >= state.totalSessionSeconds) {
+          togglePlay(false);
+        }
+      }
+
+      // Compute geometric expansion ratio [0.2 to 1.0]
+      let targetProgress = 0.2; // default min expansion
+      let rawProgress = 0.0;
+      let shimmer = 0.0;
+      let phaseTimeRemaining = 0;
+
+      const smoothingFactor = clamp(state.smoothing, 1, 10);
+
+      if (state.currentPhase === 'inhale') {
+        const dur = Math.max(0.1, state.inhale);
+        rawProgress = clamp(state.phaseTime / dur, 0, 1);
+        const eased = smoothEase(rawProgress, smoothingFactor);
+        targetProgress = 0.2 + 0.8 * eased;
+        phaseTimeRemaining = Math.max(0, dur - state.phaseTime);
+        shimmer = Math.sin(state.elapsedSeconds * 4) * 0.1;
+      } else if (state.currentPhase === 'hold') {
+        const dur = Math.max(0.1, state.hold);
+        rawProgress = clamp(state.phaseTime / dur, 0, 1);
+        targetProgress = 1.0;
+        phaseTimeRemaining = Math.max(0, dur - state.phaseTime);
+        shimmer = 0.15 + 0.15 * Math.sin(state.elapsedSeconds * 6);
+      } else if (state.currentPhase === 'exhale') {
+        const dur = Math.max(0.1, state.exhale);
+        rawProgress = clamp(state.phaseTime / dur, 0, 1);
+        const eased = smoothEase(1 - rawProgress, smoothingFactor);
+        targetProgress = 0.2 + 0.8 * eased;
+        phaseTimeRemaining = Math.max(0, dur - state.phaseTime);
+        shimmer = Math.sin(state.elapsedSeconds * 3) * 0.08;
+      } else if (state.currentPhase === 'pause') {
+        const dur = Math.max(0.1, state.pause);
+        rawProgress = clamp(state.phaseTime / dur, 0, 1);
+        targetProgress = 0.2;
+        phaseTimeRemaining = Math.max(0, dur - state.phaseTime);
+        shimmer = 0.02 * Math.sin(state.elapsedSeconds * 2);
+      }
+
+      // Modulate audio synthesis dynamically
+      soundEngine.modulatePhase(state.currentPhase, rawProgress);
+
+      // Clear Canvas
+      ctx.clearRect(0, 0, canvasW, canvasH);
+
+      // Render Selected Geometry
+      if (state.geometry === 'mandala') {
+        drawMandala(targetProgress, shimmer);
+      } else if (state.geometry === 'spirograph') {
+        drawSpirograph(targetProgress, shimmer);
+      } else if (state.geometry === 'lotus') {
+        drawLotus(targetProgress, shimmer);
+      } else if (state.geometry === 'wavefront') {
+        drawRippleWavefront(targetProgress, shimmer);
+      }
+
+      // Update Center Canvas HUD
+      const phaseNames = {
+        inhale: 'Inhale',
+        hold: 'Hold In',
+        exhale: 'Exhale',
+        pause: 'Pause Stillness'
+      };
+
+      const phaseColors = {
+        inhale: 'var(--accent-cyan)',
+        hold: 'var(--accent-warm)',
+        exhale: 'var(--accent)',
+        pause: 'var(--accent-violet)'
+      };
+
+      elPhaseBadge.textContent = state.isPlaying ? phaseNames[state.currentPhase] : 'PAUSED';
+      elPhaseBadge.style.color = phaseColors[state.currentPhase];
+      elCenterPhaseName.textContent = state.isPlaying ? phaseNames[state.currentPhase] : 'Ready';
+      elCenterPhaseCountdown.textContent = state.isPlaying ? `${phaseTimeRemaining.toFixed(1)}s` : `${state.inhale.toFixed(1)}s`;
+
+      const sessionGoalSec = state.totalSessionSeconds;
+      elSessionTimerBadge.textContent = `Session: ${formatTime(state.elapsedSeconds)} / ${formatTime(sessionGoalSec)}`;
+      elElapsedTotalText.textContent = formatTime(state.elapsedSeconds);
+      elExpansionPercentText.textContent = `${Math.round(targetProgress * 100)}%`;
+
+      const cycleD = state.inhale + state.hold + state.exhale + state.pause;
+      const totalEstimatedCycles = cycleD > 0 ? (sessionGoalSec / cycleD).toFixed(1) : 0;
+      const currentCycleFloat = cycleD > 0 ? (state.elapsedSeconds / cycleD).toFixed(1) : 0;
+      elCycleCounterText.textContent = `${currentCycleFloat} / ${totalEstimatedCycles}`;
+
+      state.animationFrameId = requestAnimationFrame(renderFrame);
+    }
+
+    // Controls & Interactions
+    function togglePlay(forceState) {
+      const nextPlay = typeof forceState === 'boolean' ? forceState : !state.isPlaying;
+      if (nextPlay && state.elapsedSeconds >= state.totalSessionSeconds) {
+        state.elapsedSeconds = 0;
+        state.phaseTime = 0;
+        state.currentPhase = 'inhale';
+      }
+      state.isPlaying = nextPlay;
+
+      if (state.isPlaying) {
+        elPlayBtn.classList.remove('btn-primary');
+        elPlayBtn.classList.add('btn-active');
+        elPlayBtnText.textContent = 'Pause Session';
+        elPlayIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+
+        // Auto-resume sound if sound was on
+        if (state.soundEnabled) {
+          soundEngine.init();
+          if (soundEngine.ctx && soundEngine.ctx.state === 'suspended') {
+            soundEngine.ctx.resume();
+          }
+          soundEngine.setMasterVolume(state.volume);
+        }
+      } else {
+        elPlayBtn.classList.add('btn-primary');
+        elPlayBtn.classList.remove('btn-active');
+        elPlayBtnText.textContent = 'Resume Session';
+        elPlayIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+
+        if (soundEngine.isInitialized) {
+          soundEngine.setMasterVolume(0);
+        }
+      }
+    }
+
+    function resetSession() {
+      state.elapsedSeconds = 0;
+      state.phaseTime = 0;
+      state.currentPhase = 'inhale';
+      state.completedCycles = 0;
+      if (!state.isPlaying) {
+        elPlayBtnText.textContent = 'Start Breathwork';
+      }
+    }
+
+    function applyPreset(key) {
+      const p = PRESETS[key];
+      if (!p) return;
+
+      state.inhale = p.inhale;
+      state.hold = p.hold;
+      state.exhale = p.exhale;
+      state.pause = p.pause;
+      state.sessionMinutes = p.sessionMinutes;
+      state.smoothing = p.smoothing;
+      state.geometry = p.geometry;
+      state.carrier = p.carrier;
+      state.binaural = p.binaural;
+
+      // Update inputs
+      elInhale.value = p.inhale;
+      elHold.value = p.hold;
+      elExhale.value = p.exhale;
+      elPause.value = p.pause;
+      elSessionGoal.value = p.sessionMinutes;
+      elVisualSmoothing.value = p.smoothing;
+      elGeometrySelect.value = p.geometry;
+
+      elCarrierFreq.value = p.carrier;
+      elCarrierFreqVal.textContent = `${p.carrier.toFixed(1)} Hz`;
+      elBinauralBeat.value = p.binaural;
+      elBinauralBeatVal.textContent = `${p.binaural.toFixed(1)} Hz`;
+
+      soundEngine.updateFrequencies();
+      computeMetrics();
+      saveSettingsToStorage();
+    }
+
+    function saveSettingsToStorage() {
+      try {
+        const payload = {
+          inhale: state.inhale,
+          hold: state.hold,
+          exhale: state.exhale,
+          pause: state.pause,
+          sessionMinutes: state.sessionMinutes,
+          smoothing: state.smoothing,
+          geometry: state.geometry,
+          carrier: state.carrier,
+          binaural: state.binaural,
+          volume: state.volume,
+          soundEnabled: state.soundEnabled
+        };
+        localStorage.setItem('sacred_breath_studio_config', JSON.stringify(payload));
+      } catch (err) {
+        // Storage restricted or disabled; fail quietly
+      }
+    }
+
+    function loadSettingsFromStorage() {
+      try {
+        const raw = localStorage.getItem('sacred_breath_studio_config');
+        if (raw) {
+          const cfg = JSON.parse(raw);
+          if (cfg && typeof cfg.inhale === 'number') {
+            state.inhale = cfg.inhale;
+            state.hold = cfg.hold;
+            state.exhale = cfg.exhale;
+            state.pause = cfg.pause;
+            state.sessionMinutes = cfg.sessionMinutes || 10;
+            state.smoothing = cfg.smoothing || 6;
+            state.geometry = cfg.geometry || 'mandala';
+            state.carrier = cfg.carrier || 136.1;
+            state.binaural = cfg.binaural || 6.0;
+            state.volume = cfg.volume !== undefined ? cfg.volume : 0.45;
+            state.soundEnabled = Boolean(cfg.soundEnabled);
+
+            elInhale.value = state.inhale;
+            elHold.value = state.hold;
+            elExhale.value = state.exhale;
+            elPause.value = state.pause;
+            elSessionGoal.value = state.sessionMinutes;
+            elVisualSmoothing.value = state.smoothing;
+            elGeometrySelect.value = state.geometry;
+            elCarrierFreq.value = state.carrier;
+            elCarrierFreqVal.textContent = `${state.carrier.toFixed(1)} Hz`;
+            elBinauralBeat.value = state.binaural;
+            elBinauralBeatVal.textContent = `${state.binaural.toFixed(1)} Hz`;
+            elSynthVolume.value = Math.round(state.volume * 100);
+            elSynthVolumeVal.textContent = `${Math.round(state.volume * 100)}%`;
+
+            updateSoundBtnUI();
+          }
+        }
+      } catch (e) {
+        // Fallback default loaded
+      }
+    }
+
+    function updateSoundBtnUI() {
+      if (state.soundEnabled) {
+        elSoundToggleBtn.classList.add('btn-active');
+        elSoundStatusText.textContent = 'Sound: On';
+      } else {
+        elSoundToggleBtn.classList.remove('btn-active');
+        elSoundStatusText.textContent = 'Sound: Off';
+      }
+    }
+
+    function validateInputs() {
+      const errors = [];
+      const rawInhale = elInhale.value.trim();
+      const rawHold = elHold.value.trim();
+      const rawExhale = elExhale.value.trim();
+      const rawPause = elPause.value.trim();
+      const rawSession = elSessionGoal.value.trim();
+      const rawSmooth = elVisualSmoothing.value.trim();
+
+      if (rawInhale === '' || isNaN(Number(rawInhale)) || Number(rawInhale) <= 0) {
+        errors.push('Inhale must be greater than 0 seconds.');
+      }
+      if (rawHold === '' || isNaN(Number(rawHold)) || Number(rawHold) < 0) {
+        errors.push('Inhale-Hold cannot be negative.');
+      }
+      if (rawExhale === '' || isNaN(Number(rawExhale)) || Number(rawExhale) <= 0) {
+        errors.push('Exhale must be greater than 0 seconds.');
+      }
+      if (rawPause === '' || isNaN(Number(rawPause)) || Number(rawPause) < 0) {
+        errors.push('Post-exhale pause cannot be negative.');
+      }
+      if (rawSession === '' || isNaN(Number(rawSession)) || Number(rawSession) <= 0) {
+        errors.push('Session target must be at least 1 minute.');
+      }
+      if (rawSmooth === '' || isNaN(Number(rawSmooth)) || Number(rawSmooth) < 1 || Number(rawSmooth) > 10) {
+        errors.push('Smoothing must be a number between 1 and 10.');
+      }
+
+      const msgEl = document.getElementById('inputValidationMsg');
+      if (errors.length > 0) {
+        msgEl.textContent = errors[0];
+        msgEl.style.display = 'block';
+      } else {
+        msgEl.textContent = '';
+        msgEl.style.display = 'none';
+      }
+    }
+
+    // Input Event Listeners
+    [elInhale, elHold, elExhale, elPause, elSessionGoal, elVisualSmoothing].forEach(input => {
+      input.addEventListener('input', () => {
+        validateInputs();
+        state.inhale = Math.max(0.1, parseFloat(elInhale.value) || 5.0);
+        state.hold = Math.max(0.0, parseFloat(elHold.value) || 0.0);
+        state.exhale = Math.max(0.1, parseFloat(elExhale.value) || 6.0);
+        state.pause = Math.max(0.0, parseFloat(elPause.value) || 0.0);
+        state.sessionMinutes = Math.max(1, parseInt(elSessionGoal.value, 10) || 10);
+        state.smoothing = clamp(parseInt(elVisualSmoothing.value, 10) || 6, 1, 10);
+
+        elPresetSelect.value = 'custom';
+        computeMetrics();
+        saveSettingsToStorage();
+      });
+    });
+
+    elGeometrySelect.addEventListener('change', (e) => {
+      state.geometry = e.target.value;
+      saveSettingsToStorage();
+    });
+
+    elPresetSelect.addEventListener('change', (e) => {
+      if (e.target.value !== 'custom') {
+        applyPreset(e.target.value);
+        validateInputs();
+      }
+    });
+
+    elPlayBtn.addEventListener('click', () => {
+      togglePlay();
+    });
+
+    elResetBtn.addEventListener('click', () => {
+      resetSession();
+    });
+
+    elSoundToggleBtn.addEventListener('click', () => {
+      soundEngine.init();
+      if (soundEngine.ctx && soundEngine.ctx.state === 'suspended') {
+        soundEngine.ctx.resume();
+      }
+
+      state.soundEnabled = !state.soundEnabled;
+      updateSoundBtnUI();
+      soundEngine.setMasterVolume(state.volume);
+      saveSettingsToStorage();
+    });
+
+    elCarrierFreq.addEventListener('input', (e) => {
+      state.carrier = parseFloat(e.target.value);
+      elCarrierFreqVal.textContent = `${state.carrier.toFixed(1)} Hz`;
+      soundEngine.updateFrequencies();
+      saveSettingsToStorage();
+    });
+
+    elBinauralBeat.addEventListener('input', (e) => {
+      state.binaural = parseFloat(e.target.value);
+      elBinauralBeatVal.textContent = `${state.binaural.toFixed(1)} Hz`;
+      soundEngine.updateFrequencies();
+      saveSettingsToStorage();
+    });
+
+    elSynthVolume.addEventListener('input', (e) => {
+      state.volume = parseInt(e.target.value, 10) / 100;
+      elSynthVolumeVal.textContent = `${Math.round(state.volume * 100)}%`;
+      if (state.soundEnabled) {
+        soundEngine.setMasterVolume(state.volume);
+      }
+      saveSettingsToStorage();
+    });
+
+    // Pro / Export Handlers
+    function showProNotice() {
+      elProBanner.style.display = 'block';
+      setTimeout(() => {
+        elProBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 50);
+    }
+
+    elCopyStatsBtn.addEventListener('click', () => {
+      const metrics = computeMetrics();
+      const text = `Breathwork Protocol:
+- Inhale: ${state.inhale}s
+- Hold: ${state.hold}s
+- Exhale: ${state.exhale}s
+- Pause: ${state.pause}s
+- Cycle Time: ${metrics.cycleTime.toFixed(1)}s
+- Rate: ${metrics.bpm.toFixed(2)} bpm
+- Ratio: 1:${metrics.ratio.toFixed(2)}
+- Autonomic Index: ${metrics.balance}
+- Est HRV Potential: ${metrics.hrvScore}%
+- Session Goal: ${state.sessionMinutes} min (${metrics.totalCycles.toFixed(1)} cycles)
+(Generated by Generative Sacred Geometry & Breath Sync Studio)`;
+
+      const markCopied = () => {
+        elCopyStatsBtn.textContent = 'Copied!';
+        setTimeout(() => {
+          elCopyStatsBtn.innerHTML = `
+            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy Data`;
+        }, 1800);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(markCopied).catch(() => {
+          fallbackCopy(text);
+        });
+      } else {
+        fallbackCopy(text);
+      }
+
+      function fallbackCopy(str) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = str;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          markCopied();
+        } catch (err) {
+          alert('Could not copy to clipboard.');
+        }
+      }
+    });
+
+    elExportJsonBtn.addEventListener('click', () => {
+      if (!PRO) {
+        showProNotice();
+        return;
+      }
+      const metrics = computeMetrics();
+      const data = {
+        title: "Generative Sacred Geometry & Breath Sync Protocol",
+        timestamp: new Date().toISOString(),
+        settings: {
+          inhale_seconds: state.inhale,
+          hold_seconds: state.hold,
+          exhale_seconds: state.exhale,
+          pause_seconds: state.pause,
+          session_goal_minutes: state.sessionMinutes,
+          visual_smoothing: state.smoothing,
+          geometry: state.geometry,
+          audio_carrier_hz: state.carrier,
+          audio_binaural_beat_hz: state.binaural
+        },
+        calculated_metrics: {
+          total_cycle_seconds: metrics.cycleTime,
+          respiratory_rate_bpm: metrics.bpm,
+          inhale_to_exhale_ratio: `1:${metrics.ratio.toFixed(2)}`,
+          total_session_cycles: metrics.totalCycles,
+          ventilation_duty_seconds: metrics.cumVentTime,
+          apnea_retention_seconds: metrics.cumRetentionTime,
+          hrv_coherence_potential_pct: metrics.hrvScore,
+          sympathovagal_balance: metrics.balance
+        }
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `breath-protocol-${Date.now()}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    elExportCsvBtn.addEventListener('click', () => {
+      if (!PRO) {
+        showProNotice();
+        return;
+      }
+      const metrics = computeMetrics();
+      const rows = [
+        ["Parameter", "Value", "Unit"],
+        ["Inhale", state.inhale, "seconds"],
+        ["Inhale-Hold", state.hold, "seconds"],
+        ["Exhale", state.exhale, "seconds"],
+        ["Post-Exhale Pause", state.pause, "seconds"],
+        ["Total Cycle Length", metrics.cycleTime.toFixed(2), "seconds"],
+        ["Respiratory Rate", metrics.bpm.toFixed(2), "breaths/min"],
+        ["Inhale:Exhale Ratio", `1:${metrics.ratio.toFixed(2)}`, "ratio"],
+        ["Session Duration", state.sessionMinutes, "minutes"],
+        ["Total Estimated Cycles", metrics.totalCycles.toFixed(1), "cycles"],
+        ["Cumulative Ventilation Time", metrics.cumVentTime.toFixed(1), "seconds"],
+        ["Cumulative Retention Time", metrics.cumRetentionTime.toFixed(1), "seconds"],
+        ["Estimated HRV Potential", metrics.hrvScore, "%"],
+        ["Sympathovagal Classification", metrics.balance, "category"],
+        ["Carrier Audio Frequency", state.carrier, "Hz"],
+        ["Binaural Beat Entrainment", state.binaural, "Hz"]
+      ];
+
+      const csvContent = rows.map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n");
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `breath-metrics-${Date.now()}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    elPrintBtn.addEventListener('click', () => {
+      if (!PRO) {
+        showProNotice();
+        return;
+      }
+      window.print();
+    });
+
+    // Window Init
+    window.addEventListener('resize', resizeCanvas);
+
+    // Initial boot sequence
+    loadSettingsFromStorage();
+    resizeCanvas();
+    computeMetrics();
+    requestAnimationFrame(renderFrame);
+
+    // Session Timeline & Ambient Lighting Dimmer Feature Script
+    (function initSessionDimmer() {
+      const dimmerProgressBar = document.getElementById('dimmerProgressBar');
+      const dimmerPctText = document.getElementById('dimmerPctText');
+      const dimmerTimeProgress = document.getElementById('dimmerTimeProgress');
+      const dimmerRemainingCycles = document.getElementById('dimmerRemainingCycles');
+      const theaterModeBtn = document.getElementById('theaterModeBtn');
+      const theaterBtnText = document.getElementById('theaterBtnText');
+      const hapticToggleBtn = document.getElementById('hapticToggleBtn');
+      const hapticBtnText = document.getElementById('hapticBtnText');
+
+      let theaterActive = false;
+      let hapticsActive = true;
+      let lastPhase = state.currentPhase;
+
+      theaterModeBtn.addEventListener('click', () => {
+        theaterActive = !theaterActive;
+        document.body.classList.toggle('theater-active', theaterActive);
+        theaterModeBtn.setAttribute('aria-pressed', String(theaterActive));
+        theaterModeBtn.classList.toggle('btn-active', theaterActive);
+        theaterBtnText.textContent = theaterActive ? 'Exit Theater Mode' : 'Theater Ambient Mode';
+      });
+
+      hapticToggleBtn.addEventListener('click', () => {
+        hapticsActive = !hapticsActive;
+        hapticToggleBtn.setAttribute('aria-pressed', String(hapticsActive));
+        hapticToggleBtn.classList.toggle('btn-active', hapticsActive);
+        hapticBtnText.textContent = hapticsActive ? 'Haptics: On' : 'Haptics: Off';
+      });
+
+      function emitPhaseHaptic(phase) {
+        if (!hapticsActive || typeof navigator === 'undefined' || !navigator.vibrate) return;
+        try {
+          const patterns = {
+            inhale: [35],
+            hold: [25, 30, 25],
+            exhale: [45],
+            pause: [20]
+          };
+          navigator.vibrate(patterns[phase] || [30]);
+        } catch (_) {}
+      }
+
+      function syncSessionDimmerHUD() {
+        const total = Math.max(1, state.totalSessionSeconds || 600);
+        const elapsed = state.elapsedSeconds || 0;
+        const ratio = clamp(elapsed / total, 0, 1);
+        const circumference = 163.36; // 2 * PI * 26
+
+        if (dimmerProgressBar) {
+          dimmerProgressBar.style.strokeDashoffset = (circumference * (1 - ratio)).toFixed(2);
+        }
+        if (dimmerPctText) {
+          dimmerPctText.textContent = `${Math.round(ratio * 100)}%`;
+        }
+        if (dimmerTimeProgress) {
+          dimmerTimeProgress.textContent = `${formatTime(elapsed)} / ${formatTime(total)}`;
+        }
+
+        const cycleD = state.inhale + state.hold + state.exhale + state.pause;
+        if (dimmerRemainingCycles) {
+          if (cycleD > 0) {
+            const totalC = total / cycleD;
+            const currentC = elapsed / cycleD;
+            const remaining = Math.max(0, totalC - currentC);
+            dimmerRemainingCycles.textContent = `${remaining.toFixed(1)} left`;
+          } else {
+            dimmerRemainingCycles.textContent = '0.0 left';
+          }
+        }
+
+        if (state.isPlaying && state.currentPhase !== lastPhase) {
+          emitPhaseHaptic(state.currentPhase);
+          lastPhase = state.currentPhase;
+        } else if (!state.isPlaying) {
+          lastPhase = state.currentPhase;
+        }
+      }
+
+      setInterval(syncSessionDimmerHUD, 120);
+    })();
+
+    // Target Respiration Rate & Ratio Reverse Solver Script
+    (function initReverseRatioSolver() {
+      const elBpm = document.getElementById('targetBpmInput');
+      const elRatio = document.getElementById('targetRatioInput');
+      const elHold = document.getElementById('targetHoldInput');
+      const elPause = document.getElementById('targetPauseInput');
+      const elCalcCycle = document.getElementById('solverCalcCycle');
+      const elCalcInhale = document.getElementById('solverCalcInhale');
+      const elCalcExhale = document.getElementById('solverCalcExhale');
+      const elApplyBtn = document.getElementById('applySolverBtn');
+      const elErr = document.getElementById('solverErrorMsg');
+
+      function calculateSolver() {
+        const bpm = parseFloat(elBpm.value);
+        const ratioVal = parseFloat(elRatio.value);
+        const hold = parseFloat(elHold.value) || 0;
+        const pause = parseFloat(elPause.value) || 0;
+
+        if (isNaN(bpm) || bpm <= 0) {
+          elErr.textContent = 'Target respiration rate must be greater than 0 BPM.';
+          elErr.style.display = 'block';
+          return null;
+        }
+        if (isNaN(ratioVal) || ratioVal <= 0) {
+          elErr.textContent = 'Inhale:Exhale ratio factor must be greater than 0.';
+          elErr.style.display = 'block';
+          return null;
+        }
+        if (isNaN(hold) || hold < 0 || isNaN(pause) || pause < 0) {
+          elErr.textContent = 'Hold and pause durations cannot be negative.';
+          elErr.style.display = 'block';
+          return null;
+        }
+
+        const totalCycle = 60 / bpm;
+        const activeTime = totalCycle - hold - pause;
+
+        if (activeTime <= 0.2) {
+          elErr.textContent = `Hold + Pause (${(hold + pause).toFixed(1)}s) exceeds target cycle length (${totalCycle.toFixed(1)}s). Reduce holds or target BPM.`;
+          elErr.style.display = 'block';
+          return null;
+        }
+
+        elErr.textContent = '';
+        elErr.style.display = 'none';
+
+        const inhale = activeTime / (1 + ratioVal);
+        const exhale = inhale * ratioVal;
+
+        elCalcCycle.textContent = `${totalCycle.toFixed(1)}s`;
+        elCalcInhale.textContent = `${inhale.toFixed(1)}s`;
+        elCalcExhale.textContent = `${exhale.toFixed(1)}s`;
+
+        return { inhale, hold, exhale, pause };
+      }
+
+      [elBpm, elRatio, elHold, elPause].forEach(input => {
+        if (input) input.addEventListener('input', calculateSolver);
+      });
+
+      if (elApplyBtn) {
+        elApplyBtn.addEventListener('click', () => {
+          const res = calculateSolver();
+          if (!res) return;
+
+          state.inhale = parseFloat(res.inhale.toFixed(1));
+          state.hold = parseFloat(res.hold.toFixed(1));
+          state.exhale = parseFloat(res.exhale.toFixed(1));
+          state.pause = parseFloat(res.pause.toFixed(1));
+
+          elInhale.value = state.inhale;
+          elHold.value = state.hold;
+          elExhale.value = state.exhale;
+          elPause.value = state.pause;
+
+          elPresetSelect.value = 'custom';
+          validateInputs();
+          computeMetrics();
+          saveSettingsToStorage();
+        });
+      }
+
+      calculateSolver();
+    })();
+
+    // Session Log History & JSON/CSV Export Script
+    (function initSessionLogAnalytics() {
+      const STORAGE_KEY = 'sacred_breath_session_logs';
+      const elTableBody = document.getElementById('historyTableBody');
+      const elTotalCount = document.getElementById('histTotalCount');
+      const elTotalTime = document.getElementById('histTotalTime');
+      const elAvgHrv = document.getElementById('histAvgHrv');
+      const elLogBtn = document.getElementById('logSessionBtn');
+      const elCsvBtn = document.getElementById('exportHistoryCsvBtn');
+      const elJsonBtn = document.getElementById('exportHistoryJsonBtn');
+      const elClearBtn = document.getElementById('clearHistoryBtn');
+      const elHistProBanner = document.getElementById('histProBanner');
+
+      const defaultSamples = [
+        {
+          id: 'samp-1',
+          timestamp: new Date(Date.now() - 86400000).toLocaleString(),
+          preset: 'Coherence Resonance 5.5 (Vagal Reset)',
+          durations: '5.0s / 0.0s / 6.0s / 0.0s',
+          elapsedSeconds: 600,
+          elapsedStr: '10:00',
+          cycles: 54.5,
+          hrvScore: 94
+        },
+        {
+          id: 'samp-2',
+          timestamp: new Date(Date.now() - 172800000).toLocaleString(),
+          preset: 'Box Breathing Calm (Tactical Focus)',
+          durations: '4.0s / 4.0s / 4.0s / 4.0s',
+          elapsedSeconds: 480,
+          elapsedStr: '08:00',
+          cycles: 30.0,
+          hrvScore: 88
+        }
+      ];
+
+      function getLogs() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) return JSON.parse(raw);
+        } catch (_) {}
+        return defaultSamples;
+      }
+
+      function saveLogs(logs) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
+        } catch (_) {}
+      }
+
+      function renderTable() {
+        const logs = getLogs();
+        if (elTableBody) {
+          if (logs.length === 0) {
+            elTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:1rem;">No session logs recorded yet.</td></tr>';
+          } else {
+            elTableBody.innerHTML = logs.map(item => `
+              <tr>
+                <td>${item.timestamp}</td>
+                <td style="font-weight:600;">${item.preset}</td>
+                <td>${item.durations}</td>
+                <td>${item.elapsedStr}</td>
+                <td>${typeof item.cycles === 'number' ? item.cycles.toFixed(1) : item.cycles}</td>
+                <td style="color:var(--accent); font-weight:700;">${item.hrvScore}%</td>
+                <td><button class="btn btn-sm" style="padding:0.15rem 0.4rem; font-size:0.7rem; color:var(--danger);" onclick="deleteSessionLog('${item.id}')">Delete</button></td>
+              </tr>
+            `).join('');
+          }
+        }
+
+        const totalCount = logs.length;
+        const totalSecs = logs.reduce((acc, item) => acc + (item.elapsedSeconds || 0), 0);
+        const avgHrv = totalCount > 0 ? Math.round(logs.reduce((acc, item) => acc + (item.hrvScore || 0), 0) / totalCount) : 0;
+
+        if (elTotalCount) elTotalCount.textContent = totalCount;
+        if (elTotalTime) elTotalTime.textContent = formatTime(totalSecs);
+        if (elAvgHrv) elAvgHrv.textContent = `${avgHrv}%`;
+      }
+
+      window.deleteSessionLog = function(id) {
+        let logs = getLogs();
+        logs = logs.filter(l => l.id !== id);
+        saveLogs(logs);
+        renderTable();
+      };
+
+      function logCurrentSession() {
+        const metrics = computeMetrics();
+        const presetName = elPresetSelect.options[elPresetSelect.selectedIndex] ? elPresetSelect.options[elPresetSelect.selectedIndex].text : 'Custom Protocol';
+        const elapsed = state.elapsedSeconds > 0 ? state.elapsedSeconds : state.totalSessionSeconds;
+        const cycleD = state.inhale + state.hold + state.exhale + state.pause;
+        const cyclesCompleted = cycleD > 0 ? elapsed / cycleD : 0;
+
+        const newLog = {
+          id: 'log-' + Date.now(),
+          timestamp: new Date().toLocaleString(),
+          preset: presetName,
+          durations: `${state.inhale.toFixed(1)}s / ${state.hold.toFixed(1)}s / ${state.exhale.toFixed(1)}s / ${state.pause.toFixed(1)}s`,
+          elapsedSeconds: Math.round(elapsed),
+          elapsedStr: formatTime(elapsed),
+          cycles: parseFloat(cyclesCompleted.toFixed(1)),
+          hrvScore: metrics.hrvScore
+        };
+
+        const logs = getLogs();
+        logs.unshift(newLog);
+        saveLogs(logs);
+        renderTable();
+      }
+
+      function showHistProNotice() {
+        if (elHistProBanner) {
+          elHistProBanner.style.display = 'block';
+          setTimeout(() => {
+            elHistProBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 50);
+        }
+      }
+
+      if (elLogBtn) elLogBtn.addEventListener('click', logCurrentSession);
+
+      if (elCsvBtn) {
+        elCsvBtn.addEventListener('click', () => {
+          if (!PRO) {
+            showHistProNotice();
+            return;
+          }
+          const logs = getLogs();
+          if (!confirm(`Export ${logs.length} recorded session logs to CSV?`)) return;
+
+          const headers = ["Timestamp", "Preset Name", "Durations (In/H/Ex/P)", "Elapsed Time", "Cycles Completed", "HRV Score (%)"];
+          const rows = logs.map(l => [
+            l.timestamp,
+            l.preset,
+            l.durations,
+            l.elapsedStr,
+            l.cycles,
+            l.hrvScore
+          ]);
+
+          const csvRows = [headers, ...rows].map(row =>
+            row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+          ).join('\n');
+
+          const blob = new Blob([csvRows], { type: 'text/csv;charset=utf-8;' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `breathwork-session-history-${Date.now()}.csv`;
+          a.click();
+          URL.revokeObjectURL(url);
+        });
+      }
+
+      if (elJsonBtn) {
+        elJsonBtn.addEventListener('click', () => {
+          if (!PRO) {
+            showHistProNotice();
+            return;
+          }
+          const logs = getLogs();
+          if (!confirm(`Export ${logs.length} recorded session logs to JSON?`)) return;
+
+          const blob = new Blob([JSON.stringify(logs, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `breathwork-session-history-${Date.now()}.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+        });
+      }
+
+      if (elClearBtn) {
+        elClearBtn.addEventListener('click', () => {
+          if (confirm('Clear all session history records?')) {
+            saveLogs([]);
+            renderTable();
+          }
+        });
+      }
+
+      renderTable();
+    })();
+
+    // Custom Breath Profile Bank & Multi-Scenario Compare Script
+    (function initCustomPresetManager() {
+      const STORAGE_KEY = 'sacred_breath_custom_profiles';
+      const elNameInput = document.getElementById('customProfileName');
+      const elSaveBtn = document.getElementById('savePresetBtn');
+      const elLoadSamplesBtn = document.getElementById('loadDefaultProfilesBtn');
+      const elChipBar = document.getElementById('presetChipBar');
+      const elCompareBody = document.getElementById('compareTableBody');
+      const elCountTag = document.getElementById('profileCountTag');
+      const elProBanner = document.getElementById('customPresetProBanner');
+      const elValMsg = document.getElementById('profileValidationMsg');
+
+      let activeProfileId = null;
+
+      const SAMPLE_PROFILES = [
+        { id: 'prof-sample-1', name: 'Coherence 5.5 Reset', inhale: 5.0, hold: 0.0, exhale: 6.0, pause: 0.0, sessionMinutes: 10, smoothing: 6, geometry: 'mandala' },
+        { id: 'prof-sample-2', name: 'Tactical Box Focus', inhale: 4.0, hold: 4.0, exhale: 4.0, pause: 4.0, sessionMinutes: 8, smoothing: 5, geometry: 'lotus' },
+        { id: 'prof-sample-3', name: 'Parasympathetic Deep Sigh', inhale: 4.0, hold: 2.0, exhale: 7.0, pause: 1.0, sessionMinutes: 12, smoothing: 7, geometry: 'spirograph' }
+      ];
+
+      function getProfiles() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          }
+        } catch (_) {}
+        return [...SAMPLE_PROFILES];
+      }
+
+      function saveProfiles(profiles) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles));
+        } catch (_) {}
+      }
+
+      function evalProfile(p) {
+        const cycle = p.inhale + p.hold + p.exhale + p.pause;
+        const bpm = cycle > 0 ? 60 / cycle : 0;
+        const ratio = p.inhale > 0 ? p.exhale / p.inhale : 1;
+        const bpmDev = Math.abs(bpm - 5.5);
+        let hrv = 100 * Math.exp(-0.5 * Math.pow(bpmDev / 1.75, 2));
+        if (ratio >= 1.0) hrv = clamp(hrv * (1 + Math.min(0.2, (ratio - 1) * 0.1)), 10, 99);
+        else hrv = clamp(hrv * 0.82, 10, 95);
+
+        let balance = 'Balanced / Stabilizing';
+        if (bpm > 12.0) balance = 'Sympathetic Stimulating';
+        else if (ratio >= 1.25 || (p.exhale >= p.inhale + 1.5)) balance = 'Parasympathetic Dominant';
+        else if (ratio < 0.8) balance = 'Sympathetic Energizing';
+
+        return { cycleTime: cycle.toFixed(1) + 's', bpm: bpm.toFixed(2) + ' bpm', hrv: Math.round(hrv) + '%', balance };
+      }
+
+      function applyProfile(p) {
+        activeProfileId = p.id;
+        state.inhale = p.inhale;
+        state.hold = p.hold;
+        state.exhale = p.exhale;
+        state.pause = p.pause;
+        if (p.sessionMinutes) state.sessionMinutes = p.sessionMinutes;
+        if (p.smoothing) state.smoothing = p.smoothing;
+        if (p.geometry) state.geometry = p.geometry;
+
+        elInhale.value = state.inhale;
+        elHold.value = state.hold;
+        elExhale.value = state.exhale;
+        elPause.value = state.pause;
+        elSessionGoal.value = state.sessionMinutes;
+        elVisualSmoothing.value = state.smoothing;
+        elGeometrySelect.value = state.geometry;
+        elPresetSelect.value = 'custom';
+
+        validateInputs();
+        computeMetrics();
+        saveSettingsToStorage();
+        render();
+      }
+
+      function render() {
+        const profiles = getProfiles();
+        if (elCountTag) elCountTag.textContent = `${profiles.length} / 10 Saved`;
+
+        if (elChipBar) {
+          if (profiles.length === 0) {
+            elChipBar.innerHTML = '<span style="font-size:0.75rem; color:var(--text-muted);">No custom presets saved.</span>';
+          } else {
+            elChipBar.innerHTML = profiles.map(p => `
+              <div class="profile-chip ${activeProfileId === p.id ? 'chip-active' : ''}" data-id="${p.id}" title="Click to recall profile">
+                <span>${p.name}</span>
+                <span class="profile-chip-del" data-del="${p.id}" title="Delete preset">&times;</span>
+              </div>
+            `).join('');
+          }
+        }
+
+        if (elCompareBody) {
+          if (profiles.length === 0) {
+            elCompareBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:1rem;">Preset bank is empty. Save current parameters above.</td></tr>';
+          } else {
+            elCompareBody.innerHTML = profiles.map(p => {
+              const res = evalProfile(p);
+              const isActive = activeProfileId === p.id;
+              return `
+                <tr style="${isActive ? 'background:rgba(94, 234, 212, 0.08);' : ''}">
+                  <td style="font-weight:700; color:${isActive ? 'var(--accent)' : 'inherit'};">${p.name}</td>
+                  <td>${p.inhale}s / ${p.hold}s / ${p.exhale}s / ${p.pause}s</td>
+                  <td>${res.cycleTime}</td>
+                  <td>${res.bpm}</td>
+                  <td style="color:var(--accent); font-weight:700;">${res.hrv}</td>
+                  <td><span class="status-badge" style="font-size:0.7rem; padding:0.15rem 0.4rem;">${res.balance}</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-primary" data-apply="${p.id}" style="padding:0.2rem 0.5rem; font-size:0.72rem;">Recall</button>
+                    <button class="btn btn-sm" data-del="${p.id}" style="padding:0.2rem 0.45rem; font-size:0.72rem; color:var(--danger);">Del</button>
+                  </td>
+                </tr>
+              `;
+            }).join('');
+          }
+        }
+      }
+
+      function showProNotice() {
+        if (elProBanner) {
+          elProBanner.style.display = 'block';
+          setTimeout(() => elProBanner.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 40);
+        }
+      }
+
+      if (elSaveBtn) {
+        elSaveBtn.addEventListener('click', () => {
+          if (!PRO) {
+            showProNotice();
+            return;
+          }
+          if (elProBanner) elProBanner.style.display = 'none';
+
+          const name = elNameInput ? elNameInput.value.trim() : '';
+          if (!name) {
+            if (elValMsg) {
+              elValMsg.textContent = 'Please enter a name for your custom profile.';
+              elValMsg.style.display = 'block';
+            }
+            return;
+          }
+
+          const profiles = getProfiles();
+          if (profiles.length >= 10) {
+            if (elValMsg) {
+              elValMsg.textContent = 'Maximum 10 custom profiles reached. Delete an existing profile first.';
+              elValMsg.style.display = 'block';
+            }
+            return;
+          }
+
+          if (elValMsg) elValMsg.style.display = 'none';
+
+          const newProfile = {
+            id: 'prof-' + Date.now(),
+            name,
+            inhale: parseFloat(state.inhale) || 5.0,
+            hold: parseFloat(state.hold) || 0.0,
+            exhale: parseFloat(state.exhale) || 6.0,
+            pause: parseFloat(state.pause) || 0.0,
+            sessionMinutes: state.sessionMinutes || 10,
+            smoothing: state.smoothing || 6,
+            geometry: state.geometry || 'mandala'
+          };
+
+          profiles.push(newProfile);
+          activeProfileId = newProfile.id;
+          saveProfiles(profiles);
+          if (elNameInput) elNameInput.value = '';
+          render();
+        });
+      }
+
+      if (elLoadSamplesBtn) {
+        elLoadSamplesBtn.addEventListener('click', () => {
+          saveProfiles([...SAMPLE_PROFILES]);
+          render();
+        });
+      }
+
+      function handleActionClick(e) {
+        const delTarget = e.target.closest('[data-del]');
+        if (delTarget) {
+          e.stopPropagation();
+          const id = delTarget.getAttribute('data-del');
+          let profiles = getProfiles().filter(p => p.id !== id);
+          if (activeProfileId === id) activeProfileId = null;
+          saveProfiles(profiles);
+          render();
+          return;
+        }
+
+        const applyTarget = e.target.closest('[data-apply]') || e.target.closest('[data-id]');
+        if (applyTarget) {
+          const id = applyTarget.getAttribute('data-apply') || applyTarget.getAttribute('data-id');
+          const p = getProfiles().find(item => item.id === id);
+          if (p) applyProfile(p);
+        }
+      }
+
+      if (elChipBar) elChipBar.addEventListener('click', handleActionClick);
+      if (elCompareBody) elCompareBody.addEventListener('click', handleActionClick);
+
+      render();
+    })();
+
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>Generative Sacred Geometry &amp; Breath Sync Studio is a browser-based visual pacer designed for meditation practitioners, yoga teachers, and breathwork facilitators. It combines customizable sacred geometry visualizers with breath-synchronized audio sweeps and physiological tracking metrics. The core tool is free to use online, with an offline single-file studio pack available for download.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select a visual anchor (Sacred Mandala, Spirograph, Lotus, or Wavefront) and configure your preferred color palette.</li><li>Enter your desired breathing pattern (Inhale, Inhale Hold, Exhale, Exhale Hold) or reverse-calculate intervals using target breaths per minute.</li><li>Enable breath-synchronized binaural beats and harmonic overtone sweeps to guide your pacing through sound.</li><li>Track real-time session indicators such as estimated HRV potential, vagal engagement, and export your session data to JSON or CSV.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">If I want to hit a specific respiratory rate (e.g., 5.5 breaths per minute for heart rate variability coherence) and maintain a 1:2 inhale-to-exhale ratio, how long should each phase of my breath cycle be, and what is its physiological effect?</h4><p style="margin:0">You enter: Desired target respiratory rate (5.5 breaths per minute) · Desired ratio structure (1:2 inhale-to-exhale with 0s hold and 0s post-exhale pause) · Intended practice goal (parasympathetic activation / HRV resonance).<br>You get: Exact second durations for Inhale, Inhale-Hold, Exhale, and Post-Exhale Pause, calculated total cycle length, breaths per minute check, and physiological nervous system impact summary.</p><h4 style="font-size:16px;margin:16px 0 4px">For my custom 4-phase breath cycle (e.g., Box Breathing 4.0s Inhale, 4.0s Hold, 4.0s Exhale, 4.0s Pause) and a 10-minute session goal, how many total breath cycles will I complete, what fraction of my session is spent in lung retention versus ventilation, and what is my cumulative air-exchange time?</h4><p style="margin:0">You enter: Inhale duration (4.0s) · Inhale-Hold duration (4.0s) · Exhale duration (4.0s) · Post-Exhale Pause duration (4.0s) · Session target duration (10 minutes = 600 seconds).<br>You get: Calculated breath cycle duration (16.0s), total completed cycles (37.5 cycles), ventilation time (300.0s, 50%), retention/pause time (300.0s, 50%), and autonomic balance rating.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free web page and the $9 Gumroad product?</h4><p style="margin:0">The free web page provides full access to the interactive geometry visualizers, audio generator, and pacing controls directly in your browser. The $9 Gumroad product is a standalone, single-file HTML package that runs entirely offline with no internet connection required, and it permanently unlocks local JSON/CSV session logging for facilitators and personal archives.</p><h4 style="font-size:16px;margin:16px 0 4px">How does the reverse-solve breath timing feature work?</h4><p style="margin:0">Instead of forcing you to mentally divide seconds, the studio lets you input your target breathing rate (such as 5.5 breaths per minute for resonance) alongside your preferred ratio (such as 1:2 inhale-to-exhale). The engine instantly calculates the exact millisecond values for each phase of the breathing cycle.</p><h4 style="font-size:16px;margin:16px 0 4px">Do I need headphones to use the audio features?</h4><p style="margin:0">Headphones or stereo earbuds are recommended if you want the full benefit of binaural beat frequencies, as they rely on presenting slightly different frequencies to each ear. However, the harmonic overtone sweeps and visual breathing cues work effectively over standard external speakers or in complete silence.</p><h4 style="font-size:16px;margin:16px 0 4px">How are physiological indicators like HRV potential and vagal brake engagement calculated?</h4><p style="margin:0">These indicators are algorithmic estimates based on peer-reviewed autonomic research correlating respiratory rate, prolonged exhalation ratios, and breath hold durations with parasympathetic activation. They provide comparative benchmarks for your sessions rather than direct clinical ECG or optical sensor measurements.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/zpoozf" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../pet-trick-shaping-clicker-lab/" style="color:inherit;font-weight:600">Pet Clicker Training &amp; Micro-Shaping Studio</a>: Offline acoustic marker, trial tracker, curriculum generator, and behavioral decision engine for precision pet training.</li><li><a href="../sourdough-fermentation-schedule-visualizer/" style="color:inherit;font-weight:600">Sourdough &amp; Fermentation Schedule Visualizer</a>: Master your sourdough timing with thermal kinetics, canvas rise simulation, and reverse bake scheduling.</li><li><a href="../narrative-pacing-tension-arc-mapper/" style="color:inherit;font-weight:600">Interactive Story Pacing &amp; Tension Arc Mapper</a>: Offline single-file HTML tool to visualize story tension, detect saggy middles, and export beat sheets.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
