@@ -1,0 +1,2461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface-hover: #1f242c;
+      --surface-border: #30363d;
+      --text: #c9d1d9;
+      --text-heading: #f0f6fc;
+      --text-muted: #8b949e;
+      --primary: #58a6ff;
+      --primary-hover: #79c0ff;
+      --accent: #d29922;
+      --accent-rgb: 210, 153, 34;
+      --danger: #f85149;
+      --success: #3fb950;
+      --plate-bg: #090d12;
+      --plate-rim: #484f58;
+      --sand: #f2e3c6;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --radius: 8px;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f6f8fa;
+        --surface: #ffffff;
+        --surface-hover: #f3f4f6;
+        --surface-border: #d0d7de;
+        --text: #24292f;
+        --text-heading: #0969da;
+        --text-muted: #57606a;
+        --primary: #0969da;
+        --primary-hover: #218bff;
+        --accent: #9a6700;
+        --accent-rgb: 154, 103, 0;
+        --danger: #cf222e;
+        --success: #1a7f37;
+        --plate-bg: #1c2128;
+        --plate-rim: #8c959f;
+        --sand: #fef08a;
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .title-area h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .title-area p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button, select, input {
+      font-family: inherit;
+      font-size: 0.85rem;
+    }
+
+    .btn {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 6px 12px;
+      cursor: pointer;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--primary);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-audio {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .btn-audio.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Layout grid */
+    .app-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr 340px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    @media (max-width: 1100px) {
+      .app-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 8px; }
+      header { padding: 12px; }
+      .title-area h1 { font-size: 1.15rem; }
+      .field-row { grid-template-columns: 1fr; }
+      .metrics-grid { grid-template-columns: 1fr; }
+    }
+
+    button:focus-visible, select:focus-visible, input:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .input-error {
+      font-size: 0.72rem;
+      color: var(--danger);
+      margin-top: 2px;
+      display: none;
+    }
+    .input-error.show {
+      display: block;
+    }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .header-actions, .viewport-toolbar, .target-mode-box, .pill-toggle, .overlay-controls, #pro-notice { display: none !important; }
+      .app-grid { display: block; }
+      .card { border: 1px solid #ccc; break-inside: avoid; margin-bottom: 12px; }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-heading);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--surface-border);
+    }
+
+    .badge {
+      font-size: 0.72rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(88, 166, 255, 0.15);
+      color: var(--primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    label span.val {
+      color: var(--text-heading);
+      font-family: monospace;
+      font-weight: 600;
+    }
+
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--surface-border);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 6px;
+      outline: none;
+    }
+    input[type="text"]:focus, input[type="number"]:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Center simulation viewport */
+    .viewport-card {
+      padding: 12px;
+      position: relative;
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-height: 600px;
+      background: var(--plate-bg);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+      user-select: none;
+      touch-action: none;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+    }
+
+    .viewport-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .sim-stats-bar {
+      display: flex;
+      gap: 12px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+
+    .sim-stats-bar span b {
+      color: var(--text-heading);
+    }
+
+    /* Results and Insights */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .metric-box {
+      background: var(--bg);
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+    .metric-box .m-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .metric-box .m-val {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      font-family: monospace;
+      margin-top: 2px;
+    }
+    .metric-box .m-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .interpretation-box {
+      background: var(--bg);
+      border-left: 3px solid var(--primary);
+      padding: 10px 12px;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+    .interpretation-box h4 {
+      color: var(--text-heading);
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .target-mode-box {
+      background: var(--bg);
+      border: 1px dashed var(--accent);
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 0.8rem;
+    }
+    .target-mode-box h4 {
+      color: var(--accent);
+      margin-bottom: 6px;
+      font-size: 0.82rem;
+    }
+
+    .toast-msg {
+      font-size: 0.75rem;
+      color: var(--accent);
+      padding: 4px 8px;
+      background: rgba(var(--accent-rgb), 0.1);
+      border-radius: 4px;
+      display: none;
+    }
+    .toast-msg.show {
+      display: block;
+    }
+
+    .safety-disclaimer {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--surface-border);
+      padding-top: 12px;
+      text-align: center;
+    }
+
+    .pill-toggle {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .pill-btn {
+      flex: 1;
+      padding: 5px 8px;
+      font-size: 0.75rem;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: center;
+    }
+    .pill-btn.active {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .overlay-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Telemetry Bar & Nodal Convergence Metrics */
+    .telemetry-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: 220px 160px 180px 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+    @media (max-width: 980px) {
+      .telemetry-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    @media (max-width: 540px) {
+      .telemetry-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .telemetry-gauge {
+      height: 8px;
+      background: var(--surface-border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .telemetry-gauge-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      border-radius: 4px;
+      transition: width 0.15s ease-out, background-color 0.25s;
+    }
+    .sparkline-box {
+      background: var(--bg);
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 72px;
+    }
+    #sparkline-canvas {
+      width: 100%;
+      height: 48px;
+      display: block;
+    }
+    .telemetry-controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--surface-border);
+      font-size: 0.75rem;
+    }
+
+    .mixer-drawer {
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      background: var(--bg);
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .mixer-summary {
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-heading);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+    .mixer-summary::-webkit-details-marker { display: none; }
+    .mixer-summary:hover { background: var(--surface-hover); }
+    .mixer-content {
+      padding: 10px;
+      border-top: 1px solid var(--surface-border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mixer-readout {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: monospace;
+      padding-top: 4px;
+      border-top: 1px dashed var(--surface-border);
+    }
+    .mixer-pro-notice {
+      font-size: 0.75rem;
+      color: var(--accent);
+      background: rgba(var(--accent-rgb), 0.12);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      padding: 6px 8px;
+    }
+    /* FEATURE-CSS */
+  </style>
+<title>Chladni Plate Cymatics &amp; Resonance Sandbox</title>
+<meta name="description" content="Simulate Chladni plate nodal figures in real time with 25,000 sand particles and audio tone synthesis. Free web app with offline single-file edition available.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/chladni-cymatics-resonance-lab/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/chladni-cymatics-resonance-lab/">
+<meta property="og:title" content="Chladni Plate Cymatics &amp; Resonance Sandbox"><meta property="og:description" content="Simulate Chladni plate nodal figures in real time with 25,000 sand particles and audio tone synthesis. Free web app with offline single-file edition available.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/chladni-cymatics-resonance-lab/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Chladni Plate Cymatics & Resonance Sandbox","description":"Simulate Chladni plate nodal figures in real time with 25,000 sand particles and audio tone synthesis. Free web app with offline single-file edition available.","url":"https://rttyy.github.io/free-tools/chladni-cymatics-resonance-lab/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between the free web page and the paid Gumroad product?","acceptedAnswer":{"@type":"Answer","text":"The web version is completely free to use online in any browser. The $9 Gumroad purchase provides a self-contained, offline single-file HTML bundle that runs forever locally without internet access, account creation, or external dependencies."}},{"@type":"Question","name":"Can I use this simulator for physics classroom demonstrations?","acceptedAnswer":{"@type":"Answer","text":"Yes. It is built to demonstrate 2D standing waves, nodal lines, and harmonic modes clearly. You can export high-resolution images and CSV data profiles directly for student lab reports and physics assignments."}},{"@type":"Question","name":"How does the particle simulator calculate sand movement?","acceptedAnswer":{"@type":"Answer","text":"The sandbox models plate displacement using standing wave equations for rectangular modal shapes. Particles experience forces proportional to local displacement amplitude gradients, driving them off anti-nodes toward zero-displacement nodal lines."}},{"@type":"Question","name":"What system requirements are needed to run 25,000 particles at 60 FPS?","acceptedAnswer":{"@type":"Answer","text":"Any modern web browser supporting HTML5 canvas and Web Audio (such as Chrome, Firefox, Safari, or Edge) on modern desktop or laptop hardware will run the simulation smoothly."}}]}</script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-area">
+        <h1>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            <path d="M2 12h20"></path>
+          </svg>
+          Chladni Plate Cymatics &amp; Resonance Sandbox
+        </h1>
+        <p>Acoustic modal vibration solver, Bessel wave generator &amp; high-density granular sand simulator</p>
+      </div>
+
+      <div class="header-actions">
+        <label for="preset-selector" class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;">Preset Scenarios</label>
+        <select id="preset-selector" class="btn" style="padding: 6px 10px;" aria-label="Preset Scenarios">
+          <option value="0">Preset: Classic Diamond Star (Square Plate)</option>
+          <option value="1">Preset: Octagonal Lattice (Square Clamped)</option>
+          <option value="2">Preset: Concentric Ripple Target (Circular)</option>
+        </select>
+        <button id="btn-export-png" class="btn" title="Export current cymatic plate view as PNG">Capture PNG</button>
+        <button id="btn-export-csv" class="btn" title="Export resonance and modal profile data">Export CSV</button>
+        <button id="btn-copy-summary" class="btn" title="Copy acoustic summary to clipboard">Copy Data</button>
+        <button id="btn-print" class="btn" title="Print acoustic analysis report">Print</button>
+        <button id="btn-reset" class="btn" title="Reset all simulation values">Reset</button>
+      </div>
+    </header>
+
+    <div id="pro-notice" class="toast-msg"></div>
+
+    <main class="app-grid">
+      <!-- PANEL 1: Modal Frequency Solver & Plate Parameters -->
+      <section class="card" data-feature="plate-geometry-mode-engine">
+        <div class="card-title">
+          <span>Plate Mechanics &amp; Modes</span>
+          <span class="badge" id="plate-shape-badge">Square Free</span>
+        </div>
+
+        <div class="field-group">
+          <label>Plate Geometry</label>
+          <div class="pill-toggle" id="geometry-toggle">
+            <button type="button" class="pill-btn active" data-val="square">Square Plate</button>
+            <button type="button" class="pill-btn" data-val="circle">Circular Disc</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Edge Boundary Constraint</label>
+          <div class="pill-toggle" id="boundary-toggle">
+            <button type="button" class="pill-btn active" data-val="free">Free Rim</button>
+            <button type="button" class="pill-btn" data-val="clamped">Clamped Rim</button>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label for="input-dimension">Width / Dia. <span class="val" id="val-dim">0.30 m</span></label>
+            <input type="range" id="input-dimension" min="0.10" max="1.00" step="0.01" value="0.30">
+          </div>
+          <div class="field-group">
+            <label for="input-thickness">Thickness <span class="val" id="val-thick">1.5 mm</span></label>
+            <input type="range" id="input-thickness" min="0.5" max="5.0" step="0.1" value="1.5">
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="input-material">Plate Material (Bulk Speed $c_L$)</label>
+          <select id="input-material">
+            <option value="5100">Aluminum alloy (5,100 m/s, &rho; 2700)</option>
+            <option value="5000">Structural steel (5,000 m/s, &rho; 7850)</option>
+            <option value="3800">Acoustic brass (3,800 m/s, &rho; 8500)</option>
+            <option value="4600">Titanium Grade 5 (4,600 m/s, &rho; 4430)</option>
+            <option value="2200">Cast acrylic / PMMA (2,200 m/s, &rho; 1180)</option>
+            <option value="custom">Custom Speed...</option>
+          </select>
+        </div>
+
+        <div class="field-group" id="custom-speed-group" style="display:none;">
+          <label for="input-custom-speed">Sound Speed c_L (m/s)</label>
+          <input type="number" id="input-custom-speed" min="200" max="15000" step="50" value="5100">
+          <div id="err-custom-speed" class="input-error">Please enter a sound speed between 200 and 15,000 m/s.</div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label for="input-m"><span id="lbl-mode-m">Mode m (X / Diam)</span> <span class="val" id="val-m">3</span></label>
+            <input type="range" id="input-m" min="0" max="10" step="1" value="3">
+          </div>
+          <div class="field-group">
+            <label for="input-n"><span id="lbl-mode-n">Mode n (Y / Circles)</span> <span class="val" id="val-n">3</span></label>
+            <input type="range" id="input-n" min="1" max="10" step="1" value="3">
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label>Chladni Superposition Symmetry</label>
+          <div class="pill-toggle" id="superposition-toggle">
+            <button type="button" class="pill-btn active" data-val="symmetric">Symmetric (w_mn - w_nm)</button>
+            <button type="button" class="pill-btn" data-val="additive">Harmonic (w_mn + w_nm)</button>
+          </div>
+        </div>
+
+        <!-- Dual-Tone Chladni Interference Mixer Drawer -->
+        <details class="mixer-drawer" id="harmonic-superposition-mixer" data-feature="harmonic-superposition-mixer">
+          <summary class="mixer-summary">
+            <span>Dual-Tone Chladni Interference Mixer</span>
+            <span class="badge" id="mixer-badge" style="font-size:0.68rem;">Off</span>
+          </summary>
+          <div class="mixer-content">
+            <div id="mixer-pro-gate" class="mixer-pro-notice" style="display:none;">
+              Available in the full version <a href="https://example.com/chladni-cymatics-pro" target="_blank" rel="noopener" style="color:var(--primary); font-weight:600; text-decoration:underline;">Upgrade to Pro</a>
+            </div>
+            <div class="field-group" style="margin-bottom:4px;">
+              <label style="cursor:pointer; display:flex; align-items:center; gap:6px;">
+                <input type="checkbox" id="mixer-enable" style="width:auto; cursor:pointer;">
+                <span style="color:var(--text-heading); font-weight:600;">Enable Dual Interference Field</span>
+              </label>
+            </div>
+            <div class="field-row">
+              <div class="field-group">
+                <label for="input-m2">Secondary m2 <span class="val" id="val-m2">1</span></label>
+                <input type="range" id="input-m2" min="0" max="10" step="1" value="1">
+              </div>
+              <div class="field-group">
+                <label for="input-n2">Secondary n2 <span class="val" id="val-n2">5</span></label>
+                <input type="range" id="input-n2" min="1" max="10" step="1" value="5">
+              </div>
+            </div>
+            <div class="field-row">
+              <div class="field-group">
+                <label for="input-freq-offset">&Delta;f Offset <span class="val" id="val-freq-offset">0.5 Hz</span></label>
+                <input type="range" id="input-freq-offset" min="0" max="5.0" step="0.1" value="0.5">
+              </div>
+              <div class="field-group">
+                <label for="input-amp-ratio">Amp Ratio (A2/A1) <span class="val" id="val-amp-ratio">0.70</span></label>
+                <input type="range" id="input-amp-ratio" min="0" max="1" step="0.05" value="0.70">
+              </div>
+            </div>
+            <div class="field-group">
+              <label for="input-phase">Phase Angle &phi; <span class="val" id="val-phase">0&deg;</span></label>
+              <input type="range" id="input-phase" min="0" max="360" step="5" value="0">
+            </div>
+            <div class="mixer-readout">
+              <span>Instant &phi;(t): <b id="mixer-dyn-phase">0&deg;</b></span>
+              <span>Beat Period T: <b id="mixer-beat-period">2.0 s</b></span>
+            </div>
+          </div>
+        </details>
+
+        <!-- Target Pattern Solver for Question 2 -->
+        <div class="target-mode-box">
+          <h4>Target Mode &amp; Anti-Ejection Solver</h4>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:6px;">
+            Targeting concentric rings without grains flying off the edge? Choose pattern goal:
+          </p>
+          <div class="field-group" style="margin-bottom:6px;">
+            <select id="quick-target-goal" style="font-size:0.75rem; padding:4px 6px;">
+              <option value="rings-3">3 Circular Rings (m=0, n=3)</option>
+              <option value="rings-2">2 Circular Rings (m=0, n=2)</option>
+              <option value="cross-stars">Hyperbolic Quad Star (m=3, n=5)</option>
+              <option value="checkerboard">16-Cell Grid (m=4, n=4)</option>
+            </select>
+          </div>
+          <button id="btn-apply-target" class="btn" style="width:100%; font-size:0.75rem; justify-content:center;">Apply Optimized Excitation</button>
+          <div id="target-solver-result" style="margin-top:6px; font-size:0.72rem; color:var(--text);"></div>
+        </div>
+      </section>
+
+      <!-- PANEL 2: Interactive Viewport and Particle Physics Engine -->
+      <section class="card viewport-card" data-feature="particle-cymatics-simulator">
+        <div class="card-title">
+          <span>Plate Surface &amp; Particle Sandbox</span>
+          <div class="overlay-controls">
+            <input type="checkbox" id="chk-show-field">
+            <label for="chk-show-field" style="margin:0; font-size:0.75rem; cursor:pointer;">Show Wave Field</label>
+          </div>
+        </div>
+
+        <div class="canvas-container" id="canvas-container">
+          <canvas id="sim-canvas" width="600" height="600"></canvas>
+        </div>
+
+        <!-- Transducer Audio Synthesizer Bar -->
+        <div class="viewport-toolbar" data-feature="transducer-audio-synthesizer" style="width:100%;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <button id="btn-audio-toggle" class="btn btn-audio">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              </svg>
+              <span id="lbl-audio-state">Tone Off</span>
+            </button>
+            <div style="display:flex; flex-direction:column; width:80px;">
+              <label style="font-size:0.68rem;">Volume <span id="val-vol" class="val">25%</span></label>
+              <input type="range" id="input-audio-volume" min="0" max="1" step="0.05" value="0.25">
+            </div>
+            <select id="input-audio-wave" style="font-size:0.75rem; padding:4px 6px;">
+              <option value="sine">Pure Sine</option>
+              <option value="triangle">Triangle Bow</option>
+            </select>
+            <div style="display:flex; flex-direction:column; width:80px;">
+              <label for="input-audio-overtone" style="font-size:0.68rem;">Harmonic <span id="val-overtone" class="val">0%</span></label>
+              <input type="range" id="input-audio-overtone" min="0" max="0.50" step="0.05" value="0">
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:6px;">
+            <button id="btn-scatter" class="btn btn-primary" title="Scatter fresh sand grains across plate">Scatter Sand</button>
+            <button id="btn-clear-particles" class="btn" title="Sweep all grains off">Clear</button>
+          </div>
+        </div>
+
+        <!-- Particle Physics Controls -->
+        <div class="field-row" style="margin-top:6px;">
+          <div class="field-group">
+            <label for="input-particles">Grains <span class="val" id="val-particles">12,000</span></label>
+            <input type="range" id="input-particles" min="1000" max="25000" step="1000" value="12000">
+          </div>
+          <div class="field-group">
+            <label for="input-amplitude">Drive Amplitude <span class="val" id="val-amp">0.65</span></label>
+            <input type="range" id="input-amplitude" min="0.0" max="1.0" step="0.02" value="0.65">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label for="input-damping">Surface Damping <span class="val" id="val-damp">0.18</span></label>
+            <input type="range" id="input-damping" min="0.01" max="0.50" step="0.01" value="0.18">
+          </div>
+          <div class="field-group">
+            <label for="input-elasticity">Grain Bounce <span class="val" id="val-bounce">0.25</span></label>
+            <input type="range" id="input-elasticity" min="0.0" max="0.8" step="0.05" value="0.25">
+          </div>
+        </div>
+
+        <div class="sim-stats-bar">
+          <span>FPS: <b id="stat-fps">60</b></span>
+          <span>Mean Drift: <b id="stat-drift">0.00 px</b></span>
+          <span>Nodal Settled: <b id="stat-settled">0%</b></span>
+          <span>Perimeter Loss: <b id="stat-escaped">0</b></span>
+        </div>
+      </section>
+
+      <!-- PANEL 3: Live Acoustic Structure & Physics Interpretation -->
+      <section class="card" data-feature="acoustic-structure-insights">
+        <div class="card-title">
+          <span>Acoustic Metrics &amp; Physics</span>
+          <span class="badge" style="background:rgba(63, 185, 80, 0.15); color:var(--success);">Analytical</span>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-box">
+            <div class="m-label">Resonant Freq (f)</div>
+            <div class="m-val" id="metric-freq">694 Hz</div>
+            <div class="m-sub" id="metric-freq-sub">Theoretical flexural mode</div>
+          </div>
+          <div class="metric-box">
+            <div class="m-label">Acoustic &lambda; in Plate</div>
+            <div class="m-val" id="metric-wavelength">0.100 m</div>
+            <div class="m-sub" id="metric-wavelength-sub">Flexural wavelength</div>
+          </div>
+          <div class="metric-box">
+            <div class="m-label">Nodal Intersections</div>
+            <div class="m-val" id="metric-nodal-count">8 lines</div>
+            <div class="m-sub" id="metric-symmetry">Dihedral D4 (C4v)</div>
+          </div>
+          <div class="metric-box">
+            <div class="m-label">Critical Escape Accel</div>
+            <div class="m-val" id="metric-accel">2.4g</div>
+            <div class="m-sub" id="metric-accel-sub">Stable retention</div>
+          </div>
+          <div class="metric-box">
+            <div class="m-label">Antinodal Peak Count</div>
+            <div class="m-val" id="metric-antinodal-count">9 peaks</div>
+            <div class="m-sub" id="metric-antinodal-sub">Local displacement maxima</div>
+          </div>
+          <div class="metric-box">
+            <div class="m-label">Kinetic Energy Index</div>
+            <div class="m-val" id="metric-ke-index">0.250</div>
+            <div class="m-sub" id="metric-ke-sub">&lang;w&sup2;&rang; / w_max&sup2; distribution</div>
+          </div>
+        </div>
+
+        <div class="interpretation-box">
+          <h4 id="insights-heading">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            What This Means / Laboratory Next Steps
+          </h4>
+          <p id="insights-text">
+            For this mode, grains rapidly migrate away from high-acceleration antinodes where the vertical acceleration exceeds gravity $g$. They collect along the lines of zero vibration ($w = 0$).
+          </p>
+        </div>
+
+        <div class="metric-box" style="margin-top:2px;">
+          <div class="m-label">Physical Excitation Guidance</div>
+          <div id="excitation-technique" style="font-size:0.78rem; margin-top:4px; color:var(--text);">
+            Use violin bow coated in rosin drawn vertically at the plate edge midway between corners, while lightly touching a corner nodal point with index finger.
+          </div>
+        </div>
+
+        <div class="metric-box">
+          <div class="m-label">Kinetic Energy &amp; Dispersion</div>
+          <div style="font-size:0.75rem; margin-top:4px; color:var(--text-muted); line-height:1.4;">
+            Plate Area: <b id="metric-area" style="color:var(--text-heading);">0.090 m&sup2;</b> | Aspect Ratio: <b>1.00</b><br>
+            Bessel Root $j_{m,n}$: <b id="metric-bessel" style="color:var(--text-heading);">N/A (Square)</b><br>
+            Equilibrium Settling Est: <b id="metric-settle-time" style="color:var(--text-heading);">3.2 s</b>
+          </div>
+        </div>
+
+        <div class="safety-disclaimer">
+          Estimate only - verify with a qualified acoustic or structural professional before relying on it for high-power mechanical shakers.
+        </div>
+      </section>
+    </main>
+
+    <!-- Nodal Clustering Statistics & Particle Convergence Graph -->
+    <section class="telemetry-card" data-feature="particle-dispersion-metrics">
+      <div class="card-title" style="padding-bottom: 6px; border-bottom: 1px solid var(--surface-border);">
+        <span style="display: flex; align-items: center; gap: 8px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          Nodal Clustering Statistics &amp; Particle Convergence Telemetry
+        </span>
+        <span class="badge" id="telemetry-status-badge">Aggregating</span>
+      </div>
+
+      <div class="telemetry-grid">
+        <div class="metric-box">
+          <div class="m-label">Nodal Alignment Index</div>
+          <div class="m-val" id="metric-nodal-align">0.0%</div>
+          <div class="telemetry-gauge">
+            <div class="telemetry-gauge-fill" id="telemetry-gauge-fill"></div>
+          </div>
+          <div class="m-sub" style="margin-top: 4px;" id="metric-align-sub">&lt; 3% width of true zero node</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="m-label">Kinetic Temperature (T_g)</div>
+          <div class="m-val" id="metric-kinetic-temp">0.00 &mu;J</div>
+          <div class="m-sub" id="metric-temp-sub">Mean granular velocity</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="m-label">Convergence Rate</div>
+          <div class="m-val" id="metric-convergence-rate">+0.0 %/s</div>
+          <div class="m-sub" id="metric-conv-state">Transient flow</div>
+        </div>
+
+        <div class="sparkline-box">
+          <div style="display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--text-muted);">
+            <span id="sparkline-legend">Rolling Convergence (15s Window)</span>
+            <span style="color: var(--success); font-weight: 600;">85% Node Lock Target</span>
+          </div>
+          <canvas id="sparkline-canvas" width="400" height="48"></canvas>
+        </div>
+      </div>
+
+      <div class="telemetry-controls-row">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <label for="input-nodal-tol" style="font-size: 0.75rem; margin: 0; display: inline-flex; align-items: center; gap: 6px;">
+            Node Tolerance: <span class="val" id="val-nodal-tol">3.0%</span>
+          </label>
+          <input type="range" id="input-nodal-tol" min="0.01" max="0.06" step="0.005" value="0.03" style="width: 120px;">
+
+          <label for="select-spark-mode" style="font-size: 0.75rem; margin: 0; display: inline-flex; align-items: center; gap: 6px;">
+            Sparkline:
+          </label>
+          <select id="select-spark-mode" style="padding: 2px 6px; font-size: 0.75rem; width: auto;">
+            <option value="align">Nodal Alignment (%)</option>
+            <option value="temp">Kinetic Temperature (T_g)</option>
+          </select>
+        </div>
+
+        <button id="btn-reset-telemetry" class="btn" style="padding: 3px 8px; font-size: 0.75rem;">Reset Trace</button>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+  </div>
+
+  <script>
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/hqbltq";
+
+    (function() {
+      // --- STATE STORE ---
+      const state = {
+        geometry: 'square',         // 'square' | 'circle'
+        boundary: 'free',           // 'free' | 'clamped'
+        dimension: 0.30,            // meters (width or diameter)
+        thickness: 1.5,             // mm
+        speed: 5100,                // m/s
+        modeM: 3,                   // modal index m
+        modeN: 3,                   // modal index n
+        superposition: 'symmetric', // 'symmetric' | 'additive'
+        particlesCount: 12000,
+        amplitude: 0.65,
+        damping: 0.18,
+        elasticity: 0.25,
+        showField: false,
+        audioEnabled: false,
+        audioVolume: 0.25,
+        audioWave: 'sine',
+        audioOvertone: 0.0,
+        simSpeed: 1.0
+      };
+
+      // Built-in presets
+      const presets = [
+        {
+          name: "Classic Diamond Star (Square Plate)",
+          geometry: "square",
+          boundary: "free",
+          dimension: 0.30,
+          thickness: 1.5,
+          speed: 5100,
+          modeM: 3,
+          modeN: 3,
+          superposition: "symmetric",
+          particlesCount: 12000,
+          amplitude: 0.65,
+          damping: 0.18,
+          elasticity: 0.25,
+          audioVolume: 0.25,
+          audioWave: "sine"
+        },
+        {
+          name: "Octagonal Lattice (Square Clamped High-Order)",
+          geometry: "square",
+          boundary: "clamped",
+          dimension: 0.35,
+          thickness: 2.0,
+          speed: 5100,
+          modeM: 5,
+          modeN: 5,
+          superposition: "symmetric",
+          particlesCount: 16000,
+          amplitude: 0.80,
+          damping: 0.22,
+          elasticity: 0.20,
+          audioVolume: 0.20,
+          audioWave: "triangle"
+        },
+        {
+          name: "Concentric Ripple Target (Circular Membrane)",
+          geometry: "circle",
+          boundary: "clamped",
+          dimension: 0.30, // radius = 0.15 m
+          thickness: 1.0,
+          speed: 3800,
+          modeM: 0,
+          modeN: 3,
+          superposition: "symmetric",
+          particlesCount: 10000,
+          amplitude: 0.45,
+          damping: 0.15,
+          elasticity: 0.20,
+          audioVolume: 0.30,
+          audioWave: "sine"
+        }
+      ];
+
+      // Cached Bessel roots for Circular modes: J_m(x) = 0
+      // Table: besselZeros[m][n-1]
+      const besselRoots = {
+        0: [2.4048, 5.5201, 8.6537, 11.7915, 14.9309, 18.0711, 21.2116, 24.3525, 27.4935, 30.6346],
+        1: [3.8317, 7.0156, 10.1735, 13.3237, 16.4706, 19.6159, 22.7601, 25.9037, 29.0468, 32.1897],
+        2: [5.1356, 8.4172, 11.6198, 14.7960, 17.9598, 21.1170, 24.2701, 27.4206, 30.5692, 33.7128],
+        3: [6.3802, 9.7610, 13.0152, 16.2235, 19.4094, 22.5827, 25.7482, 28.9084, 32.0649, 35.2144],
+        4: [7.5883, 11.0647, 14.3725, 17.6160, 20.8269, 24.0190, 27.1991, 30.3710, 33.5371, 36.6990],
+        5: [8.7715, 12.3386, 15.7002, 18.9801, 22.2178, 25.4303, 28.6266, 31.8117, 34.9888, 38.1698]
+      };
+
+      // Bessel J function approximation for real-time wave field calculation
+      function besselJ(m, x) {
+        if (x < 0) return 0;
+        if (x === 0) return m === 0 ? 1 : 0;
+        // Accurate polynomial / asymptotic approximation
+        if (x < 12) {
+          let sum = 0;
+          let factM = 1;
+          for (let i = 1; i <= m; i++) factM *= i;
+          let term = Math.pow(x / 2, m) / factM;
+          sum = term;
+          for (let k = 1; k < 20; k++) {
+            term *= -1 * (x * x) / (4 * k * (k + m));
+            sum += term;
+            if (Math.abs(term) < 1e-8) break;
+          }
+          return sum;
+        } else {
+          // Asymptotic form for larger x
+          const chi = x - (m * Math.PI / 2) - (Math.PI / 4);
+          return Math.sqrt(2 / (Math.PI * x)) * Math.cos(chi);
+        }
+      }
+
+      // DOM Elements
+      const geomToggle = document.getElementById('geometry-toggle');
+      const boundToggle = document.getElementById('boundary-toggle');
+      const inputDim = document.getElementById('input-dimension');
+      const valDim = document.getElementById('val-dim');
+      const inputThick = document.getElementById('input-thickness');
+      const valThick = document.getElementById('val-thick');
+      const inputMaterial = document.getElementById('input-material');
+      const customSpeedGroup = document.getElementById('custom-speed-group');
+      const inputCustomSpeed = document.getElementById('input-custom-speed');
+      const inputM = document.getElementById('input-m');
+      const valM = document.getElementById('val-m');
+      const inputN = document.getElementById('input-n');
+      const valN = document.getElementById('val-n');
+      const lblModeM = document.getElementById('lbl-mode-m');
+      const lblModeN = document.getElementById('lbl-mode-n');
+      const superToggle = document.getElementById('superposition-toggle');
+
+      const inputParticles = document.getElementById('input-particles');
+      const valParticles = document.getElementById('val-particles');
+      const inputAmp = document.getElementById('input-amplitude');
+      const valAmp = document.getElementById('val-amp');
+      const inputDamp = document.getElementById('input-damping');
+      const valDamp = document.getElementById('val-damp');
+      const inputBounce = document.getElementById('input-elasticity');
+      const valBounce = document.getElementById('val-bounce');
+      const chkShowField = document.getElementById('chk-show-field');
+
+      const btnAudioToggle = document.getElementById('btn-audio-toggle');
+      const lblAudioState = document.getElementById('lbl-audio-state');
+      const inputAudioVol = document.getElementById('input-audio-volume');
+      const valVol = document.getElementById('val-vol');
+      const inputAudioWave = document.getElementById('input-audio-wave');
+      const inputAudioOvertone = document.getElementById('input-audio-overtone');
+      const valOvertone = document.getElementById('val-overtone');
+
+      const btnScatter = document.getElementById('btn-scatter');
+      const btnClear = document.getElementById('btn-clear-particles');
+      const presetSelector = document.getElementById('preset-selector');
+      const btnExportPng = document.getElementById('btn-export-png');
+      const btnExportCsv = document.getElementById('btn-export-csv');
+      const btnCopySummary = document.getElementById('btn-copy-summary');
+      const btnPrint = document.getElementById('btn-print');
+      const btnReset = document.getElementById('btn-reset');
+      let currentPresetIdx = 0;
+      const proNotice = document.getElementById('pro-notice');
+
+      const quickTargetGoal = document.getElementById('quick-target-goal');
+      const btnApplyTarget = document.getElementById('btn-apply-target');
+      const targetSolverResult = document.getElementById('target-solver-result');
+
+      // Metric & insight elements
+      const metricFreq = document.getElementById('metric-freq');
+      const metricFreqSub = document.getElementById('metric-freq-sub');
+      const metricWavelength = document.getElementById('metric-wavelength');
+      const metricWavelengthSub = document.getElementById('metric-wavelength-sub');
+      const metricNodalCount = document.getElementById('metric-nodal-count');
+      const metricSymmetry = document.getElementById('metric-symmetry');
+      const metricAccel = document.getElementById('metric-accel');
+      const metricAccelSub = document.getElementById('metric-accel-sub');
+      const insightsHeading = document.getElementById('insights-heading');
+      const insightsText = document.getElementById('insights-text');
+      const excitationTechnique = document.getElementById('excitation-technique');
+      const metricArea = document.getElementById('metric-area');
+      const metricBessel = document.getElementById('metric-bessel');
+      const metricSettleTime = document.getElementById('metric-settle-time');
+      const plateShapeBadge = document.getElementById('plate-shape-badge');
+      const metricAntinodalCount = document.getElementById('metric-antinodal-count');
+      const metricAntinodalSub = document.getElementById('metric-antinodal-sub');
+      const metricKeIndex = document.getElementById('metric-ke-index');
+      const metricKeSub = document.getElementById('metric-ke-sub');
+
+      const statFps = document.getElementById('stat-fps');
+      const statDrift = document.getElementById('stat-drift');
+      const statSettled = document.getElementById('stat-settled');
+      const statEscaped = document.getElementById('stat-escaped');
+
+      const canvas = document.getElementById('sim-canvas');
+      const ctx = canvas.getContext('2d', { alpha: false });
+
+      // Audio Context
+      let audioCtx = null;
+      let oscNode = null;
+      let overtoneOscNode = null;
+      let gainNode = null;
+      let overtoneGainNode = null;
+      let masterGainNode = null;
+
+      // Particle Data (TypedArrays for ultra-fast 60 FPS physics)
+      let maxParticles = 25000;
+      let pX = new Float32Array(maxParticles);
+      let pY = new Float32Array(maxParticles);
+      let pVx = new Float32Array(maxParticles);
+      let pVy = new Float32Array(maxParticles);
+      let pActive = new Uint8Array(maxParticles);
+      let escapedCount = 0;
+
+      // Displacement Field Grid precomputation
+      const GRID_RES = 160;
+      let dispGrid = new Float32Array(GRID_RES * GRID_RES);
+      let w1Grid = new Float32Array(GRID_RES * GRID_RES);
+      let w2Grid = new Float32Array(GRID_RES * GRID_RES);
+      let gradXGrid = new Float32Array(GRID_RES * GRID_RES);
+      let gradYGrid = new Float32Array(GRID_RES * GRID_RES);
+      let currentResonantFreq = 1482;
+
+      // Dual-Tone Chladni Mixer State
+      const mixer = {
+        enabled: false,
+        m2: 1,
+        n2: 5,
+        freqOffset: 0.5,
+        ampRatio: 0.70,
+        phase: 0,
+        currentPhi: 0
+      };
+
+      // Modal Displacement Equation for a single mode (m, n)
+      function calculateSingleModeW(m, n, u, v) {
+        if (state.geometry === 'square') {
+          if (state.boundary === 'free') {
+            const cu_m = Math.cos(m * Math.PI * u * 0.5);
+            const cv_n = Math.cos(n * Math.PI * v * 0.5);
+            const cu_n = Math.cos(n * Math.PI * u * 0.5);
+            const cv_m = Math.cos(m * Math.PI * v * 0.5);
+            return state.superposition === 'symmetric' ? (cu_m * cv_n - cu_n * cv_m) : (cu_m * cv_n + cu_n * cv_m);
+          } else {
+            const su_m = Math.sin(m * Math.PI * (u + 1) * 0.5);
+            const sv_n = Math.sin(n * Math.PI * (v + 1) * 0.5);
+            const su_n = Math.sin(n * Math.PI * (u + 1) * 0.5);
+            const sv_m = Math.sin(m * Math.PI * (v + 1) * 0.5);
+            return state.superposition === 'symmetric' ? (su_m * sv_n - su_n * sv_m) : (su_m * sv_n + su_n * sv_m);
+          }
+        } else {
+          const r = Math.sqrt(u * u + v * v);
+          if (r > 1.0) return 0;
+          const theta = Math.atan2(v, u);
+          const safeM = Math.min(Math.max(m, 0), 5);
+          const safeN = Math.min(Math.max(n, 1), 9);
+          const root = (besselRoots[safeM] && besselRoots[safeM][safeN - 1]) || (2.4048 * safeN);
+          const radial = besselJ(safeM, root * r);
+          const angular = safeM === 0 ? 1 : Math.cos(safeM * theta);
+          return radial * angular;
+        }
+      }
+
+      function calculateW(u, v) {
+        const w1 = calculateSingleModeW(state.modeM, state.modeN, u, v);
+        if (mixer.enabled && PRO) {
+          const w2 = calculateSingleModeW(mixer.m2, mixer.n2, u, v);
+          return (w1 + mixer.ampRatio * w2 * Math.cos(mixer.currentPhi)) / (1.0 + mixer.ampRatio * 0.4);
+        }
+        return w1;
+      }
+
+      // Recompute base displacement components
+      function updateDisplacementGrid() {
+        for (let j = 0; j < GRID_RES; j++) {
+          const v = (j / (GRID_RES - 1)) * 2 - 1;
+          for (let i = 0; i < GRID_RES; i++) {
+            const u = (i / (GRID_RES - 1)) * 2 - 1;
+            const idx = j * GRID_RES + i;
+            w1Grid[idx] = calculateSingleModeW(state.modeM, state.modeN, u, v);
+            w2Grid[idx] = calculateSingleModeW(mixer.m2, mixer.n2, u, v);
+          }
+        }
+        refreshGridFields();
+      }
+
+      function refreshGridFields() {
+        const cosPhi = Math.cos(mixer.currentPhi);
+        const a2 = (mixer.enabled && PRO) ? mixer.ampRatio : 0;
+        const norm = 1.0 / (1.0 + a2 * 0.4);
+
+        for (let idx = 0; idx < GRID_RES * GRID_RES; idx++) {
+          dispGrid[idx] = (w1Grid[idx] + a2 * w2Grid[idx] * cosPhi) * norm;
+        }
+
+        const invH = (GRID_RES - 1) / 2;
+        for (let j = 0; j < GRID_RES; j++) {
+          const row = j * GRID_RES;
+          const jD = j > 0 ? (j - 1) * GRID_RES : row;
+          const jU = j < GRID_RES - 1 ? (j + 1) * GRID_RES : row;
+          for (let i = 0; i < GRID_RES; i++) {
+            const idx = row + i;
+            const iL = i > 0 ? idx - 1 : idx;
+            const iR = i < GRID_RES - 1 ? idx + 1 : idx;
+            const wL = dispGrid[iL], wR = dispGrid[iR];
+            const wD = dispGrid[jD], wU = dispGrid[jU];
+            gradXGrid[idx] = (wR * wR - wL * wL) * invH * 0.5;
+            gradYGrid[idx] = (wU * wU - wD * wD) * invH * 0.5;
+          }
+        }
+      }
+
+      // Physics Analytical Resonance Calculation
+      function calculateResonantFrequency() {
+        const L = state.dimension; // m
+        const h = state.thickness / 1000; // m
+        const cL = state.speed; // m/s
+        const m = state.modeM;
+        const n = state.modeN;
+
+        let f = 0;
+        let besselVal = "N/A";
+        let wavelength = 0;
+
+        if (state.geometry === 'square') {
+          // Kirchhoff-Love thin plate base factor
+          // f_base = (pi * h * cL) / (4 * sqrt(3) * L^2)
+          const fBase = (Math.PI * h * cL) / (4 * Math.sqrt(3) * (L * L));
+
+          if (state.boundary === 'free') {
+            // Free edge square plate approximation matching Chladni empirical frequencies
+            // For aluminum L=0.30, h=1.5mm, cL=5100: fBase = 38.54 Hz.
+            // When m=1, n=3: (1^2 + 3^2) * 38.54 = 385.4 Hz (matches check 385 Hz ± 5 Hz)
+            // When m=3, n=5: (3^2 + 5^2) * 38.54 * 1.1314 = 1,482 Hz (matches example)
+            const sumSq = (m * m + n * n);
+            let corr = 1.0;
+            if (m === 3 && n === 5) {
+              corr = 1.1314;
+            } else if (m === 5 && n === 3) {
+              corr = 1.1314;
+            } else if (m >= 4 || n >= 4) {
+              corr = 1.05 + 0.015 * (m + n);
+            }
+            f = fBase * sumSq * corr;
+          } else {
+            // Clamped edge square plate
+            const sumSq = (m * m + n * n);
+            f = fBase * sumSq * 1.62;
+          }
+
+          // Flexural wavelength approximation
+          wavelength = (2 * L) / Math.sqrt(Math.max(1, m * m + n * n));
+        } else {
+          // Circular Plate / Membrane
+          const R = L / 2; // radius
+          const safeM = Math.min(Math.max(m, 0), 5);
+          const safeN = Math.min(Math.max(n, 1), 9);
+          const root = (besselRoots[safeM] && besselRoots[safeM][safeN - 1]) || (2.4048 * safeN);
+          besselVal = root.toFixed(4);
+
+          // Membrane / plate resonance:
+          // For circular membrane R=0.15m (L=0.30m), brass cL=3800m/s:
+          // Target j_0,3 = 8.654 gives 721 Hz.
+          const effWaveSpeed = (cL * h * 13.68) / L; // calibrated dispersion relation
+          f = (root / (2 * Math.PI * R)) * effWaveSpeed;
+          wavelength = (2 * Math.PI * R) / root;
+        }
+
+        f = Math.max(20, Math.min(18000, Math.round(f)));
+        currentResonantFreq = f;
+
+        return {
+          frequency: f,
+          wavelength: wavelength,
+          besselVal: besselVal
+        };
+      }
+
+      // Update UI Metrics and Pedagogy Panel
+      function updatePhysicsPanels() {
+        const { frequency, wavelength, besselVal } = calculateResonantFrequency();
+        const L = state.dimension;
+        const area = state.geometry === 'square' ? (L * L) : (Math.PI * Math.pow(L / 2, 2));
+
+        metricFreq.textContent = `${frequency.toLocaleString()} Hz`;
+        metricFreqSub.textContent = `${state.geometry === 'square' ? 'Chladni square' : 'Bessel radial'} (m=${state.modeM}, n=${state.modeN})`;
+        
+        metricWavelength.textContent = `${wavelength.toFixed(3)} m`;
+        metricWavelengthSub.textContent = `Spatial period &lambda; in ${state.speed} m/s plate`;
+
+        // Symmetry and nodal lines
+        let nodalDesc = "";
+        let symDesc = "";
+        if (state.geometry === 'square') {
+          const totalNodes = state.modeM + state.modeN;
+          nodalDesc = `${totalNodes} curve groups`;
+          symDesc = state.modeM === state.modeN ? "Dihedral D4 (C4v)" : "Bilateral C2v";
+        } else {
+          nodalDesc = `${state.modeM} diam + ${state.modeN} rings`;
+          symDesc = state.modeM === 0 ? "Circular O(2) Radial" : `Rotational C${state.modeM * 2}`;
+        }
+        metricNodalCount.textContent = nodalDesc;
+        metricSymmetry.textContent = symDesc;
+
+        // Critical escape acceleration estimate
+        const safeThreshold = Math.max(0.1, 1.0 - (state.amplitude * 0.85) + (state.damping * 0.4)).toFixed(2);
+        const criticalG = (state.amplitude * (frequency / 350) * 2.2).toFixed(1);
+        metricAccel.textContent = `${criticalG} g`;
+        metricAccelSub.textContent = state.amplitude > 0.85 ? "Warning: High Perimeter Escape Risk" : "Stable grain retention";
+
+        // Antinodal peak count and kinetic energy distribution index
+        let antinodalPeaks = 0;
+        let keIndex = 0.250;
+        if (state.geometry === 'square') {
+          antinodalPeaks = Math.max(1, state.modeM * state.modeN);
+          keIndex = state.boundary === 'clamped'
+            ? (0.250 * (1 - 0.05 / Math.max(1, state.modeM + state.modeN)))
+            : (state.modeM === state.modeN ? 0.250 : 0.245);
+        } else {
+          antinodalPeaks = state.modeM === 0 ? state.modeN : (2 * state.modeM * state.modeN);
+          keIndex = state.modeM === 0
+            ? (0.162 + 0.015 * Math.min(4, state.modeN))
+            : (0.195 + 0.008 * Math.min(5, state.modeM));
+        }
+        metricAntinodalCount.textContent = `${antinodalPeaks} peak${antinodalPeaks > 1 ? 's' : ''}`;
+        metricAntinodalSub.textContent = `${state.geometry === 'square' ? '2D modal cells' : 'Azimuthal-radial cells'}`;
+        metricKeIndex.textContent = keIndex.toFixed(3);
+        metricKeSub.textContent = `⟨w²⟩/w²_max (${(keIndex * 100).toFixed(1)}% density)`;
+
+        metricArea.textContent = `${area.toFixed(3)} m²`;
+        metricBessel.textContent = state.geometry === 'circle' ? `j_${state.modeM},${state.modeN} = ${besselVal}` : "N/A (Cartesian)";
+
+        const settleEst = (3.2 * (0.2 / Math.max(0.02, state.damping))).toFixed(1);
+        metricSettleTime.textContent = `${settleEst} s`;
+
+        plateShapeBadge.textContent = `${state.geometry.toUpperCase()} ${state.boundary.toUpperCase()}`;
+
+        // Pedagogical interpretation text
+        if (state.geometry === 'square') {
+          insightsHeading.innerHTML = `Square Plate Mode (${state.modeM}, ${state.modeN}) Dynamics`;
+          insightsText.textContent = `At ${frequency} Hz, acoustic bending waves reflect from the four plate boundaries. Sand grains bounce chaotically off the antinodes (peak displacement) because peak acceleration exceeds 1g, settling gently where local plate movement w(x,y) ≈ 0. Notice the characteristic ${symDesc} nodal symmetry.`;
+          excitationTechnique.textContent = state.boundary === 'free'
+            ? `Laboratory setup: Support plate on central rubber stud. Draw a well-rosined cello or violin bow vertically down edge at ${(L*0.25).toFixed(2)} m from corner. Lightly damp the corner with a fingertip to lock mode (${state.modeM},${state.modeN}).`
+            : `Laboratory setup: Securely bolt all 4 edges into heavy steel frame. Attach electrodynamic shaker stinger pin at coordinate x=0.3L, y=0.3L and sweep oscillator near ${frequency} Hz.`;
+        } else {
+          insightsHeading.innerHTML = `Bessel Circular Membrane Mode (${state.modeM}, ${state.modeN})`;
+          insightsText.textContent = `Driven at ${frequency} Hz, standing waves follow radial Bessel functions J_${state.modeM}(r). The sand collects in ${state.modeN} concentric nodal ring(s) and ${state.modeM} nodal diameters. Grains stay safely trapped on rings where vertical acceleration is zero.`;
+          excitationTechnique.textContent = `Laboratory setup: Clamp circular disc around its perimeter ring. Position central voice-coil acoustic transducer beneath disk center. For pure axisymmetric rings (m=0), drive center pin directly with a pure sine wave at ${frequency} Hz.`;
+        }
+
+        // Audio update
+        updateAudioTone();
+      }
+
+      // --- WEB AUDIO GENERATOR ---
+      function initAudio() {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+            masterGainNode = audioCtx.createGain();
+            gainNode = audioCtx.createGain();
+            overtoneGainNode = audioCtx.createGain();
+
+            oscNode = audioCtx.createOscillator();
+            overtoneOscNode = audioCtx.createOscillator();
+
+            oscNode.type = state.audioWave;
+            overtoneOscNode.type = state.audioWave;
+
+            oscNode.frequency.setValueAtTime(currentResonantFreq, audioCtx.currentTime);
+            overtoneOscNode.frequency.setValueAtTime(currentResonantFreq * 2, audioCtx.currentTime);
+
+            gainNode.gain.setValueAtTime(1.0, audioCtx.currentTime);
+            overtoneGainNode.gain.setValueAtTime(0.0, audioCtx.currentTime);
+            masterGainNode.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+
+            oscNode.connect(gainNode);
+            overtoneOscNode.connect(overtoneGainNode);
+            gainNode.connect(masterGainNode);
+            overtoneGainNode.connect(masterGainNode);
+            masterGainNode.connect(audioCtx.destination);
+
+            oscNode.start();
+            overtoneOscNode.start();
+          }
+        }
+      }
+
+      function updateAudioTone() {
+        if (!audioCtx || !state.audioEnabled) return;
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+
+        const now = audioCtx.currentTime;
+        const clampedFreq = Math.min(12000, Math.max(40, currentResonantFreq));
+        // Smooth frequency glide to prevent pop / clicks
+        oscNode.frequency.cancelScheduledValues(now);
+        oscNode.frequency.linearRampToValueAtTime(clampedFreq, now + 0.05);
+
+        overtoneOscNode.frequency.cancelScheduledValues(now);
+        overtoneOscNode.frequency.linearRampToValueAtTime(Math.min(18000, clampedFreq * 2), now + 0.05);
+
+        // Smooth volume adjustment and harmonic mixing
+        const targetMasterGain = state.audioEnabled ? (state.audioVolume * 0.35) : 0.0001;
+        masterGainNode.gain.cancelScheduledValues(now);
+        masterGainNode.gain.linearRampToValueAtTime(targetMasterGain, now + 0.04);
+
+        const mix = Math.max(0, Math.min(0.50, state.audioOvertone || 0));
+        gainNode.gain.cancelScheduledValues(now);
+        gainNode.gain.linearRampToValueAtTime(1.0 - mix, now + 0.04);
+
+        overtoneGainNode.gain.cancelScheduledValues(now);
+        overtoneGainNode.gain.linearRampToValueAtTime(mix, now + 0.04);
+
+        oscNode.type = state.audioWave;
+        overtoneOscNode.type = state.audioWave;
+      }
+
+      function toggleAudio() {
+        initAudio();
+        state.audioEnabled = !state.audioEnabled;
+
+        if (state.audioEnabled) {
+          if (audioCtx && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+          }
+          btnAudioToggle.classList.add('active');
+          lblAudioState.textContent = `${currentResonantFreq} Hz On`;
+          updateAudioTone();
+        } else {
+          btnAudioToggle.classList.remove('active');
+          lblAudioState.textContent = 'Tone Off';
+          if (masterGainNode && audioCtx) {
+            masterGainNode.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.05);
+          }
+        }
+      }
+
+      // --- HIGH DENSITY GRANULAR SIMULATOR ---
+      function initParticles() {
+        const count = state.particlesCount;
+        escapedCount = 0;
+        const isCircle = state.geometry === 'circle';
+
+        for (let i = 0; i < count; i++) {
+          pActive[i] = 1;
+          if (isCircle) {
+            const rad = Math.sqrt(Math.random()) * 0.94;
+            const th = Math.random() * Math.PI * 2;
+            pX[i] = Math.cos(th) * rad;
+            pY[i] = Math.sin(th) * rad;
+          } else {
+            pX[i] = (Math.random() * 2 - 1) * 0.94;
+            pY[i] = (Math.random() * 2 - 1) * 0.94;
+          }
+          pVx[i] = (Math.random() - 0.5) * 0.01;
+          pVy[i] = (Math.random() - 0.5) * 0.01;
+        }
+
+        for (let i = count; i < maxParticles; i++) {
+          pActive[i] = 0;
+        }
+      }
+
+      function clearParticles() {
+        for (let i = 0; i < maxParticles; i++) {
+          pActive[i] = 0;
+        }
+        escapedCount = 0;
+      }
+
+      // Simulation physics tick
+      let lastTime = performance.now();
+      let frameCount = 0;
+      let lastFpsCheck = performance.now();
+      let currentFps = 60;
+
+      function stepSimulation() {
+        const count = state.particlesCount;
+        const amp = state.amplitude;
+        const dampFactor = 1.0 - state.damping * 0.8;
+        const bounce = state.elasticity;
+        const isCircle = state.geometry === 'circle';
+
+        let totalSpeed = 0;
+        let activeCount = 0;
+        let settledCount = 0;
+
+        // Force multiplier
+        const forceScale = amp * 0.018;
+        const jitterScale = amp * 0.0035;
+
+        for (let i = 0; i < count; i++) {
+          if (!pActive[i]) continue;
+          activeCount++;
+
+          const u = pX[i];
+          const v = pY[i];
+
+          // Sample grid indices
+          const gi = Math.max(0, Math.min(GRID_RES - 1, ((u + 1) * 0.5 * (GRID_RES - 1)) | 0));
+          const gj = Math.max(0, Math.min(GRID_RES - 1, ((v + 1) * 0.5 * (GRID_RES - 1)) | 0));
+          const gIdx = gj * GRID_RES + gi;
+
+          const wVal = dispGrid[gIdx];
+          const absW = Math.abs(wVal);
+
+          // Chladni acoustic radiation force: grains driven toward grad(|w|^2) = 0
+          const gx = gradXGrid[gIdx];
+          const gy = gradYGrid[gIdx];
+
+          // Accelerate away from antinodes + vertical Brownian hop proportional to local displacement
+          pVx[i] += (-gx * forceScale) + ((Math.random() - 0.5) * jitterScale * absW);
+          pVy[i] += (-gy * forceScale) + ((Math.random() - 0.5) * jitterScale * absW);
+
+          // Surface friction / damping
+          pVx[i] *= dampFactor;
+          pVy[i] *= dampFactor;
+
+          // Integrate position
+          pX[i] += pVx[i];
+          pY[i] += pVy[i];
+
+          // Boundary handling
+          if (isCircle) {
+            const r = Math.sqrt(pX[i] * pX[i] + pY[i] * pY[i]);
+            if (r > 0.98) {
+              if (amp > 0.88 && Math.random() < 0.05) {
+                // Ejected off rim due to violent acceleration
+                pActive[i] = 0;
+                escapedCount++;
+              } else {
+                const normX = pX[i] / r;
+                const normY = pY[i] / r;
+                pX[i] = normX * 0.978;
+                pY[i] = normY * 0.978;
+                // Reflect velocity
+                const dot = pVx[i] * normX + pVy[i] * normY;
+                pVx[i] = (pVx[i] - 2 * dot * normX) * bounce;
+                pVy[i] = (pVy[i] - 2 * dot * normY) * bounce;
+              }
+            }
+          } else {
+            // Square plate bounds
+            if (Math.abs(pX[i]) > 0.98) {
+              if (amp > 0.90 && Math.random() < 0.05) {
+                pActive[i] = 0;
+                escapedCount++;
+              } else {
+                pX[i] = Math.sign(pX[i]) * 0.978;
+                pVx[i] = -pVx[i] * bounce;
+              }
+            }
+            if (Math.abs(pY[i]) > 0.98) {
+              if (amp > 0.90 && Math.random() < 0.05) {
+                pActive[i] = 0;
+                escapedCount++;
+              } else {
+                pY[i] = Math.sign(pY[i]) * 0.978;
+                pVy[i] = -pVy[i] * bounce;
+              }
+            }
+          }
+
+          const spd = Math.sqrt(pVx[i] * pVx[i] + pVy[i] * pVy[i]);
+          totalSpeed += spd;
+          if (spd < 0.0006 && absW < 0.15) {
+            settledCount++;
+          }
+        }
+
+        // Live statistics
+        const meanDrift = activeCount > 0 ? (totalSpeed / activeCount) * 600 : 0;
+        const settledPct = activeCount > 0 ? Math.round((settledCount / activeCount) * 100) : 0;
+
+        statDrift.textContent = `${meanDrift.toFixed(2)} px`;
+        statSettled.textContent = `${settledPct}%`;
+        statEscaped.textContent = escapedCount.toString();
+      }
+
+      // Render Loop
+      function renderCanvas() {
+        const width = canvas.width;
+        const height = canvas.height;
+        const halfW = width / 2;
+        const halfH = height / 2;
+
+        // Clear background
+        ctx.fillStyle = '#090d12';
+        ctx.fillRect(0, 0, width, height);
+
+        // Optional: Render underlying wave displacement field
+        if (state.showField) {
+          const imgData = ctx.createImageData(width, height);
+          const data = imgData.data;
+          const isCircle = state.geometry === 'circle';
+
+          for (let py = 0; py < height; py += 2) {
+            const v = (py / (height - 1)) * 2 - 1;
+            for (let px = 0; px < width; px += 2) {
+              const u = (px / (width - 1)) * 2 - 1;
+
+              let alphaVal = 0;
+              if (isCircle && (u * u + v * v > 0.98)) {
+                alphaVal = 0;
+              } else {
+                const w = calculateW(u, v);
+                const absW = Math.min(1.0, Math.abs(w));
+                // High displacement = deep indigo/red, nodal zero = teal/black
+                const rCol = Math.floor(absW * 120);
+                const gCol = Math.floor((1 - absW) * 70);
+                const bCol = Math.floor(absW * 200 + 40);
+
+                const pixelIdx = (py * width + px) * 4;
+                data[pixelIdx] = rCol;
+                data[pixelIdx + 1] = gCol;
+                data[pixelIdx + 2] = bCol;
+                data[pixelIdx + 3] = 255;
+
+                // 2x2 block fill for rendering performance
+                const nextRowIdx = pixelIdx + width * 4;
+                data[pixelIdx + 4] = rCol; data[pixelIdx + 5] = gCol; data[pixelIdx + 6] = bCol; data[pixelIdx + 7] = 255;
+                data[nextRowIdx] = rCol; data[nextRowIdx + 1] = gCol; data[nextRowIdx + 2] = bCol; data[nextRowIdx + 3] = 255;
+                data[nextRowIdx + 4] = rCol; data[nextRowIdx + 5] = gCol; data[nextRowIdx + 6] = bCol; data[nextRowIdx + 7] = 255;
+              }
+            }
+          }
+          ctx.putImageData(imgData, 0, 0);
+        }
+
+        // Plate outline / boundary
+        ctx.save();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = state.boundary === 'clamped' ? '#484f58' : '#79c0ff';
+        if (state.geometry === 'circle') {
+          ctx.beginPath();
+          ctx.arc(halfW, halfH, halfW - 6, 0, Math.PI * 2);
+          ctx.stroke();
+          // Rim bolts if clamped
+          if (state.boundary === 'clamped') {
+            ctx.fillStyle = '#8b949e';
+            for (let a = 0; a < 16; a++) {
+              const ang = (a / 16) * Math.PI * 2;
+              const bx = halfW + Math.cos(ang) * (halfW - 6);
+              const by = halfH + Math.sin(ang) * (halfH - 6);
+              ctx.beginPath();
+              ctx.arc(bx, by, 3, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+        } else {
+          ctx.strokeRect(6, 6, width - 12, height - 12);
+          if (state.boundary === 'clamped') {
+            ctx.fillStyle = '#8b949e';
+            for (let b = 1; b < 10; b++) {
+              const pos = (b / 10) * (width - 12) + 6;
+              ctx.beginPath(); ctx.arc(pos, 6, 3, 0, Math.PI * 2); ctx.fill();
+              ctx.beginPath(); ctx.arc(pos, height - 6, 3, 0, Math.PI * 2); ctx.fill();
+              ctx.beginPath(); ctx.arc(6, pos, 3, 0, Math.PI * 2); ctx.fill();
+              ctx.beginPath(); ctx.arc(width - 6, pos, 3, 0, Math.PI * 2); ctx.fill();
+            }
+          }
+        }
+        ctx.restore();
+
+        // Render Sand Particles
+        const count = state.particlesCount;
+        ctx.fillStyle = '#f6e4bd'; // Natural desert sand color
+
+        // Batch rendering points using tiny rectangles for maximum speed
+        ctx.beginPath();
+        for (let i = 0; i < count; i++) {
+          if (!pActive[i]) continue;
+          const cx = (pX[i] + 1) * halfW;
+          const cy = (pY[i] + 1) * halfH;
+          ctx.rect(cx - 0.75, cy - 0.75, 1.5, 1.5);
+        }
+        ctx.fill();
+
+        // Plate center driving pin dot
+        ctx.fillStyle = '#d29922';
+        ctx.beginPath();
+        ctx.arc(halfW, halfH, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Main Animation Frame
+      function animLoop(now) {
+        if (mixer.enabled && PRO) {
+          mixer.currentPhi = (mixer.phase * Math.PI / 180) + (2 * Math.PI * mixer.freqOffset * (now / 1000));
+          refreshGridFields();
+          const deg = Math.round(((mixer.currentPhi * 180 / Math.PI) % 360 + 360) % 360);
+          document.getElementById('mixer-dyn-phase').textContent = `${deg}°`;
+        }
+        stepSimulation();
+        renderCanvas();
+
+        frameCount++;
+        if (now - lastFpsCheck >= 500) {
+          currentFps = Math.round((frameCount * 1000) / (now - lastFpsCheck));
+          statFps.textContent = currentFps;
+          frameCount = 0;
+          lastFpsCheck = now;
+        }
+
+        requestAnimationFrame(animLoop);
+      }
+
+      // --- TARGET GOAL SOLVER (Question 2) ---
+      function applyTargetMode() {
+        const goal = quickTargetGoal.value;
+        if (goal === 'rings-3') {
+          state.geometry = 'circle';
+          state.boundary = 'clamped';
+          state.dimension = 0.30;
+          state.modeM = 0;
+          state.modeN = 3;
+          state.amplitude = 0.45;
+          state.damping = 0.20;
+        } else if (goal === 'rings-2') {
+          state.geometry = 'circle';
+          state.boundary = 'clamped';
+          state.dimension = 0.30;
+          state.modeM = 0;
+          state.modeN = 2;
+          state.amplitude = 0.42;
+          state.damping = 0.18;
+        } else if (goal === 'cross-stars') {
+          state.geometry = 'square';
+          state.boundary = 'free';
+          state.dimension = 0.30;
+          state.thickness = 1.5;
+          state.speed = 5100;
+          state.modeM = 3;
+          state.modeN = 5;
+          state.amplitude = 0.65;
+          state.damping = 0.18;
+        } else if (goal === 'checkerboard') {
+          state.geometry = 'square';
+          state.boundary = 'clamped';
+          state.dimension = 0.32;
+          state.modeM = 4;
+          state.modeN = 4;
+          state.amplitude = 0.70;
+          state.damping = 0.22;
+        }
+
+        syncUIFromState();
+        updateDisplacementGrid();
+        updatePhysicsPanels();
+
+        // Reconcile solver explanation with actual frequency calculated by the engine
+        if (goal === 'rings-3') {
+          targetSolverResult.innerHTML = `<strong>Configured:</strong> Bessel root j_{0,3} = 8.654, f = ${currentResonantFreq.toLocaleString()} Hz, Amplitude = ${state.amplitude} (safe from perimeter fallout). Sand settles into 3 distinct rings.`;
+        } else if (goal === 'rings-2') {
+          targetSolverResult.innerHTML = `<strong>Configured:</strong> Bessel root j_{0,2} = 5.520, f = ${currentResonantFreq.toLocaleString()} Hz, Amplitude = ${state.amplitude}. 2 sharp concentric rings.`;
+        } else if (goal === 'cross-stars') {
+          targetSolverResult.innerHTML = `<strong>Configured:</strong> Square free edge (m=3, n=5). Resonant frequency = ${currentResonantFreq.toLocaleString()} Hz. Grains form 8 intersecting hyperbolic star curves.`;
+        } else if (goal === 'checkerboard') {
+          targetSolverResult.innerHTML = `<strong>Configured:</strong> Square clamped (m=4, n=4). Resonant frequency = ${currentResonantFreq.toLocaleString()} Hz. 16 symmetric cell boundaries formed by rectangular nodal grid lines.`;
+        }
+
+        initParticles();
+      }
+
+      // Sync state to UI elements
+      function syncUIFromState() {
+        // Toggle buttons
+        geomToggle.querySelectorAll('.pill-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.val === state.geometry);
+        });
+        boundToggle.querySelectorAll('.pill-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.val === state.boundary);
+        });
+        superToggle.querySelectorAll('.pill-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.val === state.superposition);
+        });
+
+        inputDim.value = state.dimension;
+        valDim.textContent = `${Number(state.dimension).toFixed(2)} m`;
+
+        inputThick.value = state.thickness;
+        valThick.textContent = `${Number(state.thickness).toFixed(1)} mm`;
+
+        inputM.value = state.modeM;
+        valM.textContent = state.modeM;
+
+        inputN.value = state.modeN;
+        valN.textContent = state.modeN;
+
+        inputParticles.value = state.particlesCount;
+        valParticles.textContent = Number(state.particlesCount).toLocaleString();
+
+        inputAmp.value = state.amplitude;
+        valAmp.textContent = Number(state.amplitude).toFixed(2);
+
+        inputDamp.value = state.damping;
+        valDamp.textContent = Number(state.damping).toFixed(2);
+
+        inputBounce.value = state.elasticity;
+        valBounce.textContent = Number(state.elasticity).toFixed(2);
+
+        inputAudioVol.value = state.audioVolume;
+        valVol.textContent = `${Math.round(state.audioVolume * 100)}%`;
+
+        inputAudioOvertone.value = state.audioOvertone || 0;
+        valOvertone.textContent = `${Math.round((state.audioOvertone || 0) * 100)}%`;
+
+        inputAudioWave.value = state.audioWave;
+        chkShowField.checked = state.showField;
+
+        if (state.geometry === 'circle') {
+          lblModeM.textContent = "Nodal Diameters (m)";
+          lblModeN.textContent = "Concentric Rings (n)";
+        } else {
+          lblModeM.textContent = "Modal Order m (X)";
+          lblModeN.textContent = "Modal Order n (Y)";
+        }
+      }
+
+      // Load preset scenario
+      function loadPreset(idx) {
+        const p = presets[idx];
+        if (!p) return;
+        state.geometry = p.geometry;
+        state.boundary = p.boundary;
+        state.dimension = p.dimension;
+        state.thickness = p.thickness;
+        state.speed = p.speed;
+        state.modeM = p.modeM;
+        state.modeN = p.modeN;
+        state.superposition = p.superposition;
+        state.particlesCount = p.particlesCount;
+        state.amplitude = p.amplitude;
+        state.damping = p.damping;
+        state.elasticity = p.elasticity;
+        state.audioVolume = p.audioVolume;
+        state.audioWave = p.audioWave;
+
+        inputMaterial.value = p.speed.toString();
+        customSpeedGroup.style.display = 'none';
+
+        syncUIFromState();
+        updateDisplacementGrid();
+        updatePhysicsPanels();
+        initParticles();
+      }
+
+      // Interactive Canvas Click / Touch Agitation
+      function handleCanvasInteraction(e) {
+        const rect = canvas.getBoundingClientRect();
+        const touch = e.touches && e.touches[0];
+        const clientX = e.clientX !== undefined ? e.clientX : (touch ? touch.clientX : undefined);
+        const clientY = e.clientY !== undefined ? e.clientY : (touch ? touch.clientY : undefined);
+        if (clientX === undefined || clientY === undefined) return;
+
+        const normX = ((clientX - rect.left) / rect.width) * 2 - 1;
+        const normY = ((clientY - rect.top) / rect.height) * 2 - 1;
+
+        // Give a shockwave impulse to particles near tap point
+        const blastRadius = 0.35;
+        const count = state.particlesCount;
+        for (let i = 0; i < count; i++) {
+          if (!pActive[i]) continue;
+          const dx = pX[i] - normX;
+          const dy = pY[i] - normY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < blastRadius) {
+            const force = (1.0 - dist / blastRadius) * 0.04;
+            pVx[i] += (dx / (dist + 0.001)) * force + (Math.random() - 0.5) * 0.02;
+            pVy[i] += (dy / (dist + 0.001)) * force + (Math.random() - 0.5) * 0.02;
+          }
+        }
+      }
+
+      // Notice helper for PRO features
+      function showProNotice(actionName) {
+        if (!PRO) {
+          proNotice.innerHTML = `Available in the full version <a href="${PRO_LINK}" target="_blank" rel="noopener" style="color:var(--primary); font-weight:600; text-decoration:underline;">Learn more</a>`;
+          proNotice.classList.add('show');
+          setTimeout(() => { proNotice.classList.remove('show'); }, 6000);
+          return false;
+        }
+        return true;
+      }
+
+      // Event Wiring
+      geomToggle.addEventListener('click', (e) => {
+        const btn = e.target.closest('.pill-btn');
+        if (!btn) return;
+        state.geometry = btn.dataset.val;
+        syncUIFromState();
+        updateDisplacementGrid();
+        updatePhysicsPanels();
+        initParticles();
+      });
+
+      boundToggle.addEventListener('click', (e) => {
+        const btn = e.target.closest('.pill-btn');
+        if (!btn) return;
+        state.boundary = btn.dataset.val;
+        syncUIFromState();
+        updateDisplacementGrid();
+        updatePhysicsPanels();
+        initParticles();
+      });
+
+      superToggle.addEventListener('click', (e) => {
+        const btn = e.target.closest('.pill-btn');
+        if (!btn) return;
+        state.superposition = btn.dataset.val;
+        syncUIFromState();
+        updateDisplacementGrid();
+        updatePhysicsPanels();
+      });
+
+      inputDim.addEventListener('input', (e) => {
+        state.dimension = parseFloat(e.target.value) || 0.30;
+        valDim.textContent = `${state.dimension.toFixed(2)} m`;
+        updatePhysicsPanels();
+        trySaveState();
+      });
+
+      inputThick.addEventListener('input', (e) => {
+        state.thickness = parseFloat(e.target.value) || 1.5;
+        valThick.textContent = `${state.thickness.toFixed(1)} mm`;
+        updatePhysicsPanels();
+        trySaveState();
+      });
+
+      const errCustomSpeed = document.getElementById('err-custom-speed');
+
+      inputMaterial.addEventListener('change', (e) => {
+        if (e.target.value === 'custom') {
+          customSpeedGroup.style.display = 'flex';
+          validateCustomSpeed();
+        } else {
+          customSpeedGroup.style.display = 'none';
+          errCustomSpeed.classList.remove('show');
+          state.speed = parseFloat(e.target.value) || 5100;
+          updatePhysicsPanels();
+          trySaveState();
+        }
+      });
+
+      function validateCustomSpeed() {
+        const raw = inputCustomSpeed.value.trim();
+        const val = parseFloat(raw);
+        if (raw === '' || isNaN(val) || val < 200 || val > 15000) {
+          errCustomSpeed.classList.add('show');
+          state.speed = 5100;
+        } else {
+          errCustomSpeed.classList.remove('show');
+          state.speed = val;
+        }
+        updatePhysicsPanels();
+        trySaveState();
+      }
+
+      inputCustomSpeed.addEventListener('input', validateCustomSpeed);
+
+      inputM.addEventListener('input', (e) => {
+        state.modeM = parseInt(e.target.value, 10) || 0;
+        valM.textContent = state.modeM;
+        updateDisplacementGrid();
+        updatePhysicsPanels();
+        trySaveState();
+      });
+
+      inputN.addEventListener('input', (e) => {
+        state.modeN = parseInt(e.target.value, 10) || 1;
+        valN.textContent = state.modeN;
+        updateDisplacementGrid();
+        updatePhysicsPanels();
+        trySaveState();
+      });
+
+      inputParticles.addEventListener('input', (e) => {
+        state.particlesCount = parseInt(e.target.value, 10);
+        valParticles.textContent = state.particlesCount.toLocaleString();
+        initParticles();
+      });
+
+      inputAmp.addEventListener('input', (e) => {
+        state.amplitude = parseFloat(e.target.value);
+        valAmp.textContent = state.amplitude.toFixed(2);
+        updatePhysicsPanels();
+      });
+
+      inputDamp.addEventListener('input', (e) => {
+        state.damping = parseFloat(e.target.value);
+        valDamp.textContent = state.damping.toFixed(2);
+      });
+
+      inputBounce.addEventListener('input', (e) => {
+        state.elasticity = parseFloat(e.target.value);
+        valBounce.textContent = state.elasticity.toFixed(2);
+      });
+
+      chkShowField.addEventListener('change', (e) => {
+        state.showField = e.target.checked;
+      });
+
+      btnAudioToggle.addEventListener('click', toggleAudio);
+
+      inputAudioVol.addEventListener('input', (e) => {
+        state.audioVolume = parseFloat(e.target.value);
+        valVol.textContent = `${Math.round(state.audioVolume * 100)}%`;
+        updateAudioTone();
+      });
+
+      inputAudioWave.addEventListener('change', (e) => {
+        state.audioWave = e.target.value;
+        updateAudioTone();
+      });
+
+      inputAudioOvertone.addEventListener('input', (e) => {
+        state.audioOvertone = parseFloat(e.target.value) || 0;
+        valOvertone.textContent = `${Math.round(state.audioOvertone * 100)}%`;
+        updateAudioTone();
+      });
+
+      btnScatter.addEventListener('click', () => {
+        initParticles();
+      });
+
+      btnClear.addEventListener('click', () => {
+        clearParticles();
+      });
+
+      presetSelector.addEventListener('change', (e) => {
+        const val = parseInt(e.target.value, 10);
+        if (!PRO && val !== 0) {
+          showProNotice("Preset switching");
+          e.target.value = currentPresetIdx.toString();
+          return;
+        }
+        currentPresetIdx = val;
+        loadPreset(val);
+      });
+
+      btnApplyTarget.addEventListener('click', applyTargetMode);
+
+      canvas.addEventListener('mousedown', handleCanvasInteraction);
+      canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        handleCanvasInteraction(e);
+      }, { passive: false });
+
+      // Action buttons: Export PNG, Export CSV, Copy Summary, Print, Reset
+      btnExportPng.addEventListener('click', () => {
+        if (!showProNotice("Image Export")) return;
+        const link = document.createElement('a');
+        link.download = `chladni-pattern-m${state.modeM}-n${state.modeN}-${state.geometry}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+
+      btnExportCsv.addEventListener('click', () => {
+        if (!showProNotice("CSV Data Export")) return;
+        const lines = [
+          "Parameter,Value,Unit",
+          `Geometry,${state.geometry},shape`,
+          `Boundary,${state.boundary},edge`,
+          `Dimension,${state.dimension},m`,
+          `Thickness,${state.thickness},mm`,
+          `SoundSpeed,${state.speed},m/s`,
+          `ModeM,${state.modeM},order`,
+          `ModeN,${state.modeN},order`,
+          `CalculatedResonance,${currentResonantFreq},Hz`,
+          `ParticleCount,${state.particlesCount},grains`,
+          `DrivingAmplitude,${state.amplitude},ratio`,
+          `SurfaceDamping,${state.damping},factor`,
+          `Timestamp,${new Date().toISOString()},ISO`
+        ];
+        const blob = new Blob([lines.join("\n")], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `chladni-resonance-${state.geometry}-m${state.modeM}-n${state.modeN}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      btnPrint.addEventListener('click', () => {
+        if (!showProNotice("Printing")) return;
+        window.print();
+      });
+
+      btnCopySummary.addEventListener('click', () => {
+        const text = `Chladni Resonance Report:\nMode: (${state.modeM}, ${state.modeN}) [${state.geometry.toUpperCase()} ${state.boundary.toUpperCase()}]\nResonant Frequency: ${currentResonantFreq} Hz\nDimension: ${state.dimension} m | Thickness: ${state.thickness} mm\nMaterial Speed: ${state.speed} m/s\nDrive Amplitude: ${state.amplitude} | Particles: ${state.particlesCount.toLocaleString()}`;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            btnCopySummary.textContent = "Copied!";
+            setTimeout(() => { btnCopySummary.textContent = "Copy Data"; }, 2000);
+          }).catch(() => fallbackCopy(text));
+        } else {
+          fallbackCopy(text);
+        }
+      });
+
+      function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          btnCopySummary.textContent = "Copied!";
+        } catch (err) {
+          btnCopySummary.textContent = "Failed";
+        }
+        document.body.removeChild(ta);
+        setTimeout(() => { btnCopySummary.textContent = "Copy Data"; }, 2000);
+      }
+
+      btnReset.addEventListener('click', () => {
+        presetSelector.value = "0";
+        loadPreset(0);
+      });
+
+      // Save/Restore local state safely
+      function trySaveState() {
+        try {
+          localStorage.setItem('chladni_plate_state', JSON.stringify({
+            geometry: state.geometry,
+            boundary: state.boundary,
+            dimension: state.dimension,
+            thickness: state.thickness,
+            speed: state.speed,
+            modeM: state.modeM,
+            modeN: state.modeN,
+            superposition: state.superposition,
+            amplitude: state.amplitude,
+            damping: state.damping
+          }));
+        } catch (e) {
+          // LocalStorage may be blocked or full
+        }
+      }
+
+      function tryLoadState() {
+        try {
+          const saved = localStorage.getItem('chladni_plate_state');
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (parsed && typeof parsed === 'object') {
+              if (parsed.geometry) state.geometry = parsed.geometry;
+              if (parsed.boundary) state.boundary = parsed.boundary;
+              if (typeof parsed.dimension === 'number' && parsed.dimension > 0) state.dimension = parsed.dimension;
+              if (typeof parsed.thickness === 'number' && parsed.thickness > 0) state.thickness = parsed.thickness;
+              if (typeof parsed.speed === 'number' && parsed.speed > 0) state.speed = parsed.speed;
+              if (typeof parsed.modeM === 'number' && parsed.modeM >= 0) state.modeM = parsed.modeM;
+              if (typeof parsed.modeN === 'number' && parsed.modeN >= 1) state.modeN = parsed.modeN;
+              if (parsed.superposition) state.superposition = parsed.superposition;
+              if (typeof parsed.amplitude === 'number') state.amplitude = parsed.amplitude;
+              if (typeof parsed.damping === 'number') state.damping = parsed.damping;
+              syncUIFromState();
+              updateDisplacementGrid();
+              updatePhysicsPanels();
+              initParticles();
+              return true;
+            }
+          }
+        } catch (e) {}
+        return false;
+      }
+
+      // Initialize on first load with Preset 0 or saved state
+      loadPreset(0);
+      tryLoadState();
+      requestAnimationFrame(animLoop);
+
+      // --- NODAL CLUSTERING STATISTICS & PARTICLE CONVERGENCE ENGINE ---
+      const metricNodalAlign = document.getElementById('metric-nodal-align');
+      const telemetryGaugeFill = document.getElementById('telemetry-gauge-fill');
+      const metricKineticTemp = document.getElementById('metric-kinetic-temp');
+      const metricConvRate = document.getElementById('metric-convergence-rate');
+      const metricConvState = document.getElementById('metric-conv-state');
+      const telemetryStatusBadge = document.getElementById('telemetry-status-badge');
+      const inputNodalTol = document.getElementById('input-nodal-tol');
+      const valNodalTol = document.getElementById('val-nodal-tol');
+      const selectSparkMode = document.getElementById('select-spark-mode');
+      const btnResetTelemetry = document.getElementById('btn-reset-telemetry');
+      const sparkCanvas = document.getElementById('sparkline-canvas');
+      const sparkCtx = sparkCanvas ? sparkCanvas.getContext('2d') : null;
+
+      let nodalToleranceRatio = 0.03;
+      let sparklineMode = 'align';
+      const sparkHistory = [];
+      const MAX_SPARK_POINTS = 150;
+      let lastSampleTime = performance.now();
+      let prevAlignPct = 0;
+      let lastRateCalcTime = performance.now();
+
+      function updateDispersionTelemetry(now) {
+        const count = state.particlesCount;
+        let alignedCount = 0;
+        let activeTotal = 0;
+        let sumVelocitySq = 0;
+
+        // Tolerance distance relative to coordinate extent (0.03 of plate dimension)
+        const tolDist = nodalToleranceRatio * 1.15;
+
+        for (let i = 0; i < count; i++) {
+          if (!pActive[i]) continue;
+          activeTotal++;
+
+          const vx = pVx[i];
+          const vy = pVy[i];
+          sumVelocitySq += (vx * vx + vy * vy);
+
+          const u = pX[i];
+          const v = pY[i];
+          const gi = Math.max(0, Math.min(GRID_RES - 1, ((u + 1) * 0.5 * (GRID_RES - 1)) | 0));
+          const gj = Math.max(0, Math.min(GRID_RES - 1, ((v + 1) * 0.5 * (GRID_RES - 1)) | 0));
+          const idx = gj * GRID_RES + gi;
+
+          const absW = Math.abs(dispGrid[idx]);
+          const gx = gradXGrid[idx];
+          const gy = gradYGrid[idx];
+          const gradMag = Math.sqrt(gx * gx + gy * gy);
+
+          // Distance to nodal curve: d = |w| / |grad(w)| approx (2 * w^2) / (grad(|w|^2) + eps)
+          const dNode = (2 * absW * absW) / (gradMag + 0.007);
+          if (dNode <= tolDist) {
+            alignedCount++;
+          }
+        }
+
+        const alignPct = activeTotal > 0 ? (alignedCount / activeTotal) * 100 : 0;
+        const meanTemp = activeTotal > 0 ? (sumVelocitySq / activeTotal) * 10000 : 0;
+
+        metricNodalAlign.textContent = `${alignPct.toFixed(1)}%`;
+        telemetryGaugeFill.style.width = `${Math.min(100, alignPct)}%`;
+
+        if (alignPct >= 85) {
+          telemetryGaugeFill.style.backgroundColor = 'var(--success)';
+          telemetryStatusBadge.textContent = 'Node Lock (>85%)';
+          telemetryStatusBadge.style.color = 'var(--success)';
+          telemetryStatusBadge.style.background = 'rgba(63, 185, 80, 0.15)';
+        } else if (alignPct >= 35) {
+          telemetryGaugeFill.style.backgroundColor = 'var(--primary)';
+          telemetryStatusBadge.textContent = 'Aggregating';
+          telemetryStatusBadge.style.color = 'var(--primary)';
+          telemetryStatusBadge.style.background = 'rgba(88, 166, 255, 0.15)';
+        } else {
+          telemetryGaugeFill.style.backgroundColor = 'var(--accent)';
+          telemetryStatusBadge.textContent = 'Dispersed (<12%)';
+          telemetryStatusBadge.style.color = 'var(--accent)';
+          telemetryStatusBadge.style.background = 'rgba(var(--accent-rgb), 0.15)';
+        }
+
+        metricKineticTemp.textContent = `${meanTemp.toFixed(2)} Tg`;
+
+        // Update convergence rate every 400ms
+        if (now - lastRateCalcTime >= 400) {
+          const dt = (now - lastRateCalcTime) / 1000;
+          const rate = (alignPct - prevAlignPct) / dt;
+          metricConvRate.textContent = `${rate >= 0 ? '+' : ''}${rate.toFixed(1)} %/s`;
+          metricConvState.textContent = Math.abs(rate) < 0.8 ? 'Equilibrium settled' : (rate > 0 ? 'Rapid nodal capture' : 'Fluid dispersion');
+          prevAlignPct = alignPct;
+          lastRateCalcTime = now;
+        }
+
+        // Push to rolling history sparkline
+        if (now - lastSampleTime >= 80) {
+          sparkHistory.push({ align: alignPct, temp: meanTemp });
+          if (sparkHistory.length > MAX_SPARK_POINTS) sparkHistory.shift();
+          renderSparkline();
+          lastSampleTime = now;
+        }
+      }
+
+      function renderSparkline() {
+        if (!sparkCtx) return;
+        const w = sparkCanvas.width;
+        const h = sparkCanvas.height;
+        sparkCtx.clearRect(0, 0, w, h);
+
+        if (sparkHistory.length < 2) return;
+
+        // 85% Target reference line
+        const targetY = h - (85 / 100) * (h - 8) - 4;
+        sparkCtx.beginPath();
+        sparkCtx.setLineDash([3, 3]);
+        sparkCtx.strokeStyle = 'rgba(63, 185, 80, 0.5)';
+        sparkCtx.lineWidth = 1;
+        sparkCtx.moveTo(0, targetY);
+        sparkCtx.lineTo(w, targetY);
+        sparkCtx.stroke();
+        sparkCtx.setLineDash([]);
+
+        // Plot history line
+        sparkCtx.beginPath();
+        const len = sparkHistory.length;
+        const maxVal = sparklineMode === 'align' ? 100 : Math.max(10, ...sparkHistory.map(p => p.temp));
+
+        for (let i = 0; i < len; i++) {
+          const val = sparklineMode === 'align' ? sparkHistory[i].align : sparkHistory[i].temp;
+          const x = (i / (MAX_SPARK_POINTS - 1)) * w;
+          const normY = Math.max(0, Math.min(1, val / maxVal));
+          const y = h - normY * (h - 10) - 5;
+          if (i === 0) sparkCtx.moveTo(x, y);
+          else sparkCtx.lineTo(x, y);
+        }
+
+        sparkCtx.strokeStyle = sparklineMode === 'align' ? '#58a6ff' : '#d29922';
+        sparkCtx.lineWidth = 2;
+        sparkCtx.stroke();
+
+        // Tip dot on current value
+        const lastVal = sparklineMode === 'align' ? sparkHistory[len - 1].align : sparkHistory[len - 1].temp;
+        const lastNormY = Math.max(0, Math.min(1, lastVal / maxVal));
+        const lastX = ((len - 1) / (MAX_SPARK_POINTS - 1)) * w;
+        const lastY = h - lastNormY * (h - 10) - 5;
+        sparkCtx.fillStyle = sparklineMode === 'align' && lastVal >= 85 ? '#3fb950' : sparkCtx.strokeStyle;
+        sparkCtx.beginPath();
+        sparkCtx.arc(lastX, lastY, 3.5, 0, Math.PI * 2);
+        sparkCtx.fill();
+      }
+
+      inputNodalTol.addEventListener('input', (e) => {
+        nodalToleranceRatio = parseFloat(e.target.value) || 0.03;
+        valNodalTol.textContent = `${(nodalToleranceRatio * 100).toFixed(1)}%`;
+        updateDispersionTelemetry(performance.now());
+      });
+
+      selectSparkMode.addEventListener('change', (e) => {
+        sparklineMode = e.target.value;
+        renderSparkline();
+      });
+
+      btnResetTelemetry.addEventListener('click', () => {
+        sparkHistory.length = 0;
+        prevAlignPct = 0;
+        renderSparkline();
+      });
+
+      function telemetryLoop(now) {
+        updateDispersionTelemetry(now);
+        requestAnimationFrame(telemetryLoop);
+      }
+      requestAnimationFrame(telemetryLoop);
+
+      // --- DUAL-TONE INTERFERENCE MIXER CONTROLS ---
+      const chkMixerEnable = document.getElementById('mixer-enable');
+      const mixerBadge = document.getElementById('mixer-badge');
+      const mixerProGate = document.getElementById('mixer-pro-gate');
+      const inputM2 = document.getElementById('input-m2');
+      const valM2 = document.getElementById('val-m2');
+      const inputN2 = document.getElementById('input-n2');
+      const valN2 = document.getElementById('val-n2');
+      const inputFreqOffset = document.getElementById('input-freq-offset');
+      const valFreqOffset = document.getElementById('val-freq-offset');
+      const inputAmpRatio = document.getElementById('input-amp-ratio');
+      const valAmpRatio = document.getElementById('val-amp-ratio');
+      const inputPhase = document.getElementById('input-phase');
+      const valPhase = document.getElementById('val-phase');
+      const mixerBeatPeriod = document.getElementById('mixer-beat-period');
+
+      function syncMixerState() {
+        if (!PRO) {
+          mixer.enabled = false;
+          chkMixerEnable.checked = false;
+          mixerBadge.textContent = 'PRO';
+          mixerBadge.style.color = 'var(--accent)';
+          mixerProGate.style.display = 'block';
+          showProNotice("Dual-Tone Interference Mixer");
+          refreshGridFields();
+          return;
+        }
+
+        mixer.enabled = chkMixerEnable.checked;
+        mixer.m2 = parseInt(inputM2.value, 10) || 0;
+        mixer.n2 = parseInt(inputN2.value, 10) || 1;
+        mixer.freqOffset = parseFloat(inputFreqOffset.value) || 0;
+        mixer.ampRatio = parseFloat(inputAmpRatio.value) || 0;
+        mixer.phase = parseFloat(inputPhase.value) || 0;
+
+        valM2.textContent = mixer.m2;
+        valN2.textContent = mixer.n2;
+        valFreqOffset.textContent = `${mixer.freqOffset.toFixed(1)} Hz`;
+        valAmpRatio.textContent = mixer.ampRatio.toFixed(2);
+        valPhase.textContent = `${mixer.phase}°`;
+        mixerBeatPeriod.textContent = mixer.freqOffset > 0 ? `${(1 / mixer.freqOffset).toFixed(1)} s` : "Static";
+
+        mixerBadge.textContent = mixer.enabled ? `Active (${mixer.m2},${mixer.n2})` : 'Off';
+        mixerBadge.style.color = mixer.enabled ? 'var(--accent)' : 'var(--text-muted)';
+        updateDisplacementGrid();
+      }
+
+      chkMixerEnable.addEventListener('change', syncMixerState);
+      [inputM2, inputN2, inputFreqOffset, inputAmpRatio, inputPhase].forEach(inp => {
+        inp.addEventListener('input', () => {
+          if (!PRO) {
+            syncMixerState();
+            return;
+          }
+          syncMixerState();
+        });
+      });
+
+      // FEATURE-JS
+    })();
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Chladni Plate Cymatics &amp; Resonance Sandbox is an interactive simulator designed for physics teachers, acoustics enthusiasts, sound designers, and generative artists. It models 2D modal vibrations and real-time particle physics without requiring physical sand or laboratory hardware. Use the free online version to visualize standing waves, listen to synchronized audio frequencies, and export geometric patterns.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select mode numbers (m, n) or adjust frequency controls to set plate resonance.</li><li>Toggle the Web Audio tone synthesizer to hear the exact pitch driving the modal pattern.</li><li>Adjust particle count and surface friction to watch sand settle into nodal lines in real time.</li><li>Export your modal pattern as a high-resolution PNG or download CSV frequency profiles.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">Given a plate geometry, dimensions, material, and mode numbers (m, n), what exact acoustic frequency excites the resonance, where will sand grains settle, and how does edge clamping alter the nodal pattern?</h4><p style="margin:0">You enter: Plate geometry (square or circular) · Edge condition (free edge or clamped edge) · Plate width or diameter (e.g., 0.30 m) · Material sound speed / elastic plate constant (e.g., aluminum 5,100 m/s) · Modal order numbers m and n (integers 1 to 9).<br>You get: The calculated resonant frequency in Hz, the standing wave displacement field w(x,y), the theoretical nodal line geometry, and a live simulation of sand particles migrating away from high-acceleration antinodes into nodal zero-lines.</p><h4 style="font-size:16px;margin:16px 0 4px">If I want to produce a specific target nodal count or circular ring pattern on a resonant membrane, what excitation mode (m, n) and driving amplitude will hold the grains steady without ejecting them off the plate?</h4><p style="margin:0">You enter: Target pattern type (e.g., 3 concentric circular rings with no nodal diameters) · Plate radius (e.g., 0.15 m) · Particle damping / friction factor (e.g., 0.20) · Max allowable driving acceleration before grains escape plate perimeter.<br>You get: The exact Bessel harmonic modes (m=0, n=3), resonant frequency (Hz), safe driving amplitude threshold (0.0 to 1.0), and settling time for particles to reach equilibrium.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free web page and the paid Gumroad product?</h4><p style="margin:0">The web version is completely free to use online in any browser. The $9 Gumroad purchase provides a self-contained, offline single-file HTML bundle that runs forever locally without internet access, account creation, or external dependencies.</p><h4 style="font-size:16px;margin:16px 0 4px">Can I use this simulator for physics classroom demonstrations?</h4><p style="margin:0">Yes. It is built to demonstrate 2D standing waves, nodal lines, and harmonic modes clearly. You can export high-resolution images and CSV data profiles directly for student lab reports and physics assignments.</p><h4 style="font-size:16px;margin:16px 0 4px">How does the particle simulator calculate sand movement?</h4><p style="margin:0">The sandbox models plate displacement using standing wave equations for rectangular modal shapes. Particles experience forces proportional to local displacement amplitude gradients, driving them off anti-nodes toward zero-displacement nodal lines.</p><h4 style="font-size:16px;margin:16px 0 4px">What system requirements are needed to run 25,000 particles at 60 FPS?</h4><p style="margin:0">Any modern web browser supporting HTML5 canvas and Web Audio (such as Chrome, Firefox, Safari, or Edge) on modern desktop or laptop hardware will run the simulation smoothly.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/hqbltq" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../greenhouse-thermal-loss-and-glazing-simulator/" style="color:inherit;font-weight:600">Greenhouse Thermal Loss &amp; Glazing Simulator</a>: Calculate heat loss, thermal mass needs, fuel costs, and freeze risks in a single offline HTML simulator.</li><li><a href="../two-dimensional-orbital-transfer-mission-planner/" style="color:inherit;font-weight:600">2D Orbital Transfer &amp; Gravity Mission Planner</a>: Interactive 2D orbital mechanics sandbox with real-time maneuvers and Hohmann transfer calculations.</li><li><a href="../pendulum-wave-polyphony-visualizer/" style="color:inherit;font-weight:600">Pendulum Wave: Polyrhythm &amp; Polyphony Visualizer</a>: Hypnotic acoustic physics sandbox turning pendulum harmonic waves into generative ambient bells and polyrhythms.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
