@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --border-color: #cbd5e1;
+      --border-focus: #3b82f6;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --accent-horizontal: #d97706;
+      --accent-vertical: #059669;
+      --accent-notch: #dc2626;
+      --compartment-hover: rgba(59, 130, 246, 0.12);
+      --compartment-selected: rgba(59, 130, 246, 0.22);
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --radius: 8px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-main: #0f172a;
+        --bg-card: #1e293b;
+        --bg-subtle: #334155;
+        --border-color: #475569;
+        --border-focus: #60a5fa;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --primary: #3b82f6;
+        --primary-hover: #60a5fa;
+        --primary-light: #1e3a8a;
+        --accent-horizontal: #f59e0b;
+        --accent-vertical: #10b981;
+        --accent-notch: #ef4444;
+        --compartment-hover: rgba(96, 165, 250, 0.18);
+        --compartment-selected: rgba(96, 165, 250, 0.32);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 16px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    header h1 { font-size: 1.5rem; font-weight: 700; }
+    header p { color: var(--text-muted); font-size: 0.9rem; margin-top: 2px; }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .btn:hover { background-color: var(--bg-subtle); }
+    .btn-primary {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+    .btn-primary:hover { background-color: var(--primary-hover); }
+    .btn-sm { padding: 4px 8px; font-size: 0.775rem; }
+    .btn-danger { background-color: #ef4444; color: #fff; border-color: #ef4444; }
+    .btn-danger:hover { background-color: #dc2626; }
+
+    select, input {
+      font-family: inherit;
+      font-size: 0.875rem;
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      width: 100%;
+    }
+    select:focus, input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 1024px) {
+      .layout-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 500px) {
+      .form-row, .form-row-3 { grid-template-columns: 1fr; }
+      header { flex-direction: column; align-items: flex-start; }
+      .header-actions { width: 100%; justify-content: flex-start; }
+      .header-actions .btn { flex-grow: 1; }
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-title .badge {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: var(--text-muted);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .canvas-container {
+      position: relative;
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      min-height: 420px;
+    }
+    svg#drawer-canvas {
+      width: 100%;
+      height: 100%;
+      max-height: 600px;
+      user-select: none;
+    }
+
+    /* SVG Canvas Styles */
+    .svg-drawer-outer { fill: none; stroke: var(--text-main); stroke-width: 3; }
+    .svg-drawer-inner { fill: var(--bg-card); stroke: var(--border-color); stroke-width: 1; }
+    .svg-grid-line { stroke: var(--border-color); stroke-width: 0.5; stroke-dasharray: 4, 4; opacity: 0.6; }
+    .svg-slat-h { fill: var(--accent-horizontal); cursor: ns-resize; opacity: 0.85; transition: opacity 0.15s; }
+    .svg-slat-v { fill: var(--accent-vertical); cursor: ew-resize; opacity: 0.85; transition: opacity 0.15s; }
+    .svg-slat-h:hover, .svg-slat-v:hover { opacity: 1.0; stroke: #000; stroke-width: 1px; }
+    .svg-notch { fill: var(--accent-notch); opacity: 0.9; }
+    .svg-compartment { fill: transparent; cursor: pointer; transition: fill 0.15s; }
+    .svg-compartment:hover { fill: var(--compartment-hover); }
+    .svg-compartment.active { fill: var(--compartment-selected); stroke: var(--primary); stroke-width: 1.5; }
+    .svg-text { font-family: sans-serif; font-size: 11px; fill: var(--text-main); pointer-events: none; text-anchor: middle; dominant-baseline: middle; }
+    .svg-dim-text { font-family: sans-serif; font-size: 10px; fill: var(--text-muted); pointer-events: none; }
+    .svg-handle { fill: var(--primary); stroke: #ffffff; stroke-width: 1.5; cursor: grab; }
+    .svg-handle:active { cursor: grabbing; }
+
+    /* Tables */
+    .table-responsive { overflow-x: auto; margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left; }
+    th, td { padding: 8px 10px; border-bottom: 1px solid var(--border-color); }
+    th { background-color: var(--bg-subtle); color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+    tr:hover { background-color: var(--bg-subtle); }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .tag-h { background-color: rgba(217, 119, 6, 0.15); color: var(--accent-horizontal); }
+    .tag-v { background-color: rgba(5, 150, 105, 0.15); color: var(--accent-vertical); }
+
+    .guidance-box {
+      background-color: var(--primary-light);
+      border-left: 4px solid var(--primary);
+      padding: 12px 16px;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      margin-top: 16px;
+    }
+    .guidance-box h4 { margin-bottom: 4px; color: var(--primary); font-size: 0.95rem; }
+
+    .alert {
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+    .alert-warning { background-color: #fffbeeb0; border: 1px solid #fef3c7; color: #b45309; }
+    .alert-info { background-color: #eff6ff; border: 1px solid #dbeafe; color: #1e40af; }
+    .alert-success { background-color: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+
+    .notch-badge-list { display: flex; flex-wrap: wrap; gap: 4px; }
+    .notch-badge {
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: monospace;
+      font-size: 0.775rem;
+    }
+
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-card {
+      background: var(--bg-card);
+      padding: 24px;
+      border-radius: var(--radius);
+      max-width: 440px;
+      width: 90%;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+    }
+    .modal-card h3 { margin-bottom: 8px; }
+    .modal-card p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px; }
+
+    .safety-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 24px;
+      text-align: center;
+      border-top: 1px dashed var(--border-color);
+      padding-top: 12px;
+    }
+    .svg-compartment.fit-pass { fill: rgba(16, 185, 129, 0.35) !important; stroke: #059669; stroke-width: 2px; }
+    .svg-compartment.fit-fail { fill: rgba(239, 68, 68, 0.35) !important; stroke: #dc2626; stroke-width: 2px; }
+    .fit-summary-box { font-size: 0.825rem; background: var(--bg-subtle); padding: 8px 12px; border-radius: var(--radius); margin-top: 8px; border: 1px solid var(--border-color); }
+    .svg-nest-sheet { fill: var(--bg-card); stroke: var(--border-color); stroke-width: 2; }
+    .svg-nest-slat { fill: var(--primary-light); stroke: var(--primary); stroke-width: 1.5; rx: 3; }
+    .svg-nest-text { font-family: sans-serif; font-size: 10px; font-weight: 600; fill: var(--text-main); text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+    .vector-export-note { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
+    .vault-badge-count { font-size: 0.75rem; background: var(--primary-light); color: var(--primary); padding: 2px 6px; border-radius: 4px; }
+    /* FEATURE-CSS */
+  </style>
+<title>Modular Drawer Grid &amp; Partition Box Layout Planner</title>
+<meta name="description" content="Free web generator and offline planner for custom drawer grid dividers, half-lap joints, and 1:1 SVG vector file exports.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/modular-drawer-grid-partition-planner/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/modular-drawer-grid-partition-planner/">
+<meta property="og:title" content="Modular Drawer Grid &amp; Partition Box Layout Planner"><meta property="og:description" content="Free web generator and offline planner for custom drawer grid dividers, half-lap joints, and 1:1 SVG vector file exports.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/modular-drawer-grid-partition-planner/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Modular Drawer Grid & Partition Box Layout Planner","description":"Free web generator and offline planner for custom drawer grid dividers, half-lap joints, and 1:1 SVG vector file exports.","url":"https://rttyy.github.io/free-tools/modular-drawer-grid-partition-planner/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do half-lap joints work for custom drawer dividers?","acceptedAnswer":{"@type":"Answer","text":"Half-lap joints feature vertical slots cut halfway (50% depth) through intersecting divider strips. When one set of strips is inverted and fitted onto the opposing set, the strips lock together to form a rigid, self-standing grid that sits flush on top and bottom."}},{"@type":"Question","name":"What file formats does the tool export for laser cutting and CNC?","acceptedAnswer":{"@type":"Answer","text":"The planner generates standard 1:1 scale SVG vector files. These files can be opened directly in software like LightBurn, Inkscape, Adobe Illustrator, or CAM software for CNC routing."}},{"@type":"Question","name":"Does the offline pack require installation or an internet connection?","acceptedAnswer":{"@type":"Answer","text":"No. The $9 offline pack is a self-contained HTML/JS file that runs locally inside any standard web browser without software installation, account creation, or active internet connection."}},{"@type":"Question","name":"How does the material nesting calculator reduce waste?","acceptedAnswer":{"@type":"Answer","text":"The calculator arranges your generated divider strips onto your specified stock sheet dimensions to maximize fit. This ensures you buy only the material you need and make full use of leftover plywood, acrylic, or cardboard sheets."}}]}</script>
+</head>
+<body>
+
+  <header>
+    <div>
+      <h1>Modular Drawer Grid &amp; Partition Box Layout Planner</h1>
+      <p>Precision half-lap divider generator &amp; compartment fit analyzer</p>
+    </div>
+    <div class="header-actions">
+      <label for="preset-select" style="font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-right:-4px;">Presets:</label>
+      <select id="preset-select" style="width: auto;">
+        <option value="kitchen">Standard Kitchen Silverware</option>
+        <option value="workshop">Deep Workshop Hardware Bin</option>
+        <option value="stationery">Children's Stationery Tray</option>
+      </select>
+      <button class="btn" id="btn-load-sample">Load Sample</button>
+      <button class="btn" id="btn-export-csv">Export CSV</button>
+      <button class="btn" id="btn-export-json">Export JSON</button>
+      <button class="btn" id="btn-print">Print / PDF</button>
+      <button class="btn btn-danger" id="btn-reset">Reset</button>
+    </div>
+  </header>
+
+  <div class="layout-grid">
+    <!-- LEFT SIDEBAR: INPUTS & CONTROLS -->
+    <aside>
+      <!-- FEATURE 1: DRAWER GEOMETRY ENGINE -->
+      <div class="card" data-feature="drawer-geometry-engine">
+        <div class="card-title">
+          <span>Drawer &amp; Material Setup</span>
+          <span class="badge">Dimensions</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="inp-unit">Measurement Unit</label>
+            <select id="inp-unit">
+              <option value="mm" selected>Millimeters (mm)</option>
+              <option value="in">Inches (in)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="inp-thickness">Material Thickness (<span class="unit-label">mm</span>)</label>
+            <input type="number" id="inp-thickness" min="0.1" max="50" step="any" value="3">
+          </div>
+        </div>
+
+        <div class="form-row-3">
+          <div class="form-group">
+            <label for="inp-width">Drawer Width (<span class="unit-label">mm</span>)</label>
+            <input type="number" id="inp-width" min="1" max="3000" step="any" value="310">
+          </div>
+          <div class="form-group">
+            <label for="inp-depth">Drawer Depth (<span class="unit-label">mm</span>)</label>
+            <input type="number" id="inp-depth" min="1" max="3000" step="any" value="430">
+          </div>
+          <div class="form-group">
+            <label for="inp-height">Wall Height (<span class="unit-label">mm</span>)</label>
+            <input type="number" id="inp-height" min="1" max="1000" step="any" value="60">
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURE 2: INTERACTIVE PARTITION MANAGER -->
+      <div class="card" data-feature="interactive-partition-manager">
+        <div class="card-title">
+          <span>Partition Dividers</span>
+          <span class="badge">Drag &amp; Drop or Numerical</span>
+        </div>
+
+        <div style="margin-bottom: 12px; display: flex; gap: 8px;">
+          <button class="btn btn-primary" id="btn-add-h" style="flex: 1;">+ Horizontal (X-Slat)</button>
+          <button class="btn btn-primary" id="btn-add-v" style="flex: 1;">+ Vertical (Y-Slat)</button>
+        </div>
+
+        <div class="form-row" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label for="inp-grid-cols">Quick Grid Cols</label>
+            <input type="number" id="inp-grid-cols" min="1" max="20" value="4">
+          </div>
+          <div class="form-group">
+            <label for="inp-grid-rows">Quick Grid Rows</label>
+            <input type="number" id="inp-grid-rows" min="1" max="20" value="3">
+          </div>
+        </div>
+        <button class="btn" id="btn-apply-equal-grid" style="width: 100%; margin-bottom: 16px;">Generate Equal Grid</button>
+
+        <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Active Dividers List</div>
+        <div class="table-responsive" style="max-height: 220px; overflow-y: auto;">
+          <table id="table-dividers">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Position (<span class="unit-label">mm</span>)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-dividers">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ITEM FIT CHECKER (SOLVES QUESTION 2 DIRECTLY) -->
+      <div class="card">
+        <div class="card-title">
+          <span>Item Fit Inspector</span>
+          <span class="badge">Verification</span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">
+          Check if a specific tool, knife, or craft supply will fit in any compartment.
+        </p>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="inp-item-name">Item Label</label>
+            <input type="text" id="inp-item-name" value="Chef's Knife">
+          </div>
+          <div class="form-group">
+            <label for="inp-item-len">Item Length (<span class="unit-label">mm</span>)</label>
+            <input type="number" id="inp-item-len" min="1" value="320">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="inp-item-width">Item Width (<span class="unit-label">mm</span>)</label>
+            <input type="number" id="inp-item-width" min="1" value="50">
+          </div>
+          <div class="form-group" style="display: flex; align-items: flex-end;">
+            <button class="btn btn-primary" id="btn-check-fit" style="width: 100%;">Check Fit</button>
+          </div>
+        </div>
+        <div id="fit-result-container"></div>
+      </div>
+    </aside>
+
+    <!-- RIGHT MAIN PANEL: VISUAL CANVAS & BLUEPRINT TABLES -->
+    <main>
+      <!-- CANVAS PREVIEW CARD -->
+      <div class="card">
+        <div class="card-title">
+          <span>2D Top-Down Layout Canvas</span>
+          <span id="canvas-status-badge" class="badge">Interactive Drag Active</span>
+        </div>
+        <div class="canvas-container">
+          <svg id="drawer-canvas" viewBox="0 0 600 450" preserveAspectRatio="xMidYMid meet">
+            <!-- Rendered by JavaScript -->
+          </svg>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.775rem; color:var(--text-muted); margin-top:8px;">
+          <span>* Click any compartment to inspect clearance. Drag dividers to adjust.</span>
+          <span id="compartment-count-tag">0 Compartments</span>
+        </div>
+      </div>
+
+      <!-- FEATURE 3: INTERLOCKING SLOT LOGIC -->
+      <div class="card" data-feature="interlocking-slot-logic">
+        <div class="card-title">
+          <span>Half-Lap Joint Specifications</span>
+          <span class="badge">Interlocking Cut Logic</span>
+        </div>
+        <div class="form-row-3" style="text-align: center;">
+          <div style="background:var(--bg-subtle); padding:10px; border-radius:var(--radius);">
+            <div style="font-size:0.75rem; color:var(--text-muted);">Notch Width</div>
+            <div style="font-size:1.2rem; font-weight:700; color:var(--primary);" id="calc-notch-width">3.0 mm</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);">(Material Thickness)</div>
+          </div>
+          <div style="background:var(--bg-subtle); padding:10px; border-radius:var(--radius);">
+            <div style="font-size:0.75rem; color:var(--text-muted);">Notch Depth</div>
+            <div style="font-size:1.2rem; font-weight:700; color:var(--accent-notch);" id="calc-notch-depth">30.0 mm</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);">(50% Slat Height)</div>
+          </div>
+          <div style="background:var(--bg-subtle); padding:10px; border-radius:var(--radius);">
+            <div style="font-size:0.75rem; color:var(--text-muted);">Total Joints</div>
+            <div style="font-size:1.2rem; font-weight:700;" id="calc-total-intersections">0</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);">(Intersections)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURE 4: CUTTING BLUEPRINT GENERATOR -->
+      <div class="card" data-feature="cutting-blueprint-generator">
+        <div class="card-title">
+          <span>Tabulated Cutting Checklist &amp; Slot Blueprint</span>
+          <button class="btn btn-sm" id="btn-copy-checklist">Copy Checklist</button>
+        </div>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">
+          Measurements are from the starting edge (Left edge for Horizontal slats, Top edge for Vertical slats) to notch centers.
+        </p>
+
+        <div class="table-responsive">
+          <table id="table-blueprint">
+            <thead>
+              <tr>
+                <th>Slat ID</th>
+                <th>Type</th>
+                <th>Slat Length (<span class="unit-label">mm</span>)</th>
+                <th>Slat Height (<span class="unit-label">mm</span>)</th>
+                <th>Slot Depths (<span class="unit-label">mm</span>)</th>
+                <th>Notch Center Offsets (<span class="unit-label">mm</span>)</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-blueprint">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DYNAMIC INTERPRETATION BLOCK -->
+      <div class="guidance-box" id="guidance-block">
+        <h4 id="guidance-title">What this means / What to do next</h4>
+        <p id="guidance-text">
+          Loading layout metrics...
+        </p>
+      </div>
+
+      <!-- FEATURE 5: COMPARTMENT FIT & VOLUME INSPECTOR -->
+      <div class="card" data-feature="fit-validation-inspector" id="fit-validation-inspector">
+        <div class="card-title">
+          <span>Compartment Fit &amp; Volume Inspector</span>
+          <span class="badge">Live Fit Visualizer</span>
+        </div>
+        <div id="fit-inspector-pro-gate" style="display:none;" class="alert alert-warning">
+          Available in the full version. <a href="https://example.com/pro-planner-upgrade" target="_blank" id="fit-pro-link">Upgrade now</a>
+        </div>
+        <div id="fit-inspector-controls">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fit-inp-length">Item Length (<span class="unit-label">mm</span>)</label>
+              <input type="number" id="fit-inp-length" min="1" step="1" value="200">
+            </div>
+            <div class="form-group">
+              <label for="fit-inp-width">Item Width (<span class="unit-label">mm</span>)</label>
+              <input type="number" id="fit-inp-width" min="1" step="1" value="100">
+            </div>
+          </div>
+          <div class="form-group">
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.85rem;">
+              <input type="checkbox" id="fit-chk-active" checked style="width:auto;"> Highlight Fit Overlay &amp; Compute Volumes
+            </label>
+          </div>
+          <div id="fit-summary-output" class="fit-summary-box"></div>
+        </div>
+      </div>
+
+      <!-- FEATURE 6: MATERIAL SHEET NESTING PLAN -->
+      <div class="card" data-feature="nesting-optimizer" id="nesting-optimizer">
+        <div class="card-title">
+          <span>Material Sheet Nesting Plan</span>
+          <span class="badge">Nesting Optimizer</span>
+        </div>
+        <div id="nesting-pro-gate" style="display:none;" class="alert alert-warning">
+          Available in the full version. <a href="https://example.com/pro-planner-upgrade" target="_blank" id="nesting-pro-link">Upgrade now</a>
+        </div>
+        <div id="nesting-controls">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nest-sheet-w">Sheet Width (<span class="unit-label">mm</span>)</label>
+              <input type="number" id="nest-sheet-w" min="100" max="4000" step="10" value="1200">
+            </div>
+            <div class="form-group">
+              <label for="nest-sheet-h">Sheet Depth (<span class="unit-label">mm</span>)</label>
+              <input type="number" id="nest-sheet-h" min="100" max="4000" step="10" value="600">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nest-kerf">Blade Kerf / Gap (<span class="unit-label">mm</span>)</label>
+              <input type="number" id="nest-kerf" min="0" max="20" step="0.5" value="3">
+            </div>
+            <div class="form-group" style="display:flex; align-items:flex-end;">
+              <div id="nest-efficiency" style="font-size:0.85rem; font-weight:600; padding:8px; width:100%; text-align:center; background:var(--bg-subtle); border-radius:var(--radius); border:1px solid var(--border-color);">
+                Efficiency: 0%
+              </div>
+            </div>
+          </div>
+          <div class="canvas-container" style="min-height:220px; padding:16px; margin-top:8px;">
+            <svg id="nesting-canvas" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet"></svg>
+          </div>
+          <div id="nesting-summary" style="font-size:0.825rem; color:var(--text-muted); margin-top:8px;"></div>
+        </div>
+      </div>
+
+      <!-- FEATURE: VECTOR BLUEPRINT EXPORT -->
+      <div class="card" data-feature="vector-blueprint-export" id="vector-blueprint-export">
+        <div class="card-title">
+          <span>SVG Vector Blueprint Export</span>
+          <span class="badge">1:1 CNC / Laser Pattern</span>
+        </div>
+        <div id="vector-export-pro-gate" style="display:none;" class="alert alert-warning">
+          Available in the full version. <a href="https://example.com/pro-planner-upgrade" target="_blank" id="vector-pro-link">Upgrade now</a>
+        </div>
+        <div id="vector-export-controls">
+          <p class="vector-export-note">
+            Export 1:1 scale vector SVG files of all flat-pattern slats with pre-cut notches (widths matching material thickness) for laser cutting or CNC routing.
+          </p>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="exp-slat-margin">Spacing Between Slats (<span class="unit-label">mm</span>)</label>
+              <input type="number" id="exp-slat-margin" min="1" max="50" step="1" value="10">
+            </div>
+            <div class="form-group" style="display:flex; align-items:flex-end;">
+              <button class="btn btn-primary" id="btn-export-svg-vector" style="width:100%;">Export 1:1 Vector SVG</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURE: PROJECT VAULT & PDF REPORT -->
+      <div class="card" data-feature="project-vault-pdf" id="project-vault-pdf">
+        <div class="card-title">
+          <span>Project Vault &amp; PDF Report</span>
+          <span class="badge">Save / Load &amp; Export</span>
+        </div>
+        <div id="vault-pro-gate" style="display:none;" class="alert alert-warning">
+          Available in the full version. <a href="https://example.com/pro-planner-upgrade" target="_blank" id="vault-pro-link">Upgrade now</a>
+        </div>
+        <div id="vault-controls">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="vault-project-name">Project Name</label>
+              <input type="text" id="vault-project-name" placeholder="e.g. Cutlery Drawer 1" value="My Custom Drawer">
+            </div>
+            <div class="form-group" style="display:flex; align-items:flex-end;">
+              <button class="btn btn-primary" id="btn-vault-save" style="width:100%;">Save Project</button>
+            </div>
+          </div>
+          <div class="form-row" style="margin-top:8px;">
+            <div class="form-group">
+              <label for="vault-saved-select">Saved Projects Vault</label>
+              <select id="vault-saved-select">
+                <option value="">-- Select Saved Project --</option>
+              </select>
+            </div>
+            <div class="form-group" style="display:flex; align-items:flex-end; gap:6px;">
+              <button class="btn" id="btn-vault-load" style="flex:1;">Load</button>
+              <button class="btn btn-danger" id="btn-vault-delete" style="padding:8px 10px;">Del</button>
+            </div>
+          </div>
+          <div style="margin-top:12px; border-top:1px dashed var(--border-color); padding-top:12px;">
+            <button class="btn btn-primary" id="btn-vault-pdf-report" style="width:100%;">Generate PDF Report</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURES -->
+
+      <div class="safety-note">
+        Estimate only - verify with a qualified professional before cutting expensive materials. Double check blade kerf width during manufacture.
+      </div>
+    </main>
+  </div>
+
+  <!-- UPGRADE MODAL FOR PRO BLOCKED FEATURES -->
+  <div class="modal-overlay" id="pro-modal">
+    <div class="modal-card">
+      <h3 style="color:var(--primary);">Full Version Required</h3>
+      <p id="pro-modal-msg">Available in the full version</p>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button class="btn" id="btn-close-modal">Close</button>
+        <a id="pro-link-btn" href="#" target="_blank" class="btn btn-primary">Upgrade to Full Version</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PRO = true;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/efvhjp";
+
+    // --- PRESETS DATA ---
+    const PRESETS = {
+      kitchen: {
+        name: "Standard Kitchen Silverware",
+        width: 310, depth: 430, height: 60, thickness: 3, unit: "mm",
+        h_dividers: [100, 220],
+        v_dividers: [75, 150, 225]
+      },
+      workshop: {
+        name: "Deep Workshop Hardware Bin",
+        width: 500, depth: 500, height: 100, thickness: 6, unit: "mm",
+        h_dividers: [125, 250, 375],
+        v_dividers: [125, 250, 375]
+      },
+      stationery: {
+        name: "Children's Stationery Tray",
+        width: 350, depth: 250, height: 40, thickness: 2, unit: "mm",
+        h_dividers: [125],
+        v_dividers: [50, 100, 150, 200, 250, 300]
+      }
+    };
+
+    // --- STATE MANAGEMENT ---
+    let state = {
+      unit: "mm",
+      width: 310,
+      depth: 430,
+      height: 60,
+      thickness: 3,
+      h_dividers: [], // array of Y numbers
+      v_dividers: [], // array of X numbers
+      selectedCompartmentIndex: null,
+      draggingDivider: null // { type: 'h'|'v', index: number }
+    };
+
+    // --- STORAGE HELPERS ---
+    function saveToStorage() {
+      try {
+        localStorage.setItem("drawer_planner_state", JSON.stringify(state));
+      } catch (e) {
+        // Silently handle if storage blocked
+      }
+    }
+
+    function loadFromStorage() {
+      try {
+        const saved = localStorage.getItem("drawer_planner_state");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && typeof parsed === 'object') {
+            state = { ...state, ...parsed };
+            return true;
+          }
+        }
+      } catch (e) {
+        // Silently fallback to preset
+      }
+      return false;
+    }
+
+    // --- UNIT CONVERSION UTILS ---
+    function formatLength(valMm, unit = state.unit) {
+      if (unit === 'in') {
+        const valIn = valMm / 25.4;
+        return valIn.toFixed(2) + ' in';
+      }
+      return valMm.toFixed(1) + ' mm';
+    }
+
+    function parseInputToMm(val, unit = state.unit) {
+      if (val === "" || val === null) return NaN;
+      const num = parseFloat(val);
+      if (isNaN(num)) return NaN;
+      if (num < 0) return 0;
+      return unit === 'in' ? num * 25.4 : num;
+    }
+
+    function convertMmToInputUnit(valMm, unit = state.unit) {
+      if (unit === 'in') {
+        return (valMm / 25.4).toFixed(3);
+      }
+      return valMm.toString();
+    }
+
+    // --- INITIALIZATION ---
+    document.addEventListener("DOMContentLoaded", () => {
+      initUIEventListeners();
+
+      if (!loadFromStorage()) {
+        loadPreset("kitchen");
+      } else {
+        syncInputsFromState();
+        render();
+      }
+    });
+
+    function loadPreset(key) {
+      const p = PRESETS[key];
+      if (!p) return;
+      state.unit = p.unit || "mm";
+      state.width = p.width;
+      state.depth = p.depth;
+      state.height = p.height;
+      state.thickness = p.thickness;
+      state.h_dividers = [...p.h_dividers].sort((a,b)=>a-b);
+      state.v_dividers = [...p.v_dividers].sort((a,b)=>a-b);
+      state.selectedCompartmentIndex = null;
+      syncInputsFromState();
+      render();
+    }
+
+    function syncInputsFromState() {
+      document.getElementById("inp-unit").value = state.unit;
+      document.getElementById("inp-width").value = convertMmToInputUnit(state.width);
+      document.getElementById("inp-depth").value = convertMmToInputUnit(state.depth);
+      document.getElementById("inp-height").value = convertMmToInputUnit(state.height);
+      document.getElementById("inp-thickness").value = convertMmToInputUnit(state.thickness);
+      
+      document.querySelectorAll(".unit-label").forEach(el => el.textContent = state.unit);
+    }
+
+    function readInputsToState() {
+      const inputs = [
+        { id: "inp-width", key: "width", min: 10 },
+        { id: "inp-depth", key: "depth", min: 10 },
+        { id: "inp-height", key: "height", min: 5 },
+        { id: "inp-thickness", key: "thickness", min: 0.5 }
+      ];
+
+      inputs.forEach(inp => {
+        const el = document.getElementById(inp.id);
+        const val = parseInputToMm(el.value);
+        if (isNaN(val)) {
+          el.setCustomValidity("Please enter a valid number");
+          el.reportValidity();
+        } else {
+          el.setCustomValidity("");
+          state[inp.key] = Math.max(inp.min, val);
+        }
+      });
+
+      // Sanitize dividers inside boundaries
+      state.h_dividers = state.h_dividers
+        .map(y => Math.max(state.thickness, Math.min(state.depth - state.thickness, y)))
+        .sort((a,b)=>a-b);
+      state.v_dividers = state.v_dividers
+        .map(x => Math.max(state.thickness, Math.min(state.width - state.thickness, x)))
+        .sort((a,b)=>a-b);
+
+      saveToStorage();
+    }
+
+    // --- UI EVENTS ---
+    function initUIEventListeners() {
+      // Unit change
+      document.getElementById("inp-unit").addEventListener("change", (e) => {
+        state.unit = e.target.value;
+        syncInputsFromState();
+        render();
+        saveToStorage();
+      });
+
+      // Numeric inputs change
+      ['inp-width', 'inp-depth', 'inp-height', 'inp-thickness'].forEach(id => {
+        const el = document.getElementById(id);
+        el.addEventListener("input", () => {
+          readInputsToState();
+          render();
+        });
+      });
+
+      // Preset selector
+      document.getElementById("preset-select").addEventListener("change", (e) => {
+        loadPreset(e.target.value);
+      });
+
+      // Load Sample button
+      document.getElementById("btn-load-sample").addEventListener("click", () => {
+        loadPreset("workshop");
+        document.getElementById("preset-select").value = "workshop";
+      });
+
+      // Add dividers
+      document.getElementById("btn-add-h").addEventListener("click", () => {
+        const midY = state.depth / 2;
+        state.h_dividers.push(midY);
+        state.h_dividers.sort((a,b)=>a-b);
+        render();
+        saveToStorage();
+      });
+
+      document.getElementById("btn-add-v").addEventListener("click", () => {
+        const midX = state.width / 2;
+        state.v_dividers.push(midX);
+        state.v_dividers.sort((a,b)=>a-b);
+        render();
+        saveToStorage();
+      });
+
+      // Equal Grid
+      document.getElementById("btn-apply-equal-grid").addEventListener("click", () => {
+        const cols = parseInt(document.getElementById("inp-grid-cols").value) || 1;
+        const rows = parseInt(document.getElementById("inp-grid-rows").value) || 1;
+
+        state.v_dividers = [];
+        state.h_dividers = [];
+
+        const colWidth = state.width / cols;
+        for (let i = 1; i < cols; i++) {
+          state.v_dividers.push(colWidth * i);
+        }
+
+        const rowDepth = state.depth / rows;
+        for (let j = 1; j < rows; j++) {
+          state.h_dividers.push(rowDepth * j);
+        }
+
+        render();
+        saveToStorage();
+      });
+
+      // Item Fit Inspector
+      document.getElementById("btn-check-fit").addEventListener("click", checkItemFit);
+
+      // PRO Actions Trigger
+      document.getElementById("btn-export-csv").addEventListener("click", () => handleProFeature(exportCSV));
+      document.getElementById("btn-export-json").addEventListener("click", () => handleProFeature(exportJSON));
+      document.getElementById("btn-print").addEventListener("click", () => handleProFeature(triggerPrint));
+
+      // Modal close
+      document.getElementById("btn-close-modal").addEventListener("click", () => {
+        document.getElementById("pro-modal").classList.remove("active");
+      });
+
+      // Reset
+      document.getElementById("btn-reset").addEventListener("click", () => {
+        if (confirm("Reset all settings to default kitchen silverware preset?")) {
+          loadPreset("kitchen");
+          document.getElementById("preset-select").value = "kitchen";
+        }
+      });
+
+      // Copy Checklist
+      document.getElementById("btn-copy-checklist").addEventListener("click", copyChecklistToClipboard);
+
+      // SVG Canvas Mouse Events for Dragging
+      setupSVGCanvasEvents();
+    }
+
+    function handleProFeature(callback) {
+      if (PRO) {
+        callback();
+      } else {
+        const modal = document.getElementById("pro-modal");
+        const link = document.getElementById("pro-link-btn");
+        link.href = PRO_LINK;
+        modal.classList.add("active");
+      }
+    }
+
+    // --- COMPUTATIONS & RENDER LOGIC ---
+
+    function calculateCompartments() {
+      const xs = [0, ...state.v_dividers, state.width];
+      const ys = [0, ...state.h_dividers, state.depth];
+      const t = state.thickness;
+
+      const compartments = [];
+      let index = 0;
+
+      for (let j = 0; j < ys.length - 1; j++) {
+        for (let i = 0; i < xs.length - 1; i++) {
+          const xStart = xs[i];
+          const xEnd = xs[i + 1];
+          const yStart = ys[j];
+          const yEnd = ys[j + 1];
+
+          // Internal usable calculations accounting for divider thickness
+          // Outer drawer walls have 0 divider thickness inside cavity (divider abuts flush against wall)
+          const leftDeduction = (i === 0) ? 0 : (t / 2);
+          const rightDeduction = (i === xs.length - 2) ? 0 : (t / 2);
+          const topDeduction = (j === 0) ? 0 : (t / 2);
+          const bottomDeduction = (j === ys.length - 2) ? 0 : (t / 2);
+
+          const usableWidth = Math.max(0, (xEnd - xStart) - (leftDeduction + rightDeduction));
+          const usableDepth = Math.max(0, (yEnd - yStart) - (topDeduction + bottomDeduction));
+
+          compartments.push({
+            id: `C${index + 1}`,
+            index,
+            row: j + 1,
+            col: i + 1,
+            xStart, xEnd, yStart, yEnd,
+            usableWidth,
+            usableDepth,
+            diagonal: Math.sqrt(usableWidth * usableWidth + usableDepth * usableDepth)
+          });
+          index++;
+        }
+      }
+      return compartments;
+    }
+
+    function calculateBlueprint() {
+      const H = state.height;
+      const T = state.thickness;
+      const notchDepth = H / 2;
+
+      const slats = [];
+
+      // Horizontal slats (run along X, length = Drawer Width W)
+      state.h_dividers.forEach((yPos, idx) => {
+        const notches = [...state.v_dividers]; // intersects all vertical slats
+        slats.push({
+          id: `H${idx + 1}`,
+          type: "Horizontal (X-Slat)",
+          length: state.width,
+          height: H,
+          notchDepth: notchDepth,
+          notchWidth: T,
+          notches: notches,
+          yPos: yPos
+        });
+      });
+
+      // Vertical slats (run along Y, length = Drawer Depth D)
+      state.v_dividers.forEach((xPos, idx) => {
+        const notches = [...state.h_dividers]; // intersects all horizontal slats
+        slats.push({
+          id: `V${idx + 1}`,
+          type: "Vertical (Y-Slat)",
+          length: state.depth,
+          height: H,
+          notchDepth: notchDepth,
+          notchWidth: T,
+          notches: notches,
+          xPos: xPos
+        });
+      });
+
+      return slats;
+    }
+
+    function render() {
+      renderDividersTable();
+      renderSVGCanvas();
+      renderJointSummary();
+      renderBlueprintTable();
+      renderGuidanceBlock();
+      if (typeof updateFitInspectorSummary === 'function') {
+        updateFitInspectorSummary(calculateCompartments());
+      }
+      if (typeof renderNestingPlan === 'function') {
+        renderNestingPlan();
+      }
+      if (typeof updateVectorExportUI === 'function') {
+        updateVectorExportUI();
+      }
+      if (typeof updateVaultUI === 'function') {
+        updateVaultUI();
+      }
+    }
+
+    // --- RENDER DIVIDERS TABLE ---
+    function renderDividersTable() {
+      const tbody = document.getElementById("tbody-dividers");
+      tbody.innerHTML = "";
+
+      let html = "";
+
+      state.h_dividers.forEach((y, i) => {
+        const valInput = convertMmToInputUnit(y);
+        html += `
+          <tr>
+            <td><span class="tag tag-h">H${i+1}</span></td>
+            <td>
+              <input type="number" step="any" value="${valInput}" onchange="updateDividerPos('h', ${i}, this.value)" style="padding:2px 6px; font-size:0.8rem;">
+            </td>
+            <td>
+              <button class="btn btn-sm btn-danger" onclick="deleteDivider('h', ${i})">Del</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      state.v_dividers.forEach((x, i) => {
+        const valInput = convertMmToInputUnit(x);
+        html += `
+          <tr>
+            <td><span class="tag tag-v">V${i+1}</span></td>
+            <td>
+              <input type="number" step="any" value="${valInput}" onchange="updateDividerPos('v', ${i}, this.value)" style="padding:2px 6px; font-size:0.8rem;">
+            </td>
+            <td>
+              <button class="btn btn-sm btn-danger" onclick="deleteDivider('v', ${i})">Del</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      if (state.h_dividers.length === 0 && state.v_dividers.length === 0) {
+        html = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No dividers added yet.</td></tr>`;
+      }
+
+      tbody.innerHTML = html;
+    }
+
+    window.updateDividerPos = function(type, index, val) {
+      let valMm = parseInputToMm(val);
+      if (isNaN(valMm)) return;
+      if (type === 'h') {
+        state.h_dividers[index] = Math.max(0, Math.min(state.depth, valMm));
+      } else {
+        state.v_dividers[index] = Math.max(0, Math.min(state.width, valMm));
+      }
+      render();
+      saveToStorage();
+    };
+
+    window.deleteDivider = function(type, index) {
+      if (type === 'h') {
+        state.h_dividers.splice(index, 1);
+      } else {
+        state.v_dividers.splice(index, 1);
+      }
+      render();
+      saveToStorage();
+    };
+
+    // --- RENDER SVG CANVAS ---
+    function renderSVGCanvas() {
+      const svg = document.getElementById("drawer-canvas");
+      const W = state.width;
+      const D = state.depth;
+      const T = state.thickness;
+
+      const compartments = calculateCompartments();
+      document.getElementById("compartment-count-tag").textContent = `${compartments.length} Compartment${compartments.length === 1 ? '' : 's'}`;
+
+      // Set viewBox with margin around drawer for labels
+      const pad = 45;
+      const viewW = W + pad * 2;
+      const viewH = D + pad * 2;
+      svg.setAttribute("viewBox", `-${pad} -${pad} ${viewW} ${viewH}`);
+
+      let content = "";
+
+      // Background / Outer Drawer Box
+      content += `<rect class="svg-drawer-outer" x="0" y="0" width="${W}" height="${D}" rx="4" />`;
+
+      // Background compartments hoverable areas
+      compartments.forEach(comp => {
+        const isSelected = state.selectedCompartmentIndex === comp.index;
+        const fitCls = typeof getCompartmentFitStatus === 'function' ? getCompartmentFitStatus(comp) : '';
+        const cls = `svg-compartment ${isSelected ? 'active' : ''} ${fitCls}`;
+        content += `
+          <rect class="${cls}" x="${comp.xStart}" y="${comp.yStart}" width="${comp.xEnd - comp.xStart}" height="${comp.yEnd - comp.yStart}"
+            onclick="selectCompartment(${comp.index})"
+            data-index="${comp.index}">
+            <title>${comp.id}: Usable ${formatLength(comp.usableWidth)} x ${formatLength(comp.usableDepth)}</title>
+          </rect>
+        `;
+
+        // Render dimension text if box is large enough
+        const boxW = comp.xEnd - comp.xStart;
+        const boxH = comp.yEnd - comp.yStart;
+        if (boxW > 35 && boxH > 25) {
+          const cx = comp.xStart + boxW / 2;
+          const cy = comp.yStart + boxH / 2;
+          content += `<text class="svg-text" x="${cx}" y="${cy}">${comp.id}<tspan x="${cx}" dy="14" font-size="9" fill="var(--text-muted)">${formatLength(comp.usableWidth, state.unit)} × ${formatLength(comp.usableDepth, state.unit)}</tspan></text>`;
+        }
+      });
+
+      // Outer Dimension Lines & Text
+      content += `
+        <!-- Top width dim -->
+        <line x1="0" y1="-15" x2="${W}" y2="-15" stroke="var(--text-muted)" stroke-width="1" />
+        <line x1="0" y1="-20" x2="0" y2="-10" stroke="var(--text-muted)" stroke-width="1" />
+        <line x1="${W}" y1="-20" x2="${W}" y2="-10" stroke="var(--text-muted)" stroke-width="1" />
+        <text class="svg-dim-text" x="${W/2}" y="-22" text-anchor="middle">Width: ${formatLength(W)}</text>
+
+        <!-- Left depth dim -->
+        <line x1="-15" y1="0" x2="-15" y2="${D}" stroke="var(--text-muted)" stroke-width="1" />
+        <line x1="-20" y1="0" x2="-10" y2="0" stroke="var(--text-muted)" stroke-width="1" />
+        <line x1="-20" y1="${D}" x2="-10" y2="${D}" stroke="var(--text-muted)" stroke-width="1" />
+        <text class="svg-dim-text" x="-22" y="${D/2}" text-anchor="middle" transform="rotate(-90 -22 ${D/2})">Depth: ${formatLength(D)}</text>
+      `;
+
+      // Render Horizontal Slats (X-slats)
+      state.h_dividers.forEach((yPos, i) => {
+        content += `
+          <rect class="svg-slat-h" x="0" y="${yPos - T/2}" width="${W}" height="${T}" data-type="h" data-index="${i}">
+            <title>Horizontal Slat H${i+1} at Y=${formatLength(yPos)}</title>
+          </rect>
+          <!-- Drag Handle -->
+          <circle class="svg-handle" cx="${W + 12}" cy="${yPos}" r="6" data-type="h" data-index="${i}">
+            <title>Drag to reposition H${i+1}</title>
+          </circle>
+        `;
+      });
+
+      // Render Vertical Slats (Y-slats)
+      state.v_dividers.forEach((xPos, i) => {
+        content += `
+          <rect class="svg-slat-v" x="${xPos - T/2}" y="0" width="${T}" height="${D}" data-type="v" data-index="${i}">
+            <title>Vertical Slat V${i+1} at X=${formatLength(xPos)}</title>
+          </rect>
+          <!-- Drag Handle -->
+          <circle class="svg-handle" cx="${xPos}" cy="${D + 12}" r="6" data-type="v" data-index="${i}">
+            <title>Drag to reposition V${i+1}</title>
+          </circle>
+        `;
+      });
+
+      // Render Notch Intersections (Visual Overlays)
+      state.h_dividers.forEach((yPos) => {
+        state.v_dividers.forEach((xPos) => {
+          content += `<rect class="svg-notch" x="${xPos - T/2}" y="${yPos - T/2}" width="${T}" height="${T}" />`;
+        });
+      });
+
+      svg.innerHTML = content;
+    }
+
+    window.selectCompartment = function(index) {
+      state.selectedCompartmentIndex = index;
+      render();
+    };
+
+    // --- CANVAS DRAG EVENTS ---
+    function setupSVGCanvasEvents() {
+      const svg = document.getElementById("drawer-canvas");
+
+      function getSVGCoordinates(evt) {
+        const pt = svg.createSVGPoint();
+        pt.x = evt.clientX;
+        pt.y = evt.clientY;
+        const cursorPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
+        return {
+          x: Math.max(state.thickness, Math.min(state.width - state.thickness, cursorPoint.x)),
+          y: Math.max(state.thickness, Math.min(state.depth - state.thickness, cursorPoint.y))
+        };
+      }
+
+      svg.addEventListener("mousedown", (e) => {
+        const target = e.target;
+        const type = target.getAttribute("data-type");
+        const indexStr = target.getAttribute("data-index");
+
+        if (type && indexStr !== null) {
+          state.draggingDivider = { type, index: parseInt(indexStr) };
+          document.getElementById("canvas-status-badge").textContent = `Dragging ${type.toUpperCase()}${parseInt(indexStr)+1}`;
+        }
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!state.draggingDivider) return;
+        const coords = getSVGCoordinates(e);
+        const { type, index } = state.draggingDivider;
+
+        if (type === 'h') {
+          state.h_dividers[index] = coords.y;
+          state.h_dividers.sort((a,b)=>a-b);
+        } else if (type === 'v') {
+          state.v_dividers[index] = coords.x;
+          state.v_dividers.sort((a,b)=>a-b);
+        }
+        render();
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (state.draggingDivider) {
+          state.draggingDivider = null;
+          document.getElementById("canvas-status-badge").textContent = `Interactive Drag Active`;
+          saveToStorage();
+        }
+      });
+    }
+
+    // --- RENDER JOINT SUMMARY ---
+    function renderJointSummary() {
+      const H = state.height;
+      const T = state.thickness;
+      const notchDepth = H / 2;
+      const totalJoints = state.h_dividers.length * state.v_dividers.length;
+
+      document.getElementById("calc-notch-width").textContent = formatLength(T);
+      document.getElementById("calc-notch-depth").textContent = formatLength(notchDepth);
+      document.getElementById("calc-total-intersections").textContent = totalJoints.toString();
+    }
+
+    // --- RENDER BLUEPRINT TABLE ---
+    function renderBlueprintTable() {
+      const tbody = document.getElementById("tbody-blueprint");
+      const slats = calculateBlueprint();
+
+      if (slats.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">No slats or dividers configured. Add dividers above.</td></tr>`;
+        return;
+      }
+
+      let html = "";
+      slats.forEach(slat => {
+        const notchesBadges = slat.notches.map(n => `<span class="notch-badge">${formatLength(n)}</span>`).join(' ');
+
+        html += `
+          <tr>
+            <td><strong>${slat.id}</strong></td>
+            <td><span class="tag ${slat.id.startsWith('H') ? 'tag-h' : 'tag-v'}">${slat.type}</span></td>
+            <td>${formatLength(slat.length)}</td>
+            <td>${formatLength(slat.height)}</td>
+            <td>${formatLength(slat.notchDepth)}</td>
+            <td><div class="notch-badge-list">${notchesBadges || '<em>None</em>'}</div></td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    // --- CHECK ITEM FIT (SOLVES QUESTION 2 DIRECTLY) ---
+    function checkItemFit() {
+      const name = document.getElementById("inp-item-name").value || "Item";
+      const itemLen = parseInputToMm(document.getElementById("inp-item-len").value);
+      const itemWidth = parseInputToMm(document.getElementById("inp-item-width").value);
+
+      const compartments = calculateCompartments();
+      const container = document.getElementById("fit-result-container");
+
+      const fittingComps = compartments.filter(c => {
+        // Check both standard orientation and rotated 90 deg
+        const fitsNormal = (c.usableWidth >= itemWidth && c.usableDepth >= itemLen);
+        const fitsRotated = (c.usableWidth >= itemLen && c.usableDepth >= itemWidth);
+        return fitsNormal || fitsRotated;
+      });
+
+      if (fittingComps.length > 0) {
+        const compNames = fittingComps.map(c => c.id).join(", ");
+        container.innerHTML = `
+          <div class="alert alert-success" style="margin-top:10px;">
+            <strong>SUCCESS:</strong> "${name}" (${formatLength(itemLen)} × ${formatLength(itemWidth)}) fits in <strong>${fittingComps.length}</strong> compartment(s): <strong>${compNames}</strong>.
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="alert alert-warning" style="margin-top:10px;">
+            <strong>DOES NOT FIT:</strong> "${name}" (${formatLength(itemLen)} × ${formatLength(itemWidth)}) is too large for all current compartments.
+            <br/><span style="font-size:0.775rem;">Tip: Try removing or shifting horizontal/vertical dividers to create a larger cell.</span>
+          </div>
+        `;
+      }
+    }
+
+    // --- DYNAMIC GUIDANCE BLOCK ---
+    function renderGuidanceBlock() {
+      const guidanceText = document.getElementById("guidance-text");
+      const hCount = state.h_dividers.length;
+      const vCount = state.v_dividers.length;
+      const compartments = calculateCompartments();
+
+      const totalSlatLength = (hCount * state.width) + (vCount * state.depth);
+      const totalJoints = hCount * vCount;
+
+      let msg = `Your <strong>${formatLength(state.width)} × ${formatLength(state.depth)}</strong> drawer is divided into <strong>${compartments.length} compartments</strong> using <strong>${hCount + vCount} slats</strong> (${hCount} horizontal, ${vCount} vertical).<br/>`;
+
+      msg += `Total raw material linear length required: <strong>${formatLength(totalSlatLength)}</strong> of ${formatLength(state.thickness)} material.<br/>`;
+      msg += `You will need to cut <strong>${totalJoints * 2} half-lap notches</strong> total (depth: ${formatLength(state.height/2)}, width: ${formatLength(state.thickness)}).`;
+
+      guidanceText.innerHTML = msg;
+    }
+
+    // --- UTILITY ACTIONS & EXPORTS ---
+    function copyChecklistToClipboard() {
+      const slats = calculateBlueprint();
+      let text = `MODULAR DRAWER BLUEPRINT CHECKLIST\n`;
+      text += `Drawer Dimensions: ${formatLength(state.width)} W x ${formatLength(state.depth)} D x ${formatLength(state.height)} H\n`;
+      text += `Material Thickness: ${formatLength(state.thickness)}\n`;
+      text += `--------------------------------------------------\n`;
+
+      slats.forEach(s => {
+        const notches = s.notches.map(n => formatLength(n, state.unit)).join(", ");
+        text += `${s.id} [${s.type}]: Length=${formatLength(s.length, state.unit)}, Height=${formatLength(s.height, state.unit)}, Notch Depth=${formatLength(s.notchDepth, state.unit)}, Notch Centers from Edge=[${notches}]\n`;
+      });
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Cut checklist copied to clipboard!");
+      }).catch(() => {
+        alert("Failed to copy automatically. Please select and copy manually from table.");
+      });
+    }
+
+    function exportCSV() {
+      const slats = calculateBlueprint();
+      let csv = "Slat_ID,Type,Slat_Length_mm,Slat_Height_mm,Notch_Depth_mm,Notch_Centers_mm\n";
+      slats.forEach(s => {
+        const notches = `"${s.notches.map(n => n.toFixed(1)).join('; ')}"`;
+        csv += `${s.id},${s.type},${s.length.toFixed(1)},${s.height.toFixed(1)},${s.notchDepth.toFixed(1)},${notches}\n`;
+      });
+
+      downloadFile(csv, "drawer_partition_cutlist.csv", "text/csv");
+    }
+
+    function exportJSON() {
+      const data = {
+        state: state,
+        blueprint: calculateBlueprint(),
+        compartments: calculateCompartments()
+      };
+      downloadFile(JSON.stringify(data, null, 2), "drawer_partition_project.json", "application/json");
+    }
+
+    function downloadFile(content, fileName, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function triggerPrint() {
+      window.print();
+    }
+
+    function getCompartmentFitStatus(comp) {
+      if (!PRO) return '';
+      const chkActive = document.getElementById("fit-chk-active");
+      if (!chkActive || !chkActive.checked) return '';
+
+      const inpLen = document.getElementById("fit-inp-length");
+      const inpWid = document.getElementById("fit-inp-width");
+      const itemL = parseInputToMm(inpLen ? inpLen.value : 0);
+      const itemW = parseInputToMm(inpWid ? inpWid.value : 0);
+
+      if (isNaN(itemL) || isNaN(itemW) || itemL <= 0 || itemW <= 0) return '';
+
+      const fitsNormal = comp.usableWidth >= itemW && comp.usableDepth >= itemL;
+      const fitsRotated = comp.usableWidth >= itemL && comp.usableDepth >= itemW;
+
+      return (fitsNormal || fitsRotated) ? 'fit-pass' : 'fit-fail';
+    }
+
+    function updateFitInspectorSummary(compartments) {
+      const summaryEl = document.getElementById("fit-summary-output");
+      if (!summaryEl) return;
+
+      if (!PRO) {
+        const proGate = document.getElementById("fit-inspector-pro-gate");
+        const controls = document.getElementById("fit-inspector-controls");
+        if (proGate) {
+          proGate.style.display = "block";
+          const link = document.getElementById("fit-pro-link");
+          if (link) link.href = PRO_LINK;
+        }
+        if (controls) controls.style.display = "none";
+        return;
+      }
+
+      const chkActive = document.getElementById("fit-chk-active");
+      if (!chkActive || !chkActive.checked) {
+        summaryEl.style.display = "none";
+        return;
+      }
+      summaryEl.style.display = "block";
+
+      const height = state.height;
+      let totalVolMm3 = 0;
+      let passCount = 0;
+      let passVolMm3 = 0;
+
+      compartments.forEach(comp => {
+        const vol = comp.usableWidth * comp.usableDepth * height;
+        totalVolMm3 += vol;
+        const status = getCompartmentFitStatus(comp);
+        if (status === 'fit-pass') {
+          passCount++;
+          passVolMm3 += vol;
+        }
+      });
+
+      const totalCm3 = (totalVolMm3 / 1000).toFixed(1);
+      const totalCuIn = (totalVolMm3 / 16387.064).toFixed(1);
+      const passCm3 = (passVolMm3 / 1000).toFixed(1);
+      const passCuIn = (passVolMm3 / 16387.064).toFixed(1);
+
+      summaryEl.innerHTML = `
+        <div><strong>Fit Results:</strong> ${passCount} of ${compartments.length} compartment(s) fit item</div>
+        <div style="margin-top:4px; font-size:0.775rem; color:var(--text-muted);">
+          Total Drawer Usable Volume: <strong>${totalCm3} cm³</strong> (${totalCuIn} in³)<br/>
+          Fitting Compartment Volume: <strong>${passCm3} cm³</strong> (${passCuIn} in³)
+        </div>
+      `;
+    }
+
+    (function initFitInspectorEvents() {
+      ['fit-inp-length', 'fit-inp-width', 'fit-chk-active'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          ['input', 'change'].forEach(evt => el.addEventListener(evt, render));
+        }
+      });
+    })();
+
+    function renderNestingPlan() {
+      const gate = document.getElementById("nesting-pro-gate");
+      const controls = document.getElementById("nesting-controls");
+      if (!gate || !controls) return;
+
+      if (!PRO) {
+        gate.style.display = "block";
+        controls.style.display = "none";
+        const link = document.getElementById("nesting-pro-link");
+        if (link) link.href = PRO_LINK;
+        return;
+      }
+      gate.style.display = "none";
+      controls.style.display = "block";
+
+      const sheetWInput = parseInputToMm(document.getElementById("nest-sheet-w").value);
+      const sheetHInput = parseInputToMm(document.getElementById("nest-sheet-h").value);
+      const kerfInput = parseInputToMm(document.getElementById("nest-kerf").value);
+
+      const SW = (isNaN(sheetWInput) || sheetWInput <= 0) ? 1200 : sheetWInput;
+      const SH = (isNaN(sheetHInput) || sheetHInput <= 0) ? 600 : sheetHInput;
+      const K = (isNaN(kerfInput) || kerfInput < 0) ? 3 : kerfInput;
+
+      const slats = calculateBlueprint();
+      const svg = document.getElementById("nesting-canvas");
+      const effEl = document.getElementById("nest-efficiency");
+      const summaryEl = document.getElementById("nesting-summary");
+
+      svg.setAttribute("viewBox", `0 0 ${SW} ${SH}`);
+
+      if (slats.length === 0) {
+        svg.innerHTML = `<rect class="svg-nest-sheet" x="0" y="0" width="${SW}" height="${SH}"/><text class="svg-nest-text" x="${SW/2}" y="${SH/2}">No slats to arrange</text>`;
+        effEl.textContent = "Efficiency: 0%";
+        summaryEl.textContent = "Add dividers to generate a sheet nesting plan.";
+        return;
+      }
+
+      const sortedSlats = [...slats].sort((a, b) => b.length - a.length);
+
+      let currX = K;
+      let currY = K;
+      let rowMaxH = 0;
+      let placedCount = 0;
+      let totalSlatArea = 0;
+      let svgContent = `<rect class="svg-nest-sheet" x="0" y="0" width="${SW}" height="${SH}"/>`;
+
+      sortedSlats.forEach(slat => {
+        let w = slat.length;
+        let h = slat.height;
+
+        if (currX + w + K > SW) {
+          if (currX + h + K <= SW && currY + w + K <= SH) {
+            w = slat.height;
+            h = slat.length;
+          } else {
+            currX = K;
+            currY += rowMaxH + K;
+            rowMaxH = 0;
+          }
+        }
+
+        if (currY + h + K <= SH && currX + w + K <= SW) {
+          svgContent += `<g>
+            <rect class="svg-nest-slat" x="${currX}" y="${currY}" width="${w}" height="${h}"/>
+            <text class="svg-nest-text" x="${currX + w/2}" y="${currY + h/2}">${slat.id} (${formatLength(slat.length)})</text>
+          </g>`;
+          currX += w + K;
+          rowMaxH = Math.max(rowMaxH, h);
+          placedCount++;
+          totalSlatArea += slat.length * slat.height;
+        }
+      });
+
+      svg.innerHTML = svgContent;
+
+      const sheetArea = SW * SH;
+      const efficiency = ((totalSlatArea / sheetArea) * 100).toFixed(1);
+      effEl.textContent = `Efficiency: ${efficiency}%`;
+
+      const sheetsNeeded = Math.ceil(slats.length / Math.max(1, placedCount));
+      summaryEl.innerHTML = `Placed <strong>${placedCount} of ${slats.length}</strong> slat(s) on standard sheet (${formatLength(SW)} × ${formatLength(SH)}). Estimated sheet requirement: <strong>${sheetsNeeded} sheet(s)</strong>.`;
+    }
+
+    (function initNestingEvents() {
+      ['nest-sheet-w', 'nest-sheet-h', 'nest-kerf'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          ['input', 'change'].forEach(evt => el.addEventListener(evt, renderNestingPlan));
+        }
+      });
+    })();
+
+    function updateVectorExportUI() {
+      const gate = document.getElementById("vector-export-pro-gate");
+      const controls = document.getElementById("vector-export-controls");
+      if (!gate || !controls) return;
+
+      if (!PRO) {
+        gate.style.display = "block";
+        controls.style.display = "none";
+        const link = document.getElementById("vector-pro-link");
+        if (link) link.href = PRO_LINK;
+      } else {
+        gate.style.display = "none";
+        controls.style.display = "block";
+      }
+    }
+
+    function exportVectorSVG() {
+      if (!PRO) {
+        handleProFeature(() => {});
+        return;
+      }
+
+      const slats = calculateBlueprint();
+      if (slats.length === 0) {
+        alert("No slats available to export. Please add horizontal or vertical dividers first.");
+        return;
+      }
+
+      const margin = parseFloat(document.getElementById("exp-slat-margin").value) || 10;
+      const notchW = state.thickness;
+      let currY = margin;
+      let maxW = 0;
+      let paths = "";
+
+      slats.forEach((slat) => {
+        const L = slat.length;
+        const H = slat.height;
+        const nDepth = slat.notchDepth;
+        const isTopNotch = slat.id.startsWith("H");
+        maxW = Math.max(maxW, L);
+
+        const sortedNotches = [...slat.notches].sort((a, b) => a - b);
+        let d = "";
+
+        if (isTopNotch) {
+          d += `M ${margin} ${currY}`;
+          sortedNotches.forEach((c) => {
+            const x1 = margin + Math.max(0, c - notchW / 2);
+            const x2 = margin + Math.min(L, c + notchW / 2);
+            d += ` L ${x1} ${currY} L ${x1} ${currY + nDepth} L ${x2} ${currY + nDepth} L ${x2} ${currY}`;
+          });
+          d += ` L ${margin + L} ${currY} L ${margin + L} ${currY + H} L ${margin} ${currY + H} Z`;
+        } else {
+          d += `M ${margin} ${currY} L ${margin + L} ${currY} L ${margin + L} ${currY + H}`;
+          for (let i = sortedNotches.length - 1; i >= 0; i--) {
+            const c = sortedNotches[i];
+            const x1 = margin + Math.max(0, c - notchW / 2);
+            const x2 = margin + Math.min(L, c + notchW / 2);
+            d += ` L ${x2} ${currY + H} L ${x2} ${currY + (H - nDepth)} L ${x1} ${currY + (H - nDepth)} L ${x1} ${currY + H}`;
+          }
+          d += ` L ${margin} ${currY + H} Z`;
+        }
+
+        paths += `    <path d="${d}" fill="none" stroke="#000000" stroke-width="0.2" />\n`;
+        paths += `    <text x="${margin + 4}" y="${currY + H / 2 + 1}" font-family="sans-serif" font-size="3.5" fill="#555555">${slat.id} (${slat.type})</text>\n`;
+
+        currY += H + margin;
+      });
+
+      const totalW = maxW + margin * 2;
+      const totalH = currY;
+
+      const svgStr = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${totalW}mm" height="${totalH}mm" viewBox="0 0 ${totalW} ${totalH}">
+  <g id="slats">
+${paths}  </g>
+</svg>`;
+
+      downloadFile(svgStr, "drawer_slats_1to1_vector.svg", "image/svg+xml");
+    }
+
+    (function initVectorExportEvents() {
+      const btn = document.getElementById("btn-export-svg-vector");
+      if (btn) {
+        btn.addEventListener("click", exportVectorSVG);
+      }
+    })();
+
+    function getSavedProjects() {
+      try {
+        const raw = localStorage.getItem("drawer_planner_vault");
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveSavedProjects(projects) {
+      try {
+        localStorage.setItem("drawer_planner_vault", JSON.stringify(projects));
+      } catch (e) {}
+    }
+
+    function updateVaultUI() {
+      const gate = document.getElementById("vault-pro-gate");
+      const controls = document.getElementById("vault-controls");
+      if (!gate || !controls) return;
+
+      if (!PRO) {
+        gate.style.display = "block";
+        controls.style.display = "none";
+        const link = document.getElementById("vault-pro-link");
+        if (link) link.href = PRO_LINK;
+        return;
+      }
+      gate.style.display = "none";
+      controls.style.display = "block";
+
+      const projects = getSavedProjects();
+      const select = document.getElementById("vault-saved-select");
+      if (!select) return;
+
+      const currentVal = select.value;
+      select.innerHTML = '<option value="">-- Select Saved Project --</option>';
+      Object.keys(projects).forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = `${name} (${projects[name].unit || 'mm'}, ${projects[name].width}×${projects[name].depth})`;
+        select.appendChild(opt);
+      });
+      if (projects[currentVal]) select.value = currentVal;
+    }
+
+    function saveProjectToVault() {
+      if (!PRO) { handleProFeature(() => {}); return; }
+      const nameInput = document.getElementById("vault-project-name");
+      const name = nameInput.value.trim();
+      if (!name) { alert("Please enter a project name."); return; }
+
+      const projects = getSavedProjects();
+      projects[name] = JSON.parse(JSON.stringify(state));
+      saveSavedProjects(projects);
+      updateVaultUI();
+      document.getElementById("vault-saved-select").value = name;
+      alert(`Project "${name}" saved to memory.`);
+    }
+
+    function loadProjectFromVault() {
+      if (!PRO) { handleProFeature(() => {}); return; }
+      const select = document.getElementById("vault-saved-select");
+      const name = select.value;
+      if (!name) { alert("Please select a saved project to load."); return; }
+
+      const projects = getSavedProjects();
+      if (projects[name]) {
+        state = JSON.parse(JSON.stringify(projects[name]));
+        syncInputsFromState();
+        render();
+        saveToStorage();
+        document.getElementById("vault-project-name").value = name;
+      }
+    }
+
+    function deleteProjectFromVault() {
+      if (!PRO) { handleProFeature(() => {}); return; }
+      const select = document.getElementById("vault-saved-select");
+      const name = select.value;
+      if (!name) { alert("Please select a project to delete."); return; }
+
+      if (confirm(`Delete project "${name}" from storage?`)) {
+        const projects = getSavedProjects();
+        delete projects[name];
+        saveSavedProjects(projects);
+        updateVaultUI();
+      }
+    }
+
+    function generatePDFReport() {
+      if (!PRO) { handleProFeature(() => {}); return; }
+      const name = document.getElementById("vault-project-name").value.trim() || "Drawer Layout Project";
+      const svgContent = document.getElementById("drawer-canvas").outerHTML;
+      const slats = calculateBlueprint();
+      const compartments = calculateCompartments();
+
+      let cutListRows = slats.map(s => `
+        <tr>
+          <td style="padding:6px;border:1px solid #ccc;">${s.id}</td>
+          <td style="padding:6px;border:1px solid #ccc;">${s.type}</td>
+          <td style="padding:6px;border:1px solid #ccc;">${formatLength(s.length)}</td>
+          <td style="padding:6px;border:1px solid #ccc;">${formatLength(s.height)}</td>
+          <td style="padding:6px;border:1px solid #ccc;">${formatLength(s.notchDepth)}</td>
+          <td style="padding:6px;border:1px solid #ccc;">${s.notches.map(n => formatLength(n)).join(', ')}</td>
+        </tr>
+      `).join('');
+
+      const printWin = window.open('', '_blank');
+      if (!printWin) { alert("Pop-up blocked. Please allow pop-ups to view PDF report."); return; }
+
+      printWin.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>${name} - PDF Report</title>
+          <style>
+            body { font-family: sans-serif; padding: 24px; color: #111; line-height: 1.4; }
+            h1, h2 { margin-bottom: 8px; }
+            .section { margin-bottom: 24px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13px; }
+            th { background: #f0f0f0; padding: 6px; border: 1px solid #ccc; text-align: left; }
+            .canvas-box { text-align: center; background: #fafafa; border: 1px solid #ccc; padding: 16px; margin-top: 10px; }
+            .canvas-box svg { max-width: 100%; max-height: 350px; }
+            ol { padding-left: 20px; font-size: 14px; }
+            li { margin-bottom: 6px; }
+            @media print { button { display: none; } }
+          </style>
+        </head>
+        <body>
+          <div style="display:flex;justify-space-between;align-items:center;border-bottom:2px solid #333;padding-bottom:8px;">
+            <div>
+              <h1>${name}</h1>
+              <div>Modular Drawer Partition Blueprint & Assembly Report</div>
+            </div>
+            <button onclick="window.print()" style="padding:8px 16px;font-size:14px;cursor:pointer;">Print / Save as PDF</button>
+          </div>
+
+          <div class="section" style="margin-top:16px;">
+            <h2>1. Specifications Overview</h2>
+            <div><strong>Dimensions:</strong> ${formatLength(state.width)} Width × ${formatLength(state.depth)} Depth × ${formatLength(state.height)} Wall Height</div>
+            <div><strong>Material Thickness:</strong> ${formatLength(state.thickness)} | <strong>Compartments:</strong> ${compartments.length} total</div>
+          </div>
+
+          <div class="section">
+            <h2>2. 2D Layout Plan</h2>
+            <div class="canvas-box">${svgContent}</div>
+          </div>
+
+          <div class="section">
+            <h2>3. Slat Cutting List & Notching Offsets</h2>
+            <table>
+              <thead>
+                <tr><th>ID</th><th>Type</th><th>Length</th><th>Height</th><th>Slot Depth</th><th>Notch Center Offsets</th></tr>
+              </thead>
+              <tbody>${cutListRows}</tbody>
+            </table>
+          </div>
+
+          <div class="section">
+            <h2>4. Step-by-Step Assembly Instructions</h2>
+            <ol>
+              <li>Cut <strong>${slats.length} slat strips</strong> (${state.h_dividers.length} horizontal, ${state.v_dividers.length} vertical) out of ${formatLength(state.thickness)} thick stock to specified lengths.</li>
+              <li>Mark notch center offsets measured from slat edges as indicated in the Cutting List above.</li>
+              <li>Rout or saw <strong>${formatLength(state.thickness)} wide notches</strong> to a uniform depth of <strong>${formatLength(state.height / 2)}</strong> at each marked position.</li>
+              <li>Assemble half-lap grid by interlocking vertical notches facing downward with horizontal notches facing upward.</li>
+              <li>Slide assembled partition unit into drawer frame for a friction-fit installation.</li>
+            </ol>
+          </div>
+        <section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Modular Drawer Grid &amp; Partition Box Layout Planner helps woodworkers, makers, and organizers design custom interlocking drawer dividers in seconds. Input your internal drawer dimensions, material thickness, and layout preferences to instantly generate precision templates and optimized material cut lists.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Measure the internal length, width, and height of your drawer or box.</li><li>Enter your material thickness, laser kerf (if applicable), and desired grid count.</li><li>Preview the generated half-lap notch positions and sheet nesting yield in real time.</li><li>Export clean 1:1 scale SVG vector files for laser cutting, CNC routing, or manual cutting.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">How do I calculate the exact lengths and notch positions for 4mm plywood dividers so they fit perfectly in my 42.5cm wide kitchen drawer?</h4><p style="margin:0">You enter: Internal drawer width (425mm) · Internal drawer depth (500mm) · Material thickness (4mm) · Desired number of columns (3) and rows (2).<br>You get: A precise list of board lengths and the exact millimeter measurements from the edge where 4mm wide notches must be cut halfway through the board height.</p><h4 style="font-size:16px;margin:16px 0 4px">Will my 32cm long chef&#39;s knife fit into a compartment if I divide this drawer into a 4x4 grid?</h4><p style="margin:0">You enter: Drawer depth (450mm) · Item length (320mm) · Grid configuration (4x4).<br>You get: The usable internal length of the resulting compartments after accounting for material thickness and wall clearances.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">How do half-lap joints work for custom drawer dividers?</h4><p style="margin:0">Half-lap joints feature vertical slots cut halfway (50% depth) through intersecting divider strips. When one set of strips is inverted and fitted onto the opposing set, the strips lock together to form a rigid, self-standing grid that sits flush on top and bottom.</p><h4 style="font-size:16px;margin:16px 0 4px">What file formats does the tool export for laser cutting and CNC?</h4><p style="margin:0">The planner generates standard 1:1 scale SVG vector files. These files can be opened directly in software like LightBurn, Inkscape, Adobe Illustrator, or CAM software for CNC routing.</p><h4 style="font-size:16px;margin:16px 0 4px">Does the offline pack require installation or an internet connection?</h4><p style="margin:0">No. The $9 offline pack is a self-contained HTML/JS file that runs locally inside any standard web browser without software installation, account creation, or active internet connection.</p><h4 style="font-size:16px;margin:16px 0 4px">How does the material nesting calculator reduce waste?</h4><p style="margin:0">The calculator arranges your generated divider strips onto your specified stock sheet dimensions to maximize fit. This ensures you buy only the material you need and make full use of leftover plywood, acrylic, or cardboard sheets.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Offline pack: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>This complete tool</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/efvhjp" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the offline pack · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../wood-ebonizing-tannin-acetate-calculator/" style="color:inherit;font-weight:600">Wood Ebonizing &amp; Tannin Reaction Simulator</a>: Predict iron acetate darkening, calculate tannin dosing, and simulate grain contrast before touching your lumber.</li><li><a href="../cardboard-automata-motion-designer/" style="color:inherit;font-weight:600">Cardboard Automata &amp; Cam Mechanism Studio</a>: Design mechanical cardboard toys offline with live motion graphs, jam diagnostics, and vector cut exports.</li><li><a href="../chladni-cymatics-resonance-lab/" style="color:inherit;font-weight:600">Chladni Plate Cymatics &amp; Resonance Sandbox</a>: Offline interactive modal vibration solver, granular sand physics simulator, and dual-tone interference sandbox.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">About · Offline pack</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"About · Offline pack"});</script>
+</body>
+        </html>
+      `);
+      printWin.document.close();
+    }
+
+    (function initVaultEvents() {
+      const btnSave = document.getElementById("btn-vault-save");
+      const btnLoad = document.getElementById("btn-vault-load");
+      const btnDel = document.getElementById("btn-vault-delete");
+      const btnPdf = document.getElementById("btn-vault-pdf-report");
+
+      if (btnSave) btnSave.addEventListener("click", saveProjectToVault);
+      if (btnLoad) btnLoad.addEventListener("click", loadProjectFromVault);
+      if (btnDel) btnDel.addEventListener("click", deleteProjectFromVault);
+      if (btnPdf) btnPdf.addEventListener("click", generatePDFReport);
+
+      updateVaultUI();
+    })();
+    // FEATURE-JS
+  </script>
+</body>
+</html>
