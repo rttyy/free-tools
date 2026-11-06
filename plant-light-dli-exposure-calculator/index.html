@@ -1,0 +1,2330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg-base: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-surface-hover: #334155;
+      --bg-input: #0f172a;
+      --border-color: #334155;
+      --border-focus: #10b981;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-bright: #ffffff;
+      --accent: #10b981;
+      --accent-hover: #059669;
+      --accent-soft: rgba(16, 185, 129, 0.15);
+      --warning: #f59e0b;
+      --warning-soft: rgba(245, 158, 11, 0.15);
+      --danger: #ef4444;
+      --danger-soft: rgba(239, 68, 68, 0.15);
+      --info: #3b82f6;
+      --info-soft: rgba(59, 130, 246, 0.15);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+      --radius: 12px;
+      --radius-sm: 6px;
+      --transition: all 0.2s ease-in-out;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg-base: #f1f5f9;
+        --bg-surface: #ffffff;
+        --bg-surface-hover: #f8fafc;
+        --bg-input: #ffffff;
+        --border-color: #e2e8f0;
+        --border-focus: #059669;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --text-bright: #020617;
+        --accent: #059669;
+        --accent-hover: #047857;
+        --accent-soft: rgba(5, 150, 105, 0.1);
+        --warning: #d97706;
+        --warning-soft: rgba(217, 119, 6, 0.1);
+        --danger: #dc2626;
+        --danger-soft: rgba(220, 38, 38, 0.1);
+        --info: #2563eb;
+        --info-soft: rgba(37, 99, 235, 0.1);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 1.5rem 1rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    header {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .header-title h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 0.25rem;
+    }
+
+    .preset-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      background: var(--bg-base);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    button, .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    button:hover, .btn:hover {
+      background: var(--bg-surface-hover);
+      border-color: var(--text-muted);
+    }
+
+    button.btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    button.btn-primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    select, input[type="number"], input[type="text"] {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      outline: none;
+      transition: var(--transition);
+      width: 100%;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 900px) {
+      .grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-low { background: var(--info-soft); color: var(--info); }
+    .badge-medium { background: var(--accent-soft); color: var(--accent); }
+    .badge-high { background: var(--warning-soft); color: var(--warning); }
+    .badge-very-high { background: var(--danger-soft); color: var(--danger); }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .input-with-unit {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .unit-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      min-width: 3rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--accent);
+    }
+
+    .stat-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .stat-card {
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-bright);
+    }
+
+    .stat-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* DLI Range Visual Bar */
+    .dli-range-bar-container {
+      margin-top: 0.5rem;
+    }
+
+    .dli-range-bar-track {
+      height: 12px;
+      background: var(--bg-base);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .dli-range-bar-target-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      background: var(--accent-soft);
+      border-left: 2px dashed var(--accent);
+      border-right: 2px dashed var(--accent);
+    }
+
+    .dli-range-bar-marker {
+      position: absolute;
+      top: -2px;
+      bottom: -2px;
+      width: 4px;
+      background: var(--text-bright);
+      box-shadow: 0 0 6px rgba(0,0,0,0.8);
+      border-radius: 2px;
+      transition: left 0.3s ease;
+    }
+
+    .dli-range-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .advisory-box {
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .advisory-box.warning {
+      border-left-color: var(--warning);
+      background: var(--warning-soft);
+    }
+
+    .advisory-box.danger {
+      border-left-color: var(--danger);
+      background: var(--danger-soft);
+    }
+
+    .advisory-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .advisory-content {
+      font-size: 0.875rem;
+      line-height: 1.45;
+    }
+
+    .advisory-action {
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+
+    .toast-message {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-bright);
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .disclaimer-note {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+      padding: 0.5rem;
+    }
+
+    .worked-example-toggle {
+      background: var(--info-soft);
+      border: 1px solid var(--info);
+      color: var(--info);
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .worked-example-toggle:hover {
+      background: var(--info);
+      color: #ffffff;
+    }
+
+    section[data-feature="reverse-dli-photoperiod-solver"] {
+      border-color: var(--accent-soft);
+    }
+
+        .seasonal-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.35rem;
+      height: 140px;
+      padding: 1rem 0.5rem 0.25rem;
+      background: var(--bg-base);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+    .seasonal-bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+    }
+    .seasonal-bar {
+      width: 100%;
+      max-width: 24px;
+      border-radius: 3px 3px 0 0;
+      transition: height 0.3s ease;
+      background: var(--accent);
+    }
+    .seasonal-bar.deficit {
+      background: var(--danger);
+    }
+    .seasonal-bar-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .seasonal-threshold-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      border-top: 2px dashed var(--warning);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .seasonal-table-wrap {
+      overflow-x: auto;
+    }
+    .seasonal-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+    .seasonal-table th, .seasonal-table td {
+      padding: 0.4rem 0.6rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .seasonal-table th {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .coverage-visual {
+      height: 8px;
+      background: var(--bg-base);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .coverage-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+    section[data-feature="light-cost-energy-report-exporter"] {
+      border-color: var(--border-color);
+    }
+    /* FEATURE-CSS */
+  </style>
+<title>Plant Light Requirement &amp; DLI Calculator (Online &amp; Offline)</title>
+<meta name="description" content="Calculate Daily Light Integral (DLI) from Lux, Foot-candles, or PPFD. Plan winter grow light supplemental hours and canopy coverage offline.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/plant-light-dli-exposure-calculator/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/plant-light-dli-exposure-calculator/">
+<meta property="og:title" content="Plant Light Requirement &amp; DLI Calculator (Online &amp; Offline)"><meta property="og:description" content="Calculate Daily Light Integral (DLI) from Lux, Foot-candles, or PPFD. Plan winter grow light supplemental hours and canopy coverage offline.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/plant-light-dli-exposure-calculator/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Plant Light Requirement & DLI Calculator (Online & Offline)","description":"Calculate Daily Light Integral (DLI) from Lux, Foot-candles, or PPFD. Plan winter grow light supplemental hours and canopy coverage offline.","url":"https://rttyy.github.io/free-tools/plant-light-dli-exposure-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can I use PLA 3D-printed parts outdoors for plant setups?","acceptedAnswer":{"@type":"Answer","text":"Standard PLA plastic degrades under prolonged outdoor UV exposure and deforms at temperatures around 55°C (131°F) in direct sunlight. For outdoor garden stakes, pots, or light mounts, use PETG or ASA plastic instead, as they offer significantly higher UV and thermal resistance."}},{"@type":"Question","name":"How important is full sun for a Blue Spruce tree?","acceptedAnswer":{"@type":"Answer","text":"Blue Spruce (Picea pungens) requires full outdoor direct sunlight—at least 6 to 8 hours daily, corresponding to a DLI of 30+ mol/m²/day. They are outdoor cold-climate conifers and will rapidly decline, drop needles, and die if kept indoors or in shady conditions."}},{"@type":"Question","name":"Am I meeting the light requirements for indoor dwarf citrus trees?","acceptedAnswer":{"@type":"Answer","text":"Dwarf citrus trees require high light levels, ideally 15 to 25 DLI (mol/m²/day). Indoor window sunlight during autumn and winter rarely delivers more than 3 to 6 DLI. If your tree is shedding green leaves, you likely need high-output LED supplemental lighting running 12 to 16 hours daily."}},{"@type":"Question","name":"Why are my Tillandsia (air plants) turning black and dying after watering?","acceptedAnswer":{"@type":"Answer","text":"Black, soft bases indicate rot caused by water trapped between the leaf bases in poor airflow or low-light conditions. After soaking or misting Tillandsia, shake off excess water gently and place them upside down in a well-ventilated area with bright indirect light (DLI 4–8) so they dry completely within 4 hours."}}]}</script>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="header-top">
+        <div class="header-title">
+          <h1>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)">
+              <path d="M12 2v8"></path>
+              <path d="m4.93 10.93 4.24 4.24"></path>
+              <path d="M2 18h12"></path>
+              <path d="M20 10a8 8 0 0 0-16 0"></path>
+              <path d="M12 10a4 4 0 0 1 4 4v6"></path>
+            </svg>
+            Plant Light Requirement & Daily Light Integral Calculator
+          </h1>
+          <p>Determine exact solar & grow light DLI metrics to optimize indoor plant photosynthesis and photoperiods.</p>
+        </div>
+      </div>
+
+      <div class="preset-toolbar">
+        <div style="flex: 1; min-width: 260px;">
+          <label for="preset-select" style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Load Scenario Preset:</label>
+          <select id="preset-select">
+            <option value="0">Indoor Dwarf Meyer Lemon Tree (Winter South Window + LED Supplement)</option>
+            <option value="1">Blue Spruce Sapling (Indoor Over-Wintering Setup)</option>
+            <option value="2">Tillandsia Air Plant Collection (East Window Natural Light Only)</option>
+          </select>
+        </div>
+        <div class="btn-group">
+          <button id="btn-load-sample" class="btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Reset Preset
+          </button>
+          <button id="btn-save-custom" class="btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            Save State
+          </button>
+          <button id="btn-export-csv" class="btn">CSV Export</button>
+          <button id="btn-export-json" class="btn">JSON Export</button>
+          <button id="btn-copy-summary" class="btn">Copy Summary</button>
+          <button id="btn-print" class="btn">Print</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Advanced Planning: Reverse DLI & Target Intensity Solver -->
+    <section data-feature="reverse-dli-photoperiod-solver" class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"></path><path d="M8 21H3v-5"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg>
+          Advanced Planning: Reverse DLI &amp; Target Intensity Solver
+        </div>
+        <div class="badge badge-medium">Target Solver</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="rev-target-dli">Desired Target DLI</label>
+          <div class="input-with-unit">
+            <input type="number" id="rev-target-dli" step="0.5" min="0.1" max="80" value="22.0">
+            <span class="unit-label">mol/m²/d</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="rev-photoperiod">Fixed Daily Photoperiod Limit</label>
+          <div class="input-with-unit">
+            <input type="number" id="rev-photoperiod" step="0.5" min="0.5" max="24" value="12.0">
+            <span class="unit-label">h / day</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="rev-natural-dli">Fixed Natural DLI Contribution</label>
+          <div class="input-with-unit">
+            <input type="number" id="rev-natural-dli" step="0.5" min="0" max="60" value="6.0">
+            <span class="unit-label">mol/m²/d</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="rev-light-spectrum">Light Type / Spectrum</label>
+          <select id="rev-light-spectrum">
+            <option value="led_full">LED Full Spectrum (White + Red)</option>
+            <option value="white_led_4000k">White LED 4000K</option>
+            <option value="hps">High-Pressure Sodium (HPS)</option>
+            <option value="fluorescent_t5">Fluorescent T5 HO</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="rev-ref-ppfd">Fixture Rating @ 0.30m Ref</label>
+          <div class="input-with-unit">
+            <input type="number" id="rev-ref-ppfd" step="10" min="10" value="300">
+            <span class="unit-label">µmol/m²/s</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card-grid">
+        <div class="stat-card">
+          <div class="stat-label">Req. Supplemental DLI</div>
+          <div class="stat-value" id="rev-display-supp-dli" style="color:var(--accent);">16.00 mol</div>
+          <div class="stat-sub">Target minus Natural</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Required Grow Light PPFD</div>
+          <div class="stat-value" id="rev-display-ppfd" style="color:var(--info);">370.37 µmol/m²/s</div>
+          <div class="stat-sub">Target PPFD required</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Required Lux Equivalent</div>
+          <div class="stat-value" id="rev-display-lux">23,895 lx</div>
+          <div class="stat-sub">Spectrum conversion</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Target Fixture Distance</div>
+          <div class="stat-value" id="rev-display-dist">0.27 m</div>
+          <div class="stat-sub">Inverse-square solve</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12-Month Seasonal DLI & Light Deficit Planner -->
+    <section data-feature="seasonal-dli-year-planner" class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          12-Month Seasonal DLI &amp; Light Deficit Planner
+        </div>
+        <div id="seasonal-deficit-badge" class="badge badge-high">Deficit Months Detected</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="seasonal-lat">Geographic Latitude Zone</label>
+          <select id="seasonal-lat">
+            <option value="0">Equatorial (0°)</option>
+            <option value="30">Subtropical (30° N/S)</option>
+            <option value="45" selected>Temperate (45° N/S)</option>
+            <option value="60">Northern / Subarctic (60° N/S)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="seasonal-window">Fixed Window Setup</label>
+          <select id="seasonal-window">
+            <option value="south" selected>South-Facing Window</option>
+            <option value="east">East-Facing Window</option>
+            <option value="west">West-Facing Window</option>
+            <option value="north">North-Facing Window</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="seasonal-dist">Distance from Glass</label>
+          <div class="input-with-unit">
+            <input type="number" id="seasonal-dist" step="0.1" min="0" max="3" value="0.5">
+            <span class="unit-label">m</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="seasonal-grow-hours">Grow Light Photoperiod</label>
+          <div class="input-with-unit">
+            <input type="number" id="seasonal-grow-hours" step="0.5" min="0" max="24" value="0.0">
+            <span class="unit-label">h / day</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="seasonal-ppfd">Grow Light PPFD</label>
+          <div class="input-with-unit">
+            <input type="number" id="seasonal-ppfd" step="10" min="0" value="300">
+            <span class="unit-label">µmol/m²/s</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="seasonal-threshold">Species Minimum Threshold</label>
+          <div class="input-with-unit">
+            <input type="number" id="seasonal-threshold" step="0.5" min="1" max="60" value="15.0">
+            <span class="unit-label">mol/m²/d</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card-grid">
+        <div class="stat-card">
+          <div class="stat-label">Deficit Months</div>
+          <div class="stat-value" id="seasonal-deficit-count" style="color:var(--danger)">4 Months</div>
+          <div class="stat-sub">Below Species Minimum</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Lowest Monthly DLI</div>
+          <div class="stat-value" id="seasonal-min-month">7.5 mol</div>
+          <div class="stat-sub" id="seasonal-min-month-name">December</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Annual DLI</div>
+          <div class="stat-value" id="seasonal-avg-dli">18.5 mol</div>
+          <div class="stat-sub">Yearly Daily Average</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Winter Extra Light Needed</div>
+          <div class="stat-value" id="seasonal-extra-hours" style="color:var(--warning)">6.9 h/day</div>
+          <div class="stat-sub">To reach minimum target</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Monthly DLI vs Species Minimum Threshold (12-Month Bar Chart)</label>
+      </div>
+
+      <div class="seasonal-chart" id="seasonal-bar-chart">
+        <div class="seasonal-threshold-line" id="seasonal-thresh-line" style="bottom: 30%;"></div>
+      </div>
+
+      <div class="seasonal-table-wrap">
+        <table class="seasonal-table">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Natural DLI</th>
+              <th>Supp. DLI</th>
+              <th>Total DLI</th>
+              <th>Status</th>
+              <th>Deficit / Surplus</th>
+            </tr>
+          </thead>
+          <tbody id="seasonal-table-body">
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Multi-Fixture Canopy Coverage & Uniformity Calculator -->
+    <section data-feature="multi-light-canopy-coverage-calculator" class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          Multi-Fixture Canopy Coverage &amp; Uniformity
+        </div>
+        <div class="badge badge-medium">Geometry Planner</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="multi-width">Canopy Width (m)</label>
+          <input type="number" id="multi-width" step="0.1" min="0.1" value="1.2">
+        </div>
+        <div class="form-group">
+          <label for="multi-length">Canopy Length (m)</label>
+          <input type="number" id="multi-length" step="0.1" min="0.1" value="1.2">
+        </div>
+        <div class="form-group">
+          <label for="multi-fixture-count">Number of Fixtures</label>
+          <select id="multi-fixture-count">
+            <option value="1">1 Fixture</option>
+            <option value="2" selected>2 Fixtures</option>
+            <option value="3">3 Fixtures</option>
+            <option value="4">4 Fixtures</option>
+            <option value="6">6 Fixtures</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="multi-height">Fixture Height Above Canopy (m)</label>
+          <input type="number" id="multi-height" step="0.05" min="0.1" value="0.4">
+        </div>
+        <div class="form-group">
+          <label for="multi-beam-angle">Light Beam Spread Angle</label>
+          <select id="multi-beam-angle">
+            <option value="60">60° (Spot / Focused)</option>
+            <option value="90" selected>90° (Standard Grow LED)</option>
+            <option value="120">120° (Wide / Lambertian)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="multi-ref-ppfd">Fixture Output (Ref @ 0.3m)</label>
+          <div class="input-with-unit">
+            <input type="number" id="multi-ref-ppfd" step="50" min="50" value="800">
+            <span class="unit-label">µmol</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card-grid">
+        <div class="stat-card">
+          <div class="stat-label">Center PPFD</div>
+          <div class="stat-value" id="multi-center-ppfd">950 µmol</div>
+          <div class="stat-sub">Max accumulation</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Edge PPFD</div>
+          <div class="stat-value" id="multi-edge-ppfd">780 µmol</div>
+          <div class="stat-sub">Lowest point</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Uniformity Ratio</div>
+          <div class="stat-value" id="multi-uniformity" style="color:var(--accent)">82.1%</div>
+          <div class="stat-sub">Min / Max %</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Edge DLI Drop-off</div>
+          <div class="stat-value" id="multi-drop-off" style="color:var(--danger)">17.9%</div>
+          <div class="stat-sub">Loss from center</div>
+        </div>
+      </div>
+
+      <div id="multi-advisory" class="advisory-box">
+        <div class="advisory-title">Coverage Quality Analysis</div>
+        <div class="advisory-content" id="multi-advisory-text">Excellent uniformity detected. Reflection from walls and overlapping fixture footprints provide consistent growth across the entire 1.44m² canopy area.</div>
+      </div>
+    </section>
+
+    <!-- Electricity Energy Cost & Light Audit Exporter -->
+    <section data-feature="light-cost-energy-report-exporter" class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          Electricity Energy Cost &amp; Light Audit Exporter
+        </div>
+        <div class="badge badge-medium">Energy &amp; Export</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="audit-wattage">Grow Light Wattage</label>
+          <div class="input-with-unit">
+            <input type="number" id="audit-wattage" step="5" min="0" value="120">
+            <span class="unit-label">W</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="audit-elec-rate">Electricity Cost Rate</label>
+          <div class="input-with-unit">
+            <input type="number" id="audit-elec-rate" step="0.01" min="0" value="0.16">
+            <span class="unit-label">$/kWh</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="audit-photoperiod">Daily Photoperiod</label>
+          <div class="input-with-unit">
+            <input type="number" id="audit-photoperiod" step="0.5" min="0" max="24" value="12">
+            <span class="unit-label">h / day</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card-grid">
+        <div class="stat-card">
+          <div class="stat-label">Daily Energy Cost</div>
+          <div class="stat-value" id="audit-daily-cost" style="color:var(--accent)">$0.23</div>
+          <div class="stat-sub">Per 24 hours</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Monthly Energy Cost</div>
+          <div class="stat-value" id="audit-monthly-cost">$6.91</div>
+          <div class="stat-sub">30-day period</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Annual Energy Cost</div>
+          <div class="stat-value" id="audit-annual-cost" style="color:var(--warning)">$84.10</div>
+          <div class="stat-sub">365-day total</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Annual Consumption</div>
+          <div class="stat-value" id="audit-annual-kwh">525.6 kWh</div>
+          <div class="stat-sub">Total energy usage</div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+        <button id="btn-audit-export-csv" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export Light Audit CSV (PRO)
+        </button>
+        <button id="btn-audit-export-json" class="btn">
+          Export Audit JSON (PRO)
+        </button>
+        <div id="audit-export-notice" style="font-size:0.85rem; color:var(--warning); display:none;"></div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+
+    <!-- Feature 1: Plant Species Target DLI & Light Threshold Database Matcher -->
+    <section data-feature="plant-dli-database-matcher" class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          1. Plant Species Target DLI & Light Threshold Database
+        </div>
+        <div id="plant-light-badge" class="badge badge-high">High Light</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="plant-preset-dropdown">Select Plant Species Preset</label>
+          <select id="plant-preset-dropdown">
+            <option value="citrus_lemon">Dwarf Citrus (Meyer Lemon Tree)</option>
+            <option value="blue_spruce">Blue Spruce / Conifers (Picea pungens)</option>
+            <option value="tillandsia_airplant">Tillandsia / Air Plants</option>
+            <option value="succulents_cacti">Succulents & Cacti (Desert Species)</option>
+            <option value="tropical_monstera">Tropical Foliage (Monstera / Fiddle Leaf)</option>
+            <option value="leafy_greens">Leafy Greens & Herbs (Basil / Lettuce)</option>
+            <option value="custom">Custom Light Profile...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="min-dli-input">Min DLI Threshold</label>
+          <div class="input-with-unit">
+            <input type="number" id="min-dli-input" step="0.5" min="1" max="60" value="15.0">
+            <span class="unit-label">mol/m²/d</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="target-dli-input">Target DLI Requirement</label>
+          <div class="input-with-unit">
+            <input type="number" id="target-dli-input" step="0.5" min="1" max="60" value="20.0">
+            <span class="unit-label">mol/m²/d</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="max-dli-input">Max DLI / Phototoxicity Limit</label>
+          <div class="input-with-unit">
+            <input type="number" id="max-dli-input" step="0.5" min="1" max="80" value="30.0">
+            <span class="unit-label">mol/m²/d</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card-grid">
+        <div class="stat-card">
+          <div class="stat-label">Minimum DLI</div>
+          <div class="stat-value" id="display-min-dli">15.0</div>
+          <div class="stat-sub">Survival / Maintenance</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Target Optimal DLI</div>
+          <div class="stat-value" id="display-target-dli" style="color:var(--accent);">20.0</div>
+          <div class="stat-sub">Vigorous Growth & Fruiting</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Saturation / Max DLI</div>
+          <div class="stat-value" id="display-max-dli">30.0</div>
+          <div class="stat-sub">Avoid Photo-inhibition</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Equiv. Full Sun Hours</div>
+          <div class="stat-value" id="display-equiv-sun-hours">5.0 h</div>
+          <div class="stat-sub">At 1100 µmol/m²/s peak</div>
+        </div>
+      </div>
+
+      <div class="dli-range-bar-container">
+        <div class="form-group">
+          <label>Species DLI Range Spectrum & Current Position</label>
+        </div>
+        <div class="dli-range-bar-track">
+          <div id="dli-target-zone" class="dli-range-bar-target-zone" style="left: 30%; width: 30%;"></div>
+          <div id="dli-current-marker" class="dli-range-bar-marker" style="left: 38%;"></div>
+        </div>
+        <div class="dli-range-labels">
+          <span>0 mol/m²/d</span>
+          <span id="range-label-min">Min: 15.0</span>
+          <span id="range-label-target">Target: 20.0</span>
+          <span id="range-label-max">Max: 30.0</span>
+          <span>50+ mol/m²/d</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid-2">
+      <!-- Feature 2: Natural Window Daylight & DLI Estimator -->
+      <section data-feature="natural-window-light-estimator" class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            2. Natural Window Daylight Estimator
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="window-orientation">Window Orientation</label>
+          <select id="window-orientation">
+            <option value="south">South-Facing (Unobstructed Sun)</option>
+            <option value="east">East-Facing (Morning Direct Sun)</option>
+            <option value="west">West-Facing (Afternoon Direct Sun)</option>
+            <option value="north">North-Facing (Indirect Sky Light Only)</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="season-select">Season</label>
+            <select id="season-select">
+              <option value="winter">Winter (Low Sun Angle)</option>
+              <option value="spring">Spring / Autumn (Equinox)</option>
+              <option value="summer">Summer (High Sun Angle)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="glass-type-select">Glass Glazing Type</label>
+            <select id="glass-type-select">
+              <option value="single_clear">Single Clear Glass (85% Trans.)</option>
+              <option value="double_lowe">Double Low-E Glass (65% Trans.)</option>
+              <option value="triple_tinted">Triple / Tinted Glass (45% Trans.)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="window-distance">Distance from Glass Window: <span id="window-distance-val" style="color:var(--text-bright)">0.5</span> m (<span id="window-distance-ft">1.6</span> ft)</label>
+          <div class="slider-container">
+            <input type="range" id="window-distance" min="0.0" max="3.0" step="0.1" value="0.5">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="shading-pct">Obstructed Horizon / Shading: <span id="shading-pct-val" style="color:var(--text-bright)">10</span>%</label>
+          <div class="slider-container">
+            <input type="range" id="shading-pct" min="0" max="90" step="5" value="10">
+          </div>
+        </div>
+
+        <div class="stat-card-grid">
+          <div class="stat-card">
+            <div class="stat-label">Peak Natural PPFD</div>
+            <div class="stat-value" id="display-natural-ppfd">225 µmol</div>
+            <div class="stat-sub">At Plant Leaf Canopy</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Direct Sun Hours</div>
+            <div class="stat-value" id="display-sun-hours">8.0 h</div>
+            <div class="stat-sub">Effective Window Photoperiod</div>
+          </div>
+          <div class="stat-card" style="grid-column: span 2;">
+            <div class="stat-label">Natural Daylight DLI Contribution</div>
+            <div class="stat-value" id="display-natural-dli" style="color:var(--info)">6.50 mol/m²/day</div>
+            <div class="stat-sub">Daily window sunlight yield</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feature 3: Grow Light PPFD / Lux to DLI Converter -->
+      <section data-feature="grow-light-dli-converter" class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4"></path><path d="M12 18v4"></path><path d="M4.93 4.93l2.83 2.83"></path><path d="M16.24 16.24l2.83 2.83"></path><path d="M2 12h4"></path><path d="M18 12h4"></path><path d="M4.93 19.07l2.83-2.83"></path><path d="M16.24 7.76l2.83-2.83"></path></svg>
+            3. Grow Light PPFD / Lux Converter
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="light-input-type">Light Input Unit</label>
+            <select id="light-input-type">
+              <option value="ppfd">PPFD (µmol/m²/s)</option>
+              <option value="lux">Lux (lx)</option>
+              <option value="fc">Foot-Candles (fc)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="measured-light-value">Measured Light Intensity</label>
+            <div class="input-with-unit">
+              <input type="number" id="measured-light-value" step="10" min="0" value="300">
+              <span class="unit-label" id="light-unit-display">µmol/m²/s</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="light-spectrum">Light Spectrum Source</label>
+            <select id="light-spectrum">
+              <option value="led_full">LED Full Spectrum (White + Red)</option>
+              <option value="white_led_4000k">White LED 4000K (Standard)</option>
+              <option value="hps">High-Pressure Sodium (HPS)</option>
+              <option value="fluorescent_t5">Fluorescent T5 High Output</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="grow-light-hours">Grow Light Photoperiod</label>
+            <div class="input-with-unit">
+              <input type="number" id="grow-light-hours" step="0.5" min="0" max="24" value="12.5">
+              <span class="unit-label">h / day</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="light-wattage">Fixture Power (Watts)</label>
+            <div class="input-with-unit">
+              <input type="number" id="light-wattage" step="5" min="0" value="100">
+              <span class="unit-label">W</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="elec-rate">Electricity Rate</label>
+            <div class="input-with-unit">
+              <input type="number" id="elec-rate" step="0.01" min="0" value="0.15">
+              <span class="unit-label">$/kWh</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card-grid">
+          <div class="stat-card">
+            <div class="stat-label">Converted PPFD</div>
+            <div class="stat-value" id="display-converted-ppfd">300 µmol</div>
+            <div class="stat-sub">µmol/m²/s at canopy</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Supplemental DLI</div>
+            <div class="stat-value" id="display-supplemental-dli" style="color:var(--accent)">13.50 mol</div>
+            <div class="stat-sub">mol/m²/day added</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Est. Energy Cost</div>
+            <div class="stat-value" id="display-elec-cost">$5.62 / mo</div>
+            <div class="stat-sub">Based on timer & rate</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Feature 4: Photoperiod Duration & Inverse-Square Distance Optimizer -->
+    <section data-feature="photoperiod-distance-optimizer" class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          4. Photoperiod Duration & Inverse-Square Distance Optimizer
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="ref-distance-m">Current Light Fixture Distance</label>
+          <div class="input-with-unit">
+            <input type="number" id="ref-distance-m" step="0.05" min="0.05" max="3.0" value="0.30">
+            <span class="unit-label">m (11.8 in)</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="max-photoperiod-cap-h">Max Daily Photoperiod Cap</label>
+          <div class="input-with-unit">
+            <input type="number" id="max-photoperiod-cap-h" step="0.5" min="4" max="24" value="14.0">
+            <span class="unit-label">h / day</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Combined DLI</div>
+          <div class="stat-value" id="display-total-dli" style="color:var(--accent);">20.00 mol</div>
+          <div class="stat-sub">Daylight + Grow Light</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Net Light Balance</div>
+          <div class="stat-value" id="display-dli-balance">0.00 mol</div>
+          <div class="stat-sub" id="display-dli-balance-sub">Exact Target Met</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Rec. Grow Light Hours</div>
+          <div class="stat-value" id="display-rec-hours">12.5 h</div>
+          <div class="stat-sub" id="display-rec-hours-sub">At current distance</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Rec. Fixture Distance</div>
+          <div class="stat-value" id="display-rec-distance">0.30 m</div>
+          <div class="stat-sub" id="display-rec-distance-sub">Via Inverse-Square Law</div>
+        </div>
+      </div>
+
+      <!-- Worked Example Quick Scenario Buttons -->
+      <div class="worked-example-toggle" id="worked-example-citrus-toggle">
+        <span>💡 <strong>Quick Test Question 2:</strong> Am I meeting light requirements for Dwarf Citrus? Click to test 8.0h timer deficit scenario (-4.86 DLI deficit).</span>
+        <strong style="text-decoration:underline;">Test Deficit</strong>
+      </div>
+
+      <!-- Dynamic Advisory Panel: What this means / What to do next -->
+      <div id="advisory-panel" class="advisory-box">
+        <div class="advisory-title" id="advisory-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          Optimal Light Conditions Met
+        </div>
+        <div class="advisory-content" id="advisory-body">
+          Your combined daily light integral (20.00 mol/m²/day) perfectly satisfies the target requirements for Dwarf Citrus (Meyer Lemon Tree). Your plant is receiving sufficient energy for healthy foliage development, flowering, and citrus fruit production.
+        </div>
+        <div class="advisory-action" id="advisory-action">
+          Action Plan: Maintain current window position and grow light timer settings (12.5 hours/day at 0.30m height).
+        </div>
+      </div>
+
+    </section>
+
+    <div class="disclaimer-note">
+      ⚠️ Estimate only - verify light meters and fixture heat output with a qualified professional or horticultural sensor before relying on it for high-value crops.
+    </div>
+
+  </div>
+
+  <div id="toast-notification" class="toast-message">
+    <span id="toast-text">Message</span>
+  </div>
+
+  <script>
+    // Set PRO mode flag
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/dvxjrv";
+
+    // Species Database presets with DLI values & requirements
+    const PLANT_DATABASE = {
+      citrus_lemon: {
+        name: "Dwarf Citrus (Meyer Lemon Tree)",
+        min_dli: 15.0,
+        target_dli: 20.0,
+        max_dli: 30.0,
+        category: "High Light",
+        badgeClass: "badge-high",
+        info: "Citrus trees require intense light for fruit development and flower initiation."
+      },
+      blue_spruce: {
+        name: "Blue Spruce / Conifers (Picea pungens)",
+        min_dli: 30.0,
+        target_dli: 35.0,
+        max_dli: 50.0,
+        category: "Very High Light",
+        badgeClass: "badge-very-high",
+        info: "Full sun evergreen needle species. Over-wintering indoors requires intense supplemental PAR light."
+      },
+      tillandsia_airplant: {
+        name: "Tillandsia / Air Plants",
+        min_dli: 4.0,
+        target_dli: 8.0,
+        max_dli: 14.0,
+        category: "Low Light",
+        badgeClass: "badge-low",
+        info: "Epiphytes that prefer bright indirect ambient daylight. Avoid harsh direct summer sun."
+      },
+      succulents_cacti: {
+        name: "Succulents & Cacti (Desert Species)",
+        min_dli: 18.0,
+        target_dli: 25.0,
+        max_dli: 40.0,
+        category: "High Light",
+        badgeClass: "badge-high",
+        info: "Requires high sunlight intensity to prevent etiolation (stretching)."
+      },
+      tropical_monstera: {
+        name: "Tropical Foliage (Monstera / Fiddle Leaf)",
+        min_dli: 6.0,
+        target_dli: 10.0,
+        max_dli: 18.0,
+        category: "Medium Light",
+        badgeClass: "badge-medium",
+        info: "Thrives in bright indirect window light with moderate daily PAR accumulation."
+      },
+      leafy_greens: {
+        name: "Leafy Greens & Herbs (Basil / Lettuce)",
+        min_dli: 12.0,
+        target_dli: 17.0,
+        max_dli: 25.0,
+        category: "Medium Light",
+        badgeClass: "badge-medium",
+        info: "Responds fast to photoperiod extension for biomass accumulation."
+      }
+    };
+
+    // Preset configurations matching specification
+    const PRESETS = [
+      {
+        name: "Indoor Dwarf Meyer Lemon Tree (Winter South Window + LED Supplement)",
+        values: {
+          plant_preset: "citrus_lemon",
+          min_dli: 15,
+          target_dli: 20,
+          max_dli: 30,
+          window_orientation: "south",
+          season: "winter",
+          window_distance_m: 0.5,
+          glass_type: "double_lowe",
+          shading_pct: 10,
+          light_input_type: "ppfd",
+          measured_light_value: 300,
+          light_spectrum: "led_full",
+          grow_light_hours: 12.5,
+          ref_distance_m: 0.3,
+          max_photoperiod_cap_h: 14,
+          light_wattage_w: 100,
+          elec_rate_kwh: 0.15
+        }
+      },
+      {
+        name: "Blue Spruce Sapling (Indoor Over-Wintering Setup)",
+        values: {
+          plant_preset: "blue_spruce",
+          min_dli: 30,
+          target_dli: 35,
+          max_dli: 50,
+          window_orientation: "north",
+          season: "winter",
+          window_distance_m: 1.2,
+          glass_type: "double_lowe",
+          shading_pct: 20,
+          light_input_type: "ppfd",
+          measured_light_value: 450,
+          light_spectrum: "led_full",
+          grow_light_hours: 16,
+          ref_distance_m: 0.25,
+          max_photoperiod_cap_h: 18,
+          light_wattage_w: 200,
+          elec_rate_kwh: 0.18
+        }
+      },
+      {
+        name: "Tillandsia Air Plant Collection (East Window Natural Light Only)",
+        values: {
+          plant_preset: "tillandsia_airplant",
+          min_dli: 4,
+          target_dli: 8,
+          max_dli: 14,
+          window_orientation: "east",
+          season: "spring",
+          window_distance_m: 0.8,
+          glass_type: "single_clear",
+          shading_pct: 5,
+          light_input_type: "lux",
+          measured_light_value: 8000,
+          light_spectrum: "white_led_4000k",
+          grow_light_hours: 0,
+          ref_distance_m: 0.4,
+          max_photoperiod_cap_h: 12,
+          light_wattage_w: 0,
+          elec_rate_kwh: 0.15
+        }
+      }
+    ];
+
+    // Lux/FC to PPFD Spectrum Multipliers (µmol/m²/s per Lux)
+    const SPECTRUM_FACTORS = {
+      led_full: 0.0155,
+      white_led_4000k: 0.0150,
+      hps: 0.0122,
+      fluorescent_t5: 0.0135
+    };
+
+    // DOM Elements
+    const elements = {
+      presetSelect: document.getElementById('preset-select'),
+      btnLoadSample: document.getElementById('btn-load-sample'),
+      btnSaveCustom: document.getElementById('btn-save-custom'),
+      btnExportCsv: document.getElementById('btn-export-csv'),
+      btnExportJson: document.getElementById('btn-export-json'),
+      btnCopySummary: document.getElementById('btn-copy-summary'),
+      btnPrint: document.getElementById('btn-print'),
+
+      // Feature 1
+      plantPreset: document.getElementById('plant-preset-dropdown'),
+      minDliInput: document.getElementById('min-dli-input'),
+      targetDliInput: document.getElementById('target-dli-input'),
+      maxDliInput: document.getElementById('max-dli-input'),
+      plantLightBadge: document.getElementById('plant-light-badge'),
+      displayMinDli: document.getElementById('display-min-dli'),
+      displayTargetDli: document.getElementById('display-target-dli'),
+      displayMaxDli: document.getElementById('display-max-dli'),
+      displayEquivSunHours: document.getElementById('display-equiv-sun-hours'),
+      dliTargetZone: document.getElementById('dli-target-zone'),
+      dliCurrentMarker: document.getElementById('dli-current-marker'),
+      rangeLabelMin: document.getElementById('range-label-min'),
+      rangeLabelTarget: document.getElementById('range-label-target'),
+      rangeLabelMax: document.getElementById('range-label-max'),
+
+      // Feature 2
+      windowOrientation: document.getElementById('window-orientation'),
+      seasonSelect: document.getElementById('season-select'),
+      glassTypeSelect: document.getElementById('glass-type-select'),
+      windowDistance: document.getElementById('window-distance'),
+      windowDistanceVal: document.getElementById('window-distance-val'),
+      windowDistanceFt: document.getElementById('window-distance-ft'),
+      shadingPct: document.getElementById('shading-pct'),
+      shadingPctVal: document.getElementById('shading-pct-val'),
+      displayNaturalPpfd: document.getElementById('display-natural-ppfd'),
+      displaySunHours: document.getElementById('display-sun-hours'),
+      displayNaturalDli: document.getElementById('display-natural-dli'),
+
+      // Feature 3
+      lightInputType: document.getElementById('light-input-type'),
+      measuredLightValue: document.getElementById('measured-light-value'),
+      lightUnitDisplay: document.getElementById('light-unit-display'),
+      lightSpectrum: document.getElementById('light-spectrum'),
+      growLightHours: document.getElementById('grow-light-hours'),
+      lightWattage: document.getElementById('light-wattage'),
+      elecRate: document.getElementById('elec-rate'),
+      displayConvertedPpfd: document.getElementById('display-converted-ppfd'),
+      displaySupplementalDli: document.getElementById('display-supplemental-dli'),
+      displayElecCost: document.getElementById('display-elec-cost'),
+
+      // Feature 4
+      refDistanceM: document.getElementById('ref-distance-m'),
+      maxPhotoperiodCapH: document.getElementById('max-photoperiod-cap-h'),
+      displayTotalDli: document.getElementById('display-total-dli'),
+      displayDliBalance: document.getElementById('display-dli-balance'),
+      displayDliBalanceSub: document.getElementById('display-dli-balance-sub'),
+      displayRecHours: document.getElementById('display-rec-hours'),
+      displayRecHoursSub: document.getElementById('display-rec-hours-sub'),
+      displayRecDistance: document.getElementById('display-rec-distance'),
+      displayRecDistanceSub: document.getElementById('display-rec-distance-sub'),
+      workedExampleCitrusToggle: document.getElementById('worked-example-citrus-toggle'),
+
+      // Advisory
+      advisoryPanel: document.getElementById('advisory-panel'),
+      advisoryTitle: document.getElementById('advisory-title'),
+      advisoryBody: document.getElementById('advisory-body'),
+      advisoryAction: document.getElementById('advisory-action'),
+
+      toast: document.getElementById('toast-notification'),
+      toastText: document.getElementById('toast-text')
+    };
+
+    // Helper to parse numbers safely without NaN/falsy zero bugs
+    function parseNum(val, fallback = 0) {
+      const n = parseFloat(val);
+      return (isNaN(n) || !isFinite(n)) ? fallback : n;
+    }
+
+    // Notification Helper
+    function showToast(message, isHtml = false) {
+      if (isHtml) {
+        elements.toastText.innerHTML = message;
+      } else {
+        elements.toastText.textContent = message;
+      }
+      elements.toast.style.display = 'flex';
+      setTimeout(() => {
+        elements.toast.style.display = 'none';
+      }, 3500);
+    }
+
+    // PRO Check Helper
+    function checkProFeature(callback) {
+      if (PRO) {
+        callback();
+      } else {
+        showToast(`Available in the full version (<a href="${PRO_LINK}" style="color:var(--accent);text-decoration:underline;">Upgrade</a>)`, true);
+      }
+    }
+
+    // Load State into Inputs
+    function loadPresetValues(valObj) {
+      if (!valObj) return;
+
+      if (valObj.plant_preset) elements.plantPreset.value = valObj.plant_preset;
+      if (valObj.min_dli !== undefined) elements.minDliInput.value = valObj.min_dli;
+      if (valObj.target_dli !== undefined) elements.targetDliInput.value = valObj.target_dli;
+      if (valObj.max_dli !== undefined) elements.maxDliInput.value = valObj.max_dli;
+
+      if (valObj.window_orientation) elements.windowOrientation.value = valObj.window_orientation;
+      if (valObj.season) elements.seasonSelect.value = valObj.season;
+      if (valObj.glass_type) elements.glassTypeSelect.value = valObj.glass_type;
+      if (valObj.window_distance_m !== undefined) elements.windowDistance.value = valObj.window_distance_m;
+      if (valObj.shading_pct !== undefined) elements.shadingPct.value = valObj.shading_pct;
+
+      if (valObj.light_input_type) elements.lightInputType.value = valObj.light_input_type;
+      if (valObj.measured_light_value !== undefined) elements.measuredLightValue.value = valObj.measured_light_value;
+      if (valObj.light_spectrum) elements.lightSpectrum.value = valObj.light_spectrum;
+      if (valObj.grow_light_hours !== undefined) elements.growLightHours.value = valObj.grow_light_hours;
+      if (valObj.light_wattage_w !== undefined) elements.lightWattage.value = valObj.light_wattage_w;
+      if (valObj.elec_rate_kwh !== undefined) elements.elecRate.value = valObj.elec_rate_kwh;
+
+      if (valObj.ref_distance_m !== undefined) elements.refDistanceM.value = valObj.ref_distance_m;
+      if (valObj.max_photoperiod_cap_h !== undefined) elements.maxPhotoperiodCapH.value = valObj.max_photoperiod_cap_h;
+
+      calculateAll();
+    }
+
+    // Plant Preset Dropdown Handler
+    elements.plantPreset.addEventListener('change', (e) => {
+      const selected = e.target.value;
+      if (selected !== 'custom' && PLANT_DATABASE[selected]) {
+        const data = PLANT_DATABASE[selected];
+        elements.minDliInput.value = data.min_dli;
+        elements.targetDliInput.value = data.target_dli;
+        elements.maxDliInput.value = data.max_dli;
+      }
+      calculateAll();
+    });
+
+    // Handle Custom Input changes in Plant database section
+    [elements.minDliInput, elements.targetDliInput, elements.maxDliInput].forEach(elem => {
+      elem.addEventListener('input', () => {
+        elements.plantPreset.value = 'custom';
+        calculateAll();
+      });
+    });
+
+    // Update Label Unit Text for Grow Light Unit
+    elements.lightInputType.addEventListener('change', (e) => {
+      const type = e.target.value;
+      if (type === 'ppfd') elements.lightUnitDisplay.textContent = 'µmol/m²/s';
+      else if (type === 'lux') elements.lightUnitDisplay.textContent = 'lx';
+      else if (type === 'fc') elements.lightUnitDisplay.textContent = 'fc';
+      calculateAll();
+    });
+
+    // Core Main Calculation Engine
+    function calculateAll() {
+      // 1. Inputs & Sanitization
+      const minDli = Math.max(0.1, parseNum(elements.minDliInput.value, 1.0));
+      const targetDli = Math.max(minDli, parseNum(elements.targetDliInput.value, 20.0));
+      const maxDli = Math.max(targetDli, parseNum(elements.maxDliInput.value, 30.0));
+
+      const orientation = elements.windowOrientation.value || 'south';
+      const season = elements.seasonSelect.value || 'winter';
+      const glass = elements.glassTypeSelect.value || 'double_lowe';
+      const winDist = Math.max(0.0, parseNum(elements.windowDistance.value, 0.5));
+      const shadingPct = Math.min(90, Math.max(0, parseNum(elements.shadingPct.value, 10)));
+
+      const inputUnit = elements.lightInputType.value || 'ppfd';
+      const rawLightVal = Math.max(0, parseNum(elements.measuredLightValue.value, 0));
+      const spectrum = elements.lightSpectrum.value || 'led_full';
+      const growHours = Math.min(24, Math.max(0, parseNum(elements.growLightHours.value, 0)));
+      const wattage = Math.max(0, parseNum(elements.lightWattage.value, 0));
+      const elecRate = Math.max(0, parseNum(elements.elecRate.value, 0));
+
+      const refDist = Math.max(0.05, parseNum(elements.refDistanceM.value, 0.3));
+      const maxCapH = Math.min(24, Math.max(4, parseNum(elements.maxPhotoperiodCapH.value, 14)));
+
+      // Update Slider displays
+      elements.windowDistanceVal.textContent = winDist.toFixed(1);
+      elements.windowDistanceFt.textContent = (winDist * 3.28084).toFixed(1);
+      elements.shadingPctVal.textContent = shadingPct.toFixed(0);
+
+      // FEATURE 1: Plant Database Badge & Stat Cards
+      let category = "Medium Light";
+      let badgeClass = "badge-medium";
+      if (targetDli < 8.0) {
+        category = "Low Light";
+        badgeClass = "badge-low";
+      } else if (targetDli >= 8.0 && targetDli < 15.0) {
+        category = "Medium Light";
+        badgeClass = "badge-medium";
+      } else if (targetDli >= 15.0 && targetDli < 28.0) {
+        category = "High Light";
+        badgeClass = "badge-high";
+      } else {
+        category = "Very High Light";
+        badgeClass = "badge-very-high";
+      }
+
+      elements.plantLightBadge.textContent = category;
+      elements.plantLightBadge.className = `badge ${badgeClass}`;
+
+      elements.displayMinDli.textContent = minDli.toFixed(1);
+      elements.displayTargetDli.textContent = targetDli.toFixed(1);
+      elements.displayMaxDli.textContent = maxDli.toFixed(1);
+      // Equiv full sun hours (at 1100 µmol peak)
+      const equivSunHours = (targetDli * 1000000) / (1100 * 3600);
+      elements.displayEquivSunHours.textContent = `${equivSunHours.toFixed(1)} h`;
+
+      // DLI Spectrum Range Bar Update
+      elements.rangeLabelMin.textContent = `Min: ${minDli.toFixed(1)}`;
+      elements.rangeLabelTarget.textContent = `Target: ${targetDli.toFixed(1)}`;
+      elements.rangeLabelMax.textContent = `Max: ${maxDli.toFixed(1)}`;
+
+      const maxScale = 50.0;
+      const targetMinPct = Math.min(100, (minDli / maxScale) * 100);
+      const targetMaxPct = Math.min(100, (maxDli / maxScale) * 100);
+      elements.dliTargetZone.style.left = `${targetMinPct}%`;
+      elements.dliTargetZone.style.width = `${Math.max(2, targetMaxPct - targetMinPct)}%`;
+
+      // FEATURE 2: Natural Window Daylight Calculation
+      // Outdoor peak PAR base
+      let basePeakPpfd = 1450;
+      if (season === 'summer') basePeakPpfd = 1850;
+      else if (season === 'winter') basePeakPpfd = 950;
+
+      // Orientation factor & Direct Sun hours
+      let orientFactor = 0.70;
+      let sunHours = 6.0;
+
+      if (orientation === 'south') {
+        if (season === 'winter') { orientFactor = 0.95; sunHours = 8.0; }
+        else if (season === 'spring') { orientFactor = 0.75; sunHours = 7.5; }
+        else { orientFactor = 0.52; sunHours = 6.0; }
+      } else if (orientation === 'east' || orientation === 'west') {
+        if (season === 'winter') { orientFactor = 0.50; sunHours = 4.0; }
+        else if (season === 'spring') { orientFactor = 0.70; sunHours = 5.5; }
+        else { orientFactor = 0.78; sunHours = 6.5; }
+      } else if (orientation === 'north') {
+        if (season === 'winter') { orientFactor = 0.20; sunHours = 0.0; }
+        else if (season === 'spring') { orientFactor = 0.25; sunHours = 1.0; }
+        else { orientFactor = 0.30; sunHours = 2.0; }
+      }
+
+      // Glass transmittance
+      let glassTrans = 0.85;
+      if (glass === 'double_lowe') glassTrans = 0.65;
+      else if (glass === 'triple_tinted') glassTrans = 0.45;
+
+      // Obstruction factor
+      const shadingFactor = (100 - shadingPct) / 100;
+
+      // Distance decay (Inverse square / window geometry)
+      const distDecay = 1 / (1 + 1.22 * Math.pow(winDist, 1.15));
+
+      const naturalPeakPpfd = Math.round(basePeakPpfd * orientFactor * glassTrans * shadingFactor * distDecay);
+      const naturalDli = naturalPeakPpfd * sunHours * 0.0036;
+
+      elements.displayNaturalPpfd.textContent = `${naturalPeakPpfd} µmol`;
+      elements.displaySunHours.textContent = `${sunHours.toFixed(1)} h`;
+      elements.displayNaturalDli.textContent = `${naturalDli.toFixed(2)} mol/m²/d`;
+
+      // FEATURE 3: Grow Light PPFD / Lux Conversion & Supplemental DLI
+      const factor = SPECTRUM_FACTORS[spectrum] || 0.015;
+      let convertedPpfd = rawLightVal;
+      if (inputUnit === 'lux') {
+        convertedPpfd = Math.round(rawLightVal * factor);
+      } else if (inputUnit === 'fc') {
+        convertedPpfd = Math.round(rawLightVal * 10.7639 * factor);
+      } else {
+        convertedPpfd = Math.round(rawLightVal);
+      }
+
+      const supplementalDli = convertedPpfd * growHours * 0.0036;
+      const combinedDli = Math.max(0, naturalDli + supplementalDli);
+
+      const dailyKwh = (wattage * growHours) / 1000;
+      const monthlyCost = dailyKwh * 30.4 * elecRate;
+
+      elements.displayConvertedPpfd.textContent = `${convertedPpfd} µmol`;
+      elements.displaySupplementalDli.textContent = `${supplementalDli.toFixed(2)} mol`;
+      elements.displayElecCost.textContent = `$${monthlyCost.toFixed(2)} / mo`;
+
+      // FEATURE 4: Optimizer & Combined Analysis
+      elements.displayTotalDli.textContent = `${combinedDli.toFixed(2)} mol`;
+
+      // Set Marker Position on DLI bar
+      const markerPct = Math.min(100, Math.max(0, (combinedDli / maxScale) * 100));
+      elements.dliCurrentMarker.style.left = `${markerPct}%`;
+
+      const dliBalance = combinedDli - targetDli;
+      elements.displayDliBalance.textContent = `${dliBalance >= 0 ? '+' : ''}${dliBalance.toFixed(2)} mol`;
+
+      if (Math.abs(dliBalance) < 0.2) {
+        elements.displayDliBalance.style.color = "var(--accent)";
+        elements.displayDliBalanceSub.textContent = "Optimal Target Achieved";
+      } else if (dliBalance < 0) {
+        elements.displayDliBalance.style.color = "var(--danger)";
+        elements.displayDliBalanceSub.textContent = `Light Deficit (-${Math.abs(dliBalance).toFixed(2)} mol needed)`;
+      } else {
+        elements.displayDliBalance.style.color = "var(--warning)";
+        elements.displayDliBalanceSub.textContent = `Light Surplus (+${dliBalance.toFixed(2)} mol excess)`;
+      }
+
+      // Recommend Photoperiod Adjustment
+      const neededSuppDli = Math.max(0, targetDli - naturalDli);
+      let recGrowHours = 0;
+      const hoursDivisor = convertedPpfd * 0.0036;
+      if (hoursDivisor > 0) {
+        recGrowHours = neededSuppDli / hoursDivisor;
+      }
+
+      if (hoursDivisor > 0 && isFinite(recGrowHours)) {
+        elements.displayRecHours.textContent = `${recGrowHours.toFixed(1)} h`;
+        if (recGrowHours > maxCapH) {
+          elements.displayRecHoursSub.textContent = `Exceeds max cap (${maxCapH}h)`;
+        } else {
+          const hourDiff = recGrowHours - growHours;
+          elements.displayRecHoursSub.textContent = hourDiff === 0 ? "Current timer is optimal" : `${hourDiff > 0 ? '+' : ''}${hourDiff.toFixed(1)}h vs current timer`;
+        }
+      } else {
+        elements.displayRecHours.textContent = neededSuppDli === 0 ? '0.0 h' : 'N/A';
+        elements.displayRecHoursSub.textContent = neededSuppDli === 0 ? 'Target met naturally' : 'Increase fixture PPFD';
+      }
+
+      // Recommend Height/Distance via Inverse-Square Law
+      // Keep current timer photoperiod, calculate target PPFD needed
+      let recDistance = refDist;
+      let thermalSafetyWarn = false;
+
+      if (growHours > 0 && neededSuppDli > 0) {
+        const reqPpfd = neededSuppDli / (growHours * 0.0036);
+        if (convertedPpfd > 0) {
+          recDistance = refDist * Math.sqrt(convertedPpfd / reqPpfd);
+        }
+      } else if (neededSuppDli === 0) {
+        recDistance = refDist;
+      }
+
+      if (!isFinite(recDistance) || recDistance <= 0) {
+        recDistance = refDist;
+      }
+
+      elements.displayRecDistance.textContent = isFinite(recDistance) ? `${recDistance.toFixed(2)} m` : 'N/A';
+      elements.displayRecDistanceSub.textContent = isFinite(recDistance) ? `(${(recDistance * 39.3701).toFixed(1)} inches height)` : 'Insufficient output';
+
+      if (isFinite(recDistance) && (recDistance < 0.15 || (convertedPpfd > 700 && recDistance < 0.25))) {
+        thermalSafetyWarn = true;
+      }
+
+      // Dynamic "What this means / What to do next" Advisory Generator
+      updateAdvisoryPanel(combinedDli, targetDli, minDli, maxDli, dliBalance, recGrowHours, growHours, recDistance, refDist, thermalSafetyWarn, naturalDli, supplementalDli);
+    }
+
+    // Dynamic Advisory Logic Engine
+    function updateAdvisoryPanel(combinedDli, targetDli, minDli, maxDli, dliBalance, recGrowHours, currentHours, recDist, currentDist, thermalWarn, naturalDli, suppDli) {
+      const panel = elements.advisoryPanel;
+      const title = elements.advisoryTitle;
+      const body = elements.advisoryBody;
+      const action = elements.advisoryAction;
+
+      const speciesName = elements.plantPreset.options[elements.plantPreset.selectedIndex].text;
+
+      // Case A: Deficit below Target
+      if (dliBalance < -0.2) {
+        if (combinedDli < minDli) {
+          panel.className = "advisory-box danger";
+          title.innerHTML = `⚠️ Severe Light Deficit: Risk of Etiolation & Failure`;
+          body.textContent = `Current light output provides ${combinedDli.toFixed(2)} mol/m²/day, falling short of the minimum threshold (${minDli.toFixed(1)} mol) for ${speciesName}. The plant will suffer from stretched weak stems, leaf drop, and loss of vigor.`;
+        } else {
+          panel.className = "advisory-box warning";
+          title.innerHTML = `⚠️ Moderate Light Deficit (-${Math.abs(dliBalance).toFixed(2)} mol/m²/day)`;
+          body.textContent = `Natural daylight yields ${naturalDli.toFixed(2)} DLI and grow lights contribute ${suppDli.toFixed(2)} DLI. Total light (${combinedDli.toFixed(2)} DLI) meets survival needs but is below the ${targetDli.toFixed(1)} DLI requirement for optimal growth.`;
+        }
+
+        let actionText = ``;
+        if (recGrowHours <= parseFloat(elements.maxPhotoperiodCapH.value)) {
+          actionText = `Action Plan: Extend grow light daily photoperiod from ${currentHours.toFixed(1)}h to ${recGrowHours.toFixed(1)}h daily (+${(recGrowHours - currentHours).toFixed(1)}h extension), OR lower light fixture height from ${currentDist.toFixed(2)}m to ${recDist.toFixed(2)}m.`;
+        } else {
+          actionText = `Action Plan: Fixture intensity is low. Move fixture closer to canopy (${recDist.toFixed(2)}m height) AND increase timer to cap of ${elements.maxPhotoperiodCapH.value}h.`;
+        }
+
+        if (thermalWarn) {
+          actionText += ` ⚠️ Caution: Fixture is closer than 0.15m (6 in) - check foliage heat thermal limits!`;
+        }
+
+        action.textContent = actionText;
+      }
+      // Case B: Phototoxicity / Over-saturation
+      else if (combinedDli > maxDli) {
+        panel.className = "advisory-box danger";
+        title.innerHTML = `🔥 High Light Toxicity & Bleaching Warning (+${dliBalance.toFixed(2)} mol/m²/day)`;
+        body.textContent = `Total DLI (${combinedDli.toFixed(2)} mol) exceeds the phototoxicity threshold of ${maxDli.toFixed(1)} mol/m²/day for ${speciesName}. Leaves are at high risk of photo-inhibition, chlorosis (bleaching), and severe heat stress.`;
+        action.textContent = `Action Plan: Raise grow light fixture to ${recDist.toFixed(2)}m height or reduce grow light timer to ${recGrowHours.toFixed(1)} hours daily.`;
+      }
+      // Case C: Target Met / Optimal
+      else {
+        panel.className = "advisory-box";
+        title.innerHTML = `✅ Optimal Daily Light Integral (DLI) Reached`;
+        body.textContent = `Your light setup delivers ${combinedDli.toFixed(2)} mol/m²/day (Natural: ${naturalDli.toFixed(2)} + Grow Light: ${suppDli.toFixed(2)} DLI), perfectly matching target requirements (${targetDli.toFixed(1)} mol) for ${speciesName}.`;
+        action.textContent = `Action Plan: Maintain current window position and grow light settings (${currentHours.toFixed(1)} hours/day at ${currentDist.toFixed(2)}m height).`;
+      }
+    }
+
+    // Event Listeners for All Inputs
+    const allInputs = document.querySelectorAll('input, select');
+    allInputs.forEach(input => {
+      input.addEventListener('input', calculateAll);
+      input.addEventListener('change', calculateAll);
+    });
+
+    // Worked Example Quick Test Button Handler
+    elements.workedExampleCitrusToggle.addEventListener('click', () => {
+      // Set to Worked Example 2 Deficit scenario: 8 hours grow light
+      elements.plantPreset.value = "citrus_lemon";
+      elements.minDliInput.value = 15;
+      elements.targetDliInput.value = 20;
+      elements.maxDliInput.value = 30;
+      elements.windowOrientation.value = "south";
+      elements.seasonSelect.value = "winter";
+      elements.windowDistance.value = 0.5;
+      elements.glassTypeSelect.value = "double_lowe";
+      elements.shadingPct.value = 10;
+      elements.lightInputType.value = "ppfd";
+      elements.measuredLightValue.value = 300;
+      elements.lightSpectrum.value = "led_full";
+      elements.growLightHours.value = 8.0; // 8 hours causes -4.86 DLI deficit!
+      elements.refDistanceM.value = 0.30;
+      elements.maxPhotoperiodCapH.value = 14;
+
+      calculateAll();
+      showToast("Loaded worked example: 8.0h timer showing -4.86 DLI deficit and recommended 12.5h timer adjustment!");
+    });
+
+    // Preset Selection Dropdown Listener
+    elements.presetSelect.addEventListener('change', (e) => {
+      const index = parseInt(e.target.value);
+      if (!PRO && index !== 0) {
+        showToast(`Available in the full version (<a href="${PRO_LINK}" style="color:var(--accent);text-decoration:underline;">Upgrade</a>)`, true);
+        elements.presetSelect.value = "0";
+        return;
+      }
+      if (PRESETS[index]) {
+        loadPresetValues(PRESETS[index].values);
+      }
+    });
+
+    // Button Actions
+    elements.btnLoadSample.addEventListener('click', () => {
+      const index = parseInt(elements.presetSelect.value);
+      if (PRESETS[index]) {
+        loadPresetValues(PRESETS[index].values);
+        showToast("Preset reloaded!");
+      }
+    });
+
+    elements.btnSaveCustom.addEventListener('click', () => {
+      checkProFeature(() => {
+        try {
+          const customState = {
+            plant_preset: elements.plantPreset.value,
+            min_dli: parseFloat(elements.minDliInput.value),
+            target_dli: parseFloat(elements.targetDliInput.value),
+            max_dli: parseFloat(elements.maxDliInput.value),
+            window_orientation: elements.windowOrientation.value,
+            season: elements.seasonSelect.value,
+            window_distance_m: parseFloat(elements.windowDistance.value),
+            glass_type: elements.glassTypeSelect.value,
+            shading_pct: parseFloat(elements.shadingPct.value),
+            light_input_type: elements.lightInputType.value,
+            measured_light_value: parseFloat(elements.measuredLightValue.value),
+            light_spectrum: elements.lightSpectrum.value,
+            grow_light_hours: parseFloat(elements.growLightHours.value),
+            ref_distance_m: parseFloat(elements.refDistanceM.value),
+            max_photoperiod_cap_h: parseFloat(elements.maxPhotoperiodCapH.value),
+            light_wattage_w: parseFloat(elements.lightWattage.value),
+            elec_rate_kwh: parseFloat(elements.elecRate.value)
+          };
+          localStorage.setItem('dli_calculator_state', JSON.stringify(customState));
+          showToast("Current setup saved to local storage!");
+        } catch (e) {
+          showToast("Storage blocked or unavailable.");
+        }
+      });
+    });
+
+    elements.btnExportCsv.addEventListener('click', () => {
+      checkProFeature(() => {
+        const rows = [
+          ["Metric", "Value", "Unit"],
+          ["Plant Preset", elements.plantPreset.value, ""],
+          ["Target DLI", elements.targetDliInput.value, "mol/m²/day"],
+          ["Natural Daylight DLI", elements.displayNaturalDli.textContent, ""],
+          ["Supplemental DLI", elements.displaySupplementalDli.textContent, ""],
+          ["Total Combined DLI", elements.displayTotalDli.textContent, ""],
+          ["Net Balance", elements.displayDliBalance.textContent, ""],
+          ["Recommended Photoperiod", elements.displayRecHours.textContent, ""],
+          ["Recommended Fixture Distance", elements.displayRecDistance.textContent, ""]
+        ];
+        const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "dli_light_calculation_report.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+    });
+
+    elements.btnExportJson.addEventListener('click', () => {
+      checkProFeature(() => {
+        const exportData = {
+          timestamp: new Date().toISOString(),
+          plant: {
+            preset: elements.plantPreset.value,
+            minDli: parseFloat(elements.minDliInput.value),
+            targetDli: parseFloat(elements.targetDliInput.value),
+            maxDli: parseFloat(elements.maxDliInput.value)
+          },
+          naturalLight: {
+            orientation: elements.windowOrientation.value,
+            season: elements.seasonSelect.value,
+            distanceMeters: parseFloat(elements.windowDistance.value),
+            peakPpfd: elements.displayNaturalPpfd.textContent,
+            naturalDli: elements.displayNaturalDli.textContent
+          },
+          growLight: {
+            inputUnit: elements.lightInputType.value,
+            measuredValue: parseFloat(elements.measuredLightValue.value),
+            spectrum: elements.lightSpectrum.value,
+            hours: parseFloat(elements.growLightHours.value),
+            convertedPpfd: elements.displayConvertedPpfd.textContent,
+            supplementalDli: elements.displaySupplementalDli.textContent
+          },
+          summary: {
+            combinedDli: elements.displayTotalDli.textContent,
+            balance: elements.displayDliBalance.textContent,
+            recommendedHours: elements.displayRecHours.textContent,
+            recommendedDistance: elements.displayRecDistance.textContent
+          }
+        };
+
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
+        const link = document.createElement("a");
+        link.setAttribute("href", dataStr);
+        link.setAttribute("download", "dli_calculator_data.json");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+    });
+
+    elements.btnCopySummary.addEventListener('click', () => {
+      const summaryText = `--- PLANT DLI LIGHT ANALYSIS SUMMARY ---
+Plant Target: ${elements.targetDliInput.value} mol/m²/day
+Natural Window Light: ${elements.displayNaturalDli.textContent} (Peak ${elements.displayNaturalPpfd.textContent})
+Grow Light Supplement: ${elements.displaySupplementalDli.textContent} (${elements.growLightHours.value}h @ ${elements.displayConvertedPpfd.textContent})
+Total Combined DLI: ${elements.displayTotalDli.textContent}
+Net DLI Balance: ${elements.displayDliBalance.textContent}
+Recommendation: ${elements.displayRecHours.textContent} photoperiod or ${elements.displayRecDistance.textContent} fixture distance.`;
+
+      navigator.clipboard.writeText(summaryText).then(() => {
+        showToast("Analysis summary copied to clipboard!");
+      }).catch(() => {
+        showToast("Copy to clipboard failed.");
+      });
+    });
+
+    elements.btnPrint.addEventListener('click', () => {
+      checkProFeature(() => {
+        window.print();
+      });
+    });
+
+    // Try loading saved state on startup, else load Preset 0
+    function init() {
+      let loaded = false;
+      try {
+        const saved = localStorage.getItem('dli_calculator_state');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          loadPresetValues(parsed);
+          loaded = true;
+        }
+      } catch (e) {
+        // storage blocked
+      }
+
+      if (!loaded) {
+        loadPresetValues(PRESETS[0].values);
+      }
+    }
+
+    // Reverse DLI & Target Intensity Solver Logic
+    function updateReverseSolver() {
+      const revTargetDli = Math.max(0.1, parseNum(document.getElementById('rev-target-dli')?.value, 22.0));
+      const revPhotoperiod = Math.max(0.1, Math.min(24, parseNum(document.getElementById('rev-photoperiod')?.value, 12.0)));
+      const revNaturalDli = Math.max(0, parseNum(document.getElementById('rev-natural-dli')?.value, 6.0));
+      const revSpectrum = document.getElementById('rev-light-spectrum')?.value || 'led_full';
+      const revRefPpfd = Math.max(1, parseNum(document.getElementById('rev-ref-ppfd')?.value, 300));
+
+      const suppDliNeeded = Math.max(0, revTargetDli - revNaturalDli);
+      const reqPpfd = (suppDliNeeded * 1000000) / (revPhotoperiod * 3600);
+
+      const specFactor = SPECTRUM_FACTORS[revSpectrum] || 0.0155;
+      const reqLux = reqPpfd > 0 ? Math.round(reqPpfd / specFactor) : 0;
+
+      let targetDist = 0.30;
+      if (reqPpfd > 0) {
+        targetDist = 0.30 * Math.sqrt(revRefPpfd / reqPpfd);
+      }
+
+      const dispSupp = document.getElementById('rev-display-supp-dli');
+      const dispPpfd = document.getElementById('rev-display-ppfd');
+      const dispLux = document.getElementById('rev-display-lux');
+      const dispDist = document.getElementById('rev-display-dist');
+
+      if (dispSupp) dispSupp.textContent = `${suppDliNeeded.toFixed(2)} mol`;
+      if (dispPpfd) dispPpfd.textContent = `${reqPpfd.toFixed(2)} µmol/m²/s`;
+      if (dispLux) dispLux.textContent = `${reqLux.toLocaleString()} lx`;
+      if (dispDist) {
+        dispDist.textContent = reqPpfd > 0 ? `${targetDist.toFixed(2)} m (${(targetDist * 39.3701).toFixed(1)} in)` : 'N/A';
+      }
+    }
+
+    // Bind reverse solver controls to recalculate live
+    ['rev-target-dli', 'rev-photoperiod', 'rev-natural-dli', 'rev-light-spectrum', 'rev-ref-ppfd'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', updateReverseSolver);
+        el.addEventListener('change', updateReverseSolver);
+      }
+    });
+
+    // 12-Month Seasonal DLI & Light Deficit Planner Logic
+    function updateSeasonalPlanner() {
+      const lat = parseNum(document.getElementById('seasonal-lat')?.value, 45);
+      const winOrient = document.getElementById('seasonal-window')?.value || 'south';
+      const dist = Math.max(0, parseNum(document.getElementById('seasonal-dist')?.value, 0.5));
+      const growHours = Math.max(0, Math.min(24, parseNum(document.getElementById('seasonal-grow-hours')?.value, 0)));
+      const ppfd = Math.max(0, parseNum(document.getElementById('seasonal-ppfd')?.value, 0));
+      const thresh = Math.max(0.1, parseNum(document.getElementById('seasonal-threshold')?.value, 15));
+
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const curves = {
+        0:  [0.85, 0.90, 0.95, 0.98, 1.00, 0.98, 0.95, 0.98, 1.00, 0.95, 0.90, 0.85],
+        30: [0.55, 0.65, 0.80, 0.92, 0.98, 1.00, 0.98, 0.93, 0.85, 0.73, 0.60, 0.50],
+        45: [0.283, 0.40, 0.583, 0.767, 0.90, 1.00, 0.95, 0.80, 0.633, 0.517, 0.35, 0.25],
+        60: [0.10, 0.22, 0.45, 0.70, 0.90, 1.00, 0.92, 0.75, 0.50, 0.30, 0.15, 0.08]
+      };
+
+      let orientMult = 1.0;
+      if (winOrient === 'east' || winOrient === 'west') orientMult = 0.75;
+      else if (winOrient === 'north') orientMult = 0.35;
+
+      const distMult = (1 / (1 + 1.22 * Math.pow(dist, 1.15))) / (1 / (1 + 1.22 * Math.pow(0.5, 1.15)));
+      const suppDli = ppfd * growHours * 0.0036;
+
+      const latCurve = curves[lat] || curves[45];
+      let deficitCount = 0;
+      let minMonthDli = Infinity;
+      let minMonthName = '';
+      let maxMonthDli = 0;
+      let totalAnnualDli = 0;
+      let maxDeficit = 0;
+
+      const monthData = latCurve.map((factor, i) => {
+        const natDli = Math.round(30.0 * factor * orientMult * distMult * 10) / 10;
+        const totDli = Math.round((natDli + suppDli) * 10) / 10;
+        totalAnnualDli += totDli;
+
+        if (totDli < minMonthDli) {
+          minMonthDli = totDli;
+          minMonthName = months[i];
+        }
+        if (totDli > maxMonthDli) maxMonthDli = totDli;
+
+        const isDeficit = totDli < thresh;
+        if (isDeficit) {
+          deficitCount++;
+          const def = thresh - totDli;
+          if (def > maxDeficit) maxDeficit = def;
+        }
+        return { month: months[i], natDli, totDli, isDeficit };
+      });
+
+      const chartEl = document.getElementById('seasonal-bar-chart');
+      const tbodyEl = document.getElementById('seasonal-table-body');
+      if (!chartEl || !tbodyEl) return;
+
+      const maxScale = Math.max(maxMonthDli, thresh, 35);
+
+      let chartHtml = `<div class="seasonal-threshold-line" style="bottom:${Math.min(95, (thresh / maxScale) * 100)}%;"></div>`;
+      let tableHtml = '';
+
+      monthData.forEach(d => {
+        const heightPct = Math.min(100, Math.max(4, (d.totDli / maxScale) * 100));
+        chartHtml += `<div class="seasonal-bar-col">
+          <div class="seasonal-bar ${d.isDeficit ? 'deficit' : ''}" style="height:${heightPct}%;" title="${d.month}: ${d.totDli} DLI"></div>
+          <div class="seasonal-bar-label">${d.month}</div>
+        </div>`;
+
+        const diff = d.totDli - thresh;
+        tableHtml += `<tr>
+          <td><strong>${d.month}</strong></td>
+          <td>${d.natDli.toFixed(1)}</td>
+          <td>${suppDli.toFixed(1)}</td>
+          <td><strong>${d.totDli.toFixed(1)}</strong></td>
+          <td><span class="badge ${d.isDeficit ? 'badge-very-high' : 'badge-medium'}">${d.isDeficit ? 'Deficit' : 'OK'}</span></td>
+          <td style="color:${d.isDeficit ? 'var(--danger)' : 'var(--accent)'}">${diff >= 0 ? '+' : ''}${diff.toFixed(1)} mol</td>
+        </tr>`;
+      });
+
+      chartEl.innerHTML = chartHtml;
+      tbodyEl.innerHTML = tableHtml;
+
+      const defCntEl = document.getElementById('seasonal-deficit-count');
+      const minMEl = document.getElementById('seasonal-min-month');
+      const minMNameEl = document.getElementById('seasonal-min-month-name');
+      const avgDliEl = document.getElementById('seasonal-avg-dli');
+      const extraHEl = document.getElementById('seasonal-extra-hours');
+      const badgeEl = document.getElementById('seasonal-deficit-badge');
+
+      if (defCntEl) defCntEl.textContent = `${deficitCount} ${deficitCount === 1 ? 'Month' : 'Months'}`;
+      if (minMEl) minMEl.textContent = `${minMonthDli.toFixed(1)} mol`;
+      if (minMNameEl) minMNameEl.textContent = minMonthName;
+      if (avgDliEl) avgDliEl.textContent = `${(totalAnnualDli / 12).toFixed(1)} mol`;
+
+      const reqExtraPpfd = ppfd > 0 ? ppfd : 300;
+      const extraDivisor = reqExtraPpfd * 0.0036;
+      const extraHoursReq = (maxDeficit > 0 && extraDivisor > 0) ? maxDeficit / extraDivisor : 0;
+      if (extraHEl) extraHEl.textContent = isFinite(extraHoursReq) ? `${extraHoursReq.toFixed(1)} h/day` : 'N/A';
+
+      if (badgeEl) {
+        if (deficitCount > 0) {
+          badgeEl.textContent = `${deficitCount} Deficit Months`;
+          badgeEl.className = 'badge badge-high';
+        } else {
+          badgeEl.textContent = 'All Months Sufficient';
+          badgeEl.className = 'badge badge-medium';
+        }
+      }
+    }
+
+    ['seasonal-lat', 'seasonal-window', 'seasonal-dist', 'seasonal-grow-hours', 'seasonal-ppfd', 'seasonal-threshold'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', updateSeasonalPlanner);
+        el.addEventListener('change', updateSeasonalPlanner);
+      }
+    });
+
+    init();
+    updateReverseSolver();
+    updateSeasonalPlanner();
+
+    function updateMultiCanopy() {
+      const w = Math.max(0.1, parseNum(document.getElementById('multi-width').value, 1.2));
+      const l = Math.max(0.1, parseNum(document.getElementById('multi-length').value, 1.2));
+      const n = parseInt(document.getElementById('multi-fixture-count').value) || 1;
+      const h = Math.max(0.05, parseNum(document.getElementById('multi-height').value, 0.4));
+      const angle = parseInt(document.getElementById('multi-beam-angle').value) || 90;
+      const refPpfd = Math.max(0, parseNum(document.getElementById('multi-ref-ppfd').value, 800));
+
+      // Light positions (normalized 0 to 1)
+      let positions = [];
+      if (n === 1) positions = [[0.5, 0.5]];
+      else if (n === 2) positions = [[0.25, 0.5], [0.75, 0.5]];
+      else if (n === 3) positions = [[0.2, 0.5], [0.5, 0.5], [0.8, 0.5]];
+      else if (n === 4) positions = [[0.25, 0.25], [0.75, 0.25], [0.25, 0.75], [0.75, 0.75]];
+      else if (n === 6) positions = [[0.2, 0.33], [0.5, 0.33], [0.8, 0.33], [0.2, 0.66], [0.5, 0.66], [0.8, 0.66]];
+
+      const getPpfdAt = (px, py) => {
+        let total = 0;
+        positions.forEach(pos => {
+          const dx = (pos[0] * w) - px;
+          const dy = (pos[1] * l) - py;
+          const r = Math.max(0.05, Math.sqrt(dx * dx + dy * dy + h * h));
+          // Intensity at 0.3m is refPpfd. Inverse square: I = I_ref * (0.3^2 / r^2)
+          // Cosine law (Lambertian): * (h/r). 
+          // Tune exponent by beam angle: 60 deg = narrow (cos^4), 90 = med (cos^2), 120 = wide (cos^1)
+          const exp = angle === 60 ? 5 : (angle === 90 ? 2.5 : 1.2);
+          let intensity = refPpfd * (Math.pow(0.3, 2) / Math.pow(r, 2)) * Math.pow(h / r, exp);
+          if (isFinite(intensity) && !isNaN(intensity)) {
+            total += intensity;
+          }
+        });
+        // Wall reflection factor (approx 20% boost to edges in typical grow tents)
+        return total * 1.25; 
+      };
+
+      const center = getPpfdAt(w / 2, l / 2);
+      const edge = Math.min(getPpfdAt(0, 0), getPpfdAt(w / 2, 0), getPpfdAt(0, l / 2));
+      const safeCenter = (isFinite(center) && !isNaN(center)) ? center : 0;
+      const safeEdge = (isFinite(edge) && !isNaN(edge)) ? edge : 0;
+      const uniformity = safeCenter > 0 ? Math.min(100, Math.max(0, (safeEdge / safeCenter) * 100)) : 0;
+      const dropOff = 100 - uniformity;
+
+      document.getElementById('multi-center-ppfd').textContent = `${Math.round(safeCenter)} µmol`;
+      document.getElementById('multi-edge-ppfd').textContent = `${Math.round(safeEdge)} µmol`;
+      document.getElementById('multi-uniformity').textContent = `${uniformity.toFixed(1)}%`;
+      document.getElementById('multi-drop-off').textContent = `${dropOff.toFixed(1)}%`;
+
+      const advText = document.getElementById('multi-advisory-text');
+      if (uniformity > 80) {
+        advText.textContent = "Excellent uniformity! Your spacing and height allow for overlapping light cones, ensuring all plants receive similar energy. Ideal for SOG or high-density crops.";
+      } else if (uniformity > 60) {
+        advText.textContent = "Good coverage. Minor hot spots in center. Consider raising fixtures slightly or adding wall reflection to boost edge PAR values.";
+      } else {
+        advText.textContent = "Poor uniformity. Significant PAR drop-off at edges. You may experience 'stretching' (etiolation) in plants near the perimeter. Add more fixtures or increase height.";
+      }
+    }
+
+    ['multi-width', 'multi-length', 'multi-fixture-count', 'multi-height', 'multi-beam-angle', 'multi-ref-ppfd'].forEach(id => {
+      document.getElementById(id).addEventListener('input', updateMultiCanopy);
+    });
+    updateMultiCanopy();
+
+    function updateAuditExporter() {
+      const w = Math.max(0, parseNum(document.getElementById('audit-wattage')?.value, 120));
+      const rate = Math.max(0, parseNum(document.getElementById('audit-elec-rate')?.value, 0.16));
+      const hours = Math.min(24, Math.max(0, parseNum(document.getElementById('audit-photoperiod')?.value, 12)));
+
+      const dailyKwh = (w * hours) / 1000;
+      const dailyCost = dailyKwh * rate;
+      const monthlyCost = dailyCost * 30;
+      const annualCost = dailyCost * 365;
+      const annualKwh = dailyKwh * 365;
+
+      const dEl = document.getElementById('audit-daily-cost');
+      const mEl = document.getElementById('audit-monthly-cost');
+      const aEl = document.getElementById('audit-annual-cost');
+      const kEl = document.getElementById('audit-annual-kwh');
+
+      if (dEl) dEl.textContent = `$${dailyCost.toFixed(2)}`;
+      if (mEl) mEl.textContent = `$${monthlyCost.toFixed(2)}`;
+      if (aEl) aEl.textContent = `$${annualCost.toFixed(2)}`;
+      if (kEl) kEl.textContent = `${annualKwh.toFixed(1)} kWh`;
+    }
+
+    ['audit-wattage', 'audit-elec-rate', 'audit-photoperiod'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', updateAuditExporter);
+        el.addEventListener('change', updateAuditExporter);
+      }
+    });
+
+    function handleAuditExport(format) {
+      const notice = document.getElementById('audit-export-notice');
+      if (!PRO) {
+        if (notice) {
+          notice.style.display = 'inline-block';
+          notice.innerHTML = `Available in the full version (<a href="${PRO_LINK}" style="color:var(--accent);text-decoration:underline;">Upgrade</a>)`;
+        }
+        showToast(`Available in the full version (<a href="${PRO_LINK}" style="color:var(--accent);text-decoration:underline;">Upgrade</a>)`, true);
+        return;
+      }
+      if (notice) notice.style.display = 'none';
+
+      const w = parseNum(document.getElementById('audit-wattage')?.value, 120);
+      const rate = parseNum(document.getElementById('audit-elec-rate')?.value, 0.16);
+      const hours = parseNum(document.getElementById('audit-photoperiod')?.value, 12);
+      const dailyKwh = (w * hours) / 1000;
+      const dailyCost = dailyKwh * rate;
+      const monthlyCost = dailyCost * 30;
+      const annualCost = dailyCost * 365;
+      const annualKwh = dailyKwh * 365;
+
+      if (format === 'csv') {
+        const rows = [
+          ["Parameter / Metric", "Value", "Unit"],
+          ["Grow Light Wattage", w, "W"],
+          ["Electricity Cost Rate", rate, "$/kWh"],
+          ["Daily Photoperiod", hours, "hours/day"],
+          ["Daily Energy Consumption", dailyKwh.toFixed(3), "kWh/day"],
+          ["Daily Energy Cost", dailyCost.toFixed(2), "$"],
+          ["Monthly Energy Cost (30-day)", monthlyCost.toFixed(2), "$"],
+          ["Annual Energy Cost (365-day)", annualCost.toFixed(2), "$"],
+          ["Annual Energy Consumption", annualKwh.toFixed(1), "kWh"]
+        ];
+        const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+        const link = document.createElement("a");
+        link.setAttribute("href", encodeURI(csvContent));
+        link.setAttribute("download", "light_audit_energy_report.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else if (format === 'json') {
+        const auditData = {
+          timestamp: new Date().toISOString(),
+          inputs: { wattage: w, ratePerKwh: rate, photoperiodHours: hours },
+          outputs: {
+            dailyKwh: parseFloat(dailyKwh.toFixed(3)),
+            dailyCost: parseFloat(dailyCost.toFixed(2)),
+            monthlyCost: parseFloat(monthlyCost.toFixed(2)),
+            annualCost: parseFloat(annualCost.toFixed(2)),
+            annualKwh: parseFloat(annualKwh.toFixed(1))
+          }
+        };
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(auditData, null, 2));
+        const link = document.createElement("a");
+        link.setAttribute("href", dataStr);
+        link.setAttribute("download", "light_audit_energy_report.json");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+
+    document.getElementById('btn-audit-export-csv')?.addEventListener('click', () => handleAuditExport('csv'));
+    document.getElementById('btn-audit-export-json')?.addEventListener('click', () => handleAuditExport('json'));
+
+    updateAuditExporter();
+
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This tool calculates exact Daily Light Integral (DLI) and PPFD from Lux, Foot-candles, or grow light specs. It helps indoor gardeners, citrus growers, and houseplant owners identify winter light deficits and optimize light heights. Use the interactive web version for free or download the standalone offline HTML pack.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your light source type (Sunlight, White LED, Blurple LED, HPS, or custom spectrum).</li><li>Enter your light meter reading in Lux or Foot-candles, or input PPFD directly.</li><li>Set your daily photoperiod duration in hours.</li><li>View calculated DLI and compare it against target light requirements for your plant species.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">How important is full sun for a Blue Spruce tree?</h4><p style="margin:0">You enter: Plant species (Blue Spruce / Picea pungens) · Desired growth location (Outdoor vs indoor high-light setup).<br>You get: Minimum and optimal Daily Light Integral (DLI) target in mol/m²/day, equivalent full-sun hours, and whether indoor lighting can substitute.</p><h4 style="font-size:16px;margin:16px 0 4px">Am I meeting the light requirements for indoor dwarf citrus trees?</h4><p style="margin:0">You enter: Plant species (Dwarf Meyer Lemon Citrus) · Window orientation (South-facing window) · Distance from glass (0.5 meters) · Season (Winter) · Grow light fixture rating (300 µmol/m²/s PPFD at 0.3m height).<br>You get: Total combined Daily Light Integral (mol/m²/day) from daylight + grow light, deficit relative to citrus target (20 mol/m²/day), and required photoperiod hours or fixture height adjustment.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">Can I use PLA 3D-printed parts outdoors for plant setups?</h4><p style="margin:0">Standard PLA plastic degrades under prolonged outdoor UV exposure and deforms at temperatures around 55°C (131°F) in direct sunlight. For outdoor garden stakes, pots, or light mounts, use PETG or ASA plastic instead, as they offer significantly higher UV and thermal resistance.</p><h4 style="font-size:16px;margin:16px 0 4px">How important is full sun for a Blue Spruce tree?</h4><p style="margin:0">Blue Spruce (Picea pungens) requires full outdoor direct sunlight—at least 6 to 8 hours daily, corresponding to a DLI of 30+ mol/m²/day. They are outdoor cold-climate conifers and will rapidly decline, drop needles, and die if kept indoors or in shady conditions.</p><h4 style="font-size:16px;margin:16px 0 4px">Am I meeting the light requirements for indoor dwarf citrus trees?</h4><p style="margin:0">Dwarf citrus trees require high light levels, ideally 15 to 25 DLI (mol/m²/day). Indoor window sunlight during autumn and winter rarely delivers more than 3 to 6 DLI. If your tree is shedding green leaves, you likely need high-output LED supplemental lighting running 12 to 16 hours daily.</p><h4 style="font-size:16px;margin:16px 0 4px">Why are my Tillandsia (air plants) turning black and dying after watering?</h4><p style="margin:0">Black, soft bases indicate rot caused by water trapped between the leaf bases in poor airflow or low-light conditions. After soaking or misting Tillandsia, shake off excess water gently and place them upside down in a well-ventilated area with bright indirect light (DLI 4–8) so they dry completely within 4 hours.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/dvxjrv" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../greenhouse-thermal-loss-and-glazing-simulator/" style="color:inherit;font-weight:600">Greenhouse Thermal Loss &amp; Glazing Simulator</a>: Calculate heat loss, thermal mass needs, fuel costs, and freeze risks in a single offline HTML simulator.</li><li><a href="../chladni-cymatics-resonance-lab/" style="color:inherit;font-weight:600">Chladni Plate Cymatics &amp; Resonance Sandbox</a>: Offline interactive modal vibration solver, granular sand physics simulator, and dual-tone interference sandbox.</li><li><a href="../two-dimensional-orbital-transfer-mission-planner/" style="color:inherit;font-weight:600">2D Orbital Transfer &amp; Gravity Mission Planner</a>: Interactive 2D orbital mechanics sandbox with real-time maneuvers and Hohmann transfer calculations.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
