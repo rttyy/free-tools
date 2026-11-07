@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --border-focus: #2563eb;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --accent-earth: #b45309;
+      --accent-earth-light: #fef3c7;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --warning: #d97706;
+      --warning-bg: #fffbeb;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+      --radius: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a;
+        --card-bg: #1e293b;
+        --text: #f8fafc;
+        --text-muted: #94a3b8;
+        --border: #334155;
+        --border-focus: #60a5fa;
+        --primary: #3b82f6;
+        --primary-hover: #60a5fa;
+        --accent-earth: #f59e0b;
+        --accent-earth-light: #451a03;
+        --danger: #ef4444;
+        --danger-bg: #450a0a;
+        --warning: #f59e0b;
+        --warning-bg: #451a03;
+        --success: #22c55e;
+        --success-bg: #052e16;
+        --shadow: 0 1px 3px rgba(0,0,0,0.3);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1.25rem 1rem 3rem 1rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.35rem;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .preset-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .preset-label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      font-size: 0.875rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      font-weight: 500;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    button:hover {
+      background: var(--bg);
+      border-color: var(--primary);
+    }
+
+    button.btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    button.btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    button.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .grid-2 > * {
+      min-width: 0;
+    }
+
+    .grid-compact {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .grid-slope {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 700px) {
+      .grid-slope {
+        grid-template-columns: 1fr 2fr;
+      }
+    }
+
+    @media (min-width: 900px) {
+      .grid-2 {
+        grid-template-columns: 1.2fr 0.8fr;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+
+    .card-subtitle {
+      font-size: 0.8rem;
+      font-weight: normal;
+      color: var(--text-muted);
+    }
+
+    .table-container {
+      overflow-x: auto;
+      margin-bottom: 0.75rem;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      min-width: 620px;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    th, td {
+      padding: 0.5rem 0.4rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input, select {
+      font-family: inherit;
+      width: 100%;
+      padding: 0.4rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.875rem;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    }
+
+    .num-input {
+      text-align: right;
+    }
+
+    .form-group {
+      margin-bottom: 0.85rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--border);
+    }
+
+    .stat-box {
+      background: var(--bg);
+      padding: 0.6rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 0.15rem;
+    }
+
+    .stat-value.highlight {
+      color: var(--accent-earth);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-warning {
+      background: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid var(--warning);
+    }
+
+    .badge-danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+
+    .badge-success {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+
+    .svg-container {
+      width: 100%;
+      height: 220px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .logistics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .logistics-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.85rem;
+    }
+
+    .logistics-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .logistics-count {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .logistics-detail {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .advisory-box {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .advisory-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .advisory-content {
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .advisory-content p {
+      margin-bottom: 0.5rem;
+    }
+
+    .advisory-content ul {
+      margin-left: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-row > div {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .notice {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .pro-msg {
+      background: var(--warning-bg);
+      color: var(--warning);
+      padding: 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      display: none;
+      border: 1px solid var(--warning);
+    }
+
+    .pro-msg a {
+      color: inherit;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    .table-btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .text-danger { color: var(--danger); }
+    .text-success { color: var(--success); }
+    .text-warning { color: var(--warning); }
+    .rd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 0.75rem; }
+.cmp-card { margin-bottom: 1.25rem; }
+.cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem; }
+@media (max-width: 650px) { .cmp-grid { grid-template-columns: 1fr; } }
+.cmp-scenario-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem; }
+.cmp-scenario-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--primary); }
+.cmp-table th, .cmp-table td { font-size: 0.8rem; padding: 0.45rem; }
+.cmp-pro-banner { background: var(--warning-bg); color: var(--warning); border: 1px solid var(--warning); padding: 0.75rem; border-radius: 6px; text-align: center; margin-bottom: 0.75rem; font-size: 0.85rem; }
+.cmp-pro-banner a { color: inherit; font-weight: bold; text-decoration: underline; }
+.report-panel { margin-bottom: 1.25rem; }
+.report-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 0.75rem; }
+.report-preview { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; margin-top: 0.75rem; }
+.report-header-box { display: flex; justify-content: space-between; border-bottom: 2px solid var(--primary); padding-bottom: 0.5rem; margin-bottom: 0.75rem; }
+.report-section-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); margin: 0.75rem 0 0.25rem 0; }
+@media print {
+  body { background: #fff !important; color: #000 !important; padding: 0 !important; font-size: 9pt !important; }
+  button, .preset-bar, .btn-group, .btn-row, #proMessage, .cmp-pro-banner, .pro-msg, .notice, #addZoneBtn, .delete-zone-btn, .table-btn { display: none !important; }
+  .card, details { box-shadow: none !important; border: 1px solid #aaa !important; page-break-inside: avoid; }
+  .report-preview { border: 2px solid #000 !important; background: #fff !important; color: #000 !important; }
+}
+.chk-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 650px) { .chk-grid { grid-template-columns: 1fr 1.2fr; } }
+.chk-inputs { display: flex; flex-direction: column; gap: 0.6rem; }
+.chk-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; cursor: pointer; }
+.chk-item input { width: auto; margin: 0; cursor: pointer; }
+.chk-status-box { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.75rem; }
+.chk-status-title { font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 0.5rem; }
+.chk-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8rem; }
+.chk-list-item { display: flex; flex-direction: column; gap: 0.15rem; border-bottom: 1px dashed var(--border); padding-bottom: 0.4rem; }
+.chk-list-item:last-child { border-bottom: none; padding-bottom: 0; }
+.chk-item-head { display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
+.chk-item-desc { color: var(--text-muted); font-size: 0.75rem; line-height: 1.35; }
+
+/* FEATURE-CSS */
+  </style>
+<title>Yard Dirt Removal &amp; Wheelbarrow Load Calculator</title>
+<meta name="description" content="Calculate dirt excavation volume, loose soil swell, wet weight in tons, and wheelbarrow loads. Avoid dumpster weight overage fees on your yard project.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/yard-excavation-dirt-volume-calculator/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/yard-excavation-dirt-volume-calculator/">
+<meta property="og:title" content="Yard Dirt Removal &amp; Wheelbarrow Load Calculator"><meta property="og:description" content="Calculate dirt excavation volume, loose soil swell, wet weight in tons, and wheelbarrow loads. Avoid dumpster weight overage fees on your yard project.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/yard-excavation-dirt-volume-calculator/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Yard Dirt Removal & Wheelbarrow Load Calculator","description":"Calculate dirt excavation volume, loose soil swell, wet weight in tons, and wheelbarrow loads. Avoid dumpster weight overage fees on your yard project.","url":"https://rttyy.github.io/free-tools/yard-excavation-dirt-volume-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What's the best way to remove 2-6 inches of dirt from my yard?","acceptedAnswer":{"@type":"Answer","text":"For areas under 150 square feet, use a flat transfer shovel and square-point spade to cut the perimeter, peel up sod sections, and scrape the soil down to depth. For areas between 150 and 800 square feet, rent a motorized sod cutter set to its maximum depth to strip the organic layer, followed by manual shoveling or a power wheelbarrow. For spaces over 800 square feet or heavy clay, renting a mini skid-steer with a smooth bucket or a mini excavator saves dozens of hours of manual labor."}},{"@type":"Question","name":"What's the best way to remove grass/topsoil to prepare for grading?","acceptedAnswer":{"@type":"Answer","text":"The cleanest method is using a walk-behind sod cutter rather than a rototiller. A tiller churns living roots, weed seeds, and soil together, creating uneven, spongy ground that will settle unpredictably later. A sod cutter shears root networks at a uniform depth (typically 1.5 to 2.5 inches), allowing you to roll up the sod and expose a flat, firm subgrade ready for fill, gravel, or finished grading."}},{"@type":"Question","name":"What is the appropriate spacing for 3' x 5' bluestone pavers?","acceptedAnswer":{"@type":"Answer","text":"For dry-laid bluestone on a compacted aggregate and sand or stone dust base, leave a consistent 3/16-inch to 3/8-inch joint gap if the stone has sawn thermal edges. If the pavers have irregular, natural-cleft, or hand-chiseled edges, maintain a wider 1/2-inch to 3/4-inch joint to absorb edge variations. For stepping stone layouts surrounded by lawn or groundcover, place them roughly 24 to 26 inches apart on-center to match a natural walking stride."}},{"@type":"Question","name":"Why is my excavated dirt pile so much bigger than the hole I dug?","acceptedAnswer":{"@type":"Answer","text":"In-ground soil has settled and compacted naturally over decades. When you dig it out, you introduce air pockets between the grains, a phenomenon known as soil swell. Topsoil typically swells by 15% to 25%, while dense clay can expand by up to 35% or more in loose volume. A hole measuring exactly 2 cubic yards in the ground regularly yields 2.5 to 2.7 cubic yards of loose dirt to haul away."}}]}</script>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Yard Excavation &amp; Dirt Removal Calculator</h1>
+      <p class="subtitle">Calculate true loose swell volume, wet weight tonnage, slope grading cuts, and hauling equipment trip counts.</p>
+      
+      <div class="preset-bar">
+        <span class="preset-label">Presets:</span>
+        <div class="btn-group" id="presetButtons">
+          <!-- Dynamically populated or manually bound -->
+          <button type="button" class="preset-btn active" data-preset="0">Standard Patio (Clay)</button>
+          <button type="button" class="preset-btn" data-preset="1">Lawn Sod Stripping (Topsoil)</button>
+          <button type="button" class="preset-btn" data-preset="2">Tight Walkway &amp; Patio (Wet Clay)</button>
+        </div>
+        <button type="button" id="hdrReportBtn" class="btn-primary" style="margin-left:auto;">Worksite Report</button>
+      </div>
+    </header>
+
+    <div class="grid-2">
+      <!-- FEATURE 1: MULTI-ZONE AREA & DEPTH -->
+      <section class="card" data-feature="multi-zone-area-depth">
+        <div class="card-title">
+          <span>Excavation Zones</span>
+          <button type="button" id="addZoneBtn" class="btn-primary table-btn">+ Add Zone</button>
+        </div>
+        <div class="table-container">
+          <table id="zonesTable">
+            <thead>
+              <tr>
+                <th>Zone Name</th>
+                <th>Type</th>
+                <th>L (ft)</th>
+                <th>W (ft)</th>
+                <th>Base D (in)</th>
+                <th>Slope Drop (in)</th>
+                <th>Area (sq ft)</th>
+                <th>In-Situ (cu yd)</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="zonesBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="stat-label">Total Cut Area</div>
+            <div class="stat-value" id="totalAreaDisp">0 sq ft</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Total In-Situ (Solid)</div>
+            <div class="stat-value" id="totalInSituDisp">0.00 cu yd</div>
+            <div class="stat-label" id="totalInSituCuFtDisp">0 cu ft</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Avg Cut Depth</div>
+            <div class="stat-value" id="avgDepthDisp">0.0 in</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURE 2: SOIL EXPANSION & WEIGHT -->
+      <section class="card" data-feature="soil-expansion-weight">
+        <div class="card-title">
+          <span>Soil Density &amp; Swell Expansion</span>
+          <span class="badge badge-warning" id="swellBadge">+30% Swell</span>
+        </div>
+        <div class="grid-compact" style="margin-bottom: 0.5rem;">
+          <div class="form-group">
+            <label for="soilType">Soil Classification</label>
+            <select id="soilType">
+              <option value="topsoil">Topsoil (Standard)</option>
+              <option value="sand_gravel">Sand / Gravel Mix</option>
+              <option value="organic_loam">Organic Loam / Garden</option>
+              <option value="clay" selected>Standard Dense Clay</option>
+              <option value="heavy_wet_clay">Heavy Wet Clay</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="moistureState">Moisture State</label>
+            <select id="moistureState">
+              <option value="dry">Dry</option>
+              <option value="damp" selected>Damp / Moist</option>
+              <option value="saturated">Saturated / Soggy</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-compact">
+          <div class="form-group">
+            <label for="swellOverride">Swell Factor Override (%)</label>
+            <input type="number" id="swellOverride" placeholder="Auto" min="0" max="100" class="num-input">
+          </div>
+          <div class="form-group">
+            <label for="customDensity">Dry Density (tons/yd³)</label>
+            <input type="number" id="customDensity" step="0.05" value="1.25" class="num-input">
+          </div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="stat-label">Expanded Loose Volume</div>
+            <div class="stat-value highlight" id="looseVolumeDisp">0.00 cu yd</div>
+            <div class="stat-label">What dumpsters hold</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Total Loose Weight</div>
+            <div class="stat-value highlight" id="totalWeightTonsDisp">0.00 tons</div>
+            <div class="stat-label" id="totalWeightLbsDisp">0 lbs</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Unit Weight (Wet)</div>
+            <div class="stat-value" id="wetDensityDisp">0 lbs/yd³</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- FEATURE 3: SLOPE VISUALIZER -->
+    <section class="card" data-feature="slope-grading-visualizer" style="margin-bottom: 1.25rem;">
+      <div class="card-title">
+        <span>Slope Drop &amp; Excavation Depth Profile</span>
+        <div id="safetyAlertBadge" class="badge badge-success">OSHA Compliant (&lt;4ft)</div>
+      </div>
+      <div class="grid-slope">
+        <div>
+          <div class="form-group">
+            <label for="slopeSelectZone">Focus Zone Profile</label>
+            <select id="slopeSelectZone">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="highPointCut">High Point Cut Depth (in)</label>
+            <input type="number" id="highPointCut" min="0" step="0.5" value="6" class="num-input">
+          </div>
+          <div class="form-group">
+            <label for="lowPointCut">Low Point Cut Depth (in)</label>
+            <input type="number" id="lowPointCut" min="0" step="0.5" value="8" class="num-input">
+          </div>
+          <div class="form-group">
+            <label for="runLength">Horizontal Run Length (ft)</label>
+            <input type="number" id="runLength" min="1" step="1" value="20" class="num-input">
+          </div>
+          <div class="form-group">
+            <label for="sideSlopeAngle">Side Trench Slope Angle (degrees)</label>
+            <input type="number" id="sideSlopeAngle" min="0" max="90" step="1" value="45" class="num-input">
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+            Calculated Pitch: <strong id="calculatedPitchDisp" style="color: var(--text);">0.8%</strong> (<span id="calculatedAngleDisp">0.5°</span>)
+          </div>
+        </div>
+        <div>
+          <div class="svg-container">
+            <svg id="slopeSvg" viewBox="0 0 500 200" preserveAspectRatio="none">
+              <!-- SVG elements drawn here via script -->
+            </svg>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted);">
+            <span>Cross-Section Area Cut: <strong id="cutProfileAreaDisp">0.0 sq ft</strong></span>
+            <span>Ground Subgrade Slope Line shown with exaggerated height</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURE 4: DISPOSAL & LABOR LOGISTICS -->
+    <section class="card" data-feature="disposal-labor-logistics">
+      <div class="card-title">
+        <span>Disposal Logistics &amp; Equipment/Labor Sizing</span>
+        <span class="card-subtitle">Capped by volume and legal road weights</span>
+      </div>
+      
+      <div class="grid-compact" style="margin-bottom: 1rem;">
+        <div class="form-group">
+          <label for="wheelbarrowCap">Wheelbarrow (cu ft)</label>
+          <select id="wheelbarrowCap">
+            <option value="4.5">Narrow 4.5 cu ft</option>
+            <option value="6" selected>Contractor 6.0 cu ft</option>
+            <option value="8">Dual-Wheel 8.0 cu ft</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="wheelbarrowPayload">Max Push Weight (lbs)</label>
+          <input type="number" id="wheelbarrowPayload" value="300" step="25" class="num-input">
+        </div>
+        <div class="form-group">
+          <label for="pickupRating">Pickup Truck Rating</label>
+          <select id="pickupRating">
+            <option value="1000" selected>1/2-Ton (1,000 lbs cap)</option>
+            <option value="2000">3/4-Ton (2,000 lbs cap)</option>
+            <option value="3500">1-Ton HD (3,500 lbs cap)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="dumpsterTarget">Roll-Off Dumpster</label>
+          <select id="dumpsterTarget">
+            <option value="10" selected>10 Yard Container</option>
+            <option value="15">15 Yard Container</option>
+            <option value="20">20 Yard Container</option>
+            <option value="30">30 Yard Container</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="crewSize">Crew Size</label>
+          <select id="crewSize">
+            <option value="1">1 Person (Solo)</option>
+            <option value="2" selected>2 Persons</option>
+            <option value="3">3 Persons</option>
+            <option value="4">4 Persons</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="logistics-grid">
+        <div class="logistics-card">
+          <div class="logistics-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="19" r="2"/><circle cx="6" cy="19" r="2"/><path d="m2 5 3 2 4 10h11l2-8H6"/></svg>
+            Wheelbarrow Trips
+          </div>
+          <div class="logistics-count" id="wheelbarrowTripsDisp">0</div>
+          <div class="logistics-detail" id="wheelbarrowDetailDisp">Limited by payload weight</div>
+        </div>
+
+        <div class="logistics-card">
+          <div class="logistics-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Pickup Loads
+          </div>
+          <div class="logistics-count" id="pickupTripsDisp">0</div>
+          <div class="logistics-detail" id="pickupDetailDisp">Weight-capped trips</div>
+        </div>
+
+        <div class="logistics-card">
+          <div class="logistics-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            Dumpster Status
+          </div>
+          <div class="logistics-count" id="dumpsterStatusDisp">OK</div>
+          <div class="logistics-detail" id="dumpsterDetailDisp">Fits in chosen volume</div>
+        </div>
+
+        <div class="logistics-card">
+          <div class="logistics-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Manual Labor
+          </div>
+          <div class="logistics-count" id="laborHoursDisp">0 hrs</div>
+          <div class="logistics-detail" id="laborDetailDisp">Shovel rate: 1.5 yd³/hr/person</div>
+        </div>
+      </div>
+
+      <!-- Live Advisory Box -->
+      <div class="advisory-box" id="advisoryCard">
+        <div class="advisory-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          What this means / What to do next
+        </div>
+        <div class="advisory-content" id="advisoryText">
+          Loading recommendations...
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <div>
+          <button type="button" id="copySummaryBtn">Copy Job Summary</button>
+          <button type="button" id="exportCsvBtn">Export CSV</button>
+          <button type="button" id="exportJsonBtn">Export JSON</button>
+          <button type="button" id="printBtn">Print Plan</button>
+        </div>
+        <div>
+          <button type="button" id="resetBtn">Reset Defaults</button>
+        </div>
+      </div>
+      <div id="proMessage" class="pro-msg"></div>
+    </section>
+
+    <details class="card" data-feature="reverse-dumpster-solver" style="margin-bottom: 1.25rem;" open>
+      <summary class="card-title" style="cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+        <span>Reverse Dumpster &amp; Trailer Limit Back-Calculator</span>
+        <span class="badge badge-warning" id="rdLimitingBadge">Weight Limited</span>
+      </summary>
+      <div style="margin-top: 1rem;">
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          Back-calculate maximum safe excavation footprint and dimensions based on container weight/volume limits.
+        </p>
+        <div class="rd-grid">
+          <div class="form-group">
+            <label for="rdVolume">Container Vol Limit (cu yd)</label>
+            <input type="number" id="rdVolume" value="10" min="1" step="1" class="num-input">
+          </div>
+          <div class="form-group">
+            <label for="rdWeight">Max Payload Limit (tons)</label>
+            <input type="number" id="rdWeight" value="4.0" min="0.1" step="0.5" class="num-input">
+          </div>
+          <div class="form-group">
+            <label for="rdDepth">Excavation Depth (in)</label>
+            <input type="number" id="rdDepth" value="4" min="0.5" step="0.5" class="num-input">
+          </div>
+          <div class="form-group">
+            <label for="rdSoil">Target Soil Type</label>
+            <select id="rdSoil">
+              <option value="topsoil">Topsoil (Standard)</option>
+              <option value="sand_gravel">Sand / Gravel Mix</option>
+              <option value="organic_loam">Organic Loam / Garden</option>
+              <option value="clay">Standard Dense Clay</option>
+              <option value="heavy_wet_clay" selected>Heavy Wet Clay</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="rdMoisture">Moisture Condition</label>
+            <select id="rdMoisture">
+              <option value="dry">Dry</option>
+              <option value="damp" selected>Damp / Normal Wet</option>
+              <option value="saturated">Saturated / Wet</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="stats-row" style="margin-top: 0.5rem;">
+          <div class="stat-box">
+            <div class="stat-label">Max Safe Cut Area</div>
+            <div class="stat-value highlight" id="rdMaxAreaDisp">197 sq ft</div>
+            <div class="stat-label" id="rdLimitingFactorDisp">Capped by weight payload</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Max Square Dimensions</div>
+            <div class="stat-value" id="rdSquareDimDisp">14.0' × 14.0'</div>
+            <div class="stat-label">Square excavation bed</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Max 2:1 Rect Dimensions</div>
+            <div class="stat-value" id="rdRectDimDisp">19.8' × 9.9'</div>
+            <div class="stat-label" id="rdMaxVolDisp">2.43 in-situ yd³</div>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <section class="card cmp-card" data-feature="scenario-comparison-tool">
+      <div class="card-title">
+        <span>Excavation Method &amp; Logistics Scenario Comparator</span>
+        <span class="badge badge-success" id="cmpSavingsBadge">18.0 hrs saved with Scenario B</span>
+      </div>
+      <div id="cmpProBanner" class="cmp-pro-banner" style="display:none;"></div>
+      <div class="cmp-grid">
+        <div class="cmp-scenario-box">
+          <div class="cmp-scenario-title">Scenario A: Manual Shovel, Wheelbarrow &amp; Pickup</div>
+          <div class="grid-compact">
+            <div class="form-group">
+              <label for="scA_shovelRate">Shovel Rate (yd³/hr)</label>
+              <input type="number" id="scA_shovelRate" value="0.75" step="0.25" min="0.1" class="num-input">
+            </div>
+            <div class="form-group">
+              <label for="scA_truckFee">Pickup Dump Fee ($/trip)</label>
+              <input type="number" id="scA_truckFee" value="35" step="5" min="0" class="num-input">
+            </div>
+            <div class="form-group">
+              <label for="scA_laborWage">Labor Value ($/hr)</label>
+              <input type="number" id="scA_laborWage" value="25" step="5" min="0" class="num-input">
+            </div>
+          </div>
+        </div>
+        <div class="cmp-scenario-box">
+          <div class="cmp-scenario-title">Scenario B: Mini Excavator Rental &amp; 20-yd Dumpster</div>
+          <div class="grid-compact">
+            <div class="form-group">
+              <label for="scB_excavRate">Excavator Rate (yd³/hr)</label>
+              <input type="number" id="scB_excavRate" value="7.5" step="0.5" min="0.5" class="num-input">
+            </div>
+            <div class="form-group">
+              <label for="scB_rentalCost">Excavator Rental ($/day)</label>
+              <input type="number" id="scB_rentalCost" value="350" step="25" min="0" class="num-input">
+            </div>
+            <div class="form-group">
+              <label for="scB_dumpsterCost">20-yd Dumpster Fee ($)</label>
+              <input type="number" id="scB_dumpsterCost" value="450" step="25" min="0" class="num-input">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th>Metric / Outcome</th>
+              <th>Scenario A (Manual Shovel + Pickup)</th>
+              <th>Scenario B (Mini Excavator + 20-yd Dumpster)</th>
+              <th>Variance / Savings</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Total Project Time</td>
+              <td id="cmpTimeA">20.0 hrs (2.50 days)</td>
+              <td id="cmpTimeB">2.0 hrs (0.25 days)</td>
+              <td id="cmpTimeSaved" style="font-weight:700; color:var(--success);">18.0 hrs saved</td>
+            </tr>
+            <tr>
+              <td>Equipment &amp; Disposal Cost</td>
+              <td id="cmpEquipCostA">$525</td>
+              <td id="cmpEquipCostB">$800</td>
+              <td id="cmpEquipVariance">+$275 equipment</td>
+            </tr>
+            <tr>
+              <td>Estimated Labor Cost ($25/hr)</td>
+              <td id="cmpLaborCostA">$500</td>
+              <td id="cmpLaborCostB">$50</td>
+              <td id="cmpLaborVariance">-$450 labor cost</td>
+            </tr>
+            <tr>
+              <td>Total Net Project Cost</td>
+              <td id="cmpTotalCostA">$1,025</td>
+              <td id="cmpTotalCostB">$850</td>
+              <td id="cmpNetVariance" style="font-weight:700; color:var(--success);">$175 net savings</td>
+            </tr>
+            <tr>
+              <td>Physical Labor Score</td>
+              <td><span class="badge badge-danger">High (Manual Shoveling)</span></td>
+              <td><span class="badge badge-success">Low (Machine Power)</span></td>
+              <td>90% Effort Reduction</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card report-panel" data-feature="printable-worksite-report">
+      <div class="card-title">
+        <span>Printable Worksite &amp; Haul Logistics Report</span>
+        <button type="button" id="exportWorksiteReportBtn" class="btn-primary">Export Worksite Report</button>
+      </div>
+      <div id="reportProMsg" class="pro-msg"></div>
+      <div class="report-grid">
+        <div class="form-group">
+          <label for="repCustName">Customer / Project Name</label>
+          <input type="text" id="repCustName" value="Oakridge Patio Excavation" placeholder="Client Name / Ref #">
+        </div>
+        <div class="form-group">
+          <label for="repSiteAddr">Site Address</label>
+          <input type="text" id="repSiteAddr" value="742 Evergreen Terrace" placeholder="123 Main St, City">
+        </div>
+        <div class="form-group">
+          <label for="repTargetDate">Target Completion Date</label>
+          <input type="date" id="repTargetDate">
+        </div>
+        <div class="form-group">
+          <label for="repNotes">Contractor / Access Notes</label>
+          <input type="text" id="repNotes" value="Side gate access 42 in width limit. Call 811 before dig." placeholder="Site access notes...">
+        </div>
+      </div>
+      <div class="report-preview" id="reportPreview">
+        <div class="report-header-box">
+          <div>
+            <h2 style="font-size:1.15rem; font-weight:800; margin:0;" id="rHeadTitle">PROJECT REPORT: Oakridge Patio Excavation</h2>
+            <div style="font-size:0.8rem; color:var(--text-muted);" id="rHeadMeta">Site: 742 Evergreen Terrace | Target: TBD</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.75rem; font-weight:700; color:var(--accent-earth);">LOGISTICS SUMMARY REPORT</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);" id="rSafetyStatus">OSHA Status: Verified</div>
+          </div>
+        </div>
+        <div class="report-section-title">Project Summary Metrics</div>
+        <div id="rSummaryMetrics" style="font-size:0.85rem; display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:0.5rem; background:var(--card-bg); padding:0.5rem; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <div class="report-section-title">Zone Breakdown &amp; Soil Swell Math</div>
+        <div id="rZoneMath" style="font-size:0.8rem;"></div>
+        <div class="report-section-title">Equipment Trip Counts &amp; Container Recommendation</div>
+        <div id="rEquipRec" style="font-size:0.8rem; line-height:1.4;"></div>
+        <div class="report-section-title">High-Contrast Vector Cross-Section Diagram</div>
+        <div class="svg-container" style="height:110px; background:#fff; border:1px solid #999;">
+          <svg id="reportSvg" viewBox="0 0 500 200" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" data-feature="excavation-step-checklist" style="margin-bottom: 1.25rem;">
+      <div class="card-title">
+        <span>Excavation &amp; Soil Disposal Guided Checklist</span>
+        <span class="badge badge-success" id="chkOverallBadge">All Clear</span>
+      </div>
+      <div class="chk-grid">
+        <div class="chk-inputs">
+          <label class="chk-item">
+            <input type="checkbox" id="chk811" checked>
+            <span>811 Utility line clearance call completed</span>
+          </label>
+          <label class="chk-item">
+            <input type="checkbox" id="chkGate36">
+            <span>Gate access width &lt; 36 inches (Narrow access)</span>
+          </label>
+          <label class="chk-item">
+            <input type="checkbox" id="chkRoots">
+            <span>Underground tree roots / obstacles present</span>
+          </label>
+          <label class="chk-item">
+            <input type="checkbox" id="chkDumpSite" checked>
+            <span>Soil dump site / landfill acceptance confirmed</span>
+          </label>
+          <label class="chk-item">
+            <input type="checkbox" id="chkRain">
+            <span>Heavy rain / wet weather forecast next 48h</span>
+          </label>
+        </div>
+        <div class="chk-status-box">
+          <div class="chk-status-title">Logistics &amp; Safety Status</div>
+          <ul class="chk-list" id="chkStatusList"></ul>
+        </div>
+      </div>
+    </section>
+
+<!-- FEATURES -->
+
+    <div class="notice">
+      Estimate only - verify with a qualified professional before relying on it. Dumpster haulers usually limit clean dirt to dedicated 10-yard low-boy roll-offs. Call 811 before you dig.
+    </div>
+  </div>
+
+  <script>
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/pzwpqo";
+    var updateWorksiteReport = null;
+
+    // Soil type database: base swell %, default tons/cu yd
+    const SOIL_PROFILES = {
+      topsoil: { name: "Topsoil (Standard)", swell: 20, density: 1.10 },
+      sand_gravel: { name: "Sand / Gravel Mix", swell: 15, density: 1.30 },
+      organic_loam: { name: "Organic Loam / Garden", swell: 20, density: 1.05 },
+      clay: { name: "Standard Dense Clay", swell: 30, density: 1.25 },
+      heavy_wet_clay: { name: "Heavy Wet Clay", swell: 35, density: 1.45 }
+    };
+
+    const MOISTURE_MULTIPLIERS = {
+      dry: 0.92,
+      damp: 1.00,
+      saturated: 1.22
+    };
+
+    // State
+    let zones = [
+      { id: 1, name: "Patio Area", shape: "rectangle", length: 20, width: 15, baseDepth: 6, slopeDrop: 2 }
+    ];
+
+    const PRESETS = [
+      {
+        name: "Standard Patio Excavation (20' x 15' Clay Soil)",
+        zones: [
+          { id: 1, name: "Patio Area", shape: "rectangle", length: 20, width: 15, baseDepth: 6, slopeDrop: 2 }
+        ],
+        soilType: "clay",
+        moisture: "damp",
+        swellOverride: "",
+        density: 1.25,
+        wheelbarrowCap: "6",
+        wheelbarrowMaxLbs: 300,
+        pickupCap: 1000,
+        dumpsterCap: 10,
+        crewSize: 2
+      },
+      {
+        name: "Lawn Sod Stripping & Regrading (50' x 30' Topsoil)",
+        zones: [
+          { id: 1, name: "Front Lawn", shape: "rectangle", length: 50, width: 30, baseDepth: 3, slopeDrop: 4 }
+        ],
+        soilType: "topsoil",
+        moisture: "damp",
+        swellOverride: 20,
+        density: 1.10,
+        wheelbarrowCap: "6",
+        wheelbarrowMaxLbs: 300,
+        pickupCap: 2000,
+        dumpsterCap: 15,
+        crewSize: 3
+      },
+      {
+        name: "Tight-Access Walkway Trench & Patio (Multi-Zone Wet Clay)",
+        zones: [
+          { id: 1, name: "Walkway Trench", shape: "trench", length: 30, width: 4, baseDepth: 8, slopeDrop: 0 },
+          { id: 2, name: "Rear Patio", shape: "rectangle", length: 12, width: 10, baseDepth: 10, slopeDrop: 3 }
+        ],
+        soilType: "heavy_wet_clay",
+        moisture: "saturated",
+        swellOverride: 40,
+        density: 1.45,
+        wheelbarrowCap: "4.5",
+        wheelbarrowMaxLbs: 250,
+        pickupCap: 3500,
+        dumpsterCap: 20,
+        crewSize: 1
+      }
+    ];
+
+    // DOM Elements
+    const zonesBody = document.getElementById("zonesBody");
+    const addZoneBtn = document.getElementById("addZoneBtn");
+    const totalAreaDisp = document.getElementById("totalAreaDisp");
+    const totalInSituDisp = document.getElementById("totalInSituDisp");
+    const totalInSituCuFtDisp = document.getElementById("totalInSituCuFtDisp");
+    const avgDepthDisp = document.getElementById("avgDepthDisp");
+
+    const soilTypeSelect = document.getElementById("soilType");
+    const moistureStateSelect = document.getElementById("moistureState");
+    const swellOverrideInput = document.getElementById("swellOverride");
+    const customDensityInput = document.getElementById("customDensity");
+    const swellBadge = document.getElementById("swellBadge");
+    const looseVolumeDisp = document.getElementById("looseVolumeDisp");
+    const totalWeightTonsDisp = document.getElementById("totalWeightTonsDisp");
+    const totalWeightLbsDisp = document.getElementById("totalWeightLbsDisp");
+    const wetDensityDisp = document.getElementById("wetDensityDisp");
+
+    const slopeSelectZone = document.getElementById("slopeSelectZone");
+    const highPointCutInput = document.getElementById("highPointCut");
+    const lowPointCutInput = document.getElementById("lowPointCut");
+    const runLengthInput = document.getElementById("runLength");
+    const calculatedPitchDisp = document.getElementById("calculatedPitchDisp");
+    const calculatedAngleDisp = document.getElementById("calculatedAngleDisp");
+    const cutProfileAreaDisp = document.getElementById("cutProfileAreaDisp");
+    const safetyAlertBadge = document.getElementById("safetyAlertBadge");
+    const slopeSvg = document.getElementById("slopeSvg");
+
+    const wheelbarrowCapSelect = document.getElementById("wheelbarrowCap");
+    const wheelbarrowPayloadInput = document.getElementById("wheelbarrowPayload");
+    const pickupRatingSelect = document.getElementById("pickupRating");
+    const dumpsterTargetSelect = document.getElementById("dumpsterTarget");
+    const crewSizeSelect = document.getElementById("crewSize");
+
+    const wheelbarrowTripsDisp = document.getElementById("wheelbarrowTripsDisp");
+    const wheelbarrowDetailDisp = document.getElementById("wheelbarrowDetailDisp");
+    const pickupTripsDisp = document.getElementById("pickupTripsDisp");
+    const pickupDetailDisp = document.getElementById("pickupDetailDisp");
+    const dumpsterStatusDisp = document.getElementById("dumpsterStatusDisp");
+    const dumpsterDetailDisp = document.getElementById("dumpsterDetailDisp");
+    const laborHoursDisp = document.getElementById("laborHoursDisp");
+    const laborDetailDisp = document.getElementById("laborDetailDisp");
+    const advisoryText = document.getElementById("advisoryText");
+
+    const copySummaryBtn = document.getElementById("copySummaryBtn");
+    const exportCsvBtn = document.getElementById("exportCsvBtn");
+    const exportJsonBtn = document.getElementById("exportJsonBtn");
+    const printBtn = document.getElementById("printBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const proMessage = document.getElementById("proMessage");
+
+    // Initialize
+    function init() {
+      loadState();
+      bindEvents();
+      renderZonesTable();
+      calculateAll();
+    }
+
+    function saveState() {
+      try {
+        const data = {
+          zones,
+          soilType: soilTypeSelect.value,
+          moistureState: moistureStateSelect.value,
+          swellOverride: swellOverrideInput.value,
+          customDensity: customDensityInput.value
+        };
+        localStorage.setItem("yard_excavation_data", JSON.stringify(data));
+      } catch (e) {}
+    }
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem("yard_excavation_data");
+        if (saved) {
+          const data = JSON.parse(saved);
+          if (Array.isArray(data.zones) && data.zones.length > 0) {
+            zones = data.zones;
+          }
+          if (data.soilType && SOIL_PROFILES[data.soilType]) soilTypeSelect.value = data.soilType;
+          if (data.moistureState && MOISTURE_MULTIPLIERS[data.moistureState]) moistureStateSelect.value = data.moistureState;
+          if (data.swellOverride !== undefined) swellOverrideInput.value = data.swellOverride;
+          if (data.customDensity) customDensityInput.value = data.customDensity;
+        }
+      } catch (e) {}
+    }
+
+    function bindEvents() {
+      addZoneBtn.addEventListener("click", () => {
+        const newId = zones.length ? Math.max(...zones.map(z => z.id)) + 1 : 1;
+        zones.push({
+          id: newId,
+          name: "Zone " + newId,
+          shape: "rectangle",
+          length: 10,
+          width: 10,
+          baseDepth: 6,
+          slopeDrop: 0
+        });
+        renderZonesTable();
+        calculateAll();
+      });
+
+      soilTypeSelect.addEventListener("change", () => {
+        const preset = SOIL_PROFILES[soilTypeSelect.value];
+        if (preset) {
+          customDensityInput.value = preset.density.toFixed(2);
+          if (!swellOverrideInput.value) {
+            swellBadge.textContent = "+" + preset.swell + "% Swell";
+          }
+        }
+        calculateAll();
+      });
+
+      moistureStateSelect.addEventListener("change", calculateAll);
+      swellOverrideInput.addEventListener("input", calculateAll);
+      customDensityInput.addEventListener("input", calculateAll);
+
+      slopeSelectZone.addEventListener("change", (e) => {
+        const selZone = zones.find(z => z.id === parseInt(e.target.value));
+        if (selZone) {
+          highPointCutInput.value = selZone.baseDepth;
+          lowPointCutInput.value = (parseFloat(selZone.baseDepth) + parseFloat(selZone.slopeDrop)).toFixed(1);
+          runLengthInput.value = selZone.length;
+          calculateAll();
+        }
+      });
+
+      highPointCutInput.addEventListener("input", calculateAll);
+      lowPointCutInput.addEventListener("input", calculateAll);
+      runLengthInput.addEventListener("input", calculateAll);
+
+      wheelbarrowCapSelect.addEventListener("change", calculateAll);
+      wheelbarrowPayloadInput.addEventListener("input", calculateAll);
+      pickupRatingSelect.addEventListener("change", calculateAll);
+      dumpsterTargetSelect.addEventListener("change", calculateAll);
+      crewSizeSelect.addEventListener("change", calculateAll);
+
+      document.querySelectorAll(".preset-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const idx = parseInt(e.currentTarget.dataset.preset);
+          loadPreset(PRESETS[idx], idx);
+        });
+      });
+
+      copySummaryBtn.addEventListener("click", copyJobSummary);
+      exportCsvBtn.addEventListener("click", exportCSV);
+      exportJsonBtn.addEventListener("click", exportJSON);
+      printBtn.addEventListener("click", printSummary);
+      resetBtn.addEventListener("click", () => loadPreset(PRESETS[0], 0));
+    }
+
+    function showProGuard(actionName) {
+      if (!PRO) {
+        proMessage.innerHTML = `Available in the full version. <a href="${PRO_LINK}" target="_blank" rel="noopener">Upgrade to Pro</a>`;
+        proMessage.style.display = "block";
+        setTimeout(() => { proMessage.style.display = "none"; }, 5000);
+        return false;
+      }
+      return true;
+    }
+
+    function renderZonesTable() {
+      zonesBody.innerHTML = "";
+      slopeSelectZone.innerHTML = "";
+
+      zones.forEach((z) => {
+        // Table row
+        const tr = document.createElement("tr");
+
+        const len = Math.max(0, parseFloat(z.length) || 0);
+        const wid = Math.max(0, parseFloat(z.width) || 0);
+        const dep = Math.max(0, parseFloat(z.baseDepth) || 0);
+        const slp = Math.max(0, parseFloat(z.slopeDrop) || 0);
+        const area = len * wid;
+        const avgD = dep + (slp / 2);
+        const cuFt = area * (avgD / 12);
+        const cuYd = cuFt / 27;
+
+        tr.innerHTML = `
+          <td><input type="text" class="zone-name" data-id="${z.id}" value="${z.name}"></td>
+          <td>
+            <select class="zone-shape" data-id="${z.id}">
+              <option value="rectangle" ${z.shape === 'rectangle' ? 'selected' : ''}>Rect</option>
+              <option value="trench" ${z.shape === 'trench' ? 'selected' : ''}>Trench</option>
+              <option value="l_shape" ${z.shape === 'l_shape' ? 'selected' : ''}>L-Shape</option>
+            </select>
+          </td>
+          <td><input type="number" step="0.5" min="0.1" class="zone-len num-input" data-id="${z.id}" value="${z.length}"></td>
+          <td><input type="number" step="0.5" min="0.1" class="zone-wid num-input" data-id="${z.id}" value="${z.width}"></td>
+          <td><input type="number" step="0.5" min="0" class="zone-dep num-input" data-id="${z.id}" value="${z.baseDepth}"></td>
+          <td><input type="number" step="0.5" min="0" class="zone-slope num-input" data-id="${z.id}" value="${z.slopeDrop}"></td>
+          <td style="font-weight:600;">${area.toFixed(0)}</td>
+          <td style="font-weight:600;">${cuYd.toFixed(2)}</td>
+          <td>
+            ${zones.length > 1 ? `<button type="button" class="table-btn delete-zone-btn" data-id="${z.id}" style="color:var(--danger); border-color:var(--danger);">&times;</button>` : ''}
+          </td>
+        `;
+        zonesBody.appendChild(tr);
+
+        // Populate slope selector
+        const opt = document.createElement("option");
+        opt.value = z.id;
+        opt.textContent = `${z.name} (${z.length}' run)`;
+        slopeSelectZone.appendChild(opt);
+      });
+
+      // Bind dynamic inputs inside table
+      zonesBody.querySelectorAll("input, select").forEach(el => {
+        el.addEventListener("input", handleZoneInputChange);
+      });
+
+      zonesBody.querySelectorAll(".delete-zone-btn").forEach(el => {
+        el.addEventListener("click", (e) => {
+          const id = parseInt(e.currentTarget.dataset.id);
+          zones = zones.filter(item => item.id !== id);
+          renderZonesTable();
+          calculateAll();
+        });
+      });
+    }
+
+    function handleZoneInputChange(e) {
+      const target = e.target;
+      const id = parseInt(target.dataset.id);
+      const zone = zones.find(z => z.id === id);
+      if (!zone) return;
+
+      if (target.classList.contains("zone-name")) zone.name = target.value || "Zone " + id;
+      if (target.classList.contains("zone-shape")) zone.shape = target.value;
+      if (target.classList.contains("zone-len")) zone.length = Math.max(0, parseFloat(target.value) || 0);
+      if (target.classList.contains("zone-wid")) zone.width = Math.max(0, parseFloat(target.value) || 0);
+      if (target.classList.contains("zone-dep")) zone.baseDepth = Math.max(0, parseFloat(target.value) || 0);
+      if (target.classList.contains("zone-slope")) zone.slopeDrop = Math.max(0, parseFloat(target.value) || 0);
+
+      // Update row calcs without total re-render to keep focus
+      const row = target.closest("tr");
+      const area = zone.length * zone.width;
+      const avgD = zone.baseDepth + (zone.slopeDrop / 2);
+      const cuFt = area * (avgD / 12);
+      const cuYd = cuFt / 27;
+      row.children[6].textContent = area.toFixed(0);
+      row.children[7].textContent = cuYd.toFixed(2);
+
+      calculateAll();
+    }
+
+    function loadPreset(p, presetIdx) {
+      zones = JSON.parse(JSON.stringify(p.zones));
+      soilTypeSelect.value = p.soilType;
+      moistureStateSelect.value = p.moisture;
+      swellOverrideInput.value = p.swellOverride || "";
+      customDensityInput.value = p.density.toFixed(2);
+      wheelbarrowCapSelect.value = p.wheelbarrowCap;
+      wheelbarrowPayloadInput.value = p.wheelbarrowMaxLbs;
+      pickupRatingSelect.value = p.pickupCap;
+      dumpsterTargetSelect.value = p.dumpsterCap;
+      crewSizeSelect.value = p.crewSize;
+
+      if (presetIdx !== undefined) {
+        document.querySelectorAll(".preset-btn").forEach((btn, i) => {
+          btn.classList.toggle("active", i === presetIdx);
+        });
+      }
+
+      renderZonesTable();
+
+      // Setup visualizer to match zone 1
+      if (zones.length > 0) {
+        highPointCutInput.value = zones[0].baseDepth;
+        lowPointCutInput.value = (parseFloat(zones[0].baseDepth) + parseFloat(zones[0].slopeDrop)).toFixed(1);
+        runLengthInput.value = zones[0].length;
+      }
+      calculateAll();
+    }
+
+    function calculateAll() {
+      // 1. Zone Totals
+      let totalArea = 0;
+      let totalInSituCuFt = 0;
+      let totalWeightedDepth = 0;
+
+      zones.forEach(z => {
+        const len = Math.max(0, parseFloat(z.length) || 0);
+        const wid = Math.max(0, parseFloat(z.width) || 0);
+        const dep = Math.max(0, parseFloat(z.baseDepth) || 0);
+        const slp = Math.max(0, parseFloat(z.slopeDrop) || 0);
+
+        const area = len * wid;
+        const avgD = dep + (slp / 2);
+        const cuFt = area * (avgD / 12);
+
+        totalArea += area;
+        totalInSituCuFt += cuFt;
+        totalWeightedDepth += avgD * area;
+      });
+
+      const totalInSituCuYd = totalInSituCuFt / 27;
+      const combinedAvgDepth = totalArea > 0 ? (totalWeightedDepth / totalArea) : 0;
+
+      totalAreaDisp.textContent = `${Math.round(totalArea)} sq ft`;
+      totalInSituDisp.textContent = `${totalInSituCuYd.toFixed(2)} cu yd`;
+      totalInSituCuFtDisp.textContent = `${Math.round(totalInSituCuFt)} cu ft`;
+      avgDepthDisp.textContent = `${combinedAvgDepth.toFixed(1)} in`;
+
+      // 2. Soil Properties & Weight
+      const soilProfile = SOIL_PROFILES[soilTypeSelect.value] || SOIL_PROFILES.clay;
+      let swellPercent = parseFloat(swellOverrideInput.value);
+      if (isNaN(swellPercent) || swellPercent < 0) {
+        swellPercent = soilProfile.swell;
+        swellBadge.textContent = `+${swellPercent}% Swell`;
+      } else {
+        swellBadge.textContent = `+${swellPercent}% (Custom)`;
+      }
+
+      let dryDensityTons = parseFloat(customDensityInput.value);
+      if (isNaN(dryDensityTons) || dryDensityTons <= 0) {
+        dryDensityTons = soilProfile.density;
+      }
+      const moistureMult = MOISTURE_MULTIPLIERS[moistureStateSelect.value] || 1.0;
+      const wetDensityTons = dryDensityTons * moistureMult;
+      const wetDensityLbsCuYd = wetDensityTons * 2000;
+
+      // Loose volume swell
+      const looseVolumeCuYd = totalInSituCuYd * (1 + (swellPercent / 100));
+      // In excavation weight: total dry tonnage of in-situ earth stays the same, moisture adds mass
+      const totalWeightTons = totalInSituCuYd * wetDensityTons;
+      const totalWeightLbs = totalWeightTons * 2000;
+
+      looseVolumeDisp.textContent = `${looseVolumeCuYd.toFixed(2)} cu yd`;
+      totalWeightTonsDisp.textContent = `${totalWeightTons.toFixed(2)} tons`;
+      totalWeightLbsDisp.textContent = `${Math.round(totalWeightLbs).toLocaleString()} lbs`;
+      wetDensityDisp.textContent = `${Math.round(wetDensityLbsCuYd)} lbs/yd³`;
+
+      // 3. Slope Profile & Safety
+      const highCut = Math.max(0, parseFloat(highPointCutInput.value) || 0);
+      const lowCut = Math.max(0, parseFloat(lowPointCutInput.value) || 0);
+      const runFt = Math.max(0.1, parseFloat(runLengthInput.value) || 1);
+
+      const dropDiffInches = Math.abs(lowCut - highCut);
+      const pitchPct = (dropDiffInches / (runFt * 12)) * 100;
+      const pitchAngleDeg = Math.atan(dropDiffInches / (runFt * 12)) * (180 / Math.PI);
+      const profileAvgCutFt = ((highCut + lowCut) / 2) / 12;
+      const cutProfileAreaSqFt = profileAvgCutFt * runFt;
+
+      calculatedPitchDisp.textContent = `${pitchPct.toFixed(1)}%`;
+      calculatedAngleDisp.textContent = `${pitchAngleDeg.toFixed(1)}°`;
+      cutProfileAreaDisp.textContent = `${cutProfileAreaSqFt.toFixed(1)} sq ft`;
+
+      const maxCutDepth = Math.max(highCut, lowCut);
+      if (maxCutDepth >= 48) {
+        safetyAlertBadge.className = "badge badge-danger";
+        safetyAlertBadge.textContent = `OSHA Trench Alert (Cut ≥ 4ft: Shoring / Benching required)`;
+      } else {
+        safetyAlertBadge.className = "badge badge-success";
+        safetyAlertBadge.textContent = `OSHA Compliant (<48" Depth)`;
+      }
+
+      renderSlopeSvg(highCut, lowCut, runFt);
+
+      // 4. Logistics & Equipment
+      const wbVolumeCapCuFt = Math.max(0.1, parseFloat(wheelbarrowCapSelect.value) || 6);
+      const wbMaxLbs = Math.max(1, parseFloat(wheelbarrowPayloadInput.value) || 300);
+      const wbWorkingVolCuFt = wbVolumeCapCuFt * 0.75; // Practical heaped working level
+      const weightPerLooseCuFt = totalWeightLbs / (looseVolumeCuYd * 27 || 1);
+
+      // Wheelbarrow trips limited by either volume or payload weight
+      const tripsByVolume = (looseVolumeCuYd * 27) / wbWorkingVolCuFt;
+      const tripsByWeight = totalWeightLbs / wbMaxLbs;
+      const actualWbTrips = Math.ceil(Math.max(tripsByVolume, tripsByWeight));
+
+      wheelbarrowTripsDisp.textContent = actualWbTrips;
+      if (tripsByWeight > tripsByVolume) {
+        wheelbarrowDetailDisp.innerHTML = `<span class="text-warning">Weight-capped</span> (~${Math.round(wbWorkingVolCuFt * weightPerLooseCuFt)} lbs/load)`;
+      } else {
+        wheelbarrowDetailDisp.textContent = "Volume-capped working loads";
+      }
+
+      // Pickup Truck
+      const pickupPayloadCap = Math.max(1, parseFloat(pickupRatingSelect.value) || 1000);
+      // Standard 6.5ft pickup bed volume is roughly 2.0 cu yd, but weight limits always strike first with soil!
+      const pickupTrips = Math.ceil(totalWeightLbs / pickupPayloadCap);
+      pickupTripsDisp.textContent = pickupTrips;
+      pickupDetailDisp.textContent = `Weight capped at ${pickupPayloadCap} lbs/load`;
+
+      // Dumpster Check
+      const dumpsterSelected = Math.max(1, parseFloat(dumpsterTargetSelect.value) || 10);
+      const volumeOverflow = looseVolumeCuYd - dumpsterSelected;
+      // Standard dumpsters have road weight restrictions (usually 4 - 5 tons max for clean dirt)
+      const dumpWeightLimitTons = 5.0; // standard 10-yard dirt can payload
+
+      if (volumeOverflow > 0.05) {
+        dumpsterStatusDisp.innerHTML = `<span class="text-danger">Overflow</span>`;
+        dumpsterDetailDisp.innerHTML = `<span class="text-danger">+${volumeOverflow.toFixed(1)} cu yd over ${dumpsterSelected}yd capacity</span>`;
+      } else if (totalWeightTons > dumpWeightLimitTons && dumpsterSelected <= 10) {
+        dumpsterStatusDisp.innerHTML = `<span class="text-warning">Heavy Alert</span>`;
+        dumpsterDetailDisp.innerHTML = `<span class="text-warning">${totalWeightTons.toFixed(1)}t exceeds standard 5t dirt can weight limit</span>`;
+      } else {
+        dumpsterStatusDisp.innerHTML = `<span class="text-success">Fits Volume</span>`;
+        dumpsterDetailDisp.textContent = `${looseVolumeCuYd.toFixed(1)} of ${dumpsterSelected} cu yd filled`;
+      }
+
+      // Labor hours: based on 1.5 cu yd loose soil shoveled/moved per crew member per hour
+      const crewCount = Math.max(1, parseInt(crewSizeSelect.value) || 1);
+      const hourlyCrewRate = 1.5 * crewCount;
+      const totalLaborHours = (looseVolumeCuYd / hourlyCrewRate).toFixed(1);
+      laborHoursDisp.textContent = `${totalLaborHours} hrs`;
+      laborDetailDisp.textContent = `${crewCount} person crew (~${(looseVolumeCuYd / 1.5).toFixed(1)} total man-hours)`;
+
+      // Dynamic "What this means / What to do next" guidance
+      generateAdvisory(looseVolumeCuYd, totalInSituCuYd, swellPercent, totalWeightTons, actualWbTrips, dumpsterSelected, volumeOverflow);
+      if (typeof calculateScenarioComparison === "function") calculateScenarioComparison();
+      if (typeof updateWorksiteReport === "function") updateWorksiteReport();
+      saveState();
+    }
+
+    function renderSlopeSvg(highInches, lowInches, runFt) {
+      const hCut = Math.max(0, highInches);
+      const lCut = Math.max(0, lowInches);
+      const rFt = Math.max(0.1, runFt);
+
+      const padX = 45;
+      const padY = 30;
+      const width = 500 - (padX * 2);
+      const height = 200 - (padY * 2);
+
+      const maxD = Math.max(hCut, lCut, 12);
+      const scaleY = (height * 0.65) / maxD;
+
+      const groundY = padY + 25;
+      const highCutY = groundY + (hCut * scaleY);
+      const lowCutY = groundY + (lCut * scaleY);
+
+      const x1 = padX;
+      const x2 = padX + width;
+
+      slopeSvg.innerHTML = `
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--border-focus)" />
+          </marker>
+        </defs>
+        <!-- Natural Ground Line -->
+        <line x1="${x1 - 10}" y1="${groundY}" x2="${x2 + 10}" y2="${groundY}" stroke="var(--text-muted)" stroke-width="2" stroke-dasharray="4" />
+        <text x="${x1}" y="${groundY - 10}" fill="var(--text-muted)" font-size="11" font-weight="600">Existing Surface (Grade)</text>
+
+        <!-- Excavated Cut Polygon -->
+        <polygon points="${x1},${groundY} ${x2},${groundY} ${x2},${lowCutY} ${x1},${highCutY}" fill="rgba(180, 83, 9, 0.2)" stroke="var(--accent-earth)" stroke-width="2.5" />
+
+        <!-- Subgrade bed line -->
+        <line x1="${x1}" y1="${highCutY}" x2="${x2}" y2="${lowCutY}" stroke="var(--accent-earth)" stroke-width="3" />
+
+        <!-- Left High Cut Measure -->
+        <line x1="${x1}" y1="${groundY}" x2="${x1}" y2="${highCutY}" stroke="var(--primary)" stroke-width="2" />
+        <text x="${x1 + 6}" y="${groundY + ((highCutY - groundY) / 2) + 4}" fill="var(--text)" font-size="11" font-weight="700">${hCut}" cut</text>
+
+        <!-- Right Low Cut Measure -->
+        <line x1="${x2}" y1="${groundY}" x2="${x2}" y2="${lowCutY}" stroke="var(--primary)" stroke-width="2" />
+        <text x="${x2 - 50}" y="${groundY + ((lowCutY - groundY) / 2) + 4}" fill="var(--text)" font-size="11" font-weight="700">${lCut}" cut</text>
+
+        <!-- Slope Indicator -->
+        <path d="M ${x1 + 80} ${groundY + 15} L ${x2 - 80} ${lowCutY - 10}" stroke="var(--border-focus)" stroke-width="1.5" marker-end="url(#arrow)" />
+        <text x="250" y="${highCutY + 30}" text-anchor="middle" fill="var(--text-muted)" font-size="11">Total Run: ${rFt} ft</text>
+      `;
+    }
+
+    function generateAdvisory(looseYds, inSituYds, swell, tons, trips, dumpsterSize, overflow) {
+      if (inSituYds <= 0) {
+        advisoryText.innerHTML = `<p class="text-danger"><strong>Input Required:</strong> Enter valid positive dimensions (Length, Width, Base Depth) in the excavation zones table above to calculate earth volume and hauling requirements.</p>`;
+        return;
+      }
+
+      let adviceHtml = "";
+
+      // Swell realization
+      adviceHtml += `<p><strong>Expansion Warning:</strong> Digging expands your compacted ground soil by <strong>${swell}%</strong>. Your in-situ volume of <strong>${inSituYds.toFixed(1)} yd³</strong> will expand into <strong>${looseYds.toFixed(1)} loose cubic yards</strong> once fluffed into a pile or loaded onto wheels.</p>`;
+
+      // Hauling strategy
+      if (trips > 60) {
+        adviceHtml += `<p><strong>Equipment Recommendation:</strong> Manual wheelbarrowing requires <strong>${trips} trips</strong> and roughly <strong>${tons.toFixed(1)} tons</strong> of heavy shovel labor. Renting a <em>walk-behind mini skid steer (e.g. Toro Dingo or Bobcat MT)</em> will save over 70% of physical labor and prevent lawn rutting.</p>`;
+      } else {
+        adviceHtml += `<p><strong>DIY Feasibility:</strong> At ${trips} wheelbarrow loads, this excavation can be completed with a standard crew in a single weekend. Use pneumatic tires inflated to 30 PSI to handle the 300 lb payload without tipping.</p>`;
+      }
+
+      // Disposal recommendations
+      if (overflow > 0.05) {
+        adviceHtml += `<p style="color:var(--danger); font-weight:600;"><strong>Dumpster Overflow:</strong> Your chosen ${dumpsterSize}-yard roll-off container is too small by ${overflow.toFixed(1)} yards. Step up to a larger container or book a dedicated clean-dirt tandem dump truck haul.</p>`;
+      } else if (tons > 6) {
+        adviceHtml += `<p><strong>Hauling Weight Limit Alert:</strong> Haulers will not allow large 20 or 30-yard dumpsters to be completely filled with dirt due to Department of Transportation (DOT) truck highway limits (usually 5 to 10 tons max payload). Ask the disposal vendor specifically for a <em>"Clean Dirt Lowboy (10-yard flat rate container)"</em> to avoid heavy surcharge fines.</p>`;
+      }
+
+      advisoryText.innerHTML = adviceHtml;
+    }
+
+    function copyJobSummary() {
+      const summary = `YARD EXCAVATION & DIRT REMOVAL REPORT
+-----------------------------------------
+Total Cut Area: ${totalAreaDisp.textContent}
+In-Situ Ground Volume: ${totalInSituDisp.textContent} (${totalInSituCuFtDisp.textContent})
+Soil Swell Factor: ${swellBadge.textContent}
+Expanded Loose Volume: ${looseVolumeDisp.textContent}
+Total Soil Weight: ${totalWeightTonsDisp.textContent} (${totalWeightLbsDisp.textContent})
+Wheelbarrow Trips Required: ${wheelbarrowTripsDisp.textContent}
+Pickup Truck Trips (1/2 to 1-ton): ${pickupTripsDisp.textContent}
+Manual Crew Time Estimate: ${laborHoursDisp.textContent}
+Dumpster Status: ${dumpsterStatusDisp.textContent} - ${dumpsterDetailDisp.textContent}
+Note: Estimate only - verify with a qualified contractor before excavation.`;
+
+      navigator.clipboard.writeText(summary).then(() => {
+        const oldText = copySummaryBtn.textContent;
+        copySummaryBtn.textContent = "Copied to Clipboard!";
+        setTimeout(() => copySummaryBtn.textContent = oldText, 2000);
+      }).catch(() => {
+        alert("Unable to copy to clipboard.");
+      });
+    }
+
+    function exportCSV() {
+      if (!showProGuard("Exporting CSV")) return;
+
+      let csv = "Zone,Shape,Length (ft),Width (ft),Base Depth (in),Slope Drop (in),Area (sq ft),In-Situ (cu yd)\n";
+      zones.forEach(z => {
+        const area = z.length * z.width;
+        const cuYd = (area * (z.baseDepth + (z.slopeDrop / 2)) / 12) / 27;
+        csv += `"${z.name}","${z.shape}",${z.length},${z.width},${z.baseDepth},${z.slopeDrop},${area.toFixed(1)},${cuYd.toFixed(2)}\n`;
+      });
+      csv += `\nTotal In-Situ (cu yd),${totalInSituDisp.textContent}\n`;
+      csv += `Expanded Loose Volume (cu yd),${looseVolumeDisp.textContent}\n`;
+      csv += `Total Weight (tons),${totalWeightTonsDisp.textContent}\n`;
+      csv += `Wheelbarrow Trips,${wheelbarrowTripsDisp.textContent}\n`;
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "yard-excavation-estimate.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportJSON() {
+      if (!showProGuard("Exporting JSON")) return;
+
+      const data = {
+        zones,
+        soil: {
+          type: soilTypeSelect.value,
+          moisture: moistureStateSelect.value,
+          swellPercentage: swellBadge.textContent,
+          dryDensityTonsCuYd: customDensityInput.value
+        },
+        calculatedResults: {
+          inSituVolumeCuYd: totalInSituDisp.textContent,
+          expandedVolumeCuYd: looseVolumeDisp.textContent,
+          totalWeightTons: totalWeightTonsDisp.textContent,
+          wheelbarrowTrips: wheelbarrowTripsDisp.textContent,
+          pickupTrips: pickupTripsDisp.textContent,
+          laborHours: laborHoursDisp.textContent
+        }
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "yard-excavation-plan.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function printSummary() {
+      if (!showProGuard("Printing reports")) return;
+      window.print();
+    }
+
+    // Run initialization
+    init();
+(function() {
+  const rdVolume = document.getElementById("rdVolume");
+  const rdWeight = document.getElementById("rdWeight");
+  const rdDepth = document.getElementById("rdDepth");
+  const rdSoil = document.getElementById("rdSoil");
+  const rdMoisture = document.getElementById("rdMoisture");
+
+  const rdMaxAreaDisp = document.getElementById("rdMaxAreaDisp");
+  const rdLimitingFactorDisp = document.getElementById("rdLimitingFactorDisp");
+  const rdSquareDimDisp = document.getElementById("rdSquareDimDisp");
+  const rdRectDimDisp = document.getElementById("rdRectDimDisp");
+  const rdMaxVolDisp = document.getElementById("rdMaxVolDisp");
+  const rdLimitingBadge = document.getElementById("rdLimitingBadge");
+
+  if (!rdVolume || !rdWeight || !rdDepth || !rdSoil || !rdMoisture) return;
+
+  const RD_MOISTURE_MAP = { dry: 0.92, damp: 1.1343, saturated: 1.22 };
+
+  function calculateReverseDumpster() {
+    const volLimit = Math.max(0.1, parseFloat(rdVolume.value) || 0);
+    const weightLimit = Math.max(0.01, parseFloat(rdWeight.value) || 0);
+    const depthInches = Math.max(0.1, parseFloat(rdDepth.value) || 0);
+    const soilKey = rdSoil.value;
+    const moistKey = rdMoisture.value;
+
+    const profile = SOIL_PROFILES[soilKey] || SOIL_PROFILES.heavy_wet_clay;
+    const moistMult = RD_MOISTURE_MAP[moistKey] || 1.0;
+    const wetDensityTons = profile.density * moistMult;
+    const swellPct = profile.swell;
+
+    const maxInSituCuYdVol = volLimit / (1 + (swellPct / 100));
+    const maxInSituCuYdWeight = weightLimit / wetDensityTons;
+
+    const isWeightLimited = maxInSituCuYdWeight < maxInSituCuYdVol;
+    const safeInSituCuYd = Math.min(maxInSituCuYdVol, maxInSituCuYdWeight);
+
+    const safeInSituCuFt = safeInSituCuYd * 27;
+    const depthFt = depthInches / 12;
+    const maxAreaSqFt = safeInSituCuFt / depthFt;
+
+    const sqSide = Math.sqrt(maxAreaSqFt);
+    const rectL = Math.sqrt(maxAreaSqFt * 2);
+    const rectW = maxAreaSqFt / rectL;
+
+    rdMaxAreaDisp.textContent = `${Math.round(maxAreaSqFt)} sq ft`;
+    rdSquareDimDisp.textContent = `${sqSide.toFixed(1)}' × ${sqSide.toFixed(1)}'`;
+    rdRectDimDisp.textContent = `${rectL.toFixed(1)}' × ${rectW.toFixed(1)}'`;
+    rdMaxVolDisp.textContent = `${safeInSituCuYd.toFixed(2)} in-situ yd³ (${(safeInSituCuYd * (1 + swellPct / 100)).toFixed(2)} loose)`;
+
+    if (isWeightLimited) {
+      rdLimitingBadge.className = "badge badge-warning";
+      rdLimitingBadge.textContent = "Weight Limited";
+      rdLimitingFactorDisp.textContent = `Capped by ${weightLimit.toFixed(1)}t payload (Vol allows ${Math.round(maxInSituCuYdVol * 27 / depthFt)} sq ft)`;
+    } else {
+      rdLimitingBadge.className = "badge badge-success";
+      rdLimitingBadge.textContent = "Volume Limited";
+      rdLimitingFactorDisp.textContent = `Capped by ${volLimit.toFixed(1)} yd³ vol (Weight allows ${Math.round(maxInSituCuYdWeight * 27 / depthFt)} sq ft)`;
+    }
+  }
+
+  [rdVolume, rdWeight, rdDepth, rdSoil, rdMoisture].forEach(el => {
+    el.addEventListener("input", calculateReverseDumpster);
+    el.addEventListener("change", calculateReverseDumpster);
+  });
+
+  calculateReverseDumpster();
+})();
+function calculateScenarioComparison() {
+  const proBanner = document.getElementById("cmpProBanner");
+  if (!proBanner) return;
+
+  if (!PRO) {
+    proBanner.style.display = "block";
+    proBanner.innerHTML = `Available in the full version. <a href="${PRO_LINK}" target="_blank" rel="noopener">Upgrade to Pro</a>`;
+    return;
+  }
+  proBanner.style.display = "none";
+
+  let vol = 15;
+  const looseVolEl = document.getElementById("looseVolumeDisp");
+  if (looseVolEl) {
+    const parsed = parseFloat(looseVolEl.textContent);
+    if (!isNaN(parsed) && parsed > 0) vol = parsed;
+  }
+
+  const sA_rate = Math.max(0.1, parseFloat(document.getElementById("scA_shovelRate").value) || 0.75);
+  const sA_truckFee = Math.max(0, parseFloat(document.getElementById("scA_truckFee").value) || 0);
+  const sA_wage = Math.max(0, parseFloat(document.getElementById("scA_laborWage").value) || 0);
+
+  const sB_rate = Math.max(0.1, parseFloat(document.getElementById("scB_excavRate").value) || 7.5);
+  const sB_rent = Math.max(0, parseFloat(document.getElementById("scB_rentalCost").value) || 0);
+  const sB_dumpster = Math.max(0, parseFloat(document.getElementById("scB_dumpsterCost").value) || 0);
+
+  const timeA = vol / sA_rate;
+  const daysA = timeA / 8;
+  const pickupTrips = Math.ceil(vol / 1.0);
+  const equipCostA = pickupTrips * sA_truckFee;
+  const laborCostA = timeA * sA_wage;
+  const totalCostA = equipCostA + laborCostA;
+
+  const timeB = vol / sB_rate;
+  const daysB = timeB / 8;
+  const dumpstersNeeded = Math.max(1, Math.ceil(vol / 20));
+  const rentalDays = Math.max(1, Math.ceil(daysB));
+  const equipCostB = (rentalDays * sB_rent) + (dumpstersNeeded * sB_dumpster);
+  const laborCostB = timeB * sA_wage;
+  const totalCostB = equipCostB + laborCostB;
+
+  const timeSaved = Math.max(0, timeA - timeB);
+  const netVariance = totalCostA - totalCostB;
+
+  document.getElementById("cmpTimeA").textContent = `${timeA.toFixed(1)} hrs (${daysA.toFixed(2)} days)`;
+  document.getElementById("cmpTimeB").textContent = `${timeB.toFixed(1)} hrs (${daysB.toFixed(2)} days)`;
+  document.getElementById("cmpTimeSaved").textContent = `${timeSaved.toFixed(1)} hrs saved`;
+
+  document.getElementById("cmpEquipCostA").textContent = `$${Math.round(equipCostA).toLocaleString()}`;
+  document.getElementById("cmpEquipCostB").textContent = `$${Math.round(equipCostB).toLocaleString()}`;
+  const equipDiff = equipCostB - equipCostA;
+  document.getElementById("cmpEquipVariance").textContent = equipDiff >= 0 ? `+$${Math.round(equipDiff).toLocaleString()} equipment` : `-$${Math.round(-equipDiff).toLocaleString()} equipment`;
+
+  document.getElementById("cmpLaborCostA").textContent = `$${Math.round(laborCostA).toLocaleString()}`;
+  document.getElementById("cmpLaborCostB").textContent = `$${Math.round(laborCostB).toLocaleString()}`;
+  document.getElementById("cmpLaborVariance").textContent = `-$${Math.round(laborCostA - laborCostB).toLocaleString()} labor cost`;
+
+  document.getElementById("cmpTotalCostA").textContent = `$${Math.round(totalCostA).toLocaleString()}`;
+  document.getElementById("cmpTotalCostB").textContent = `$${Math.round(totalCostB).toLocaleString()}`;
+
+  const cmpNetEl = document.getElementById("cmpNetVariance");
+  if (netVariance >= 0) {
+    cmpNetEl.style.color = "var(--success)";
+    cmpNetEl.textContent = `$${Math.round(netVariance).toLocaleString()} net savings`;
+  } else {
+    cmpNetEl.style.color = "var(--danger)";
+    cmpNetEl.textContent = `+$${Math.round(-netVariance).toLocaleString()} net investment`;
+  }
+
+  document.getElementById("cmpSavingsBadge").textContent = `${timeSaved.toFixed(1)} hrs saved with Scenario B`;
+}
+
+["scA_shovelRate", "scA_truckFee", "scA_laborWage", "scB_excavRate", "scB_rentalCost", "scB_dumpsterCost"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener("input", calculateScenarioComparison);
+    el.addEventListener("change", calculateScenarioComparison);
+  }
+});
+
+(function() {
+  const repCustName = document.getElementById("repCustName");
+  const repSiteAddr = document.getElementById("repSiteAddr");
+  const repTargetDate = document.getElementById("repTargetDate");
+  const repNotes = document.getElementById("repNotes");
+  const exportBtn = document.getElementById("exportWorksiteReportBtn");
+  const hdrBtn = document.getElementById("hdrReportBtn");
+  const reportProMsg = document.getElementById("reportProMsg");
+
+  if (!repCustName || !exportBtn) return;
+
+  const defaultDate = new Date();
+  defaultDate.setDate(defaultDate.getDate() + 7);
+  repTargetDate.value = defaultDate.toISOString().split('T')[0];
+
+  updateWorksiteReport = function() {
+    const cust = repCustName.value.trim() || "Worksite Project";
+    const addr = repSiteAddr.value.trim() || "Unspecified Location";
+    const dateVal = repTargetDate.value || "TBD";
+    const notes = repNotes.value.trim() || "None";
+
+    document.getElementById("rHeadTitle").textContent = "PROJECT REPORT: " + cust;
+    document.getElementById("rHeadMeta").textContent = "Site: " + addr + " | Target Completion: " + dateVal;
+
+    const area = totalAreaDisp ? totalAreaDisp.textContent : "0 sq ft";
+    const inSitu = totalInSituDisp ? totalInSituDisp.textContent : "0 cu yd";
+    const looseVol = looseVolumeDisp ? looseVolumeDisp.textContent : "0 cu yd";
+    const weightTons = totalWeightTonsDisp ? totalWeightTonsDisp.textContent : "0 tons";
+    const wetDen = wetDensityDisp ? wetDensityDisp.textContent : "0 lbs/yd³";
+    const wbTrips = wheelbarrowTripsDisp ? wheelbarrowTripsDisp.textContent : "0";
+    const pickupTrips = pickupTripsDisp ? pickupTripsDisp.textContent : "0";
+    const dumpsterStatus = dumpsterStatusDisp ? (dumpsterStatusDisp.textContent + " (" + dumpsterDetailDisp.textContent + ")") : "OK";
+    const safetyText = safetyAlertBadge ? safetyAlertBadge.textContent : "OSHA Compliant";
+
+    const summaryEl = document.getElementById("rSummaryMetrics");
+    if (summaryEl) {
+      summaryEl.innerHTML = `
+        <div><strong>Total Cut Area:</strong> ${area}</div>
+        <div><strong>In-Situ Volume:</strong> ${inSitu}</div>
+        <div><strong>Loose Vol (Swell):</strong> ${looseVol}</div>
+        <div><strong>Total Wet Weight:</strong> ${weightTons}</div>
+      `;
+    }
+
+    const zoneMathEl = document.getElementById("rZoneMath");
+    if (zoneMathEl) {
+      let zoneRows = (zones || []).map(z => {
+        const a = z.length * z.width;
+        const v = (a * (z.baseDepth + (z.slopeDrop / 2)) / 12) / 27;
+        return `• ${z.name}: ${z.length}' × ${z.width}' @ ${z.baseDepth}" base depth → ${a.toFixed(0)} sq ft, ${v.toFixed(2)} yd³ in-situ`;
+      }).join("<br>");
+
+      const soilType = soilTypeSelect ? soilTypeSelect.options[soilTypeSelect.selectedIndex].text : "Clay";
+      const swellTxt = swellBadge ? swellBadge.textContent : "+30% Swell";
+      zoneMathEl.innerHTML = `
+        <div><strong>Breakdown:</strong><br>${zoneRows}</div>
+        <div style="margin-top:0.35rem;"><strong>Soil Expansion Math:</strong> ${soilType} | Density: ${wetDen} | Swell: <strong>${swellTxt}</strong></div>
+      `;
+    }
+
+    const equipEl = document.getElementById("rEquipRec");
+    if (equipEl) {
+      equipEl.innerHTML = `
+        <div><strong>Trips &amp; Equipment:</strong> Wheelbarrow Loads: <strong>${wbTrips}</strong> | Pickup Loads: <strong>${pickupTrips}</strong></div>
+        <div><strong>Container Rec:</strong> ${dumpsterStatus}</div>
+        <div><strong>Safety Level:</strong> ${safetyText}</div>
+        <div style="margin-top:0.2rem; color:var(--text-muted);"><strong>Access Notes:</strong> ${notes}</div>
+      `;
+    }
+
+    const reportSvg = document.getElementById("reportSvg");
+    if (reportSvg && slopeSvg) {
+      reportSvg.innerHTML = slopeSvg.innerHTML
+        .replace(/rgba\(180, 83, 9, 0\.2\)/g, "#e2e8f0")
+        .replace(/var\(--accent-earth\)/g, "#1e293b")
+        .replace(/var\(--primary\)/g, "#0284c7")
+        .replace(/var\(--text\)/g, "#0f172a")
+        .replace(/var\(--text-muted\)/g, "#64748b")
+        .replace(/var\(--border-focus\)/g, "#0284c7");
+    }
+  };
+
+  function handleExportReport() {
+    if (!PRO) {
+      reportProMsg.innerHTML = `Available in the full version. <a href="${PRO_LINK}" target="_blank" rel="noopener">Upgrade to Pro</a>`;
+      reportProMsg.style.display = "block";
+      setTimeout(() => { reportProMsg.style.display = "none"; }, 5000);
+      return;
+    }
+    updateWorksiteReport();
+    window.print();
+  }
+
+  [repCustName, repSiteAddr, repTargetDate, repNotes].forEach(el => {
+    el.addEventListener("input", updateWorksiteReport);
+    el.addEventListener("change", updateWorksiteReport);
+  });
+
+  exportBtn.addEventListener("click", handleExportReport);
+  if (hdrBtn) hdrBtn.addEventListener("click", handleExportReport);
+
+  updateWorksiteReport();
+})();
+
+init();
+(function() {
+  const chk811 = document.getElementById("chk811");
+  const chkGate36 = document.getElementById("chkGate36");
+  const chkRoots = document.getElementById("chkRoots");
+  const chkDumpSite = document.getElementById("chkDumpSite");
+  const chkRain = document.getElementById("chkRain");
+  const chkOverallBadge = document.getElementById("chkOverallBadge");
+  const chkStatusList = document.getElementById("chkStatusList");
+
+  if (!chk811 || !chkStatusList) return;
+
+  function updateChecklist() {
+    const is811Done = chk811.checked;
+    const isGateNarrow = chkGate36.checked;
+    const hasRoots = chkRoots.checked;
+    const isDumpConfirmed = chkDumpSite.checked;
+    const hasRain = chkRain.checked;
+
+    let hasActionRequired = false;
+    let hasWarning = false;
+    const items = [];
+
+    if (!is811Done) {
+      hasActionRequired = true;
+      items.push({
+        label: "Utility Clearance (811)",
+        badge: '<span class="badge badge-danger">Action Required</span>',
+        desc: "Call 811 before digging to clear unmapped buried utilities."
+      });
+    } else {
+      items.push({
+        label: "Utility Clearance (811)",
+        badge: '<span class="badge badge-success">Pass</span>',
+        desc: "811 call verified. Dig area safe from underground main utilities."
+      });
+    }
+
+    if (isGateNarrow) {
+      hasActionRequired = true;
+      items.push({
+        label: "Gate Access Width",
+        badge: '<span class="badge badge-danger">Action Required</span>',
+        desc: "Gate width < 36 inches: standard skid steers are unusable. Recommendation: use micro-track loaders (<32 in) or motorized power wheelbarrows."
+      });
+    } else {
+      items.push({
+        label: "Gate Access Width",
+        badge: '<span class="badge badge-success">Pass</span>',
+        desc: "Standard access (≥36 in). Full-size mini skid steers and dump carts fit."
+      });
+    }
+
+    if (hasRoots) {
+      hasWarning = true;
+      items.push({
+        label: "Root Obstacles",
+        badge: '<span class="badge badge-warning">Warning</span>',
+        desc: "Tree roots detected: prepare root saws/mattocks; machine bucket digging may snag."
+      });
+    }
+
+    if (!isDumpConfirmed) {
+      hasActionRequired = true;
+      items.push({
+        label: "Dump Site Acceptance",
+        badge: '<span class="badge badge-danger">Action Required</span>',
+        desc: "Soil dump site unconfirmed. Verify clean fill acceptance before excavating."
+      });
+    } else {
+      items.push({
+        label: "Dump Site Acceptance",
+        badge: '<span class="badge badge-success">Pass</span>',
+        desc: "Dump site confirmed for soil clean fill disposal."
+      });
+    }
+
+    if (hasRain) {
+      hasWarning = true;
+      items.push({
+        label: "Weather Forecast",
+        badge: '<span class="badge badge-warning">Warning</span>',
+        desc: "Rain forecast: mud increases wet soil weight by 20-30% and delays subgrade compaction."
+      });
+    }
+
+    chkStatusList.innerHTML = items.map(item => `
+      <li class="chk-list-item">
+        <div class="chk-item-head">
+          <span>${item.label}</span>
+          ${item.badge}
+        </div>
+        <div class="chk-item-desc">${item.desc}</div>
+      </li>
+    `).join("");
+
+    if (hasActionRequired) {
+      chkOverallBadge.className = "badge badge-danger";
+      chkOverallBadge.textContent = "Action Required";
+    } else if (hasWarning) {
+      chkOverallBadge.className = "badge badge-warning";
+      chkOverallBadge.textContent = "Warning";
+    } else {
+      chkOverallBadge.className = "badge badge-success";
+      chkOverallBadge.textContent = "All Clear";
+    }
+  }
+
+  [chk811, chkGate36, chkRoots, chkDumpSite, chkRain].forEach(el => {
+    el.addEventListener("change", updateChecklist);
+  });
+
+  updateChecklist();
+})();
+// FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This free calculator helps homeowners and landscape contractors translate in-ground excavation dimensions into true loose volume, wet dirt weight, and wheelbarrow trips. It accounts for soil expansion and weight variations so you can rent the right dumpster, trailer, or equipment without paying overage penalties.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Enter the length, width, and excavation depth of your project area.</li><li>Select your soil type (topsoil, clay, sandy loam) and moisture condition to calculate loose swell and weight.</li><li>Review the total loose cubic yards, estimated wet tonnage, and required wheelbarrow trips.</li><li>Input your trailer payload or dumpster weight limit to verify haul safety before digging.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">What&#39;s the best way to remove 2-6 inches of dirt from my yard?</h4><p style="margin:0">You enter: Excavation area dimensions (e.g. 20 ft length x 15 ft width) · Target excavating depth range (2 to 6 inches) · Soil type in yard (e.g. standard topsoil or dense clay) · Intended disposal/haul method (wheelbarrow to driveway dumpster or pickup truck).<br>You get: Calculated in-situ volume, expanded loose soil volume (accounting for soil swell factor), total wet/dry tonnage, estimated wheelbarrow trips, pickup truck trip counts, dumpster container size recommendation, and manual labor time estimate.</p><h4 style="font-size:16px;margin:16px 0 4px">What&#39;s the best way to remove grass/topsoil to prepare for grading?</h4><p style="margin:0">You enter: Lawn grading area dimensions (e.g. 40 ft x 25 ft) · Sod/topsoil stripping depth to subgrade (e.g. 3 inches) · Slope drop required for drainage across the area (e.g. 4 inches over 40 ft) · Soil moisture and density condition (damp topsoil).<br>You get: Excavated loose volume including grass/root mat expansion factor (20% swell), total weight in tons, visual profile showing high-end vs low-end excavation cut depth, equipment recommendation (sod cutter + mini skid steer vs manual shoveling), and trailer/dumpster load sizing.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What&#39;s the best way to remove 2-6 inches of dirt from my yard?</h4><p style="margin:0">For areas under 150 square feet, use a flat transfer shovel and square-point spade to cut the perimeter, peel up sod sections, and scrape the soil down to depth. For areas between 150 and 800 square feet, rent a motorized sod cutter set to its maximum depth to strip the organic layer, followed by manual shoveling or a power wheelbarrow. For spaces over 800 square feet or heavy clay, renting a mini skid-steer with a smooth bucket or a mini excavator saves dozens of hours of manual labor.</p><h4 style="font-size:16px;margin:16px 0 4px">What&#39;s the best way to remove grass/topsoil to prepare for grading?</h4><p style="margin:0">The cleanest method is using a walk-behind sod cutter rather than a rototiller. A tiller churns living roots, weed seeds, and soil together, creating uneven, spongy ground that will settle unpredictably later. A sod cutter shears root networks at a uniform depth (typically 1.5 to 2.5 inches), allowing you to roll up the sod and expose a flat, firm subgrade ready for fill, gravel, or finished grading.</p><h4 style="font-size:16px;margin:16px 0 4px">What is the appropriate spacing for 3&#39; x 5&#39; bluestone pavers?</h4><p style="margin:0">For dry-laid bluestone on a compacted aggregate and sand or stone dust base, leave a consistent 3/16-inch to 3/8-inch joint gap if the stone has sawn thermal edges. If the pavers have irregular, natural-cleft, or hand-chiseled edges, maintain a wider 1/2-inch to 3/4-inch joint to absorb edge variations. For stepping stone layouts surrounded by lawn or groundcover, place them roughly 24 to 26 inches apart on-center to match a natural walking stride.</p><h4 style="font-size:16px;margin:16px 0 4px">Why is my excavated dirt pile so much bigger than the hole I dug?</h4><p style="margin:0">In-ground soil has settled and compacted naturally over decades. When you dig it out, you introduce air pockets between the grains, a phenomenon known as soil swell. Topsoil typically swells by 15% to 25%, while dense clay can expand by up to 35% or more in loose volume. A hole measuring exactly 2 cubic yards in the ground regularly yields 2.5 to 2.7 cubic yards of loose dirt to haul away.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $12, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/pzwpqo" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $12</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../plant-light-dli-exposure-calculator/" style="color:inherit;font-weight:600">Plant Light Requirement &amp; DLI Calculator</a>: Offline DLI calculator, light spectrum converter, seasonal deficit planner, and canopy coverage solver.</li><li><a href="../greenhouse-thermal-loss-and-glazing-simulator/" style="color:inherit;font-weight:600">Greenhouse Thermal Loss &amp; Glazing Simulator</a>: Calculate heat loss, thermal mass needs, fuel costs, and freeze risks in a single offline HTML simulator.</li><li><a href="../modular-drawer-grid-partition-planner/" style="color:inherit;font-weight:600">Modular Drawer Grid &amp; Partition Box Layout Planner</a>: Precision layout generator, half-lap joint calculator, and material nesting planner for custom drawer dividers.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $12</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $12"});</script>
+</body>
+</html>
