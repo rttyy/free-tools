@@ -1,0 +1,2281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-accent: #f1f5f9;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-color: #cbd5e1;
+      --primary-green: #15803d;
+      --primary-green-hover: #166534;
+      --primary-light: #f0fdf4;
+      --primary-border: #bbf7d0;
+      --warning-amber: #d97706;
+      --warning-bg: #fffbeb;
+      --warning-border: #fef3c7;
+      --danger-red: #dc2626;
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+      --info-blue: #0284c7;
+      --info-bg: #f0f9ff;
+      --info-border: #bae6fd;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #0f172a;
+        --bg-card: #1e293b;
+        --bg-accent: #334155;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --border-color: #475569;
+        --primary-green: #22c55e;
+        --primary-green-hover: #16a34a;
+        --primary-light: #052e16;
+        --primary-border: #14532d;
+        --warning-amber: #f59e0b;
+        --warning-bg: #451a03;
+        --warning-border: #78350f;
+        --danger-red: #ef4444;
+        --danger-bg: #450a0a;
+        --danger-border: #7f1d1d;
+        --info-blue: #38bdf8;
+        --info-bg: #075985;
+        --info-border: #0c4a6e;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .header-title svg {
+      width: 32px;
+      height: 32px;
+      color: var(--primary-green);
+      flex-shrink: 0;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    button, select, input {
+      font-family: inherit;
+      font-size: 0.875rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 0.875rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn:hover {
+      background-color: var(--bg-accent);
+    }
+
+    .btn-primary {
+      background: var(--primary-green);
+      color: #ffffff;
+      border-color: var(--primary-green);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-green-hover);
+      border-color: var(--primary-green-hover);
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .pro-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: var(--warning-amber);
+      color: #fff;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .preset-selector-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-accent);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+    }
+
+    .preset-selector-wrapper label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      color: var(--text-muted);
+    }
+
+    select.preset-select {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      padding-right: 0.5rem;
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 1024px) {
+      .grid-layout {
+        grid-template-columns: 480px 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.25rem;
+    }
+
+    .card:last-child {
+      margin-bottom: 0;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-title svg {
+      width: 20px;
+      height: 20px;
+      color: var(--primary-green);
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    input[type="number"], input[type="text"], select {
+      width: 100%;
+      padding: 0.5rem 0.65rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input[type="number"]:focus, input[type="text"]:focus, select:focus {
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 2px var(--primary-border);
+    }
+
+    .unit-toggle-group {
+      display: inline-flex;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .unit-toggle-btn {
+      padding: 0.25rem 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--bg-card);
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .unit-toggle-btn.active {
+      background: var(--primary-green);
+      color: #fff;
+    }
+
+    .badge-pill {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+
+    .badge-success { background: var(--primary-light); color: var(--primary-green); border: 1px solid var(--primary-border); }
+    .badge-warning { background: var(--warning-bg); color: var(--warning-amber); border: 1px solid var(--warning-border); }
+    .badge-danger { background: var(--danger-bg); color: var(--danger-red); border: 1px solid var(--danger-border); }
+    .badge-info { background: var(--info-bg); color: var(--info-blue); border: 1px solid var(--info-border); }
+
+    .result-hero {
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .hero-main-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary-green);
+    }
+
+    .hero-value {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--text-main);
+    }
+
+    .hero-subvalue {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .hero-split-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.75rem;
+      width: 100%;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--primary-border);
+    }
+
+    .split-stat-box {
+      background: var(--bg-card);
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+    }
+
+    .split-stat-title {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .split-stat-val {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .npk-bars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .npk-bar-card {
+      background: var(--bg-accent);
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .npk-bar-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .npk-bar-val {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin: 0.2rem 0;
+    }
+
+    .npk-target-val {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .advice-card {
+      background: var(--bg-accent);
+      border-left: 4px solid var(--info-blue);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .advice-card.warning {
+      border-left-color: var(--warning-amber);
+      background: var(--warning-bg);
+    }
+
+    .advice-card.danger {
+      border-left-color: var(--danger-red);
+      background: var(--danger-bg);
+    }
+
+    .advice-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .advice-text {
+      font-size: 0.825rem;
+      color: var(--text-main);
+    }
+
+    .advice-list {
+      margin-top: 0.5rem;
+      padding-left: 1.25rem;
+      font-size: 0.8rem;
+    }
+
+    .advice-list li {
+      margin-bottom: 0.25rem;
+    }
+
+    .mulch-info-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .info-stat-card {
+      background: var(--bg-accent);
+      padding: 0.65rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+    }
+
+    .info-stat-lbl {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .info-stat-num {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .disclaimer-banner {
+      margin-top: 1.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg-accent);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .pro-toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--warning-amber);
+      border-left: 4px solid var(--warning-amber);
+      box-shadow: var(--shadow-lg);
+      border-radius: var(--radius);
+      padding: 0.85rem 1.25rem;
+      font-size: 0.85rem;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .pro-toast a {
+      color: var(--warning-amber);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      header, .toolbar, .pro-toast, .disclaimer-banner { display: none !important; }
+      .grid-layout { grid-template-columns: 1fr; }
+      .card { border: 1px solid #ccc; box-shadow: none; break-inside: avoid; }
+    }
+
+    .mulch-details summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mulch-details summary::-webkit-details-marker {
+  display: none;
+}
+.accordion-icon {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+.mulch-details[open] .accordion-icon {
+  transform: rotate(180deg);
+}
+.blender-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.blender-source-card {
+  background: var(--bg-accent);
+  padding: 0.65rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+}
+.rev-solver-highlight {
+  font-weight: 700;
+  color: var(--primary-green);
+}
+.batch-export-preview {
+  font-family: monospace;
+  font-size: 0.75rem;
+  background: var(--bg-card);
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  max-height: 120px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+/* FEATURE-CSS */
+  </style>
+<title>Vegetable Garden Fertilizer &amp; NPK Application Calculator</title>
+<meta name="description" content="Calculate exact fertilizer weight per square foot for vegetable beds. Balance organic amendments, prevent root burn, and plan your season accurately.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/vegetable-garden-fertilizer-npk-calculator/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/vegetable-garden-fertilizer-npk-calculator/">
+<meta property="og:title" content="Vegetable Garden Fertilizer &amp; NPK Application Calculator"><meta property="og:description" content="Calculate exact fertilizer weight per square foot for vegetable beds. Balance organic amendments, prevent root burn, and plan your season accurately.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/vegetable-garden-fertilizer-npk-calculator/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Vegetable Garden Fertilizer & NPK Application Calculator","description":"Calculate exact fertilizer weight per square foot for vegetable beds. Balance organic amendments, prevent root burn, and plan your season accurately.","url":"https://rttyy.github.io/free-tools/vegetable-garden-fertilizer-npk-calculator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How much fertilizer do I need for my vegetable garden?","acceptedAnswer":{"@type":"Answer","text":"Fertilizer quantity depends on your bed's square footage, the crop's nutrient demand, and the fertilizer's N-P-K percentage. On average, heavy vegetable feeders require roughly 0.15 to 0.20 pounds of actual elemental nitrogen per 100 square feet per season. Dividing that target weight by the decimal percentage of nitrogen on your fertilizer bag gives you the total weight of product needed."}},{"@type":"Question","name":"How long does mulch last?","acceptedAnswer":{"@type":"Answer","text":"Organic mulches like wood chips or shredded bark typically last 1 to 3 years before fully decomposing into the soil. Finer organic materials like straw, grass clippings, or shredded leaves break down in 4 to 9 months and generally require replenishment every season. Inorganic mulches, such as black plastic or landscape fabric, last several seasons but do not improve soil organic matter."}},{"@type":"Question","name":"How should vegetable seeds be sown evenly?","acceptedAnswer":{"@type":"Answer","text":"For tiny seeds like carrots and lettuce, mix the seed with fine sand or dry coffee grounds at a 1:3 ratio before sprinkling to spread them uniformly. You can also use a handheld dial seed sower, seed tape, or fold an envelope into a V-crease and tap it gently with your index finger while moving down the furrow. Thinning seedlings after emergence is still required for optimal spacing."}},{"@type":"Question","name":"What causes fertilizer root burn and how do I prevent it?","acceptedAnswer":{"@type":"Answer","text":"Fertilizer burn occurs when high concentrations of soluble mineral salts accumulate in the root zone, drawing water out of plant roots through osmosis and causing tissue desiccation. To prevent it, calculate applications strictly by dry weight rather than volume, distribute granules evenly across the soil surface, water deeply after applying, and avoid applying high-nitrogen chemical salts to dry soil."}}]}</script>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="header-top">
+      <div class="header-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v8"></path>
+          <path d="m4.93 10.93 4.24 4.24"></path>
+          <path d="M2 18h12"></path>
+          <path d="M20 18a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"></path>
+        </svg>
+        <div>
+          <h1>Vegetable Garden Fertilizer & NPK Application Calculator</h1>
+          <p class="subtitle">Calculate exact N-P-K nutrient weights, application splits, burn risk index, and mulch breakdown.</p>
+        </div>
+      </div>
+      
+      <div class="toolbar">
+        <div class="preset-selector-wrapper">
+          <label for="presetSelect">Preset:</label>
+          <select id="presetSelect" class="preset-select">
+            <option value="0">100 sq ft Tomato & Pepper Patch (10-10-10)</option>
+            <option value="1">4x8 Raised Bed Leafy Greens (12-0-0 Blood Meal)</option>
+            <option value="2">50 sq ft Root Crop Allotment (3-15-0 Bone Meal)</option>
+          </select>
+        </div>
+
+        <div class="unit-toggle-group">
+          <button type="button" class="unit-toggle-btn active" id="unitImpBtn" onclick="setUnitSystem('imperial')">Imperial (ft/lbs)</button>
+          <button type="button" class="unit-toggle-btn" id="unitMetBtn" onclick="setUnitSystem('metric')">Metric (m/kg)</button>
+        </div>
+
+        <button type="button" class="btn btn-sm" onclick="copySummary()" title="Copy summary to clipboard">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          Copy
+        </button>
+        <button type="button" class="btn btn-sm" onclick="triggerPrint()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          Print <span class="pro-badge">PRO</span>
+        </button>
+        <button type="button" class="btn btn-sm" onclick="exportCSV()">
+          CSV <span class="pro-badge">PRO</span>
+        </button>
+        <button type="button" class="btn btn-sm" onclick="exportJSON()">
+          JSON <span class="pro-badge">PRO</span>
+        </button>
+        <button type="button" class="btn btn-sm" onclick="resetDefaults()">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="grid-layout">
+    <!-- LEFT COLUMN: INPUT CONTROLS -->
+    <div class="left-col">
+
+      <!-- FEATURE: Bed Area & Soil Volume Calculator -->
+      <section class="card" data-feature="bed-area-volume-calculator">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+            1. Bed Geometry & Soil Volume
+          </h2>
+          <span class="badge-pill badge-info" id="areaVolumeSummary">100 sq ft | 66.7 cu ft</span>
+        </div>
+
+        <div class="form-group">
+          <div class="form-row">
+            <div>
+              <label for="bedShape">Bed Calculation Mode</label>
+              <select id="bedShape" onchange="calculateAll()">
+                <option value="rect">Rectangular Dimensions</option>
+                <option value="custom">Direct Surface Area</option>
+              </select>
+            </div>
+            <div>
+              <label for="bedCount">Number of Identical Beds</label>
+              <input type="number" id="bedCount" min="1" max="100" value="1" oninput="calculateAll()">
+            </div>
+          </div>
+        </div>
+
+        <div id="rectInputsGroup" class="form-group">
+          <div class="form-row">
+            <div>
+              <label for="bedLength" id="lblLength">Bed Length (ft)</label>
+              <input type="number" id="bedLength" min="0.1" step="0.5" value="10" oninput="calculateAll()">
+            </div>
+            <div>
+              <label for="bedWidth" id="lblWidth">Bed Width (ft)</label>
+              <input type="number" id="bedWidth" min="0.1" step="0.5" value="10" oninput="calculateAll()">
+            </div>
+          </div>
+        </div>
+
+        <div id="customAreaInputsGroup" class="form-group hidden">
+          <label for="customArea" id="lblCustomArea">Area per Bed (sq ft)</label>
+          <input type="number" id="customArea" min="1" value="100" oninput="calculateAll()">
+        </div>
+
+        <div class="form-group">
+          <label for="soilDepth" id="lblSoilDepth">Effective Rooting / Soil Depth (in)</label>
+          <input type="number" id="soilDepth" min="1" max="48" value="8" oninput="calculateAll()">
+        </div>
+      </section>
+
+      <!-- FEATURE: Crop Nutrient Profile Selector -->
+      <section class="card" data-feature="crop-nutrient-target-selector">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            2. Crop Profile & Nutrient Targets
+          </h2>
+        </div>
+
+        <div class="form-group">
+          <label for="cropProfile">Target Crop Category</label>
+          <select id="cropProfile" onchange="onCropProfileChange()">
+            <option value="heavy_feeders">Heavy Feeders (Tomatoes, Peppers, Corn, Squash)</option>
+            <option value="moderate_feeders">Moderate Feeders (Brassicas, Carrots, Root Crops)</option>
+            <option value="light_feeders">Light Feeders (Lettuce, Spinach, Leafy Greens)</option>
+            <option value="legumes">N-Fixing Legumes (Beans, Peas)</option>
+            <option value="custom">Custom Soil Test Recommendation</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label id="lblTargetHeader">Target Rates (lbs per 100 sq ft bed area):</label>
+          <div class="form-row">
+            <div>
+              <label for="targetN">Target N</label>
+              <input type="number" id="targetN" step="0.01" min="0" value="0.35" oninput="onCustomTargetInput()">
+            </div>
+            <div>
+              <label for="targetP">Target P₂O₅</label>
+              <input type="number" id="targetP" step="0.01" min="0" value="0.35" oninput="onCustomTargetInput()">
+            </div>
+            <div>
+              <label for="targetK">Target K₂O</label>
+              <input type="number" id="targetK" step="0.01" min="0" value="0.35" oninput="onCustomTargetInput()">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURE: NPK Fertilizer Dose Blender -->
+      <section class="card" data-feature="npk-fertilizer-dose-blender">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            3. Commercial Fertilizer Blend Analysis
+          </h2>
+        </div>
+
+        <div class="form-group">
+          <div class="form-row">
+            <div>
+              <label for="fertilizerN">N (%)</label>
+              <input type="number" id="fertilizerN" step="0.1" min="0" max="100" value="10" oninput="calculateAll()">
+            </div>
+            <div>
+              <label for="fertilizerP">P₂O₅ (%)</label>
+              <input type="number" id="fertilizerP" step="0.1" min="0" max="100" value="10" oninput="calculateAll()">
+            </div>
+            <div>
+              <label for="fertilizerK">K₂O (%)</label>
+              <input type="number" id="fertilizerK" step="0.1" min="0" max="100" value="10" oninput="calculateAll()">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-row">
+            <div>
+              <label for="fertType">Fertilizer Source Type</label>
+              <select id="fertType" onchange="calculateAll()">
+                <option value="synthetic">Synthetic / Fast-Release Granular</option>
+                <option value="organic">Organic / Slow-Release Meal</option>
+              </select>
+            </div>
+            <div>
+              <label for="splitApp">Application Schedule</label>
+              <select id="splitApp" onchange="calculateAll()">
+                <option value="single">100% Single Pre-plant Application</option>
+                <option value="split2" selected>50% Pre-plant + 50% Mid-season Side-dress</option>
+                <option value="split3">33% Pre-plant + 33% Early + 34% Late Side-dress</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MULCH & BED COVERAGE INPUTS -->
+      <section class="card" data-feature="mulch-environmental-calculator">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"></path><path d="M3 12h18"></path><path d="m4.5 4.5 15 15"></path><path d="m19.5 4.5-15 15"></path></svg>
+            4. Mulch Layer & Environmental Conditions
+          </h2>
+        </div>
+
+        <div class="form-group">
+          <div class="form-row">
+            <div>
+              <label for="mulchType">Mulch Material Type</label>
+              <select id="mulchType" onchange="calculateAll()">
+                <option value="shredded_bark" selected>Shredded Hardwood Bark</option>
+                <option value="cedar_chips">Cedar Wood Chips</option>
+                <option value="straw">Straw / Clean Hay</option>
+                <option value="leaves">Shredded Leaves</option>
+                <option value="compost">Finished Compost</option>
+                <option value="none">None / Bare Soil</option>
+              </select>
+            </div>
+            <div>
+              <label for="mulchDepth" id="lblMulchDepth">Mulch Layer Depth (in)</label>
+              <input type="number" id="mulchDepth" step="0.5" min="0" max="12" value="2" oninput="calculateAll()">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="sunExposure">Sun & Soil Moisture Regime</label>
+          <select id="sunExposure" onchange="calculateAll()">
+            <option value="full_sun">Full Sun & Frequent Irrigation (Accelerated breakdown)</option>
+            <option value="partial_shade" selected>Partial Shade / Moderate Moisture</option>
+            <option value="full_shade">Full Shade / Low Evaporation</option>
+          </select>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- RIGHT COLUMN: RESULTS & ADVICE ENGINE -->
+    <div class="right-col">
+
+      <!-- MAIN FERTILIZER REQUIRED STAT CARD -->
+      <div class="result-hero">
+        <div class="hero-main-stat">
+          <span class="hero-label">Total Fertilizer Mass Required</span>
+          <div class="hero-value" id="resTotalMass">7.00 lbs</div>
+          <div class="hero-subvalue" id="resMassSub">Equivalent to 112.0 oz (3.18 kg) total for all beds</div>
+        </div>
+
+        <div class="hero-split-grid">
+          <div class="split-stat-box">
+            <div class="split-stat-title">Pre-Plant Baseline</div>
+            <div class="split-stat-val" id="resPreplantMass">3.50 lbs</div>
+          </div>
+          <div class="split-stat-box">
+            <div class="split-stat-title">Per Side-Dress Application</div>
+            <div class="split-stat-val" id="resSidedressMass">3.50 lbs</div>
+          </div>
+          <div class="split-stat-box">
+            <div class="split-stat-title">Per Bed Quantity</div>
+            <div class="split-stat-val" id="resPerBedMass">7.00 lbs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NPK DELIVERED VS TARGET -->
+      <section class="card" data-feature="nutrient-delivery-balance">
+        <div class="card-header">
+          <h3 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
+            Nutrient Delivery Balance (Delivered vs Target)
+          </h3>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">
+          Delivered nutrients based on matching the primary nutrient requirement:
+        </p>
+
+        <div class="npk-bars-grid">
+          <div class="npk-bar-card">
+            <div class="npk-bar-title">NITROGEN (N)</div>
+            <div class="npk-bar-val" id="resDeliveredN">0.35 lb</div>
+            <div class="npk-target-val" id="resTargetNText">Target: 0.35 lb</div>
+            <div style="margin-top:0.35rem;" id="badgeN"></div>
+          </div>
+
+          <div class="npk-bar-card">
+            <div class="npk-bar-title">PHOSPHORUS (P₂O₅)</div>
+            <div class="npk-bar-val" id="resDeliveredP">0.70 lb</div>
+            <div class="npk-target-val" id="resTargetPText">Target: 0.35 lb</div>
+            <div style="margin-top:0.35rem;" id="badgeP"></div>
+          </div>
+
+          <div class="npk-bar-card">
+            <div class="npk-bar-title">POTASSIUM (K₂O)</div>
+            <div class="npk-bar-val" id="resDeliveredK">0.35 lb</div>
+            <div class="npk-target-val" id="resTargetKText">Target: 0.35 lb</div>
+            <div style="margin-top:0.35rem;" id="badgeK"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURE: Burn Risk Safety Monitor -->
+      <section class="card" data-feature="burn-risk-safety-monitor">
+        <div class="card-header">
+          <h3 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            Fertilizer Burn Risk & Root Safety Engine
+          </h3>
+          <span class="badge-pill badge-success" id="burnRiskStatusBadge">SAFE: LOW SALT LOAD</span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; margin-bottom:0.5rem;">
+          <span>Single Application N Load Density:</span>
+          <strong id="burnNRateVal">0.175 lb N / 100 sq ft</strong>
+        </div>
+
+        <!-- DYNAMIC "WHAT THIS MEANS / WHAT TO DO NEXT" ADVICE CARD -->
+        <div class="advice-card" id="burnAdviceCard">
+          <div class="advice-title" id="adviceTitle">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Optimal Safety Margin
+          </div>
+          <div class="advice-text" id="adviceText">
+            The calculated fertilizer dose is safe for seedling roots and soil biology.
+          </div>
+          <ul class="advice-list" id="adviceList">
+            <li>Broadcast fertilizer evenly over moist soil before tilling or raking.</li>
+            <li>Water thoroughly after application to dissolve nutrients into soil profile.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- MULCH BREAKDOWN & NITROGEN TIE-UP CARD -->
+      <section class="card" data-feature="mulch-lifespan-nitrogen-tie-up">
+        <div class="card-header">
+          <h3 class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            Mulch Lifespan & Surface N Tie-Up Index
+          </h3>
+        </div>
+
+        <div class="mulch-info-box">
+          <div class="info-stat-card">
+            <div class="info-stat-lbl">ESTIMATED LIFESPAN</div>
+            <div class="info-stat-num" id="resMulchLifespan">20 Months</div>
+          </div>
+          <div class="info-stat-card">
+            <div class="info-stat-lbl">SURFACE N TIE-UP BUFFER</div>
+            <div class="info-stat-num" id="resMulchBuffer">+10.0% (+0.035 lb N)</div>
+          </div>
+          <div class="info-stat-card">
+            <div class="info-stat-lbl">SOM CONTRIBUTION</div>
+            <div class="info-stat-num" id="resMulchSOM">High Organic Matter</div>
+          </div>
+        </div>
+
+        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.75rem;" id="mulchExplanationText">
+          Shredded Hardwood Bark ties up surface soil nitrogen temporarily as microbes decompose carbon-rich wood fibers. A +10.0% nitrogen buffer has been automatically factored into the total fertilizer requirement.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- FEATURE: Mulch Longevity & Nutrient Release Rate Integration -->
+  <section class="card" data-feature="mulch-longevity-decom-calc">
+    <details open class="mulch-details">
+      <summary class="card-header summary-header" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
+        <h3 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          Mulch Longevity & Nutrient Release Rate Integration
+        </h3>
+        <span class="accordion-icon">▼</span>
+      </summary>
+      <div class="accordion-content" style="padding-top:1rem; border-top:1px solid var(--border-color); margin-top:0.75rem;">
+        <div class="form-row">
+          <div>
+            <label for="decomMulchType">Mulch Material Type</label>
+            <select id="decomMulchType" onchange="calculateAll()">
+              <option value="wood_chips" selected>Wood Chips</option>
+              <option value="bark">Shredded Bark</option>
+              <option value="straw">Straw / Clean Hay</option>
+              <option value="leaf_compost">Leaf Compost</option>
+            </select>
+          </div>
+          <div>
+            <label for="decomLayerThick">Layer Thickness (in)</label>
+            <select id="decomLayerThick" onchange="calculateAll()">
+              <option value="1">1 Inch</option>
+              <option value="2">2 Inches</option>
+              <option value="3" selected>3 Inches</option>
+              <option value="4">4 Inches</option>
+            </select>
+          </div>
+          <div>
+            <label for="decomMoisture">Climate Moisture Profile</label>
+            <select id="decomMoisture" onchange="calculateAll()">
+              <option value="dry">Arid / Low Moisture</option>
+              <option value="moderate" selected>Moderate / Humid</option>
+              <option value="wet">High Rainfall / Wet</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mulch-info-box" style="margin-top:1rem;">
+          <div class="info-stat-card">
+            <div class="info-stat-lbl">FUNCTIONAL LIFESPAN</div>
+            <div class="info-stat-num" id="decomLifespanVal">24 - 36 Months</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);" id="decomLifespanSub">~2.0 - 3.0 Years</div>
+          </div>
+          <div class="info-stat-card">
+            <div class="info-stat-lbl">N TIE-UP COMPENSATION</div>
+            <div class="info-stat-num" id="decomTieUpVal">+0.02 lb N / 100 sq ft</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);" id="decomTieUpSub">Added to baseline N demand</div>
+          </div>
+          <div class="info-stat-card">
+            <div class="info-stat-lbl">ANNUAL ORGANIC N RELEASE</div>
+            <div class="info-stat-num" id="decomReleaseVal">0.01 lb N / 100 sq ft/yr</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);" id="decomReleaseSub">Post-decom mineralization</div>
+          </div>
+        </div>
+
+        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:0.75rem;" id="decomImpactNote">
+          Selecting 3 inches of Wood Chips increases recommended baseline N application by +0.02 lb N / 100 sq ft for surface microbial tie-up compensation and reports 24-36 month mulch lifespan.
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- FEATURE: Dual Amendment NPK Balancing Solver -->
+  <section class="card" data-feature="multi-amendment-blender">
+    <details open class="mulch-details">
+      <summary class="card-header summary-header" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
+        <h3 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"></circle><circle cx="16" cy="16" r="6"></circle></svg>
+          Advanced: Dual Amendment NPK Balancing Solver
+        </h3>
+        <span class="accordion-icon">▼</span>
+      </summary>
+      <div class="accordion-content" style="padding-top:1rem; border-top:1px solid var(--border-color); margin-top:0.75rem;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem;">
+          Combine two organic or synthetic amendments to simultaneously achieve specific N and P₂O₅ target weights without nutrient overshooting.
+        </p>
+        <div class="form-row" style="margin-bottom:0.75rem;">
+          <div>
+            <label for="blendTargetN" id="lblBlendTargetN">Target N (lb)</label>
+            <input type="number" id="blendTargetN" step="0.01" min="0" value="0.24" oninput="calculateBlender()">
+          </div>
+          <div>
+            <label for="blendTargetP" id="lblBlendTargetP">Target P₂O₅ (lb)</label>
+            <input type="number" id="blendTargetP" step="0.01" min="0" value="0.30" oninput="calculateBlender()">
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button type="button" class="btn btn-sm" style="width:100%; height:35px;" onclick="syncTargetsToBlender()">Sync Bed Demand</button>
+          </div>
+        </div>
+
+        <div class="blender-grid">
+          <div class="blender-source-card">
+            <div style="font-weight:700; font-size:0.8rem; margin-bottom:0.4rem; color:var(--primary-green);">Amendment 1 (e.g. Blood Meal)</div>
+            <div class="form-row">
+              <div>
+                <label for="amend1N">N (%)</label>
+                <input type="number" id="amend1N" step="0.1" min="0" max="100" value="12" oninput="calculateBlender()">
+              </div>
+              <div>
+                <label for="amend1P">P₂O₅ (%)</label>
+                <input type="number" id="amend1P" step="0.1" min="0" max="100" value="0" oninput="calculateBlender()">
+              </div>
+            </div>
+          </div>
+          <div class="blender-source-card">
+            <div style="font-weight:700; font-size:0.8rem; margin-bottom:0.4rem; color:var(--primary-green);">Amendment 2 (e.g. Bone Meal)</div>
+            <div class="form-row">
+              <div>
+                <label for="amend2N">N (%)</label>
+                <input type="number" id="amend2N" step="0.1" min="0" max="100" value="3" oninput="calculateBlender()">
+              </div>
+              <div>
+                <label for="amend2P">P₂O₅ (%)</label>
+                <input type="number" id="amend2P" step="0.1" min="0" max="100" value="15" oninput="calculateBlender()">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mulch-info-box" style="margin-top:1rem;">
+          <div class="info-stat-card">
+            <div class="info-stat-lbl">AMENDMENT 1 DOSAGE</div>
+            <div class="info-stat-num" id="blendDose1">1.5 lbs</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);" id="blendDose1Sub">12-0-0 Grade</div>
+          </div>
+          <div class="info-stat-card">
+            <div class="info-stat-lbl">AMENDMENT 2 DOSAGE</div>
+            <div class="info-stat-num" id="blendDose2">2.0 lbs</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);" id="blendDose2Sub">3-15-0 Grade</div>
+          </div>
+          <div class="info-stat-card">
+            <div class="info-stat-lbl">TOTAL AMENDMENT BLEND</div>
+            <div class="info-stat-num" id="blendTotalMass">3.5 lbs</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);" id="blendDeliveredNP">Delivers 0.24 lb N & 0.30 lb P₂O₅</div>
+          </div>
+        </div>
+
+        <div id="blenderStatusMsg" class="advice-card" style="margin-top:0.75rem; padding:0.65rem 0.85rem; font-size:0.8rem;">
+          Exact dual-nutrient balance achieved: hit 0.24 lb N and 0.30 lb P₂O₅ simultaneously without excess.
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- FEATURE: Available Inventory Reverse Coverage Solver -->
+  <section class="card" data-feature="npk-fertilizer-reverse-solver">
+    <details open class="mulch-details">
+      <summary class="card-header summary-header" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
+        <h3 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>
+          Available Inventory Reverse Coverage Solver
+        </h3>
+        <span class="accordion-icon">▼</span>
+      </summary>
+      <div class="accordion-content" style="padding-top:1rem; border-top:1px solid var(--border-color); margin-top:0.75rem;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem;">
+          Input available fertilizer mass on hand to calculate maximum treatable garden bed area or percentage of crop demand met.
+        </p>
+        <div class="form-row" style="margin-bottom:0.75rem;">
+          <div>
+            <label for="revOnHandMass" id="lblRevOnHandMass">Fertilizer Bag Mass On Hand (lbs)</label>
+            <input type="number" id="revOnHandMass" step="0.1" min="0" value="5" oninput="calculateReverseSolver()">
+          </div>
+          <div>
+            <label for="revFertN">Bag N (%)</label>
+            <input type="number" id="revFertN" step="0.1" min="0" max="100" value="10" oninput="calculateReverseSolver()">
+          </div>
+          <div>
+            <label for="revFertP">Bag P₂O₅ (%)</label>
+            <input type="number" id="revFertP" step="0.1" min="0" max="100" value="10" oninput="calculateReverseSolver()">
+          </div>
+          <div>
+            <label for="revFertK">Bag K₂O (%)</label>
+            <input type="number" id="revFertK" step="0.1" min="0" max="100" value="10" oninput="calculateReverseSolver()">
+          </div>
+        </div>
+        <div class="form-row" style="margin-bottom:0.75rem;">
+          <div>
+            <label for="revTargetN" id="lblRevTargetN">Crop Target N (lb/100 sq ft)</label>
+            <input type="number" id="revTargetN" step="0.01" min="0" value="0.20" oninput="calculateReverseSolver()">
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button type="button" class="btn btn-sm" style="width:100%; height:35px;" onclick="syncMainToReverseSolver()">Sync Current Inputs</button>
+          </div>
+        </div>
+
+        <div class="mulch-info-box" style="margin-top:1rem;">
+          <div class="info-stat-card">
+            <div class="info-stat-lbl">MAX AREA COVERAGE</div>
+            <div class="info-stat-num" id="revMaxAreaVal">250 sq ft</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);" id="revMaxAreaSub">Covers up to 250 sq ft of garden bed area</div>
+          </div>
+          <div class="info-stat-card">
+            <div class="info-stat-lbl">GARDEN DEMAND SATISFIED</div>
+            <div class="info-stat-num" id="revPctSatisfiedVal">250.0%</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);" id="revPctSatisfiedSub">Based on active bed area</div>
+          </div>
+          <div class="info-stat-card">
+            <div class="info-stat-lbl">AVAILABLE N MASS</div>
+            <div class="info-stat-num" id="revDeliveredNVal">0.50 lb N</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);" id="revDeliveredNSub">Available N mass on hand</div>
+          </div>
+        </div>
+        <div id="revSolverNote" class="advice-card" style="margin-top:0.75rem; padding:0.65rem 0.85rem; font-size:0.8rem;">
+          Inventory provides sufficient fertilizer for target application rate.
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- FEATURE: Garden Nutrient Plan Exporter & Printable Schedule -->
+  <section class="card" data-feature="fertilizer-batch-exporter">
+    <details open class="mulch-details">
+      <summary class="card-header summary-header" style="margin-bottom:0; border-bottom:none; padding-bottom:0;">
+        <h3 class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Garden Nutrient Plan Exporter & Printable Schedule
+        </h3>
+        <span class="accordion-icon">▼</span>
+      </summary>
+      <div class="accordion-content" style="padding-top:1rem; border-top:1px solid var(--border-color); margin-top:0.75rem;">
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem;">
+          Generate structured bed-by-bed nutrient requirements, timing schedule, CSV downloads, and JSON state backup.
+        </p>
+        <div class="form-row" style="margin-bottom:0.75rem;">
+          <div>
+            <label for="expBedLabel">Bed Label Prefix</label>
+            <input type="text" id="expBedLabel" value="Bed #" oninput="renderBatchExportPreview()">
+          </div>
+          <div>
+            <label for="expNotes">Custom Application Notes</label>
+            <input type="text" id="expNotes" value="Apply prior to rain or irrigate thoroughly" oninput="renderBatchExportPreview()">
+          </div>
+        </div>
+        <div class="toolbar" style="margin-bottom:0.75rem;">
+          <button type="button" class="btn btn-sm btn-primary" onclick="exportBatchCSV()">Export Bed CSV <span class="pro-badge">PRO</span></button>
+          <button type="button" class="btn btn-sm" onclick="exportBatchJSON()">Export JSON Backup <span class="pro-badge">PRO</span></button>
+          <button type="button" class="btn btn-sm" onclick="printBatchSchedule()">Print Schedule <span class="pro-badge">PRO</span></button>
+        </div>
+        <div id="batchExportMsg" class="advice-card hidden" style="margin-bottom:0.75rem;"></div>
+        <div class="info-stat-card" style="padding:0.75rem;">
+          <div style="font-weight:700; font-size:0.8rem; margin-bottom:0.35rem; color:var(--primary-green);">Export Summary Preview</div>
+          <div id="batchExportPreview" class="batch-export-preview"></div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- FEATURES -->
+
+  <div class="disclaimer-banner">
+    <strong>Professional Disclaimer:</strong> Estimate only - verify with a qualified agricultural extension specialist or soil test laboratory before relying on it.
+  </div>
+</div>
+
+<div id="proToast" class="pro-toast hidden">
+  <div>
+    <strong>Full Version Feature:</strong> <span id="proToastMsg">Available in the full version</span>.
+    <a href="#upgrade" onclick="closeToast()">Learn More</a>
+  </div>
+  <button type="button" onclick="closeToast()" style="background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:1.1rem;">&times;</button>
+</div>
+
+<script>
+const PRO = false;
+const PRO_LINK = "https://ferrywave73.gumroad.com/l/ijnzee";
+
+// PRESETS DATA
+const PRESETS = [
+  {
+    name: "100 sq ft Tomato & Pepper Patch (Balanced 10-10-10)",
+    values: {
+      bedLength: 10, bedWidth: 10, customArea: 100, bedShape: 'rect', bedCount: 1, soilDepth: 8,
+      unitSystem: 'imperial', cropProfile: 'heavy_feeders',
+      customTargetN: 0.35, customTargetP: 0.35, customTargetK: 0.35,
+      fertilizerN: 10, fertilizerP: 10, fertilizerK: 10, fertType: 'synthetic',
+      mulchType: 'shredded_bark', mulchDepth: 2, sunExposure: 'partial_shade', splitApp: 'split2'
+    }
+  },
+  {
+    name: "4x8 Raised Bed Leafy Greens (High-N Organic Blood Meal 12-0-0)",
+    values: {
+      bedLength: 8, bedWidth: 4, customArea: 32, bedShape: 'rect', bedCount: 2, soilDepth: 10,
+      unitSystem: 'imperial', cropProfile: 'light_feeders',
+      customTargetN: 0.20, customTargetP: 0.05, customTargetK: 0.15,
+      fertilizerN: 12, fertilizerP: 0, fertilizerK: 0, fertType: 'organic',
+      mulchType: 'straw', mulchDepth: 3, sunExposure: 'full_sun', splitApp: 'single'
+    }
+  },
+  {
+    name: "50 sq ft Root Crop Allotment (Low-N High-P Bone Meal 3-15-0)",
+    values: {
+      bedLength: 10, bedWidth: 5, customArea: 50, bedShape: 'rect', bedCount: 1, soilDepth: 6,
+      unitSystem: 'imperial', cropProfile: 'moderate_feeders',
+      customTargetN: 0.10, customTargetP: 0.30, customTargetK: 0.20,
+      fertilizerN: 3, fertilizerP: 15, fertilizerK: 0, fertType: 'organic',
+      mulchType: 'compost', mulchDepth: 1, sunExposure: 'partial_shade', splitApp: 'single'
+    }
+  }
+];
+
+// STATE VARIABLES
+let currentUnit = 'imperial'; // 'imperial' or 'metric'
+
+function init() {
+  // Try loading from localStorage
+  try {
+    const saved = localStorage.getItem('npk_calc_state');
+    if (saved) {
+      applyValues(JSON.parse(saved));
+      calculateAll();
+      return;
+    }
+  } catch(e) {}
+
+  // Default to preset 0
+  loadPreset(0);
+}
+
+function showProToast(msg) {
+  const toast = document.getElementById('proToast');
+  document.getElementById('proToastMsg').textContent = msg || "Available in the full version";
+  const link = toast.querySelector('a');
+  if (link) link.setAttribute('href', PRO_LINK);
+  toast.classList.remove('hidden');
+  setTimeout(() => { toast.classList.add('hidden'); }, 4000);
+}
+
+function closeToast() {
+  document.getElementById('proToast').classList.add('hidden');
+}
+
+function updateUnitLabels() {
+  const isMetric = currentUnit === 'metric';
+  document.getElementById('lblLength').textContent = isMetric ? "Bed Length (m)" : "Bed Length (ft)";
+  document.getElementById('lblWidth').textContent = isMetric ? "Bed Width (m)" : "Bed Width (ft)";
+  document.getElementById('lblCustomArea').textContent = isMetric ? "Area per Bed (m²)" : "Area per Bed (sq ft)";
+  document.getElementById('lblSoilDepth').textContent = isMetric ? "Soil Depth (cm)" : "Soil Depth (in)";
+  document.getElementById('lblMulchDepth').textContent = isMetric ? "Mulch Layer Depth (cm)" : "Mulch Layer Depth (in)";
+  document.getElementById('lblTargetHeader').textContent = isMetric ? "Target Rates (grams per m² bed area):" : "Target Rates (lbs per 100 sq ft bed area):";
+}
+
+function setUnitSystem(unit) {
+  if (unit === currentUnit) return;
+
+  const toMetric = unit === 'metric';
+  currentUnit = unit;
+
+  document.getElementById('unitImpBtn').classList.toggle('active', !toMetric);
+  document.getElementById('unitMetBtn').classList.toggle('active', toMetric);
+
+  const lengthInput = document.getElementById('bedLength');
+  const widthInput = document.getElementById('bedWidth');
+  const areaInput = document.getElementById('customArea');
+  const depthInput = document.getElementById('soilDepth');
+  const mulchDepthInput = document.getElementById('mulchDepth');
+
+  const targetN = document.getElementById('targetN');
+  const targetP = document.getElementById('targetP');
+  const targetK = document.getElementById('targetK');
+
+  const l = parseFloat(lengthInput.value) || 0;
+  const w = parseFloat(widthInput.value) || 0;
+  const a = parseFloat(areaInput.value) || 0;
+  const d = parseFloat(depthInput.value) || 0;
+  const md = parseFloat(mulchDepthInput.value) || 0;
+  const tn = parseFloat(targetN.value) || 0;
+  const tp = parseFloat(targetP.value) || 0;
+  const tk = parseFloat(targetK.value) || 0;
+
+  if (toMetric) {
+    lengthInput.value = (l * 0.3048).toFixed(1);
+    widthInput.value = (w * 0.3048).toFixed(1);
+    areaInput.value = (a * 0.092903).toFixed(1);
+    depthInput.value = (d * 2.54).toFixed(1);
+    mulchDepthInput.value = (md * 2.54).toFixed(1);
+
+    targetN.value = (tn * 48.824).toFixed(1);
+    targetP.value = (tp * 48.824).toFixed(1);
+    targetK.value = (tk * 48.824).toFixed(1);
+  } else {
+    lengthInput.value = (l / 0.3048).toFixed(1);
+    widthInput.value = (w / 0.3048).toFixed(1);
+    areaInput.value = (a / 0.092903).toFixed(1);
+    depthInput.value = (d / 2.54).toFixed(1);
+    mulchDepthInput.value = (md / 2.54).toFixed(1);
+
+    targetN.value = (tn / 48.824).toFixed(2);
+    targetP.value = (tp / 48.824).toFixed(2);
+    targetK.value = (tk / 48.824).toFixed(2);
+  }
+
+  updateUnitLabels();
+  calculateAll();
+}
+
+function loadPreset(idx) {
+  const p = PRESETS[idx];
+  if (!p) return;
+  document.getElementById('presetSelect').value = idx;
+  applyValues(p.values);
+  calculateAll();
+}
+
+document.getElementById('presetSelect').addEventListener('change', (e) => {
+  const selectedIdx = parseInt(e.target.value);
+  if (!PRO && selectedIdx !== 0) {
+    showProToast("Available in the full version");
+    e.target.value = 0;
+    return;
+  }
+  loadPreset(selectedIdx);
+});
+
+function applyValues(vals) {
+  currentUnit = vals.unitSystem || 'imperial';
+  document.getElementById('unitImpBtn').classList.toggle('active', currentUnit === 'imperial');
+  document.getElementById('unitMetBtn').classList.toggle('active', currentUnit === 'metric');
+
+  document.getElementById('bedShape').value = vals.bedShape || 'rect';
+  document.getElementById('bedCount').value = vals.bedCount || 1;
+  document.getElementById('bedLength').value = vals.bedLength || 10;
+  document.getElementById('bedWidth').value = vals.bedWidth || 10;
+  document.getElementById('customArea').value = vals.customArea || 100;
+  document.getElementById('soilDepth').value = vals.soilDepth || 8;
+
+  document.getElementById('cropProfile').value = vals.cropProfile || 'heavy_feeders';
+  document.getElementById('targetN').value = vals.customTargetN !== undefined ? vals.customTargetN : 0.35;
+  document.getElementById('targetP').value = vals.customTargetP !== undefined ? vals.customTargetP : 0.35;
+  document.getElementById('targetK').value = vals.customTargetK !== undefined ? vals.customTargetK : 0.35;
+
+  document.getElementById('fertilizerN').value = vals.fertilizerN !== undefined ? vals.fertilizerN : 10;
+  document.getElementById('fertilizerP').value = vals.fertilizerP !== undefined ? vals.fertilizerP : 10;
+  document.getElementById('fertilizerK').value = vals.fertilizerK !== undefined ? vals.fertilizerK : 10;
+  document.getElementById('fertType').value = vals.fertType || 'synthetic';
+  document.getElementById('splitApp').value = vals.splitApp || (vals.splitApplication ? 'split2' : 'single');
+
+  document.getElementById('mulchType').value = vals.mulchType || 'shredded_bark';
+  document.getElementById('mulchDepth').value = vals.mulchDepth !== undefined ? vals.mulchDepth : 2;
+  document.getElementById('sunExposure').value = vals.sunExposure || 'partial_shade';
+
+  updateUnitLabels();
+  toggleShapeInputs();
+}
+
+function toggleShapeInputs() {
+  const shape = document.getElementById('bedShape').value;
+  if (shape === 'rect') {
+    document.getElementById('rectInputsGroup').classList.remove('hidden');
+    document.getElementById('customAreaInputsGroup').classList.add('hidden');
+  } else {
+    document.getElementById('rectInputsGroup').classList.add('hidden');
+    document.getElementById('customAreaInputsGroup').classList.remove('hidden');
+  }
+}
+
+function onCropProfileChange() {
+  const profile = document.getElementById('cropProfile').value;
+  const isImperial = currentUnit === 'imperial';
+
+  // Base values in Imperial (lbs / 100 sq ft)
+  let n = 0.35, p = 0.35, k = 0.35;
+  if (profile === 'heavy_feeders') { n = 0.35; p = 0.35; k = 0.35; }
+  else if (profile === 'moderate_feeders') { n = 0.20; p = 0.20; k = 0.20; }
+  else if (profile === 'light_feeders') { n = 0.12; p = 0.05; k = 0.12; }
+  else if (profile === 'legumes') { n = 0.05; p = 0.20; k = 0.20; }
+  else if (profile === 'custom') {
+    calculateAll();
+    return;
+  }
+
+  if (!isImperial) {
+    n = n * 48.824;
+    p = p * 48.824;
+    k = k * 48.824;
+    document.getElementById('targetN').value = n.toFixed(1);
+    document.getElementById('targetP').value = p.toFixed(1);
+    document.getElementById('targetK').value = k.toFixed(1);
+  } else {
+    document.getElementById('targetN').value = n.toFixed(2);
+    document.getElementById('targetP').value = p.toFixed(2);
+    document.getElementById('targetK').value = k.toFixed(2);
+  }
+
+  calculateAll();
+}
+
+function onCustomTargetInput() {
+  document.getElementById('cropProfile').value = 'custom';
+  calculateAll();
+}
+
+function calculateAll() {
+  toggleShapeInputs();
+
+  // Read inputs safely
+  const shape = document.getElementById('bedShape').value;
+  const bedCount = Math.max(1, parseInt(document.getElementById('bedCount').value) || 1);
+  const length = Math.max(0.1, parseFloat(document.getElementById('bedLength').value) || 0);
+  const width = Math.max(0.1, parseFloat(document.getElementById('bedWidth').value) || 0);
+  const customArea = Math.max(0.1, parseFloat(document.getElementById('customArea').value) || 0);
+  const soilDepth = Math.max(0.1, parseFloat(document.getElementById('soilDepth').value) || 0);
+
+  const targetNVal = Math.max(0, parseFloat(document.getElementById('targetN').value) || 0);
+  const targetPVal = Math.max(0, parseFloat(document.getElementById('targetP').value) || 0);
+  const targetKVal = Math.max(0, parseFloat(document.getElementById('targetK').value) || 0);
+
+  const fertNPct = Math.max(0, parseFloat(document.getElementById('fertilizerN').value) || 0);
+  const fertPPct = Math.max(0, parseFloat(document.getElementById('fertilizerP').value) || 0);
+  const fertKPct = Math.max(0, parseFloat(document.getElementById('fertilizerK').value) || 0);
+  const fertType = document.getElementById('fertType').value;
+  const splitApp = document.getElementById('splitApp').value;
+
+  const mulchType = document.getElementById('mulchType').value;
+  const mulchDepth = Math.max(0, parseFloat(document.getElementById('mulchDepth').value) || 0);
+  const sunExposure = document.getElementById('sunExposure').value;
+
+  // 1. Calculate Single Bed Area and Total Area
+  let singleBedArea = 0;
+  if (shape === 'rect') {
+    singleBedArea = length * width;
+  } else {
+    singleBedArea = customArea;
+  }
+  const totalArea = singleBedArea * bedCount;
+
+  // Calculate Volume
+  let totalVolume = 0; // cu ft if imperial, m3 if metric
+  if (currentUnit === 'imperial') {
+    totalVolume = totalArea * (soilDepth / 12);
+  } else {
+    totalVolume = totalArea * (soilDepth / 100);
+  }
+
+  // Update Area & Volume Badge
+  if (currentUnit === 'imperial') {
+    document.getElementById('areaVolumeSummary').textContent = 
+      `${totalArea.toFixed(0)} sq ft | ${totalVolume.toFixed(1)} cu ft (${(totalVolume/27).toFixed(2)} yd³)`;
+  } else {
+    document.getElementById('areaVolumeSummary').textContent = 
+      `${totalArea.toFixed(1)} m² | ${totalVolume.toFixed(2)} m³`;
+  }
+
+  // 2. Mulch Lifespan & N Tie-Up Calculation
+  let baseLifespanMonths = 0;
+  let nBufferPctPerInch = 0; // % per inch (or per 2.5cm)
+  let somContribution = "None";
+
+  if (mulchType === 'shredded_bark') {
+    baseLifespanMonths = 20;
+    nBufferPctPerInch = 5.0;
+    somContribution = "High Organic Matter";
+  } else if (mulchType === 'cedar_chips') {
+    baseLifespanMonths = 36;
+    nBufferPctPerInch = 4.0;
+    somContribution = "Moderate / Long-term";
+  } else if (mulchType === 'straw') {
+    baseLifespanMonths = 8;
+    nBufferPctPerInch = 3.0;
+    somContribution = "Fast Humus Conversion";
+  } else if (mulchType === 'leaves') {
+    baseLifespanMonths = 9;
+    nBufferPctPerInch = 2.0;
+    somContribution = "Rich Soil Biology";
+  } else if (mulchType === 'compost') {
+    baseLifespanMonths = 5;
+    nBufferPctPerInch = 0.0; // Compost supplies N
+    somContribution = "Direct Humus & Nutrients";
+  }
+
+  // Adjust depth scale
+  const depthInches = currentUnit === 'imperial' ? mulchDepth : mulchDepth / 2.54;
+  let sunMult = 1.0;
+  if (sunExposure === 'full_sun') sunMult = 0.85;
+  else if (sunExposure === 'full_shade') sunMult = 1.15;
+
+  const estimatedLifespanMonths = Math.round(baseLifespanMonths * (depthInches / 2.0) * sunMult);
+  const nTieUpPct = Math.min(25, depthInches * nBufferPctPerInch);
+
+  // Convert Targets to Standard Imperial (lb / 100 sq ft) for calculation engine
+  let stdTargetNPer100 = currentUnit === 'imperial' ? targetNVal : targetNVal / 48.824;
+  let stdTargetPPer100 = currentUnit === 'imperial' ? targetPVal : targetPVal / 48.824;
+  let stdTargetKPer100 = currentUnit === 'imperial' ? targetKVal : targetKVal / 48.824;
+
+  // Add Mulch Nitrogen Tie-Up Buffer to N Target
+  const nBufferLbPer100 = stdTargetNPer100 * (nTieUpPct / 100);
+  const adjustedTargetNPer100 = stdTargetNPer100 + nBufferLbPer100;
+
+  // 3. Total Nutrient Mass Demands for Total Area (in lbs)
+  const totalAreaSqFt = currentUnit === 'imperial' ? totalArea : totalArea * 10.7639;
+  const areaMultiplier = totalAreaSqFt / 100.0;
+
+  const reqTotalNLb = adjustedTargetNPer100 * areaMultiplier;
+  const reqTotalPLb = stdTargetPPer100 * areaMultiplier;
+  const reqTotalKLb = stdTargetKPer100 * areaMultiplier;
+
+  // 4. Calculate Fertilizer Product Mass Required
+  // Primary driver is Nitrogen if N% > 0, else P2O5, else K2O
+  let reqFertilizerMassLb = 0;
+  if (fertNPct > 0) {
+    reqFertilizerMassLb = reqTotalNLb / (fertNPct / 100);
+  } else if (fertPPct > 0) {
+    reqFertilizerMassLb = reqTotalPLb / (fertPPct / 100);
+  } else if (fertKPct > 0) {
+    reqFertilizerMassLb = reqTotalKLb / (fertKPct / 100);
+  }
+
+  // Delivered Nutrients from that Fertilizer Mass (in lbs)
+  const deliveredNLb = reqFertilizerMassLb * (fertNPct / 100);
+  const deliveredPLb = reqFertilizerMassLb * (fertPPct / 100);
+  const deliveredKLb = reqFertilizerMassLb * (fertKPct / 100);
+
+  // 5. Application Splits
+  let numSplits = 1;
+  let preplantRatio = 1.0;
+  let sidedressRatio = 0.0;
+
+  if (splitApp === 'split2') {
+    numSplits = 2;
+    preplantRatio = 0.5;
+    sidedressRatio = 0.5;
+  } else if (splitApp === 'split3') {
+    numSplits = 3;
+    preplantRatio = 0.34;
+    sidedressRatio = 0.33;
+  }
+
+  const preplantMassLb = reqFertilizerMassLb * preplantRatio;
+  const sidedressMassLb = reqFertilizerMassLb * sidedressRatio;
+  const perBedMassLb = reqFertilizerMassLb / bedCount;
+
+  // Display Main Result Hero Mass
+  if (currentUnit === 'imperial') {
+    document.getElementById('resTotalMass').textContent = `${reqFertilizerMassLb.toFixed(2)} lbs`;
+    document.getElementById('resMassSub').textContent = 
+      `Equivalent to ${(reqFertilizerMassLb * 16).toFixed(1)} oz (${(reqFertilizerMassLb * 0.453592).toFixed(2)} kg) total for ${totalArea.toFixed(0)} sq ft`;
+    document.getElementById('resPreplantMass').textContent = `${preplantMassLb.toFixed(2)} lbs (${(preplantMassLb*16).toFixed(0)} oz)`;
+    document.getElementById('resSidedressMass').textContent = numSplits > 1 ? `${sidedressMassLb.toFixed(2)} lbs (${(sidedressMassLb*16).toFixed(0)} oz)` : 'N/A (Single Dose)';
+    document.getElementById('resPerBedMass').textContent = `${perBedMassLb.toFixed(2)} lbs (${(perBedMassLb*16).toFixed(0)} oz)`;
+  } else {
+    const reqKg = reqFertilizerMassLb * 0.453592;
+    const reqGrams = reqKg * 1000;
+    document.getElementById('resTotalMass').textContent = `${reqKg.toFixed(2)} kg`;
+    document.getElementById('resMassSub').textContent = 
+      `Equivalent to ${reqGrams.toFixed(0)} g (${(reqFertilizerMassLb * 2.20462).toFixed(2)} lbs) total for ${totalArea.toFixed(1)} m²`;
+    document.getElementById('resPreplantMass').textContent = `${(preplantMassLb * 0.453592).toFixed(2)} kg`;
+    document.getElementById('resSidedressMass').textContent = numSplits > 1 ? `${(sidedressMassLb * 0.453592).toFixed(2)} kg` : 'N/A (Single Dose)';
+    document.getElementById('resPerBedMass').textContent = `${(perBedMassLb * 0.453592).toFixed(2)} kg`;
+  }
+
+  // Display Delivered vs Target Nutrients
+  function formatNutrient(valLb) {
+    if (currentUnit === 'imperial') {
+      return `${valLb.toFixed(2)} lb`;
+    } else {
+      return `${(valLb * 453.592).toFixed(0)} g`;
+    }
+  }
+
+  document.getElementById('resDeliveredN').textContent = formatNutrient(deliveredNLb);
+  document.getElementById('resTargetNText').textContent = `Target: ${formatNutrient(reqTotalNLb)}`;
+
+  document.getElementById('resDeliveredP').textContent = formatNutrient(deliveredPLb);
+  document.getElementById('resTargetPText').textContent = `Target: ${formatNutrient(reqTotalPLb)}`;
+
+  document.getElementById('resDeliveredK').textContent = formatNutrient(deliveredKLb);
+  document.getElementById('resTargetKText').textContent = `Target: ${formatNutrient(reqTotalKLb)}`;
+
+  // Badges for N, P, K Balance
+  renderNutrientBadge('badgeN', deliveredNLb, reqTotalNLb);
+  renderNutrientBadge('badgeP', deliveredPLb, reqTotalPLb);
+  renderNutrientBadge('badgeK', deliveredKLb, reqTotalKLb);
+
+  // 6. Burn Risk Safety Engine Logic
+  // Single application maximum N rate per 100 sq ft
+  const maxSingleAppNRatio = Math.max(preplantRatio, sidedressRatio);
+  const singleAppNRatePer100 = (deliveredNLb * maxSingleAppNRatio) / areaMultiplier;
+
+  // Thresholds based on synthetic vs organic
+  const warnThreshold = fertType === 'synthetic' ? 0.30 : 0.60;
+  const dangerThreshold = fertType === 'synthetic' ? 0.55 : 0.90;
+
+  const burnBadge = document.getElementById('burnRiskStatusBadge');
+  const adviceCard = document.getElementById('burnAdviceCard');
+  const adviceTitle = document.getElementById('adviceTitle');
+  const adviceText = document.getElementById('adviceText');
+  const adviceList = document.getElementById('adviceList');
+  const burnNRateVal = document.getElementById('burnNRateVal');
+
+  burnNRateVal.textContent = `${singleAppNRatePer100.toFixed(3)} lb N / 100 sq ft (${(singleAppNRatePer100 * 48.824).toFixed(1)} g/m²) per app`;
+
+  adviceCard.className = 'advice-card';
+  adviceList.innerHTML = '';
+
+  if (fertNPct === 0 && fertPPct === 0 && fertKPct === 0) {
+    burnBadge.className = 'badge-pill badge-warning';
+    burnBadge.textContent = 'ZERO N-P-K GRADE';
+    adviceCard.classList.add('warning');
+    adviceTitle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line></svg> Invalid Fertilizer Grade`;
+    adviceText.textContent = `Fertilizer N-P-K grade cannot be 0-0-0. Enter at least one nutrient percentage greater than 0% (e.g. 10-10-10 or 12-0-0).`;
+  } else if (singleAppNRatePer100 > dangerThreshold) {
+    burnBadge.className = 'badge-pill badge-danger';
+    burnBadge.textContent = 'HIGH RISK OF ROOT BURN';
+    adviceCard.classList.add('danger');
+    adviceTitle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path></svg> Action Required: High Nitrogen Burn Hazard`;
+    adviceText.textContent = `Applying ${singleAppNRatePer100.toFixed(2)} lb synthetic N per 100 sq ft in a single dose exceeds safe root osmotic thresholds and risks burning tender roots.`;
+
+    adviceList.innerHTML += `<li><strong>Split Application:</strong> Switch schedule to 50/50 or 3-way split side-dressing to lower peak salt load per dose.</li>`;
+    if (fertType === 'synthetic') {
+      adviceList.innerHTML += `<li><strong>Consider Organic Blend:</strong> Organic slow-release sources (e.g. feather meal, blood meal) minimize salt shock.</li>`;
+    }
+    adviceList.innerHTML += `<li><strong>Heavy Initial Irrigation:</strong> Water garden deeply after application to diffuse concentration.</li>`;
+  } else if (singleAppNRatePer100 > warnThreshold) {
+    burnBadge.className = 'badge-pill badge-warning';
+    burnBadge.textContent = 'MODERATE CAUTION';
+    adviceCard.classList.add('warning');
+    adviceTitle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line></svg> Moderate Salt Concentration`;
+    adviceText.textContent = `Dose is within tolerable range for established plants but could stress young seedlings during dry hot weather.`;
+
+    adviceList.innerHTML += `<li>Apply fertilizer around the drip line of crops, avoiding direct contact with stems or foliage.</li>`;
+    adviceList.innerHTML += `<li>Keep soil evenly moist during the first 7-10 days post-application.</li>`;
+  } else {
+    burnBadge.className = 'badge-pill badge-success';
+    burnBadge.textContent = 'SAFE: LOW SALT LOAD';
+    adviceTitle.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="9 11 12 14 22 4"></polyline></svg> Optimal Root Safety`;
+    adviceText.textContent = `The calculated single application rate is well within safe bio-availability limits for vegetable roots and soil micro-fauna.`;
+
+    adviceList.innerHTML += `<li>Mix fertilizer into the top 2-4 inches of soil during bed preparation or scratch gently into surface for side-dressing.</li>`;
+    adviceList.innerHTML += `<li>Follow up with standard irrigation to activate nutrient release.</li>`;
+  }
+
+  // Additional advice on NPK imbalance
+  if (deliveredPLb > reqTotalPLb * 1.5 && reqTotalPLb > 0) {
+    adviceList.innerHTML += `<li><strong style="color:var(--warning-amber);">Phosphorus Surplus Notice:</strong> This blend delivers ${(deliveredPLb/reqTotalPLb).toFixed(1)}x required P₂O₅. Excess P can accumulate long-term and lock out iron/zinc.</li>`;
+  }
+  if (deliveredKLb > reqTotalKLb * 1.5 && reqTotalKLb > 0) {
+    adviceList.innerHTML += `<li><strong style="color:var(--warning-amber);">Potassium Surplus Notice:</strong> Blend delivers ${(deliveredKLb/reqTotalKLb).toFixed(1)}x required K₂O.</li>`;
+  }
+
+  // 7. Mulch Lifespan & N Tie-Up UI update
+  document.getElementById('resMulchLifespan').textContent = mulchType === 'none' ? 'N/A' : `${estimatedLifespanMonths} Months`;
+  document.getElementById('resMulchBuffer').textContent = mulchType === 'none' ? '0%' : `+${nTieUpPct.toFixed(1)}% (+${formatNutrient(nBufferLbPer100 * areaMultiplier)})`;
+  document.getElementById('resMulchSOM').textContent = somContribution;
+
+  const mulchExp = document.getElementById('mulchExplanationText');
+  if (mulchType === 'none') {
+    mulchExp.textContent = "Bare soil without mulch has zero nitrogen tie-up but experiences higher moisture loss and erosion risk.";
+  } else if (mulchType === 'compost') {
+    mulchExp.textContent = "Finished compost does not tie up nitrogen and actively contributes biologically available micro-nutrients and humus.";
+  } else {
+    const mName = document.getElementById('mulchType').options[document.getElementById('mulchType').selectedIndex].text;
+    mulchExp.textContent = `${mName} (${depthInches.toFixed(1)}" depth) ties up surface soil nitrogen temporarily as carbon-decomposing microbes draw N. A +${nTieUpPct.toFixed(1)}% N buffer (+${formatNutrient(nBufferLbPer100 * areaMultiplier)}) is automatically integrated into the application requirement.`;
+  }
+
+  // Save current state to localStorage safely
+  saveStateLocally();
+}
+
+function renderNutrientBadge(elemId, delivered, target) {
+  const el = document.getElementById(elemId);
+  if (target === 0) {
+    el.innerHTML = `<span class="badge-pill badge-info">NO TARGET</span>`;
+    return;
+  }
+  const ratio = delivered / target;
+  if (ratio >= 0.95 && ratio <= 1.05) {
+    el.innerHTML = `<span class="badge-pill badge-success">BALANCED</span>`;
+  } else if (ratio > 1.05 && ratio <= 1.5) {
+    el.innerHTML = `<span class="badge-pill badge-warning">+${((ratio-1)*100).toFixed(0)}% OVERSHOOT</span>`;
+  } else if (ratio > 1.5) {
+    el.innerHTML = `<span class="badge-pill badge-danger">+${((ratio-1)*100).toFixed(0)}% EXCESS</span>`;
+  } else {
+    el.innerHTML = `<span class="badge-pill badge-warning">-${((1-ratio)*100).toFixed(0)}% DEFICIT</span>`;
+  }
+}
+
+function saveStateLocally() {
+  try {
+    const state = {
+      unitSystem: currentUnit,
+      bedShape: document.getElementById('bedShape').value,
+      bedCount: document.getElementById('bedCount').value,
+      bedLength: document.getElementById('bedLength').value,
+      bedWidth: document.getElementById('bedWidth').value,
+      customArea: document.getElementById('customArea').value,
+      soilDepth: document.getElementById('soilDepth').value,
+      cropProfile: document.getElementById('cropProfile').value,
+      customTargetN: document.getElementById('targetN').value,
+      customTargetP: document.getElementById('targetP').value,
+      customTargetK: document.getElementById('targetK').value,
+      fertilizerN: document.getElementById('fertilizerN').value,
+      fertilizerP: document.getElementById('fertilizerP').value,
+      fertilizerK: document.getElementById('fertilizerK').value,
+      fertType: document.getElementById('fertType').value,
+      splitApp: document.getElementById('splitApp').value,
+      mulchType: document.getElementById('mulchType').value,
+      mulchDepth: document.getElementById('mulchDepth').value,
+      sunExposure: document.getElementById('sunExposure').value
+    };
+    localStorage.setItem('npk_calc_state', JSON.stringify(state));
+  } catch(e) {}
+}
+
+function copySummary() {
+  const massText = document.getElementById('resTotalMass').textContent;
+  const subText = document.getElementById('resMassSub').textContent;
+  const nText = document.getElementById('resDeliveredN').textContent;
+  const pText = document.getElementById('resDeliveredP').textContent;
+  const kText = document.getElementById('resDeliveredK').textContent;
+  const burnStatus = document.getElementById('burnRiskStatusBadge').textContent;
+  const mulchLifespan = document.getElementById('resMulchLifespan').textContent;
+
+  const textToCopy = `Vegetable Garden Fertilizer & NPK Summary:
+- Total Fertilizer Mass Required: ${massText} (${subText})
+- Delivered Nutrients: N: ${nText} | P2O5: ${pText} | K2O: ${kText}
+- Burn Risk Status: ${burnStatus}
+- Mulch Lifespan: ${mulchLifespan}
+Calculated via Vegetable Garden Fertilizer & NPK Application Calculator.`;
+
+  navigator.clipboard.writeText(textToCopy).then(() => {
+    alert("Fertilizer calculation summary copied to clipboard!");
+  }).catch(() => {
+    alert("Summary copied to clipboard!");
+  });
+}
+
+function triggerPrint() {
+  if (!PRO) {
+    showProToast("Available in the full version");
+    return;
+  }
+  window.print();
+}
+
+function exportCSV() {
+  if (!PRO) {
+    showProToast("Available in the full version");
+    return;
+  }
+  const rows = [
+    ["Parameter", "Value"],
+    ["Unit System", currentUnit],
+    ["Bed Shape", document.getElementById('bedShape').value],
+    ["Bed Count", document.getElementById('bedCount').value],
+    ["Soil Depth", document.getElementById('soilDepth').value],
+    ["Crop Profile", document.getElementById('cropProfile').value],
+    ["Fertilizer NPK", `${document.getElementById('fertilizerN').value}-${document.getElementById('fertilizerP').value}-${document.getElementById('fertilizerK').value}`],
+    ["Total Fertilizer Mass Required", document.getElementById('resTotalMass').textContent],
+    ["Preplant Mass", document.getElementById('resPreplantMass').textContent],
+    ["Side-dress Mass", document.getElementById('resSidedressMass').textContent],
+    ["Burn Risk", document.getElementById('burnRiskStatusBadge').textContent],
+    ["Mulch Lifespan", document.getElementById('resMulchLifespan').textContent]
+  ];
+
+  let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "npk_fertilizer_calculation.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function exportJSON() {
+  if (!PRO) {
+    showProToast("Available in the full version");
+    return;
+  }
+  const data = {
+    unitSystem: currentUnit,
+    bedCount: document.getElementById('bedCount').value,
+    soilDepth: document.getElementById('soilDepth').value,
+    cropProfile: document.getElementById('cropProfile').value,
+    targetN: document.getElementById('targetN').value,
+    targetP: document.getElementById('targetP').value,
+    targetK: document.getElementById('targetK').value,
+    fertilizerN: document.getElementById('fertilizerN').value,
+    fertilizerP: document.getElementById('fertilizerP').value,
+    fertilizerK: document.getElementById('fertilizerK').value,
+    fertType: document.getElementById('fertType').value,
+    splitApp: document.getElementById('splitApp').value,
+    totalFertilizerMass: document.getElementById('resTotalMass').textContent,
+    burnRiskStatus: document.getElementById('burnRiskStatusBadge').textContent,
+    mulchLifespan: document.getElementById('resMulchLifespan').textContent,
+    timestamp: new Date().toISOString()
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'npk_fertilizer_calculation.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function resetDefaults() {
+  try {
+    localStorage.removeItem('npk_calc_state');
+  } catch(e) {}
+  loadPreset(0);
+}
+
+// INITIALIZE ON LOAD
+document.addEventListener('DOMContentLoaded', init);
+
+function getMulchDecomTieUp() {
+  const mTypeEl = document.getElementById('decomMulchType');
+  if (!mTypeEl) return 0;
+  const mType = mTypeEl.value;
+  const thick = parseFloat(document.getElementById('decomLayerThick').value) || 3;
+  const moist = document.getElementById('decomMoisture').value;
+
+  let tieUpPerIn = 0.00667;
+  if (mType === 'bark') tieUpPerIn = 0.005;
+  else if (mType === 'straw') tieUpPerIn = 0.010;
+  else if (mType === 'leaf_compost') tieUpPerIn = 0.0;
+
+  let tieUpMult = 1.0;
+  if (moist === 'dry') tieUpMult = 0.8;
+  else if (moist === 'wet') tieUpMult = 1.2;
+
+  return tieUpPerIn * thick * tieUpMult;
+}
+
+function calculateMulchDecom() {
+  const mTypeEl = document.getElementById('decomMulchType');
+  if (!mTypeEl) return 0;
+  const mType = mTypeEl.value;
+  const thick = parseFloat(document.getElementById('decomLayerThick').value) || 3;
+  const moist = document.getElementById('decomMoisture').value;
+
+  let minMosPerIn = 8, maxMosPerIn = 12, tieUpPerIn = 0.00667, releasePerIn = 0.004;
+  if (mType === 'bark') { minMosPerIn = 6; maxMosPerIn = 9; tieUpPerIn = 0.005; releasePerIn = 0.006; }
+  else if (mType === 'straw') { minMosPerIn = 3; maxMosPerIn = 4; tieUpPerIn = 0.010; releasePerIn = 0.010; }
+  else if (mType === 'leaf_compost') { minMosPerIn = 2; maxMosPerIn = 3; tieUpPerIn = 0.0; releasePerIn = 0.025; }
+
+  let durationMult = 1.0, tieUpMult = 1.0;
+  if (moist === 'dry') { durationMult = 1.3; tieUpMult = 0.8; }
+  else if (moist === 'wet') { durationMult = 0.75; tieUpMult = 1.2; }
+
+  const minMos = Math.round(minMosPerIn * thick * durationMult);
+  const maxMos = Math.round(maxMosPerIn * thick * durationMult);
+  const tieUpLb = tieUpPerIn * thick * tieUpMult;
+  const releaseLb = releasePerIn * thick;
+
+  const isMetric = currentUnit === 'metric';
+  document.getElementById('decomLifespanVal').textContent = `${minMos} - ${maxMos} Months`;
+  document.getElementById('decomLifespanSub').textContent = `~${(minMos/12).toFixed(1)} - ${(maxMos/12).toFixed(1)} Years`;
+
+  const tieUpDisp = isMetric ? `+${(tieUpLb * 48.824).toFixed(2)} g N / m²` : `+${tieUpLb.toFixed(2)} lb N / 100 sq ft`;
+  document.getElementById('decomTieUpVal').textContent = tieUpDisp;
+  document.getElementById('decomReleaseVal').textContent = isMetric ? `${(releaseLb * 48.824).toFixed(2)} g N / m²/yr` : `${releaseLb.toFixed(2)} lb N / 100 sq ft/yr`;
+
+  const mName = mTypeEl.options[mTypeEl.selectedIndex].text;
+  document.getElementById('decomImpactNote').textContent = 
+    `Selecting ${thick} inches of ${mName} increases recommended baseline N application by ${tieUpDisp} for surface microbial tie-up compensation and reports ${minMos}-${maxMos} month mulch lifespan.`;
+
+  return tieUpLb;
+}
+
+(function() {
+  const origCalculateAll = window.calculateAll;
+  window.calculateAll = function() {
+    origCalculateAll();
+    calculateMulchDecom();
+  };
+  calculateMulchDecom();
+})();
+function calculateBlender() {
+  const tN = parseFloat(document.getElementById('blendTargetN').value) || 0;
+  const tP = parseFloat(document.getElementById('blendTargetP').value) || 0;
+  const a1N = (parseFloat(document.getElementById('amend1N').value) || 0) / 100;
+  const a1P = (parseFloat(document.getElementById('amend1P').value) || 0) / 100;
+  const a2N = (parseFloat(document.getElementById('amend2N').value) || 0) / 100;
+  const a2P = (parseFloat(document.getElementById('amend2P').value) || 0) / 100;
+
+  const isMetric = currentUnit === 'metric';
+  document.getElementById('lblBlendTargetN').textContent = isMetric ? "Target N (kg)" : "Target N (lb)";
+  document.getElementById('lblBlendTargetP').textContent = isMetric ? "Target P₂O₅ (kg)" : "Target P₂O₅ (lb)";
+  const unitStr = isMetric ? 'kg' : 'lbs';
+  const nutUnit = isMetric ? 'kg' : 'lb';
+
+  const dose1El = document.getElementById('blendDose1');
+  const dose2El = document.getElementById('blendDose2');
+  const totalEl = document.getElementById('blendTotalMass');
+  const deliveredEl = document.getElementById('blendDeliveredNP');
+  const msgEl = document.getElementById('blenderStatusMsg');
+
+  document.getElementById('blendDose1Sub').textContent = `${(a1N * 100).toFixed(0)}-${(a1P * 100).toFixed(0)}-0 Grade`;
+  document.getElementById('blendDose2Sub').textContent = `${(a2N * 100).toFixed(0)}-${(a2P * 100).toFixed(0)}-0 Grade`;
+
+  const det = (a1N * a2P) - (a2N * a1P);
+
+  if (Math.abs(det) < 1e-7) {
+    dose1El.textContent = 'N/A';
+    dose2El.textContent = 'N/A';
+    totalEl.textContent = '0.0 ' + unitStr;
+    deliveredEl.textContent = 'Indeterminate solution';
+    msgEl.className = 'advice-card warning';
+    msgEl.innerHTML = '<strong>Linear dependency:</strong> Both amendments share identical N:P ratios or zero grades. Choose complementary inputs.';
+    return;
+  }
+
+  const dose1 = (tN * a2P - tP * a2N) / det;
+  const dose2 = (a1N * tP - a1P * tN) / det;
+
+  function fmtVal(v) {
+    return Math.abs(v - Math.round(v * 10) / 10) < 1e-4 ? v.toFixed(1) : v.toFixed(2);
+  }
+
+  if (dose1 < -0.001 || dose2 < -0.001) {
+    dose1El.textContent = dose1 >= 0 ? `${fmtVal(dose1)} ${unitStr}` : 'Infeasible';
+    dose2El.textContent = dose2 >= 0 ? `${fmtVal(dose2)} ${unitStr}` : 'Infeasible';
+    totalEl.textContent = 'Ratio Conflict';
+    deliveredEl.textContent = 'Negative quantity required';
+    msgEl.className = 'advice-card danger';
+    msgEl.innerHTML = '<strong>Ratio mismatch:</strong> Target nutrient ratio cannot be hit without overshooting one element. Select an amendment with higher concentration of the limiting nutrient.';
+    return;
+  }
+
+  const d1 = Math.max(0, dose1);
+  const d2 = Math.max(0, dose2);
+  const totalDose = d1 + d2;
+  const delivN = d1 * a1N + d2 * a2N;
+  const delivP = d1 * a1P + d2 * a2P;
+
+  dose1El.textContent = `${fmtVal(d1)} ${unitStr}`;
+  dose2El.textContent = `${fmtVal(d2)} ${unitStr}`;
+  totalEl.textContent = `${fmtVal(totalDose)} ${unitStr}`;
+  deliveredEl.textContent = `Delivers ${delivN.toFixed(2)} ${nutUnit} N & ${delivP.toFixed(2)} ${nutUnit} P₂O₅`;
+
+  msgEl.className = 'advice-card';
+  msgEl.innerHTML = `<strong>Exact Balance:</strong> Delivers precisely ${delivN.toFixed(2)} ${nutUnit} N and ${delivP.toFixed(2)} ${nutUnit} P₂O₅ without overshooting either element. Apply ${fmtVal(d1)} ${unitStr} of Amendment 1 and ${fmtVal(d2)} ${unitStr} of Amendment 2.`;
+}
+
+function syncTargetsToBlender() {
+  const cropN = parseFloat(document.getElementById('targetN').value) || 0;
+  const cropP = parseFloat(document.getElementById('targetP').value) || 0;
+  const bedCount = Math.max(1, parseInt(document.getElementById('bedCount').value) || 1);
+  const shape = document.getElementById('bedShape').value;
+  const length = Math.max(0.1, parseFloat(document.getElementById('bedLength').value) || 0);
+  const width = Math.max(0.1, parseFloat(document.getElementById('bedWidth').value) || 0);
+  const customArea = Math.max(0.1, parseFloat(document.getElementById('customArea').value) || 0);
+  const totalArea = (shape === 'rect' ? length * width : customArea) * bedCount;
+  const areaMult = currentUnit === 'imperial' ? totalArea / 100 : totalArea;
+
+  if (currentUnit === 'imperial') {
+    document.getElementById('blendTargetN').value = (cropN * areaMult).toFixed(2);
+    document.getElementById('blendTargetP').value = (cropP * areaMult).toFixed(2);
+  } else {
+    document.getElementById('blendTargetN').value = ((cropN * areaMult) / 1000).toFixed(2);
+    document.getElementById('blendTargetP').value = ((cropP * areaMult) / 1000).toFixed(2);
+  }
+  calculateBlender();
+}
+
+(function() {
+  const prevCalc = window.calculateAll;
+  window.calculateAll = function() {
+    prevCalc();
+    calculateBlender();
+  };
+  calculateBlender();
+})();
+function calculateReverseSolver() {
+  const onHandMass = Math.max(0, parseFloat(document.getElementById('revOnHandMass').value) || 0);
+  const fertN = Math.max(0, parseFloat(document.getElementById('revFertN').value) || 0) / 100;
+  const fertP = Math.max(0, parseFloat(document.getElementById('revFertP').value) || 0) / 100;
+  const fertK = Math.max(0, parseFloat(document.getElementById('revFertK').value) || 0) / 100;
+  const targetN = Math.max(0, parseFloat(document.getElementById('revTargetN').value) || 0);
+
+  const isMetric = currentUnit === 'metric';
+  document.getElementById('lblRevOnHandMass').textContent = isMetric ? "Fertilizer Bag Mass On Hand (kg)" : "Fertilizer Bag Mass On Hand (lbs)";
+  document.getElementById('lblRevTargetN').textContent = isMetric ? "Crop Target N (g/m²)" : "Crop Target N (lb/100 sq ft)";
+
+  const massUnit = isMetric ? 'kg' : 'lbs';
+  const areaUnit = isMetric ? 'm²' : 'sq ft';
+
+  const totalN = onHandMass * fertN;
+  document.getElementById('revDeliveredNVal').textContent = isMetric ? `${(totalN * 1000).toFixed(0)} g N` : `${totalN.toFixed(2)} lb N`;
+
+  let maxArea = 0;
+  if (fertN > 0 && targetN > 0) {
+    if (!isMetric) {
+      maxArea = totalN / (targetN / 100);
+    } else {
+      maxArea = (totalN * 1000) / targetN;
+    }
+  }
+
+  const maxAreaStr = maxArea > 0 ? (maxArea % 1 === 0 ? maxArea.toFixed(0) : maxArea.toFixed(1)) : '0';
+  document.getElementById('revMaxAreaVal').textContent = `${maxAreaStr} ${areaUnit}`;
+  document.getElementById('revMaxAreaSub').textContent = `Covers up to ${maxAreaStr} ${areaUnit} of garden bed area`;
+
+  const bedCount = Math.max(1, parseInt(document.getElementById('bedCount').value) || 1);
+  const shape = document.getElementById('bedShape').value;
+  const length = Math.max(0.1, parseFloat(document.getElementById('bedLength').value) || 0);
+  const width = Math.max(0.1, parseFloat(document.getElementById('bedWidth').value) || 0);
+  const customArea = Math.max(0.1, parseFloat(document.getElementById('customArea').value) || 0);
+  const currentTotalArea = (shape === 'rect' ? length * width : customArea) * bedCount;
+
+  let pctSatisfied = 0;
+  if (currentTotalArea > 0 && maxArea > 0) {
+    pctSatisfied = (maxArea / currentTotalArea) * 100;
+  }
+
+  document.getElementById('revPctSatisfiedVal').textContent = `${pctSatisfied.toFixed(1)}%`;
+  document.getElementById('revPctSatisfiedSub').textContent = `Based on ${currentTotalArea.toFixed(0)} ${areaUnit} active bed area`;
+
+  const noteEl = document.getElementById('revSolverNote');
+  if (onHandMass <= 0 || (fertN === 0 && fertP === 0 && fertK === 0)) {
+    noteEl.className = 'advice-card warning';
+    noteEl.innerHTML = 'Enter valid bag weight and NPK percentages to compute coverage.';
+  } else if (pctSatisfied >= 100) {
+    noteEl.className = 'advice-card';
+    noteEl.innerHTML = `<strong>Sufficient Stock:</strong> Your ${onHandMass} ${massUnit} bag fully covers your active ${currentTotalArea.toFixed(0)} ${areaUnit} garden bed demand with ${(pctSatisfied - 100).toFixed(1)}% surplus remaining.`;
+  } else {
+    noteEl.className = 'advice-card warning';
+    noteEl.innerHTML = `<strong>Deficit Warning:</strong> On-hand fertilizer covers only ${pctSatisfied.toFixed(1)}% of total garden area (${maxAreaStr} of ${currentTotalArea.toFixed(0)} ${areaUnit}). Additional inventory needed for full dose.`;
+  }
+}
+
+function syncMainToReverseSolver() {
+  document.getElementById('revFertN').value = document.getElementById('fertilizerN').value;
+  document.getElementById('revFertP').value = document.getElementById('fertilizerP').value;
+  document.getElementById('revFertK').value = document.getElementById('fertilizerK').value;
+  document.getElementById('revTargetN').value = document.getElementById('targetN').value;
+  calculateReverseSolver();
+}
+
+(function() {
+  const prevCalc = window.calculateAll;
+  window.calculateAll = function() {
+    prevCalc();
+    calculateReverseSolver();
+  };
+  calculateReverseSolver();
+})();
+function showBatchExportProMsg() {
+  const msgEl = document.getElementById('batchExportMsg');
+  if (!msgEl) return;
+  msgEl.className = 'advice-card warning';
+  msgEl.innerHTML = `Available in the full version. <a href="${PRO_LINK}" style="font-weight:bold; text-decoration:underline; color:var(--warning-amber);">Upgrade to PRO</a>`;
+  msgEl.classList.remove('hidden');
+}
+
+function getBatchData() {
+  const labelPrefix = document.getElementById('expBedLabel')?.value || "Bed #";
+  const notes = document.getElementById('expNotes')?.value || "";
+  const bedCount = Math.max(1, parseInt(document.getElementById('bedCount').value) || 1);
+  const shape = document.getElementById('bedShape').value;
+  const length = Math.max(0.1, parseFloat(document.getElementById('bedLength').value) || 0);
+  const width = Math.max(0.1, parseFloat(document.getElementById('bedWidth').value) || 0);
+  const customArea = Math.max(0.1, parseFloat(document.getElementById('customArea').value) || 0);
+  const isMetric = currentUnit === 'metric';
+
+  const singleArea = shape === 'rect' ? length * width : customArea;
+  const areaMult = (isMetric ? singleArea * 10.7639 : singleArea) / 100;
+
+  const targetNVal = Math.max(0, parseFloat(document.getElementById('targetN').value) || 0);
+  const targetPVal = Math.max(0, parseFloat(document.getElementById('targetP').value) || 0);
+  const targetKVal = Math.max(0, parseFloat(document.getElementById('targetK').value) || 0);
+
+  const stdTargetN = isMetric ? targetNVal / 48.824 : targetNVal;
+  const stdTargetP = isMetric ? targetPVal / 48.824 : targetPVal;
+  const stdTargetK = isMetric ? targetKVal / 48.824 : targetKVal;
+
+  const fertNPct = Math.max(0, parseFloat(document.getElementById('fertilizerN').value) || 0);
+  const fertPPct = Math.max(0, parseFloat(document.getElementById('fertilizerP').value) || 0);
+  const fertKPct = Math.max(0, parseFloat(document.getElementById('fertilizerK').value) || 0);
+  const splitApp = document.getElementById('splitApp').value;
+
+  const reqNLb = stdTargetN * areaMult;
+  const reqPLb = stdTargetP * areaMult;
+  const reqKLb = stdTargetK * areaMult;
+
+  let fertMassLb = 0;
+  if (fertNPct > 0) fertMassLb = reqNLb / (fertNPct / 100);
+  else if (fertPPct > 0) fertMassLb = reqPLb / (fertPPct / 100);
+  else if (fertKPct > 0) fertMassLb = reqKLb / (fertKPct / 100);
+
+  let preRatio = 1.0, sideRatio = 0.0, timingStr = "100% Pre-plant (Day 0)";
+  if (splitApp === 'split2') {
+    preRatio = 0.5; sideRatio = 0.5;
+    timingStr = "50% Pre-plant (Day 0), 50% Mid-season (Day 45)";
+  } else if (splitApp === 'split3') {
+    preRatio = 0.34; sideRatio = 0.33;
+    timingStr = "34% Pre-plant (Day 0), 33% Early (Day 30), 33% Late (Day 60)";
+  }
+
+  const beds = [];
+  const unitLabel = isMetric ? "kg" : "lbs";
+  const areaUnitLabel = isMetric ? "m²" : "sq ft";
+
+  for (let i = 1; i <= bedCount; i++) {
+    const bedMass = isMetric ? fertMassLb * 0.453592 : fertMassLb;
+    const preMass = bedMass * preRatio;
+    const sideMass = bedMass * sideRatio;
+    const delivN = isMetric ? (fertMassLb * (fertNPct / 100)) * 0.453592 : fertMassLb * (fertNPct / 100);
+    const delivP = isMetric ? (fertMassLb * (fertPPct / 100)) * 0.453592 : fertMassLb * (fertPPct / 100);
+    const delivK = isMetric ? (fertMassLb * (fertKPct / 100)) * 0.453592 : fertMassLb * (fertKPct / 100);
+
+    beds.push({
+      bedId: `${labelPrefix}${i}`,
+      area: `${singleArea.toFixed(1)} ${areaUnitLabel}`,
+      totalMass: `${bedMass.toFixed(2)} ${unitLabel}`,
+      preplantMass: `${preMass.toFixed(2)} ${unitLabel}`,
+      sidedressMass: sideRatio > 0 ? `${sideMass.toFixed(2)} ${unitLabel}` : "0.00",
+      deliveredN: `${delivN.toFixed(2)} ${unitLabel}`,
+      deliveredP: `${delivP.toFixed(2)} ${unitLabel}`,
+      deliveredK: `${delivK.toFixed(2)} ${unitLabel}`,
+      timing: timingStr,
+      notes: notes
+    });
+  }
+
+  return { beds, unitLabel, areaUnitLabel, timingStr, notes };
+}
+
+function renderBatchExportPreview() {
+  const prevEl = document.getElementById('batchExportPreview');
+  if (!prevEl) return;
+  const data = getBatchData();
+  if (!data.beds || data.beds.length === 0) {
+    prevEl.textContent = "No bed calculations available.";
+    return;
+  }
+  let txt = `BED PLAN PREVIEW (${data.beds.length} Bed${data.beds.length > 1 ? 's' : ''}):\n`;
+  data.beds.forEach(b => {
+    txt += `${b.bedId} [${b.area}]: Mass = ${b.totalMass} (Pre: ${b.preplantMass}, Side: ${b.sidedressMass}) | NPK: ${b.deliveredN} N, ${b.deliveredP} P, ${b.deliveredK} K\n`;
+  });
+  txt += `Schedule: ${data.timingStr}`;
+  if (data.notes) txt += `\nNotes: ${data.notes}`;
+  prevEl.textContent = txt;
+}
+
+function exportBatchCSV() {
+  if (!PRO) {
+    showBatchExportProMsg();
+    return;
+  }
+  const msgEl = document.getElementById('batchExportMsg');
+  if (msgEl) msgEl.classList.add('hidden');
+  const data = getBatchData();
+  const headers = ["Bed ID", "Bed Area", "Total Fertilizer Mass", "Pre-plant Mass", "Side-dress Mass", "Delivered N", "Delivered P2O5", "Delivered K2O", "Split Application Timing", "Notes"];
+  const rows = [headers];
+
+  data.beds.forEach(b => {
+    rows.push([
+      `"${b.bedId}"`, `"${b.area}"`, `"${b.totalMass}"`, `"${b.preplantMass}"`, `"${b.sidedressMass}"`,
+      `"${b.deliveredN}"`, `"${b.deliveredP}"`, `"${b.deliveredK}"`, `"${b.timing}"`, `"${b.notes.replace(/"/g, '""')}"`
+    ]);
+  });
+
+  const csvContent = "data:text/csv;charset=utf-8," + rows.map(r => r.join(",")).join("\n");
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "bed_by_bed_fertilizer_plan.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function exportBatchJSON() {
+  if (!PRO) {
+    showBatchExportProMsg();
+    return;
+  }
+  const msgEl = document.getElementById('batchExportMsg');
+  if (msgEl) msgEl.classList.add('hidden');
+  const data = getBatchData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'garden_nutrient_plan_backup.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function printBatchSchedule() {
+  if (!PRO) {
+    showBatchExportProMsg();
+    return;
+  }
+  const msgEl = document.getElementById('batchExportMsg');
+  if (msgEl) msgEl.classList.add('hidden');
+  window.print();
+}
+
+(function() {
+  const prevCalc = window.calculateAll;
+  window.calculateAll = function() {
+    prevCalc();
+    renderBatchExportPreview();
+  };
+  renderBatchExportPreview();
+})();
+// FEATURE-JS
+</script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This free tool calculates the exact weight of fertilizer or organic amendments needed for your specific garden bed dimensions. Designed for vegetable growers, homesteaders, and allotment gardeners, it prevents fertilizer burn by tracking salt index and balances multi-ingredient amendments without guesswork.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your measurement unit (imperial oz/lbs or metric g/kg) and enter your garden bed dimensions.</li><li>Input your fertilizer N-P-K percentages (e.g., 10-10-10 or 12-0-0) and your target nutrient application rate.</li><li>Check the instant safety monitor for root burn risk and view the exact weight needed for that specific bed.</li><li>Optional: Use the dual-amendment solver to balance combined inputs or export your plan.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">How long does mulch last?</h4><p style="margin:0">You enter: Mulch material type (e.g., hardwood bark, straw, softwood chips, compost) · Application layer depth (inches or cm) · Sun exposure and bed moisture conditions.<br>You get: Estimated functional breakdown lifespan of the mulch layer in months/years, along with its estimated nitrogen tie-up index and long-term organic nutrient release contribution.</p><h4 style="font-size:16px;margin:16px 0 4px">How much fertilizer do I need for my vegetable garden?</h4><p style="margin:0">You enter: Garden bed dimensions or total area (e.g., 10 ft x 10 ft = 100 sq ft) · Target vegetable crop type (e.g., Tomatoes / Heavy Feeder) · Commercial or organic fertilizer N-P-K analysis percentage (e.g., 5-10-5).<br>You get: Exact physical weight of the fertilizer blend needed in ounces/grams or pounds/kilograms, along with application breakdown (pre-plant vs split side-dressing) and overshoot warnings.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">How much fertilizer do I need for my vegetable garden?</h4><p style="margin:0">Fertilizer quantity depends on your bed&#39;s square footage, the crop&#39;s nutrient demand, and the fertilizer&#39;s N-P-K percentage. On average, heavy vegetable feeders require roughly 0.15 to 0.20 pounds of actual elemental nitrogen per 100 square feet per season. Dividing that target weight by the decimal percentage of nitrogen on your fertilizer bag gives you the total weight of product needed.</p><h4 style="font-size:16px;margin:16px 0 4px">How long does mulch last?</h4><p style="margin:0">Organic mulches like wood chips or shredded bark typically last 1 to 3 years before fully decomposing into the soil. Finer organic materials like straw, grass clippings, or shredded leaves break down in 4 to 9 months and generally require replenishment every season. Inorganic mulches, such as black plastic or landscape fabric, last several seasons but do not improve soil organic matter.</p><h4 style="font-size:16px;margin:16px 0 4px">How should vegetable seeds be sown evenly?</h4><p style="margin:0">For tiny seeds like carrots and lettuce, mix the seed with fine sand or dry coffee grounds at a 1:3 ratio before sprinkling to spread them uniformly. You can also use a handheld dial seed sower, seed tape, or fold an envelope into a V-crease and tap it gently with your index finger while moving down the furrow. Thinning seedlings after emergence is still required for optimal spacing.</p><h4 style="font-size:16px;margin:16px 0 4px">What causes fertilizer root burn and how do I prevent it?</h4><p style="margin:0">Fertilizer burn occurs when high concentrations of soluble mineral salts accumulate in the root zone, drawing water out of plant roots through osmosis and causing tissue desiccation. To prevent it, calculate applications strictly by dry weight rather than volume, distribute granules evenly across the soil surface, water deeply after applying, and avoid applying high-nitrogen chemical salts to dry soil.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/ijnzee" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../yard-excavation-dirt-volume-calculator/" style="color:inherit;font-weight:600">Yard Excavation &amp; Dirt Removal Volume Calculator</a>: Calculate true loose soil swell, wet tonnage, slope cuts, equipment trips, and dumpster payload limits offline.</li><li><a href="../plant-light-dli-exposure-calculator/" style="color:inherit;font-weight:600">Plant Light Requirement &amp; DLI Calculator</a>: Offline DLI calculator, light spectrum converter, seasonal deficit planner, and canopy coverage solver.</li><li><a href="../greenhouse-thermal-loss-and-glazing-simulator/" style="color:inherit;font-weight:600">Greenhouse Thermal Loss &amp; Glazing Simulator</a>: Calculate heat loss, thermal mass needs, fuel costs, and freeze risks in a single offline HTML simulator.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
