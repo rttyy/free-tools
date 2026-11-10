@@ -1,0 +1,2220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <style>
+    :root {
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-hover: #334155;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #10b981;
+      --primary-hover: #059669;
+      --accent-blue: #38bdf8;
+      --accent-purple: #a855f7;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --lawn-bg: #064e3b;
+      --lawn-grid: #047857;
+      --shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -4px rgba(0,0,0,0.2);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg-main: #f1f5f9;
+        --bg-card: #ffffff;
+        --bg-card-hover: #f8fafc;
+        --border-color: #cbd5e1;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --primary: #059669;
+        --primary-hover: #047857;
+        --accent-blue: #0284c7;
+        --accent-purple: #7c3aed;
+        --warning: #d97706;
+        --danger: #dc2626;
+        --lawn-bg: #dcfce7;
+        --lawn-grid: #86efac;
+        --shadow: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 1rem;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* Header & Navigation */
+    header {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .title-area h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-main);
+    }
+
+    .title-area p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .preset-bar {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .preset-btn, .action-btn {
+      background: var(--bg-card-hover);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .preset-btn:hover, .action-btn:hover {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .preset-btn.active {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .btn-danger {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+    .btn-danger:hover {
+      background-color: var(--danger);
+      color: #fff;
+    }
+
+    .disclaimer-banner {
+      background-color: rgba(245, 158, 11, 0.1);
+      border-left: 4px solid var(--warning);
+      padding: 0.6rem 1rem;
+      border-radius: 4px;
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    /* Layout Grid */
+    .app-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 1rem;
+      min-width: 0;
+    }
+
+    .app-grid > * {
+      min-width: 0;
+    }
+
+    @media (max-width: 1024px) {
+      .app-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-width: 0;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      min-width: 0;
+      overflow-wrap: break-word;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .card-title span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      min-width: 0;
+    }
+
+    .input-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+
+    input, select {
+      background-color: var(--bg-main);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.45rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    .unit-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    /* Metric Badges */
+    .metric-badge-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .metric-badge {
+      background-color: var(--bg-main);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.5rem 0.6rem;
+      text-align: center;
+    }
+
+    .metric-badge .val {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .metric-badge .lbl {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* Main Canvas Section */
+    .viewport-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-width: 0;
+    }
+
+    .canvas-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+    }
+
+    .tool-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .toggle-btn {
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.35rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .toggle-btn.active {
+      background-color: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      background-color: var(--lawn-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    canvas {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      cursor: crosshair;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0.5rem;
+      }
+      .card {
+        padding: 0.85rem;
+      }
+      .input-grid {
+        gap: 0.5rem;
+      }
+    }
+
+    .canvas-overlay-info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(15, 23, 42, 0.85);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-family: monospace;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+    }
+
+    .canvas-legend {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+    }
+
+    /* Head Editor Panel */
+    .head-editor-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    /* Bottom Section */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 900px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .zone-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    .zone-table th, .zone-table td {
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+    }
+
+    .zone-table th {
+      background-color: var(--bg-main);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .status-pass {
+      background-color: rgba(16, 185, 129, 0.15);
+      color: var(--primary);
+    }
+    .status-warn {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+    }
+
+    .insights-card {
+      background: var(--bg-card);
+      border-left: 4px solid var(--accent-blue);
+    }
+
+    .insights-card h3 {
+      font-size: 0.95rem;
+      color: var(--accent-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .insights-list {
+      font-size: 0.85rem;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .insights-list li {
+      margin-left: 1rem;
+    }
+
+    /* Modal / Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--primary);
+      color: var(--text-main);
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      display: none;
+      z-index: 1000;
+      font-size: 0.9rem;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+      }
+      .preset-bar, .canvas-toolbar, .action-btn {
+        display: none !important;
+      }
+      .card {
+        border: 1px solid #ccc;
+        box-shadow: none;
+      }
+    }
+
+    /* Scenario Matrix Styles */
+    .delta-badge {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.8rem;
+    }
+    .delta-positive {
+      background-color: rgba(16, 185, 129, 0.2);
+      color: var(--primary);
+    }
+    .delta-negative {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+    }
+    .delta-neutral {
+      background-color: rgba(148, 163, 184, 0.2);
+      color: var(--text-muted);
+    }
+    .scenario-details summary {
+      list-style: none;
+    }
+    .scenario-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+      .auto-solver-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.85rem 1.25rem;
+      box-shadow: var(--shadow);
+    }
+.bom-exporter-card {
+  border-left: 4px solid var(--accent-purple);
+}
+  /* FEATURE-CSS */
+  </style>
+<title>Irrigation Sprinkler Layout Head to Head Coverage Calculator</title>
+<meta name="description" content="Design DIY lawn sprinkler layouts with live coverage heatmaps, calculate water flow budgets (GPM), and prevent zone pressure failure. Free online tool.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/lawn-sprinkler-head-coverage-flow-budget-designer/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/lawn-sprinkler-head-coverage-flow-budget-designer/">
+<meta property="og:title" content="Irrigation Sprinkler Layout Head to Head Coverage Calculator"><meta property="og:description" content="Design DIY lawn sprinkler layouts with live coverage heatmaps, calculate water flow budgets (GPM), and prevent zone pressure failure. Free online tool.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/lawn-sprinkler-head-coverage-flow-budget-designer/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Irrigation Sprinkler Layout Head to Head Coverage Calculator","description":"Design DIY lawn sprinkler layouts with live coverage heatmaps, calculate water flow budgets (GPM), and prevent zone pressure failure. Free online tool.","url":"https://rttyy.github.io/free-tools/lawn-sprinkler-head-coverage-flow-budget-designer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I go about planning the layout of a sprinkler network for my lawn?","acceptedAnswer":{"@type":"Answer","text":"Start by measuring your home water supply flow rate (GPM) and dynamic pressure (PSI). Map your lawn dimensions to scale, then place heads along corners and perimeters using head-to-head spacing, where each head's spray reaches the adjacent head. Finally, group heads into separate zones so no single zone exceeds your available GPM budget."}},{"@type":"Question","name":"How do I fix the worst lawn on the street?","acceptedAnswer":{"@type":"Answer","text":"Fixing a failing lawn starts with correcting uneven irrigation, soil compaction, and nutrient imbalances. Ensure your sprinkler system delivers 100% head-to-head coverage so dry patches aren't missed during heat waves. Pair balanced watering with core aeration, soil testing, and consistent mowing heights to rebuild turf health."}},{"@type":"Question","name":"Why is head-to-head coverage necessary for lawn sprinklers?","acceptedAnswer":{"@type":"Answer","text":"Sprinkler heads throw the densest amount of water near the nozzle and taper off toward the edge of their radius. Spacing heads so their spray patterns overlap reaching adjacent heads ensures uniform water application across the entire lawn surface."}},{"@type":"Question","name":"Is my data private when using the paid offline pack?","acceptedAnswer":{"@type":"Answer","text":"Yes. The downloadable desktop edition included in the offline pack runs 100% locally on your computer with zero internet tracking, telemetry, or cloud storage requirements. Your property measurements and layout files remain private on your machine."}}]}</script>
+</head>
+<body>
+
+  <!-- Header Section -->
+  <header>
+    <div class="header-top">
+      <div class="title-area">
+        <h1>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);"><path d="M12 2v6"/><path d="m4.93 10.93 4.24 4.24"/><path d="M2 18h6"/><path d="M20 18h2"/><path d="m19.07 10.93-4.24 4.24"/><path d="M22 22H2"/><path d="M16 6l-4 4-4-4"/></svg>
+          Lawn Sprinkler Head-to-Head Coverage & Flow Budget Designer
+        </h1>
+        <p>Design uniform irrigation zones, prevent dry patches, and balance household water spigot dynamic GPM flow budgets.</p>
+      </div>
+
+      <div class="preset-bar">
+        <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">PRESETS:</span>
+        <button class="preset-btn active" id="btn-preset-1" onclick="loadPreset(0)">1. Suburban Front (20x40')</button>
+        <button class="preset-btn" id="btn-preset-2" onclick="loadPreset(1)">2. Corner Lot Rotors (60x80')</button>
+        <button class="preset-btn" id="btn-preset-3" onclick="loadPreset(2)">3. L-Shaped Yard (50x50')</button>
+      </div>
+    </div>
+
+    <div class="disclaimer-banner">
+      <span><strong>Engineering Note:</strong> Calculations provide hydraulic guidelines based on standard friction loss and precipitation formulas. Estimate only - verify with a qualified professional before relying on it.</span>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button class="action-btn" onclick="copySummary()">Copy Summary</button>
+        <button class="action-btn" onclick="exportJSON()">Export Scenario</button>
+        <button class="action-btn" onclick="exportCSV()">Export CSV</button>
+        <button class="action-btn" onclick="triggerPrint()">Print Layout</button>
+        <button class="action-btn btn-danger" onclick="resetAll()">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Multi-Layout Scenario Comparison Matrix -->
+  <div class="card scenario-matrix-card" data-feature="scenario-comparison-matrix" style="margin-bottom: 1rem;">
+    <details class="scenario-details">
+      <summary class="card-title" style="cursor: pointer; user-select: none; margin-bottom: 0;">
+        <span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M21 9H3"/><path d="M21 15H3"/><path d="M12 3v18"/></svg>
+          Multi-Layout Scenario Comparison Matrix
+        </span>
+        <div class="preset-bar" style="margin-left: auto;" onclick="event.stopPropagation()">
+          <button class="action-btn" onclick="saveScenarioSlot('A')">💾 Save to Scenario A</button>
+          <button class="action-btn" onclick="saveScenarioSlot('B')">💾 Save to Scenario B</button>
+          <button class="action-btn" onclick="saveScenarioSlot('C')">💾 Save to Scenario C</button>
+        </div>
+      </summary>
+      <div style="padding-top: 1rem;">
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+          <table class="zone-table" id="scenario-matrix-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Scenario A</th>
+                <th>Scenario B</th>
+                <th>Scenario C</th>
+                <th>Delta (B vs A)</th>
+              </tr>
+            </thead>
+            <tbody id="scenario-matrix-body">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- Feature: Auto-Layout & Optimal Nozzle Solver -->
+  <div class="card auto-solver-card" data-feature="reverse-nozzle-solver" style="margin-bottom: 1rem;">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        <strong style="font-size: 0.95rem;">Auto-Layout & Optimal Nozzle Solver</strong>
+      </div>
+      <div class="tool-group" style="gap: 0.5rem; flex-wrap: wrap;">
+        <select id="autoHeadFamily" style="width: auto; padding: 0.35rem 0.6rem; font-size: 0.85rem;">
+          <option value="spray">Standard Sprays (15-20ft radius)</option>
+          <option value="rotor">Gear Rotors (30-40ft radius)</option>
+        </select>
+        <button class="action-btn" style="background: var(--primary); color: #fff; border-color: var(--primary);" onclick="runAutoLayoutSolver('spray')">⚡ Auto-Layout Head-to-Head (Sprays)</button>
+        <button class="action-btn" onclick="runAutoLayoutSolver('rotor')">⚡ Auto-Layout Head-to-Head (Rotors)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature: Bill of Materials & High-Res Plan Exporter -->
+  <div class="card bom-exporter-card" data-feature="export-bom-report" style="margin-bottom: 1rem;">
+    <div class="card-title">
+      <span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Bill of Materials & Engineering Plan Exporter
+      </span>
+      <div style="font-size:0.8rem; color:var(--text-muted);">Dynamic Takeoff & Manifest</div>
+    </div>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+        <div class="input-group" style="width: auto;">
+          <label for="bomPipeFactor">Pipe Routing Overhead</label>
+          <select id="bomPipeFactor" onchange="updateBomManifest()" style="padding: 0.3rem 0.5rem; font-size: 0.85rem;">
+            <option value="1.15">Direct + 15% Slack</option>
+            <option value="1.3" selected>Standard Perimeter + 30%</option>
+            <option value="1.5">Complex Obstacles + 50%</option>
+          </select>
+        </div>
+        <div class="input-group" style="width: auto;">
+          <label for="bomMainlineExtra">Mainline Trench Add-on</label>
+          <input type="number" id="bomMainlineExtra" value="15" min="0" max="100" step="5" oninput="updateBomManifest()" style="width: 80px; padding: 0.3rem 0.5rem; font-size: 0.85rem;" />
+          <span class="unit-label">ft</span>
+        </div>
+      </div>
+      <div class="tool-group" style="gap: 0.5rem; flex-wrap: wrap;">
+        <button class="action-btn" style="background: var(--primary); color: #fff; border-color: var(--primary);" onclick="handleBomExport('csv')">📄 Export CSV Manifest</button>
+        <button class="action-btn" onclick="handleBomExport('json')">📦 Export Layout JSON</button>
+        <button class="action-btn" onclick="handleBomExport('plan')">🖨️ Printable Plan HTML/PDF</button>
+      </div>
+    </div>
+    <div id="bom-pro-prompt" style="display:none; margin-bottom: 0.75rem; padding: 0.5rem 0.75rem; background: rgba(245, 158, 11, 0.15); border: 1px solid var(--warning); border-radius: 6px; font-size: 0.85rem;">
+      <span style="color: var(--warning); font-weight: 600;">Available in the full version:</span> <a href="https://ferrywave73.gumroad.com/l/xbmsmt" target="_blank" style="color: var(--accent-blue); text-decoration: underline; font-weight: 600;">Upgrade to PRO to download manifest & reports</a>.
+    </div>
+    <div class="metric-badge-container" style="margin-top: 0;">
+      <div class="metric-badge">
+        <div class="val" id="bom-total-heads">0</div>
+        <div class="lbl">Total Heads</div>
+      </div>
+      <div class="metric-badge">
+        <div class="val" id="bom-valves-count" style="color:var(--accent-purple);">0</div>
+        <div class="lbl">Zone Valves</div>
+      </div>
+      <div class="metric-badge">
+        <div class="val" id="bom-pipe-feet" style="color:var(--accent-blue);">0 ft</div>
+        <div class="lbl">Est. 3/4" Lateral Pipe</div>
+      </div>
+      <div class="metric-badge">
+        <div class="val" id="bom-mainline-feet" style="color:var(--warning);">0 ft</div>
+        <div class="lbl">1" Mainline Pipe</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+
+  <!-- App Layout -->
+  <div class="app-grid">
+    
+    <!-- LEFT SIDEBAR: Controls & Flow Budget -->
+    <div class="sidebar">
+      
+      <!-- Feature 1: Water Supply Flow & Pressure Budget Calculator -->
+      <div class="card" data-feature="flow-budget-calculator">
+        <div class="card-title">
+          <span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+            Water Supply & Pressure Budget
+          </span>
+        </div>
+
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="bucketVol">Bucket Vol</label>
+            <input type="number" id="bucketVol" value="5" step="0.5" min="1" oninput="recalculateAll()" />
+            <span class="unit-label">Gallons</span>
+          </div>
+          <div class="input-group">
+            <label for="fillTime">Fill Time</label>
+            <input type="number" id="fillTime" value="30" step="1" min="1" oninput="recalculateAll()" />
+            <span class="unit-label">Seconds</span>
+          </div>
+          <div class="input-group">
+            <label for="staticPsi">Static Pressure</label>
+            <input type="number" id="staticPsi" value="50" step="1" min="10" oninput="recalculateAll()" />
+            <span class="unit-label">PSI (Spigot)</span>
+          </div>
+          <div class="input-group">
+            <label for="elevation">Elevation Gain</label>
+            <input type="number" id="elevation" value="0" step="1" oninput="recalculateAll()" />
+            <span class="unit-label">Feet (+ / -)</span>
+          </div>
+          <div class="input-group full-width">
+            <label for="safetyFactor">Safety Dynamic Factor</label>
+            <input type="number" id="safetyFactor" value="75" step="5" min="50" max="100" oninput="recalculateAll()" />
+            <span class="unit-label">% of Gross Supply GPM</span>
+          </div>
+        </div>
+
+        <!-- Calculated Metrics -->
+        <div class="metric-badge-container">
+          <div class="metric-badge">
+            <div class="val" id="disp-gross-gpm">10.0</div>
+            <div class="lbl">Gross GPM</div>
+          </div>
+          <div class="metric-badge">
+            <div class="val" id="disp-safe-gpm" style="color: var(--accent-blue);">7.5</div>
+            <div class="lbl">Safe Dynamic Budget</div>
+          </div>
+          <div class="metric-badge">
+            <div class="val" id="disp-dynamic-psi">35.0</div>
+            <div class="lbl">Est Dynamic PSI</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lawn Geometry & Water Target Settings -->
+      <div class="card">
+        <div class="card-title">
+          <span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/></svg>
+            Lawn Dimensions & Target
+          </span>
+        </div>
+        
+        <div class="input-grid">
+          <div class="input-group">
+            <label for="lawnWidth">Lawn Width (X)</label>
+            <input type="number" id="lawnWidth" value="20" step="1" min="10" max="150" onchange="recalculateAll()" />
+            <span class="unit-label">Feet</span>
+          </div>
+          <div class="input-group">
+            <label for="lawnHeight">Lawn Height (Y)</label>
+            <input type="number" id="lawnHeight" value="40" step="1" min="10" max="150" onchange="recalculateAll()" />
+            <span class="unit-label">Feet</span>
+          </div>
+          <div class="input-group">
+            <label for="targetDepth">Target Precip</label>
+            <input type="number" id="targetDepth" value="1.0" step="0.1" min="0.2" max="3.0" oninput="recalculateAll()" />
+            <span class="unit-label">Inches / Week</span>
+          </div>
+          <div class="input-group">
+            <label for="waterDays">Schedule Days</label>
+            <input type="number" id="waterDays" value="3" step="1" min="1" max="7" oninput="recalculateAll()" />
+            <span class="unit-label">Days / Week</span>
+          </div>
+          <div class="input-group full-width">
+            <label for="shapeType">Lawn Layout Shape</label>
+            <select id="shapeType" onchange="recalculateAll()">
+              <option value="rectangle">Standard Rectangle</option>
+              <option value="l-shape">L-Shape (Top-Right Cutout)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Head Controls & Selected Head Editor -->
+      <div class="card head-editor-panel">
+        <div class="card-title">
+          <span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            Sprinkler Head Tools
+          </span>
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
+          <button class="action-btn" style="flex:1;" onclick="addNewHead('spray')">+ Add Spray</button>
+          <button class="action-btn" style="flex:1;" onclick="addNewHead('rotor')">+ Add Rotor</button>
+        </div>
+
+        <div id="head-properties-container" style="display: none; border-top: 1px dashed var(--border-color); pt-2; margin-top: 0.5rem; padding-top: 0.5rem;">
+          <div style="font-weight: 600; font-size: 0.8rem; color: var(--accent-blue); margin-bottom: 0.5rem;" id="selected-head-title">Editing Head #1</div>
+          
+          <div class="input-grid">
+            <div class="input-group">
+              <label for="headType">Type</label>
+              <select id="headType" onchange="updateSelectedHeadProps()">
+                <option value="spray">Fixed Spray</option>
+                <option value="rotor">Gear Rotor</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="headFlow">Flow Rate</label>
+              <input type="number" id="headFlow" step="0.1" min="0.2" max="10" oninput="updateSelectedHeadProps()" />
+              <span class="unit-label">GPM</span>
+            </div>
+            <div class="input-group">
+              <label for="headRadius">Throw Radius</label>
+              <input type="number" id="headRadius" step="1" min="3" max="50" oninput="updateSelectedHeadProps()" />
+              <span class="unit-label">Feet</span>
+            </div>
+            <div class="input-group">
+              <label for="headArc">Arc Angle</label>
+              <select id="headArc" onchange="updateSelectedHeadProps()">
+                <option value="90">90° (Quarter)</option>
+                <option value="180">180° (Half)</option>
+                <option value="270">270° (Three-Quarter)</option>
+                <option value="360">360° (Full)</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="headRot">Rotation Angle</label>
+              <input type="number" id="headRot" min="0" max="359" step="15" oninput="updateSelectedHeadProps()" />
+              <span class="unit-label">Degrees (0°=Right)</span>
+            </div>
+            <div class="input-group">
+              <label for="headPosX">Pos X</label>
+              <input type="number" id="headPosX" step="0.5" oninput="updateSelectedHeadProps()" />
+              <span class="unit-label">Feet</span>
+            </div>
+            <div class="input-group">
+              <label for="headPosY">Pos Y</label>
+              <input type="number" id="headPosY" step="0.5" oninput="updateSelectedHeadProps()" />
+              <span class="unit-label">Feet</span>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+            <button class="action-btn btn-danger" style="flex:1;" onclick="deleteSelectedHead()">Delete Head</button>
+            <button class="action-btn" style="flex:1;" onclick="duplicateSelectedHead()">Duplicate</button>
+          </div>
+        </div>
+
+        <div id="no-head-selected" style="font-size: 0.8rem; color: var(--text-muted); text-align: center; padding: 1rem 0;">
+          Click any head on the canvas to edit its location, radius, arc, and dynamic flow parameters.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MAIN VIEWPORT: 2D Interactive Lawn Canvas & Heatmap Engine -->
+    <div class="viewport-section">
+      
+      <div class="canvas-toolbar">
+        <div class="tool-group">
+          <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">VIEW OVERLAYS:</span>
+          <button class="toggle-btn active" id="btn-toggle-heatmap" onclick="toggleOverlay('heatmap')">🔥 Uniformity Heatmap</button>
+          <button class="toggle-btn active" id="btn-toggle-arcs" onclick="toggleOverlay('arcs')">📐 Spray Arcs</button>
+          <button class="toggle-btn active" id="btn-toggle-grid" onclick="toggleOverlay('grid')">🌐 1ft Grid</button>
+          <button class="toggle-btn active" id="btn-toggle-lines" onclick="toggleOverlay('lines')">🔗 Head-to-Head Rays</button>
+        </div>
+
+        <div class="canvas-legend" id="heatmap-legend">
+          <div class="legend-item"><div class="legend-color" style="background:#ef4444;"></div> Dry (&lt;0.5 in/hr)</div>
+          <div class="legend-item"><div class="legend-color" style="background:#84cc16;"></div> Moderate (0.5-1.0)</div>
+          <div class="legend-item"><div class="legend-color" style="background:#10b981;"></div> Ideal (1.0-1.8)</div>
+          <div class="legend-item"><div class="legend-color" style="background:#8b5cf6;"></div> Over (&gt;2.0 in/hr)</div>
+        </div>
+      </div>
+
+      <!-- Feature 2: Lawn Canvas Planner -->
+      <div class="canvas-wrapper" id="canvas-container" data-feature="lawn-canvas-planner">
+        <canvas id="lawnCanvas"></canvas>
+        <div class="canvas-overlay-info" id="cursor-info">X: 0.0 ft, Y: 0.0 ft | Rate: 0.00 in/hr</div>
+      </div>
+
+      <!-- Feature 3: Live Precipitation Uniformity & Overlap Heatmap Engine Summary Bar -->
+      <div class="card" data-feature="precipitation-uniformity-engine">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Distribution Uniformity (DU)</div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: var(--primary);" id="metric-du">84%</div>
+          </div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Total Lawn Coverage</div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: var(--accent-blue);" id="metric-coverage">100%</div>
+          </div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">System Avg Precip Rate</div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: var(--text-main);" id="metric-avg-pr">1.44 in/hr</div>
+          </div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Total Heads Installed</div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: var(--accent-purple);" id="metric-head-count">6 Heads</div>
+          </div>
+          <div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">System Active Flow</div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: var(--warning);" id="metric-total-gpm">7.2 GPM</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Section: Zone Grouping & Scheduler -->
+      <div class="summary-grid">
+        
+        <!-- Feature 4: Automatic Zone Segregation & Weekly Watering Scheduler -->
+        <div class="card" data-feature="zone-grouping-scheduler">
+          <div class="card-title">
+            <span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/></svg>
+              Zone Grouping & Weekly Schedule
+            </span>
+          </div>
+
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+            Heads automatically segregated by nozzle type (Rotors vs Sprays) to prevent under-watering. Multi-zone splits applied if GPM exceeds safe dynamic supply.
+          </p>
+
+          <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+            <table class="zone-table">
+              <thead>
+                <tr>
+                  <th>Zone #</th>
+                  <th>Type</th>
+                  <th>Heads</th>
+                  <th>Flow (GPM)</th>
+                  <th>Status</th>
+                  <th>Run / Session</th>
+                </tr>
+              </thead>
+              <tbody id="zone-table-body">
+                <!-- Dynamically Populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <div style="margin-top: 0.75rem; font-size: 0.85rem; font-weight: 600; display: flex; justify-content: space-between;" id="total-runtime-summary">
+            <span>Total System Weekly Runtime:</span>
+            <span style="color: var(--primary);" id="disp-weekly-runtime">42 mins / week</span>
+          </div>
+
+          <!-- Feature: Water Consumption & Seasonal Utility Cost Estimator -->
+          <div class="cost-estimator-section" data-feature="water-bill-cost-estimator" style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed var(--border-color);">
+            <div style="font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--accent-blue);">
+              💧 Water Consumption & Seasonal Utility Cost Estimator
+            </div>
+            <div class="input-grid" style="margin-bottom: 0.5rem;">
+              <div class="input-group">
+                <label for="waterRate">Water Rate ($/1k gal)</label>
+                <input type="number" id="waterRate" value="6.50" step="0.25" min="0" oninput="recalculateAll()" />
+              </div>
+              <div class="input-group">
+                <label for="seasonWeeks">Season Length</label>
+                <input type="number" id="seasonWeeks" value="22" step="1" min="1" max="52" oninput="recalculateAll()" />
+                <span class="unit-label">Weeks</span>
+              </div>
+              <div class="input-group full-width" style="display: flex; flex-direction: row; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                <input type="checkbox" id="sewerToggle" onchange="recalculateAll()" style="width: auto;" />
+                <label for="sewerToggle" style="text-transform: none; font-weight: 500; cursor: pointer;">Include Sewer Charge Surcharge (+50%)</label>
+              </div>
+            </div>
+            <div class="metric-badge-container">
+              <div class="metric-badge">
+                <div class="val" id="disp-weekly-vol" style="font-size: 0.95rem;">300 Gallons</div>
+                <div class="lbl">Weekly Volume</div>
+              </div>
+              <div class="metric-badge">
+                <div class="val" id="disp-seasonal-vol" style="font-size: 0.95rem;">6,600 Gallons</div>
+                <div class="lbl">Seasonal Volume</div>
+              </div>
+              <div class="metric-badge">
+                <div class="val" id="disp-seasonal-cost" style="color: var(--primary); font-size: 0.95rem;">$42.90</div>
+                <div class="lbl">Est. Seasonal Cost</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Insights & Diagnostic Block -->
+        <div class="card insights-card">
+          <h3>💡 What this means / What to do next</h3>
+          <ul class="insights-list" id="insights-list">
+            <!-- Dynamically Populated -->
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="toast" class="toast">Action notification</div>
+
+  <script>
+    const PRO = true;
+
+    // Standard presets definition matching specification requirements
+    const PRESETS = [
+      {
+        name: "Narrow Suburban Front Yard (20x40 ft)",
+        lawnWidth: 20,
+        lawnHeight: 40,
+        shapeType: "rectangle",
+        bucketVol: 5,
+        fillTime: 30,
+        staticPsi: 50,
+        elevation: 0,
+        safetyFactor: 75,
+        targetDepth: 1.0,
+        waterDays: 3,
+        heads: [
+          { id: 1, type: "spray", x: 0, y: 0, radius: 15, arc: 90, rotation: 0, gpm: 1.2 },
+          { id: 2, type: "spray", x: 20, y: 0, radius: 15, arc: 90, rotation: 90, gpm: 1.2 },
+          { id: 3, type: "spray", x: 0, y: 40, radius: 15, arc: 90, rotation: 270, gpm: 1.2 },
+          { id: 4, type: "spray", x: 20, y: 40, radius: 15, arc: 90, rotation: 180, gpm: 1.2 },
+          { id: 5, type: "spray", x: 0, y: 20, radius: 15, arc: 180, rotation: 270, gpm: 1.2 },
+          { id: 6, type: "spray", x: 20, y: 20, radius: 15, arc: 180, rotation: 90, gpm: 1.2 }
+        ]
+      },
+      {
+        name: "Large Corner Lot with Rotors (60x80 ft)",
+        lawnWidth: 60,
+        lawnHeight: 80,
+        shapeType: "rectangle",
+        bucketVol: 5,
+        fillTime: 20,
+        staticPsi: 65,
+        elevation: 0,
+        safetyFactor: 75,
+        targetDepth: 1.0,
+        waterDays: 3,
+        heads: [
+          { id: 1, type: "rotor", x: 0, y: 0, radius: 30, arc: 90, rotation: 0, gpm: 2.5 },
+          { id: 2, type: "rotor", x: 60, y: 0, radius: 30, arc: 90, rotation: 90, gpm: 2.5 },
+          { id: 3, type: "rotor", x: 0, y: 80, radius: 30, arc: 90, rotation: 270, gpm: 2.5 },
+          { id: 4, type: "rotor", x: 60, y: 80, radius: 30, arc: 90, rotation: 180, gpm: 2.5 },
+          { id: 5, type: "rotor", x: 0, y: 40, radius: 30, arc: 180, rotation: 270, gpm: 2.5 },
+          { id: 6, type: "rotor", x: 60, y: 40, radius: 30, arc: 180, rotation: 90, gpm: 2.5 }
+        ]
+      },
+      {
+        name: "L-Shaped Backyard Turf Zone (50x50 ft)",
+        lawnWidth: 50,
+        lawnHeight: 50,
+        shapeType: "l-shape",
+        bucketVol: 5,
+        fillTime: 24,
+        staticPsi: 55,
+        elevation: 0,
+        safetyFactor: 75,
+        targetDepth: 1.0,
+        waterDays: 3,
+        heads: [
+          { id: 1, type: "rotor", x: 0, y: 0, radius: 30, arc: 90, rotation: 0, gpm: 2.0 },
+          { id: 2, type: "rotor", x: 30, y: 0, radius: 30, arc: 90, rotation: 90, gpm: 2.0 },
+          { id: 3, type: "rotor", x: 0, y: 50, radius: 30, arc: 90, rotation: 270, gpm: 2.0 },
+          { id: 4, type: "rotor", x: 50, y: 50, radius: 30, arc: 90, rotation: 180, gpm: 2.0 },
+          { id: 5, type: "spray", x: 30, y: 20, radius: 12, arc: 90, rotation: 0, gpm: 1.0 },
+          { id: 6, type: "spray", x: 50, y: 20, radius: 12, arc: 90, rotation: 90, gpm: 1.0 },
+          { id: 7, type: "spray", x: 0, y: 25, radius: 12, arc: 180, rotation: 270, gpm: 1.0 },
+          { id: 8, type: "spray", x: 50, y: 35, radius: 12, arc: 180, rotation: 90, gpm: 1.0 }
+        ]
+      }
+    ];
+
+    // State Variables
+    let currentScenario = JSON.parse(JSON.stringify(PRESETS[0]));
+    let selectedHeadId = null;
+    let isDragging = false;
+    let dragHeadId = null;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+    let cachedEngineResults = null;
+
+    // View Overlay Toggles
+    const overlays = {
+      heatmap: true,
+      arcs: true,
+      grid: true,
+      lines: true
+    };
+
+    // Canvas references
+    const canvas = document.getElementById("lawnCanvas");
+    const ctx = canvas.getContext("2d");
+    let scale = 10; // pixels per foot
+
+    // Initialize application
+    window.addEventListener("DOMContentLoaded", () => {
+      initCanvasEvents();
+      let restored = false;
+      try {
+        const saved = localStorage.getItem("lawn_sprinkler_scenario");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.lawnWidth && parsed.heads) {
+            currentScenario = parsed;
+            restored = true;
+          }
+        }
+      } catch (e) {}
+
+      if (restored) {
+        document.getElementById("lawnWidth").value = currentScenario.lawnWidth;
+        document.getElementById("lawnHeight").value = currentScenario.lawnHeight;
+        document.getElementById("shapeType").value = currentScenario.shapeType || "rectangle";
+        document.getElementById("bucketVol").value = currentScenario.bucketVol || 5;
+        document.getElementById("fillTime").value = currentScenario.fillTime || 30;
+        document.getElementById("staticPsi").value = currentScenario.staticPsi || 50;
+        document.getElementById("elevation").value = currentScenario.elevation || 0;
+        document.getElementById("safetyFactor").value = currentScenario.safetyFactor || 75;
+        document.getElementById("targetDepth").value = currentScenario.targetDepth || 1.0;
+        document.getElementById("waterDays").value = currentScenario.waterDays || 3;
+        recalculateAll();
+      } else {
+        loadPreset(0);
+      }
+
+      window.addEventListener("resize", setupCanvasDimensions);
+    });
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.innerHTML = msg;
+      toast.style.display = "block";
+      setTimeout(() => { toast.style.display = "none"; }, 4000);
+    }
+
+    function toggleOverlay(key) {
+      overlays[key] = !overlays[key];
+      const btn = document.getElementById(`btn-toggle-${key}`);
+      if (btn) btn.classList.toggle("active", overlays[key]);
+      renderCanvas();
+    }
+
+    function loadPreset(index) {
+      if (!PRO && index !== 0) {
+        showToast('<a href="https://ferrywave73.gumroad.com/l/xbmsmt" style="color:var(--accent-blue);font-weight:600;text-decoration:underline;">Available in the full version</a>');
+        return;
+      }
+      currentScenario = JSON.parse(JSON.stringify(PRESETS[index]));
+      
+      document.querySelectorAll(".preset-btn").forEach((b, i) => {
+        b.classList.toggle("active", i === index);
+      });
+
+      // Populate input controls
+      document.getElementById("lawnWidth").value = currentScenario.lawnWidth;
+      document.getElementById("lawnHeight").value = currentScenario.lawnHeight;
+      document.getElementById("shapeType").value = currentScenario.shapeType || "rectangle";
+      document.getElementById("bucketVol").value = currentScenario.bucketVol;
+      document.getElementById("fillTime").value = currentScenario.fillTime;
+      document.getElementById("staticPsi").value = currentScenario.staticPsi;
+      document.getElementById("elevation").value = currentScenario.elevation;
+      document.getElementById("safetyFactor").value = currentScenario.safetyFactor;
+      document.getElementById("targetDepth").value = currentScenario.targetDepth;
+      document.getElementById("waterDays").value = currentScenario.waterDays;
+
+      selectedHeadId = null;
+      updateHeadPropertiesPanel();
+      recalculateAll();
+    }
+
+    function recalculateAll() {
+      // 1. Read Inputs with robust sanitization
+      const rawW = parseFloat(document.getElementById("lawnWidth").value);
+      const rawH = parseFloat(document.getElementById("lawnHeight").value);
+      const rawVol = parseFloat(document.getElementById("bucketVol").value);
+      const rawTime = parseFloat(document.getElementById("fillTime").value);
+      const rawPsi = parseFloat(document.getElementById("staticPsi").value);
+      const rawElev = parseFloat(document.getElementById("elevation").value);
+      const rawSafety = parseFloat(document.getElementById("safetyFactor").value);
+      const rawDepth = parseFloat(document.getElementById("targetDepth").value);
+      const rawDays = parseFloat(document.getElementById("waterDays").value);
+
+      const W = Math.max(5, Math.min(200, isNaN(rawW) ? 20 : rawW));
+      const H = Math.max(5, Math.min(200, isNaN(rawH) ? 40 : rawH));
+      const shape = document.getElementById("shapeType").value;
+      
+      const bucketVol = Math.max(0.1, isNaN(rawVol) ? 5 : rawVol);
+      const fillTime = Math.max(0.1, isNaN(rawTime) ? 30 : rawTime);
+      const staticPsi = Math.max(0, isNaN(rawPsi) ? 50 : rawPsi);
+      const elevation = isNaN(rawElev) ? 0 : rawElev;
+      const safetyFactor = Math.max(1, Math.min(100, isNaN(rawSafety) ? 75 : rawSafety));
+
+      const targetDepth = Math.max(0.1, Math.min(10, isNaN(rawDepth) ? 1.0 : rawDepth));
+      const waterDays = Math.max(1, Math.min(7, isNaN(rawDays) ? 3 : rawDays));
+
+      currentScenario.lawnWidth = W;
+      currentScenario.lawnHeight = H;
+      currentScenario.shapeType = shape;
+      currentScenario.bucketVol = bucketVol;
+      currentScenario.fillTime = fillTime;
+      currentScenario.staticPsi = staticPsi;
+      currentScenario.elevation = elevation;
+      currentScenario.safetyFactor = safetyFactor;
+      currentScenario.targetDepth = targetDepth;
+      currentScenario.waterDays = waterDays;
+
+      // 2. Flow Budget Calculation
+      // Gross GPM = (Bucket Volume / Fill Time) * 60
+      const grossGpm = fillTime > 0 ? (bucketVol / fillTime) * 60 : 0;
+      // Safe Dynamic Budget GPM = Gross GPM * (Safety Factor / 100)
+      const safeDynamicGpm = grossGpm * (safetyFactor / 100);
+      // Dynamic Pressure PSI = Static PSI - 15 - (Elevation * 0.433)
+      const dynamicPsi = Math.max(0, staticPsi - 15 - (elevation * 0.433));
+
+      // Update UI Header Metrics
+      document.getElementById("disp-gross-gpm").innerText = grossGpm.toFixed(1);
+      document.getElementById("disp-safe-gpm").innerText = safeDynamicGpm.toFixed(1);
+      document.getElementById("disp-dynamic-psi").innerText = dynamicPsi.toFixed(1);
+
+      // Save to localStorage safely
+      try {
+        localStorage.setItem("lawn_sprinkler_scenario", JSON.stringify(currentScenario));
+      } catch (e) {
+        // Storage restricted or unavailable
+      }
+
+      // 3. Render Canvas & Calculate Uniformity Engine Metrics
+      setupCanvasDimensions();
+      cachedEngineResults = runPrecipitationEngine();
+      
+      // Update Summary Bar Metrics
+      document.getElementById("metric-du").innerText = `${Math.round(cachedEngineResults.du)}%`;
+      document.getElementById("metric-coverage").innerText = `${Math.round(cachedEngineResults.coverage)}%`;
+      document.getElementById("metric-avg-pr").innerText = `${cachedEngineResults.avgPr.toFixed(2)} in/hr`;
+      document.getElementById("metric-head-count").innerText = `${currentScenario.heads.length} Heads`;
+      document.getElementById("metric-total-gpm").innerText = `${cachedEngineResults.totalGpm.toFixed(1)} GPM`;
+
+      // 4. Run Zone Grouping & Scheduling Engine
+      updateZoneScheduler(safeDynamicGpm, cachedEngineResults.avgPr, targetDepth, waterDays);
+
+      // 5. Build Dynamic Insights
+      updateInsights(safeDynamicGpm, cachedEngineResults);
+
+      renderCanvas(cachedEngineResults.gridPrMap);
+      if (typeof updateBomManifest === "function") updateBomManifest();
+    }
+
+    /* Grid Cell Precipitation Calculation Engine */
+    function runPrecipitationEngine() {
+      const W = Math.round(currentScenario.lawnWidth);
+      const H = Math.round(currentScenario.lawnHeight);
+      const isLShape = currentScenario.shapeType === "l-shape";
+
+      // Build 1ft x 1ft cell array
+      let gridPrMap = new Float32Array(W * H);
+      let totalLawnCells = 0;
+      let coveredCells = 0;
+      let cellPrList = [];
+
+      let totalGpm = 0;
+      currentScenario.heads.forEach(h => { totalGpm += h.gpm; });
+
+      for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+          // Check if cell is inside lawn boundary
+          if (isLShape && x >= W * 0.6 && y < H * 0.4) {
+            // Top-right cutout for L-shape
+            continue;
+          }
+
+          totalLawnCells++;
+          const cellX = x + 0.5;
+          const cellY = y + 0.5;
+
+          let cellPr = 0;
+
+          // Sum precipitation contribution from each sprinkler head
+          currentScenario.heads.forEach(head => {
+            const dx = cellX - head.x;
+            const dy = cellY - head.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist <= head.radius && dist > 0.1) {
+              // Calculate angle relative to head rotation
+              let angle = (Math.atan2(dy, dx) * 180 / Math.PI);
+              if (angle < 0) angle += 360;
+
+              let startArc = head.rotation % 360;
+              let endArc = (head.rotation + head.arc) % 360;
+
+              let inArc = false;
+              if (startArc <= endArc) {
+                inArc = angle >= startArc && angle <= endArc;
+              } else {
+                inArc = angle >= startArc || angle <= endArc;
+              }
+
+              if (inArc) {
+                // Wetted area = (arc / 360) * PI * R^2
+                const wettedArea = (head.arc / 360) * Math.PI * head.radius * head.radius;
+                if (wettedArea > 0) {
+                  // Standard Precip Rate formula (in/hr) = (96.25 * GPM) / Area
+                  const headPr = (96.25 * head.gpm) / wettedArea;
+                  cellPr += headPr;
+                }
+              }
+            }
+          });
+
+          const cellIndex = y * W + x;
+          gridPrMap[cellIndex] = cellPr;
+
+          if (cellPr >= 0.5) coveredCells++;
+          cellPrList.push(cellPr);
+        }
+      }
+
+      // Calculate Distribution Uniformity (DU %)
+      // DU % = (Mean precip rate of lowest 25% cells / Overall mean precip rate) * 100
+      let du = 0;
+      let avgPr = 0;
+
+      if (cellPrList.length > 0) {
+        const sumPr = cellPrList.reduce((a, b) => a + b, 0);
+        avgPr = sumPr / cellPrList.length;
+
+        cellPrList.sort((a, b) => a - b);
+        const lowestCount = Math.max(1, Math.floor(cellPrList.length * 0.25));
+        let lowestSum = 0;
+        for (let i = 0; i < lowestCount; i++) {
+          lowestSum += cellPrList[i];
+        }
+        const lowestAvg = lowestSum / lowestCount;
+
+        if (avgPr > 0) {
+          du = Math.min(100, (lowestAvg / avgPr) * 100);
+        }
+      }
+
+      const coverage = totalLawnCells > 0 ? (coveredCells / totalLawnCells) * 100 : 0;
+
+      return {
+        du,
+        coverage,
+        avgPr,
+        totalGpm,
+        gridPrMap,
+        width: W,
+        height: H
+      };
+    }
+
+    /* Zone Grouping & Schedule Calculator */
+    function updateZoneScheduler(safeBudgetGpm, avgPr, targetDepth, waterDays) {
+      const tbody = document.getElementById("zone-table-body");
+      tbody.innerHTML = "";
+
+      // Rule: Separate Spray vs Rotor heads into distinct zones
+      const sprayHeads = currentScenario.heads.filter(h => h.type === "spray");
+      const rotorHeads = currentScenario.heads.filter(h => h.type === "rotor");
+
+      const zones = [];
+
+      // Process Spray Heads
+      if (sprayHeads.length > 0) {
+        let currentSprayZone = { type: "Fixed Spray", heads: [], gpm: 0 };
+        sprayHeads.forEach(h => {
+          if (currentSprayZone.gpm + h.gpm > safeBudgetGpm && currentSprayZone.heads.length > 0) {
+            zones.push(currentSprayZone);
+            currentSprayZone = { type: "Fixed Spray", heads: [], gpm: 0 };
+          }
+          currentSprayZone.heads.push(h);
+          currentSprayZone.gpm += h.gpm;
+        });
+        if (currentSprayZone.heads.length > 0) zones.push(currentSprayZone);
+      }
+
+      // Process Rotor Heads
+      if (rotorHeads.length > 0) {
+        let currentRotorZone = { type: "Gear Rotor", heads: [], gpm: 0 };
+        rotorHeads.forEach(h => {
+          if (currentRotorZone.gpm + h.gpm > safeBudgetGpm && currentRotorZone.heads.length > 0) {
+            zones.push(currentRotorZone);
+            currentRotorZone = { type: "Gear Rotor", heads: [], gpm: 0 };
+          }
+          currentRotorZone.heads.push(h);
+          currentRotorZone.gpm += h.gpm;
+        });
+        if (currentRotorZone.heads.length > 0) zones.push(currentRotorZone);
+      }
+
+      // Calculate Weekly & Session Runtime
+      // Runtime (hrs/wk) = Target Inches / Avg Precip Rate
+      const totalWeeklyMin = avgPr > 0 ? (targetDepth / avgPr) * 60 : 0;
+      const perSessionMin = waterDays > 0 ? totalWeeklyMin / waterDays : totalWeeklyMin;
+
+      document.getElementById("disp-weekly-runtime").innerText = `${Math.round(totalWeeklyMin)} min/wk (${perSessionMin.toFixed(1)} min/sess, ${waterDays}x/wk)`;
+
+      updateWaterCostEstimator(cachedEngineResults ? cachedEngineResults.totalGpm : 0, totalWeeklyMin);
+
+      if (zones.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: var(--text-muted);">No heads added to lawn yet.</td></tr>`;
+        return;
+      }
+
+      zones.forEach((z, idx) => {
+        const isOver = z.gpm > safeBudgetGpm;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td style="font-weight: 700;">Zone ${idx + 1}</td>
+          <td>${z.type}</td>
+          <td>${z.heads.length} heads</td>
+          <td>${z.gpm.toFixed(1)} GPM</td>
+          <td>
+            <span class="status-badge ${isOver ? 'status-warn' : 'status-pass'}">
+              ${isOver ? 'EXCEEDS BUDGET' : 'PASS'}
+            </span>
+          </td>
+          <td>${perSessionMin.toFixed(1)} min</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    /* Dynamic Recommendations & Insights */
+    function updateInsights(safeBudgetGpm, engineResults) {
+      const insightsList = document.getElementById("insights-list");
+      insightsList.innerHTML = "";
+
+      const addInsight = (text) => {
+        const li = document.createElement("li");
+        li.innerHTML = text;
+        insightsList.appendChild(li);
+      };
+
+      // Hydraulic Check
+      if (engineResults.totalGpm > safeBudgetGpm) {
+        addInsight(`<strong>Hydraulic Flow Alert:</strong> Total active flow (${engineResults.totalGpm.toFixed(1)} GPM) exceeds your spigot's safe dynamic budget (${safeBudgetGpm.toFixed(1)} GPM). Heads have been split into multiple zones in the schedule table.`);
+      } else {
+        addInsight(`<strong>Hydraulic Capacity PASS:</strong> Active system flow (${engineResults.totalGpm.toFixed(1)} GPM) fits within your house spigot budget (${safeBudgetGpm.toFixed(1)} GPM) in a single zone.`);
+      }
+
+      // Distribution Uniformity Check & Next Steps
+      if (engineResults.du < 70) {
+        addInsight(`<strong>Low Uniformity (${Math.round(engineResults.du)}%):</strong> Severe risk of brown dry patches. <em>Action:</em> Relocate heads closer so throw radii reach adjacent heads (head-to-head rule).`);
+      } else if (engineResults.du >= 80) {
+        addInsight(`<strong>Excellent Uniformity (${Math.round(engineResults.du)}%):</strong> Highly efficient head-to-head overlap! Water distributes evenly across the lawn.`);
+      } else {
+        addInsight(`<strong>Moderate Uniformity (${Math.round(engineResults.du)}%):</strong> Acceptable coverage. <em>Action:</em> Adjust rotation angles or increase head radius slightly to eliminate dry corner zones.`);
+      }
+
+      // Uncovered area warning
+      if (engineResults.coverage < 95) {
+        addInsight(`<strong>Incomplete Lawn Coverage (${Math.round(engineResults.coverage)}%):</strong> ${Math.round(100 - engineResults.coverage)}% of your lawn receives zero direct spray. <em>Action:</em> Click "+ Add Spray" or "+ Add Rotor" to cover dry corners.`);
+      }
+
+      // Mixing Nozzle Types Warning
+      const hasSprays = currentScenario.heads.some(h => h.type === "spray");
+      const hasRotors = currentScenario.heads.some(h => h.type === "rotor");
+      if (hasSprays && hasRotors) {
+        addInsight(`<strong>Nozzle Mixing Detected:</strong> Spray heads apply water 2-3x faster than gear rotors. Automatic zone segregation has separated them into independent valves.`);
+      }
+    }
+
+    /* Canvas Drawing Engine */
+    function setupCanvasDimensions() {
+      const container = document.getElementById("canvas-container");
+      const maxW = container.clientWidth - 20;
+      const maxH = 500;
+
+      const lawnW = currentScenario.lawnWidth;
+      const lawnH = currentScenario.lawnHeight;
+
+      const scaleX = maxW / lawnW;
+      const scaleY = maxH / lawnH;
+      scale = Math.min(scaleX, scaleY, 18); // Capped scale factor
+
+      canvas.width = lawnW * scale;
+      canvas.height = lawnH * scale;
+    }
+
+    function renderCanvas(gridPrMap) {
+      if (!ctx) return;
+      const W = currentScenario.lawnWidth;
+      const H = currentScenario.lawnHeight;
+      const cW = canvas.width;
+      const cH = canvas.height;
+      const isLShape = currentScenario.shapeType === "l-shape";
+
+      ctx.clearRect(0, 0, cW, cH);
+
+      // 1. Draw Lawn Background & Shape Cutouts
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--lawn-bg') || "#064e3b";
+      ctx.fillRect(0, 0, cW, cH);
+
+      if (isLShape) {
+        // Cut out top-right section (40% width, 40% height)
+        const cutX = W * 0.6 * scale;
+        const cutW = W * 0.4 * scale;
+        const cutH = H * 0.4 * scale;
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-main') || "#0f172a";
+        ctx.fillRect(cutX, 0, cutW, cutH);
+        ctx.strokeStyle = "rgba(255,255,255,0.3)";
+        ctx.strokeRect(cutX, 0, cutW, cutH);
+      }
+
+      // 2. Render Heatmap Overlay
+      if (overlays.heatmap && gridPrMap) {
+        const gridW = Math.round(W);
+        const gridH = Math.round(H);
+        const cellPixelW = scale;
+        const cellPixelH = scale;
+
+        for (let y = 0; y < gridH; y++) {
+          for (let x = 0; x < gridW; x++) {
+            if (isLShape && x >= gridW * 0.6 && y < gridH * 0.4) continue;
+
+            const pr = gridPrMap[y * gridW + x];
+            if (pr > 0) {
+              ctx.fillStyle = getHeatmapColor(pr);
+              ctx.fillRect(x * scale, y * scale, cellPixelW, cellPixelH);
+            }
+          }
+        }
+      }
+
+      // 3. Render Grid Overlay
+      if (overlays.grid) {
+        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--lawn-grid') || "#047857";
+        ctx.lineWidth = 0.5;
+        for (let x = 0; x <= W; x += 5) {
+          ctx.beginPath();
+          ctx.moveTo(x * scale, 0);
+          ctx.lineTo(x * scale, cH);
+          ctx.stroke();
+        }
+        for (let y = 0; y <= H; y += 5) {
+          ctx.beginPath();
+          ctx.moveTo(0, y * scale);
+          ctx.lineTo(cW, y * scale);
+          ctx.stroke();
+        }
+      }
+
+      // 4. Render Head-to-Head Overlap Connection Lines
+      if (overlays.lines) {
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+
+        for (let i = 0; i < currentScenario.heads.length; i++) {
+          for (let j = i + 1; j < currentScenario.heads.length; j++) {
+            const h1 = currentScenario.heads[i];
+            const h2 = currentScenario.heads[j];
+            const dist = Math.sqrt((h1.x - h2.x)**2 + (h1.y - h2.y)**2);
+
+            // Check if head 1 reaches head 2 or vice versa
+            if (dist <= h1.radius || dist <= h2.radius) {
+              ctx.beginPath();
+              ctx.moveTo(h1.x * scale, h1.y * scale);
+              ctx.lineTo(h2.x * scale, h2.y * scale);
+              ctx.stroke();
+            }
+          }
+        }
+        ctx.setLineDash([]);
+      }
+
+      // 5. Render Sprinkler Head Cones and Nodes
+      currentScenario.heads.forEach(h => {
+        const hX = h.x * scale;
+        const hY = h.y * scale;
+        const radPix = h.radius * scale;
+        const startRad = (h.rotation * Math.PI) / 180;
+        const endRad = ((h.rotation + h.arc) * Math.PI) / 180;
+
+        // Draw Spray Arc Cone
+        if (overlays.arcs) {
+          ctx.beginPath();
+          ctx.moveTo(hX, hY);
+          ctx.arc(hX, hY, radPix, startRad, endRad);
+          ctx.closePath();
+          
+          if (h.type === "rotor") {
+            ctx.fillStyle = "rgba(168, 85, 247, 0.2)";
+            ctx.strokeStyle = "rgba(168, 85, 247, 0.6)";
+          } else {
+            ctx.fillStyle = "rgba(56, 189, 248, 0.2)";
+            ctx.strokeStyle = "rgba(56, 189, 248, 0.6)";
+          }
+          ctx.fill();
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+
+        // Draw Node Center Marker
+        const isSelected = h.id === selectedHeadId;
+        ctx.beginPath();
+        ctx.arc(hX, hY, isSelected ? 8 : 5, 0, Math.PI * 2);
+        ctx.fillStyle = isSelected ? "#f59e0b" : "#ffffff";
+        ctx.fill();
+        ctx.strokeStyle = isSelected ? "#ffffff" : "#0f172a";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Label
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "10px sans-serif";
+        ctx.fillText(`#${h.id}`, hX + 8, hY - 6);
+      });
+    }
+
+    function getHeatmapColor(pr) {
+      // Color map based on precipitation intensity (in/hr)
+      if (pr < 0.5) return "rgba(239, 68, 68, 0.4)";    // Under-watered (Red)
+      if (pr < 1.0) return "rgba(132, 204, 22, 0.4)";   // Light/Moderate (Lime)
+      if (pr <= 1.8) return "rgba(16, 185, 129, 0.45)";  // Ideal (Emerald Green)
+      if (pr <= 2.5) return "rgba(6, 182, 212, 0.5)";   // Heavy (Cyan)
+      return "rgba(139, 92, 246, 0.55)";               // Over-watered (Purple)
+    }
+
+    /* Canvas Event Listeners for Drag-and-Drop & Selection */
+    function initCanvasEvents() {
+      canvas.addEventListener("mousedown", (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = (e.clientX - rect.left) / scale;
+        const mouseY = (e.clientY - rect.top) / scale;
+
+        // Find clicked head node
+        const clickedHead = currentScenario.heads.find(h => {
+          const dist = Math.sqrt((h.x - mouseX)**2 + (h.y - mouseY)**2);
+          return dist <= 1.5; // 1.5 ft click tolerance threshold
+        });
+
+        if (clickedHead) {
+          selectedHeadId = clickedHead.id;
+          isDragging = true;
+          dragHeadId = clickedHead.id;
+          dragOffsetX = mouseX - clickedHead.x;
+          dragOffsetY = mouseY - clickedHead.y;
+          updateHeadPropertiesPanel();
+          renderCanvas();
+        } else {
+          selectedHeadId = null;
+          updateHeadPropertiesPanel();
+          renderCanvas();
+        }
+      });
+
+      canvas.addEventListener("mousemove", (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = Math.max(0, Math.min(currentScenario.lawnWidth, (e.clientX - rect.left) / scale));
+        const mouseY = Math.max(0, Math.min(currentScenario.lawnHeight, (e.clientY - rect.top) / scale));
+
+        // Update Cursor Position & Local Precip Info using cached engine results
+        const cellX = Math.floor(mouseX);
+        const cellY = Math.floor(mouseY);
+        let localPr = 0;
+        if (cachedEngineResults && cellX >= 0 && cellX < cachedEngineResults.width && cellY >= 0 && cellY < cachedEngineResults.height) {
+          localPr = cachedEngineResults.gridPrMap[cellY * cachedEngineResults.width + cellX] || 0;
+        }
+
+        document.getElementById("cursor-info").innerText = 
+          `X: ${mouseX.toFixed(1)} ft, Y: ${mouseY.toFixed(1)} ft | Rate: ${localPr.toFixed(2)} in/hr`;
+
+        if (isDragging && dragHeadId !== null) {
+          const head = currentScenario.heads.find(h => h.id === dragHeadId);
+          if (head) {
+            const newX = Math.max(0, Math.min(currentScenario.lawnWidth, mouseX - dragOffsetX));
+            const newY = Math.max(0, Math.min(currentScenario.lawnHeight, mouseY - dragOffsetY));
+            head.x = Math.round(newX * 2) / 2; // Snap to 0.5 ft
+            head.y = Math.round(newY * 2) / 2;
+            updateHeadPropertiesInputs(head);
+            recalculateAll();
+          }
+        }
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (isDragging) {
+          isDragging = false;
+          dragHeadId = null;
+        }
+      });
+    }
+
+    /* Head Property Panel Operations */
+    function addNewHead(type) {
+      const newId = currentScenario.heads.length > 0 
+        ? Math.max(...currentScenario.heads.map(h => h.id)) + 1 
+        : 1;
+
+      const isRotor = type === "rotor";
+      const newHead = {
+        id: newId,
+        type: type,
+        x: Math.round(currentScenario.lawnWidth / 2),
+        y: Math.round(currentScenario.lawnHeight / 2),
+        radius: isRotor ? 30 : 15,
+        arc: 180,
+        rotation: 0,
+        gpm: isRotor ? 2.5 : 1.2
+      };
+
+      currentScenario.heads.push(newHead);
+      selectedHeadId = newId;
+      updateHeadPropertiesPanel();
+      recalculateAll();
+      showToast(`Added Head #${newId} (${type})`);
+    }
+
+    function updateHeadPropertiesPanel() {
+      const panel = document.getElementById("head-properties-container");
+      const noSelect = document.getElementById("no-head-selected");
+      const title = document.getElementById("selected-head-title");
+
+      const head = currentScenario.heads.find(h => h.id === selectedHeadId);
+      if (head) {
+        panel.style.display = "block";
+        noSelect.style.display = "none";
+        title.innerText = `Editing Head #${head.id} (${head.type.toUpperCase()})`;
+        updateHeadPropertiesInputs(head);
+      } else {
+        panel.style.display = "none";
+        noSelect.style.display = "block";
+      }
+    }
+
+    function updateHeadPropertiesInputs(head) {
+      document.getElementById("headType").value = head.type;
+      document.getElementById("headFlow").value = head.gpm;
+      document.getElementById("headRadius").value = head.radius;
+      document.getElementById("headArc").value = head.arc;
+      document.getElementById("headRot").value = head.rotation;
+      document.getElementById("headPosX").value = head.x;
+      document.getElementById("headPosY").value = head.y;
+    }
+
+    function updateSelectedHeadProps() {
+      const head = currentScenario.heads.find(h => h.id === selectedHeadId);
+      if (!head) return;
+
+      head.type = document.getElementById("headType").value;
+      head.gpm = Math.max(0.1, Math.min(50, parseFloat(document.getElementById("headFlow").value) || 1.0));
+      head.radius = Math.max(1, Math.min(100, parseFloat(document.getElementById("headRadius").value) || 10));
+      head.arc = parseInt(document.getElementById("headArc").value) || 180;
+      head.rotation = ((parseInt(document.getElementById("headRot").value) || 0) % 360 + 360) % 360;
+      head.x = Math.max(0, Math.min(currentScenario.lawnWidth, parseFloat(document.getElementById("headPosX").value) || 0));
+      head.y = Math.max(0, Math.min(currentScenario.lawnHeight, parseFloat(document.getElementById("headPosY").value) || 0));
+
+      recalculateAll();
+    }
+
+    function deleteSelectedHead() {
+      if (selectedHeadId === null) return;
+      currentScenario.heads = currentScenario.heads.filter(h => h.id !== selectedHeadId);
+      showToast(`Deleted Head #${selectedHeadId}`);
+      selectedHeadId = null;
+      updateHeadPropertiesPanel();
+      recalculateAll();
+    }
+
+    function duplicateSelectedHead() {
+      const head = currentScenario.heads.find(h => h.id === selectedHeadId);
+      if (!head) return;
+
+      const newId = Math.max(...currentScenario.heads.map(h => h.id)) + 1;
+      const dup = JSON.parse(JSON.stringify(head));
+      dup.id = newId;
+      dup.x = Math.min(currentScenario.lawnWidth, dup.x + 2);
+      dup.y = Math.min(currentScenario.lawnHeight, dup.y + 2);
+
+      currentScenario.heads.push(dup);
+      selectedHeadId = newId;
+      updateHeadPropertiesPanel();
+      recalculateAll();
+      showToast(`Duplicated Head #${newId}`);
+    }
+
+    function resetAll() {
+      loadPreset(0);
+      showToast("Reset to default Suburban scenario.");
+    }
+
+    /* PRO Feature Export & Print Handler */
+    function checkProAction(actionCallback) {
+      if (!PRO) {
+        showToast('<a href="https://ferrywave73.gumroad.com/l/xbmsmt" style="color:var(--accent-blue);font-weight:600;text-decoration:underline;">Available in the full version</a>');
+        return;
+      }
+      actionCallback();
+    }
+
+    function copySummary() {
+      const summaryText = `Lawn Sprinkler Design Summary:
+- Lawn Dimensions: ${currentScenario.lawnWidth}' x ${currentScenario.lawnHeight}' (${currentScenario.shapeType})
+- Total Heads: ${currentScenario.heads.length}
+- Distribution Uniformity (DU): ${document.getElementById("metric-du").innerText}
+- Total Active Flow: ${document.getElementById("metric-total-gpm").innerText}
+- Safe Dynamic Budget: ${document.getElementById("disp-safe-gpm").innerText} GPM
+- Avg Precip Rate: ${document.getElementById("metric-avg-pr").innerText}
+- Schedule: ${document.getElementById("disp-weekly-runtime").innerText}`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(summaryText).then(() => {
+          showToast("Design summary copied to clipboard!");
+        }).catch(() => {
+          showToast("Failed to copy summary.");
+        });
+      } else {
+        showToast("Clipboard copy not supported in this browser environment.");
+      }
+    }
+
+    function exportJSON() {
+      checkProAction(() => {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentScenario, null, 2));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", `lawn_sprinkler_design_${Date.now()}.json`);
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        dlAnchor.remove();
+        showToast("Exported JSON configuration file.");
+      });
+    }
+
+    function exportCSV() {
+      checkProAction(() => {
+        let csvContent = "data:text/csv;charset=utf-8,Head ID,Type,X (ft),Y (ft),Radius (ft),Arc (deg),Rotation (deg),Flow (GPM)\n";
+        currentScenario.heads.forEach(h => {
+          csvContent += `${h.id},${h.type},${h.x},${h.y},${h.radius},${h.arc},${h.rotation},${h.gpm}\n`;
+        });
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "sprinkler_heads_schedule.csv");
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        showToast("Exported CSV heads schedule.");
+      });
+    }
+
+    function triggerPrint() {
+      checkProAction(() => {
+        window.print();
+      });
+    }
+
+    // Multi-Layout Scenario Comparison Matrix Logic
+    const savedScenarios = { A: null, B: null, C: null };
+
+    function saveScenarioSlot(slot) {
+      const engine = runPrecipitationEngine();
+      const safeGpm = parseFloat(document.getElementById("disp-safe-gpm").innerText) || 7.5;
+      
+      const sprayHeads = currentScenario.heads.filter(h => h.type === "spray");
+      const rotorHeads = currentScenario.heads.filter(h => h.type === "rotor");
+      let numZones = 0;
+      
+      [sprayHeads, rotorHeads].forEach(group => {
+        let currentGpm = 0;
+        group.forEach(h => {
+          if (currentGpm + h.gpm > safeGpm && currentGpm > 0) {
+            numZones++;
+            currentGpm = 0;
+          }
+          currentGpm += h.gpm;
+        });
+        if (currentGpm > 0) numZones++;
+      });
+      if (numZones === 0 && currentScenario.heads.length > 0) numZones = 1;
+
+      const avgZoneGpm = numZones > 0 ? engine.totalGpm / numZones : 0;
+      const frictionLoss = Math.round((0.08 * Math.pow(avgZoneGpm, 1.75)) * 10) / 10;
+      const targetDepth = parseFloat(document.getElementById("targetDepth").value) || 1.0;
+      const totalWeeklyMin = engine.avgPr > 0 ? Math.round((targetDepth / engine.avgPr) * 60) : 0;
+
+      savedScenarios[slot] = {
+        headCount: currentScenario.heads.length,
+        totalGpm: Math.round(engine.totalGpm * 10) / 10,
+        numZones: numZones,
+        du: Math.round(engine.du),
+        frictionLoss: frictionLoss,
+        weeklyRuntime: totalWeeklyMin
+      };
+
+      renderScenarioMatrix();
+      showToast(`Current setup saved as Scenario ${slot}!`);
+      const details = document.querySelector('.scenario-matrix-card details');
+      if (details) details.open = true;
+    }
+
+    function renderScenarioMatrix() {
+      const tbody = document.getElementById("scenario-matrix-body");
+      if (!tbody) return;
+
+      const metrics = [
+        { key: 'headCount', label: 'Head Count', unit: '', format: v => v },
+        { key: 'totalGpm', label: 'Total GPM', unit: ' GPM', format: v => `${v.toFixed(1)} GPM` },
+        { key: 'numZones', label: 'Number of Zones', unit: '', format: v => v },
+        { key: 'du', label: 'Distribution Uniformity (DU)', unit: '%', format: v => `${v}%`, higherIsBetter: true },
+        { key: 'frictionLoss', label: 'Est. Pipe Friction Loss', unit: ' PSI drop', format: v => `${v.toFixed(1)} PSI`, higherIsBetter: false },
+        { key: 'weeklyRuntime', label: 'Total Weekly Runtime', unit: ' mins', format: v => `${v} mins`, higherIsBetter: false }
+      ];
+
+      let html = '';
+      metrics.forEach(m => {
+        const valA = savedScenarios.A ? savedScenarios.A[m.key] : null;
+        const valB = savedScenarios.B ? savedScenarios.B[m.key] : null;
+        const valC = savedScenarios.C ? savedScenarios.C[m.key] : null;
+
+        let deltaText = '—';
+        let deltaClass = '';
+
+        if (valA !== null && valB !== null) {
+          const diff = valB - valA;
+          if (Math.abs(diff) > 0.01) {
+            const sign = diff > 0 ? '+' : '';
+            const formattedDiff = Number.isInteger(diff) ? diff : diff.toFixed(1);
+            deltaText = `${sign}${formattedDiff}${m.unit}`;
+            if (m.higherIsBetter !== undefined) {
+              deltaClass = (m.higherIsBetter ? diff > 0 : diff < 0) ? 'delta-positive' : 'delta-negative';
+            } else {
+              deltaClass = 'delta-neutral';
+            }
+          } else {
+            deltaText = `0${m.unit}`;
+          }
+        }
+
+        html += `<tr>
+          <td style="font-weight: 600;">${m.label}</td>
+          <td>${valA !== null ? m.format(valA) : '<span style="color:var(--text-muted)">Not saved</span>'}</td>
+          <td>${valB !== null ? m.format(valB) : '<span style="color:var(--text-muted)">Not saved</span>'}</td>
+          <td>${valC !== null ? m.format(valC) : '<span style="color:var(--text-muted)">Not saved</span>'}</td>
+          <td><span class="delta-badge ${deltaClass}">${deltaText}</span></td>
+        </tr>`;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    renderScenarioMatrix();
+
+    function runAutoLayoutSolver(familyOverride) {
+      const family = familyOverride || document.getElementById("autoHeadFamily")?.value || "spray";
+      const W = parseFloat(document.getElementById("lawnWidth").value) || currentScenario.lawnWidth;
+      const H = parseFloat(document.getElementById("lawnHeight").value) || currentScenario.lawnHeight;
+      const shape = document.getElementById("shapeType").value || "rectangle";
+      const isRotor = family === "rotor";
+
+      let R = isRotor ? 30 : 20;
+      if (!isRotor && W <= 15 && H <= 15) R = 15;
+
+      const numSegX = Math.max(1, Math.round(W / R));
+      const numSegY = Math.max(1, Math.round(H / R));
+      const dx = W / numSegX;
+      const dy = H / numSegY;
+
+      const newHeads = [];
+      let headId = 1;
+
+      const isCutout = (x, y) => shape === "l-shape" && x > W * 0.59 && y < H * 0.41;
+
+      for (let ix = 0; ix <= numSegX; ix++) {
+        for (let iy = 0; iy <= numSegY; iy++) {
+          const x = Math.round(ix * dx * 10) / 10;
+          const y = Math.round(iy * dy * 10) / 10;
+
+          if (isCutout(x, y)) continue;
+
+          const isLeft = ix === 0;
+          const isRight = ix === numSegX || (shape === "l-shape" && Math.abs(x - W * 0.6) < 0.1 && y <= H * 0.4);
+          const isTop = iy === 0;
+          const isBottom = iy === numSegY;
+
+          let arc = 360;
+          let rot = 0;
+
+          if (isLeft && isTop) { arc = 90; rot = 0; }
+          else if (isRight && isTop) { arc = 90; rot = 90; }
+          else if (isRight && isBottom) { arc = 90; rot = 180; }
+          else if (isLeft && isBottom) { arc = 90; rot = 270; }
+          else if (isTop) { arc = 180; rot = 0; }
+          else if (isRight) { arc = 180; rot = 90; }
+          else if (isBottom) { arc = 180; rot = 180; }
+          else if (isLeft) { arc = 180; rot = 270; }
+
+          if (shape === "l-shape" && Math.abs(x - W * 0.6) < 0.1 && Math.abs(y - H * 0.4) < 0.1) {
+            arc = 270;
+            rot = 90;
+          }
+
+          let baseGpm = isRotor ? 1.5 : 0.8;
+          let gpm = Math.round((baseGpm * (arc / 90)) * 10) / 10;
+
+          newHeads.push({
+            id: headId++,
+            type: family,
+            x: x,
+            y: y,
+            radius: R,
+            arc: arc,
+            rotation: rot,
+            gpm: gpm
+          });
+        }
+      }
+
+      currentScenario.heads = newHeads;
+      selectedHeadId = null;
+      updateHeadPropertiesPanel();
+      recalculateAll();
+
+      const safeGpm = parseFloat(document.getElementById("disp-safe-gpm").innerText) || 7.5;
+      const totalGpm = newHeads.reduce((sum, h) => sum + h.gpm, 0);
+      const minZones = Math.max(1, Math.ceil(totalGpm / safeGpm));
+
+      showToast(`Auto-Layout: Placed ${newHeads.length} heads (${minZones} min zone${minZones > 1 ? 's' : ''} required, ${totalGpm.toFixed(1)} GPM total).`);
+    }
+
+    function updateWaterCostEstimator(totalSystemGpm, totalWeeklyMin) {
+      const rateInput = document.getElementById("waterRate");
+      const weeksInput = document.getElementById("seasonWeeks");
+      const sewerInput = document.getElementById("sewerToggle");
+
+      if (!rateInput || !weeksInput) return;
+
+      const rawRate = parseFloat(rateInput.value);
+      const rawWeeks = parseFloat(weeksInput.value);
+      const sewerIncluded = sewerInput ? sewerInput.checked : false;
+
+      const rate = isNaN(rawRate) || rawRate < 0 ? 0 : rawRate;
+      const weeks = isNaN(rawWeeks) || rawWeeks < 0 ? 0 : rawWeeks;
+
+      const weeklyGallons = totalSystemGpm * totalWeeklyMin;
+      const seasonalGallons = weeklyGallons * weeks;
+      const effectiveRate = rate * (sewerIncluded ? 1.5 : 1.0);
+      const seasonalCost = (seasonalGallons / 1000) * effectiveRate;
+
+      const dispWeekly = document.getElementById("disp-weekly-vol");
+      const dispSeasonal = document.getElementById("disp-seasonal-vol");
+      const dispCost = document.getElementById("disp-seasonal-cost");
+
+      if (dispWeekly) dispWeekly.innerText = `${Math.round(weeklyGallons).toLocaleString('en-US')} Gallons`;
+      if (dispSeasonal) dispSeasonal.innerText = `${Math.round(seasonalGallons).toLocaleString('en-US')} Gallons`;
+      if (dispCost) dispCost.innerText = `$${seasonalCost.toFixed(2)}`;
+    }
+
+    function calcBomMetrics() {
+      const heads = currentScenario.heads || [];
+      const pipeFactor = parseFloat(document.getElementById("bomPipeFactor")?.value || "1.3");
+      const mainExtra = parseFloat(document.getElementById("bomMainlineExtra")?.value || "15");
+
+      const safeBudgetGpm = parseFloat(document.getElementById("disp-safe-gpm")?.innerText) || 7.5;
+      const sprayHeads = heads.filter(h => h.type === "spray");
+      const rotorHeads = heads.filter(h => h.type === "rotor");
+      const zones = [];
+
+      [sprayHeads, rotorHeads].forEach(group => {
+        let currZone = [];
+        let currGpm = 0;
+        group.forEach(h => {
+          if (currGpm + h.gpm > safeBudgetGpm && currZone.length > 0) {
+            zones.push(currZone);
+            currZone = [];
+            currGpm = 0;
+          }
+          currZone.push(h);
+          currGpm += h.gpm;
+        });
+        if (currZone.length > 0) zones.push(currZone);
+      });
+
+      let totalLateralFeet = 0;
+      zones.forEach(zHeads => {
+        if (zHeads.length === 0) return;
+        let zoneDist = Math.sqrt(zHeads[0].x ** 2 + zHeads[0].y ** 2);
+        for (let i = 1; i < zHeads.length; i++) {
+          const dx = zHeads[i].x - zHeads[i-1].x;
+          const dy = zHeads[i].y - zHeads[i-1].y;
+          zoneDist += Math.sqrt(dx * dx + dy * dy);
+        }
+        totalLateralFeet += zoneDist * pipeFactor;
+      });
+
+      const lateralFeet = Math.round(totalLateralFeet);
+      const mainlineFeet = Math.round(mainExtra + (zones.length * 5));
+
+      return {
+        totalHeads: heads.length,
+        numZones: zones.length,
+        lateralFeet: lateralFeet,
+        mainlineFeet: mainlineFeet,
+        zones: zones
+      };
+    }
+
+    function updateBomManifest() {
+      const metrics = calcBomMetrics();
+      const elHeads = document.getElementById("bom-total-heads");
+      const elValves = document.getElementById("bom-valves-count");
+      const elPipe = document.getElementById("bom-pipe-feet");
+      const elMain = document.getElementById("bom-mainline-feet");
+
+      if (elHeads) elHeads.innerText = metrics.totalHeads;
+      if (elValves) elValves.innerText = `${metrics.numZones} Valve${metrics.numZones !== 1 ? 's' : ''}`;
+      if (elPipe) elPipe.innerText = `${metrics.lateralFeet} ft`;
+      if (elMain) elMain.innerText = `${metrics.mainlineFeet} ft`;
+    }
+
+    function handleBomExport(type) {
+      const promptEl = document.getElementById("bom-pro-prompt");
+      if (!PRO) {
+        if (promptEl) {
+          promptEl.style.display = "block";
+          promptEl.innerHTML = 'Available in the full version: <a href="https://ferrywave73.gumroad.com/l/xbmsmt" target="_blank" style="color:var(--accent-blue);font-weight:600;text-decoration:underline;">Upgrade to PRO to download manifest & reports</a>.';
+        }
+        showToast('Available in the full version');
+        return;
+      }
+
+      if (promptEl) promptEl.style.display = "none";
+
+      const metrics = calcBomMetrics();
+      const filenameBase = `sprinkler_bom_manifest_${Date.now()}`;
+
+      if (type === 'csv') {
+        let csv = "Item Category,Component Description,Quantity,Unit,Notes\n";
+        csv += `Head,Fixed Spray Nozzles,${currentScenario.heads.filter(h=>h.type==='spray').length},ea,15-20ft radius\n`;
+        csv += `Head,Gear Rotor Nozzles,${currentScenario.heads.filter(h=>h.type==='rotor').length},ea,30-40ft radius\n`;
+        csv += `Valves,1-Inch Zone Control Valves,${metrics.numZones},ea,Electric Solenoid\n`;
+        csv += `Piping,3/4-Inch Poly/PVC Lateral Pipe,${metrics.lateralFeet},linear ft,Includes routing overhead\n`;
+        csv += `Piping,1-Inch PVC Mainline Pipe,${metrics.mainlineFeet},linear ft,Supply & manifold line\n`;
+        metrics.zones.forEach((z, i) => {
+          csv += `Zone Schedule,Zone ${i+1} (${z[0]?.type || 'Standard'}),${z.length},heads,Est dynamic flow: ${z.reduce((s,h)=>s+h.gpm,0).toFixed(1)} GPM\n`;
+        });
+
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `${filenameBase}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        showToast("Downloaded BOM CSV Manifest!");
+      } else if (type === 'json') {
+        const data = {
+          timestamp: new Date().toISOString(),
+          lawnDimensions: { width: currentScenario.lawnWidth, height: currentScenario.lawnHeight, shape: currentScenario.shapeType },
+          takeoff: {
+            totalHeads: metrics.totalHeads,
+            sprayCount: currentScenario.heads.filter(h=>h.type==='spray').length,
+            rotorCount: currentScenario.heads.filter(h=>h.type==='rotor').length,
+            zoneValves: metrics.numZones,
+            lateralPipe34Ft: metrics.lateralFeet,
+            mainlinePipe1InFt: metrics.mainlineFeet
+          },
+          zoneSchedule: metrics.zones.map((z, i) => ({
+            zoneIndex: i + 1,
+            nozzleType: z[0]?.type || 'spray',
+            headCount: z.length,
+            totalGpm: z.reduce((s,h)=>s+h.gpm, 0),
+            heads: z.map(h => ({ id: h.id, x: h.x, y: h.y, gpm: h.gpm, radius: h.radius, arc: h.arc, rotation: h.rotation }))
+          }))
+        };
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `${filenameBase}.json`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        showToast("Downloaded Layout JSON Manifest!");
+      } else if (type === 'plan') {
+        const canvasImg = canvas ? canvas.toDataURL("image/png") : "";
+        const printWin = window.open("", "_blank");
+        if (!printWin) {
+          showToast("Pop-up blocked. Allow pop-ups to view engineering plan.");
+          return;
+        }
+        printWin.document.write(`<!DOCTYPE html><html><head><title>Irrigation Engineering Plan</title><style>body{font-family:sans-serif;padding:20px;color:#1e293b;}h1{margin-bottom:5px;}table{width:100%;border-collapse:collapse;margin-top:15px;}th,td{border:1px solid #cbd5e1;padding:8px;text-align:left;font-size:14px;}th{background:#f1f5f9;}.img-container{margin:20px 0;border:1px solid #cbd5e1;text-align:center;background:#064e3b;padding:10px;border-radius:8px;}img{max-width:100%;height:auto;}</style></head><body><h1>Irrigation Engineering Plan & Takeoff</h1><div>Lawn: ${currentScenario.lawnWidth}' x ${currentScenario.lawnHeight}' (${currentScenario.shapeType})</div><div class="img-container"><img src="${canvasImg}" /></div><h2>Bill of Materials</h2><table><thead><tr><th>Item</th><th>Qty / Length</th><th>Notes</th></tr></thead><tbody><tr><td>Spray Heads</td><td>${currentScenario.heads.filter(h=>h.type==='spray').length} ea</td><td>15-20ft radius</td></tr><tr><td>Rotor Heads</td><td>${currentScenario.heads.filter(h=>h.type==='rotor').length} ea</td><td>30-40ft radius</td></tr><tr><td>Zone Valves</td><td>${metrics.numZones} ea</td><td>1-inch solenoid</td></tr><tr><td>3/4" Lateral Pipe</td><td>${metrics.lateralFeet} ft</td><td>Poly/PVC lateral line</td></tr><tr><td>1" Mainline Pipe</td><td>${metrics.mainlineFeet} ft</td><td>Supply & manifold</td></tr></tbody></table><script>window.onload=function(){window.print();};<\/script><section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This interactive designer helps homeowners and DIY landscapers map head-to-head sprinkler coverage and calculate home water flow budgets. Visualize dry spots and over-watered areas in real time while generating an exact bill of materials before digging up your yard. Try the free web version directly in your browser or grab the offline pack for offline use.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Measure your home&#39;s water flow (GPM) using the 5-gallon bucket test and input your supply limits.</li><li>Plot your lawn perimeter dimensions and place sprinkler heads on the interactive grid.</li><li>Check the live coverage heatmap to eliminate dry zones and verify head-to-head overlap.</li><li>Group heads into zones within your GPM flow budget, then export your complete Bill of Materials.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">How do I go about planning the layout of a sprinkler network for my lawn?</h4><p style="margin:0">You enter: Lawn physical dimensions (length and width in feet) · Spigot bucket test results (seconds to fill a 5-gallon bucket) · Static water pressure (PSI at outdoor spigot) · Desired head types (fixed spray heads vs gear-driven rotors) · Approximate target weekly watering depth (inches per week, standard 1.0 in).<br>You get: A safe flow budget (max GPM per zone), head-to-head overlap validation, zone grouping recommendations (separating spray vs rotor heads), precipitation rate (in/hr), and runtime schedule (minutes per zone per week).</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">How do I go about planning the layout of a sprinkler network for my lawn?</h4><p style="margin:0">Start by measuring your home water supply flow rate (GPM) and dynamic pressure (PSI). Map your lawn dimensions to scale, then place heads along corners and perimeters using head-to-head spacing, where each head&#39;s spray reaches the adjacent head. Finally, group heads into separate zones so no single zone exceeds your available GPM budget.</p><h4 style="font-size:16px;margin:16px 0 4px">How do I fix the worst lawn on the street?</h4><p style="margin:0">Fixing a failing lawn starts with correcting uneven irrigation, soil compaction, and nutrient imbalances. Ensure your sprinkler system delivers 100% head-to-head coverage so dry patches aren&#39;t missed during heat waves. Pair balanced watering with core aeration, soil testing, and consistent mowing heights to rebuild turf health.</p><h4 style="font-size:16px;margin:16px 0 4px">Why is head-to-head coverage necessary for lawn sprinklers?</h4><p style="margin:0">Sprinkler heads throw the densest amount of water near the nozzle and taper off toward the edge of their radius. Spacing heads so their spray patterns overlap reaching adjacent heads ensures uniform water application across the entire lawn surface.</p><h4 style="font-size:16px;margin:16px 0 4px">Is my data private when using the paid offline pack?</h4><p style="margin:0">Yes. The downloadable desktop edition included in the offline pack runs 100% locally on your computer with zero internet tracking, telemetry, or cloud storage requirements. Your property measurements and layout files remain private on your machine.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Offline pack: $12, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>This complete tool</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/xbmsmt" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the offline pack · $12</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../yard-excavation-dirt-volume-calculator/" style="color:inherit;font-weight:600">Yard Excavation &amp; Dirt Removal Volume Calculator</a>: Calculate true loose soil swell, wet tonnage, slope cuts, equipment trips, and dumpster payload limits offline.</li><li><a href="../vegetable-garden-fertilizer-npk-calculator/" style="color:inherit;font-weight:600">Vegetable Garden Fertilizer &amp; NPK Application Calculator</a>: Calculate exact N-P-K fertilizer weights, balance organic amendments, prevent root burn, and export plan.</li><li><a href="../plant-light-dli-exposure-calculator/" style="color:inherit;font-weight:600">Plant Light Requirement &amp; DLI Calculator</a>: Offline DLI calculator, light spectrum converter, seasonal deficit planner, and canopy coverage solver.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">About · Offline pack</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"About · Offline pack"});</script>
+</body></html>`);
+        printWin.document.close();
+      }
+    }
+
+    // FEATURE-JS
+  </script>
+</body>
+</html>
