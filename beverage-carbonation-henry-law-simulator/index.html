@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root {
+  --bg-primary: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f1f5f9;
+  --border: #e2e8f0;
+  --border-focus: #3b82f6;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: #eff6ff;
+  --success: #16a34a;
+  --success-bg: #f0fdf4;
+  --warning: #d97706;
+  --warning-bg: #fffbeb;
+  --danger: #dc2626;
+  --danger-bg: #fef2f2;
+  --radius: 10px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #090d16;
+    --bg-surface: #111827;
+    --bg-subtle: #1e293b;
+    --border: #334155;
+    --border-focus: #60a5fa;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #3b82f6;
+    --primary-hover: #60a5fa;
+    --primary-light: #1e3a8a33;
+    --success: #22c55e;
+    --success-bg: #052e1640;
+    --warning: #f59e0b;
+    --warning-bg: #451a0340;
+    --danger: #ef4444;
+    --danger-bg: #450a0a40;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  line-height: 1.5;
+  padding: 16px;
+}
+
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+header {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.title-group h1 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.badge-tag {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.header-subtitle {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  max-width: 860px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.preset-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.preset-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.btn-preset {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-preset:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.btn-preset.active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+.actions-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn-action {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.btn-action:hover {
+  background: var(--bg-subtle);
+}
+
+.pro-msg {
+  display: none;
+  font-size: 0.75rem;
+  color: var(--danger);
+  background: var(--danger-bg);
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+  width: 100%;
+}
+
+.pro-msg a {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.interpretation-banner {
+  background: var(--bg-surface);
+  border-left: 4px solid var(--primary);
+  border: 1px solid var(--border);
+  border-left-width: 5px;
+  border-left-color: var(--primary);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.interpretation-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.interpretation-body {
+  font-size: 0.92rem;
+  color: var(--text-main);
+  line-height: 1.45;
+}
+
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 900px) {
+  .grid-2col {
+    grid-template-columns: 1.15fr 1fr;
+  }
+}
+
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+.card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.card-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.field-unit {
+  font-weight: normal;
+  color: var(--text-muted);
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+input[type="number"], select {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 0.88rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+input[type="number"]:focus, select:focus {
+  border-color: var(--border-focus);
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--primary);
+  cursor: pointer;
+  margin: 6px 0;
+}
+
+.results-shelf {
+  background: var(--bg-subtle);
+  border-radius: 8px;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stat-value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-top: 2px;
+}
+
+.stat-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 20px;
+  width: fit-content;
+}
+
+.badge-info {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.badge-success {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.badge-warning {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.badge-danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.chart-container {
+  width: 100%;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  overflow: hidden;
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.legal-notice {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 16px 8px;
+  border-top: 1px solid var(--border);
+}
+
+[data-feature="reverse-carbonation-solver"] {
+  margin-top: 0;
+}
+.benchmark-line { stroke: var(--border); stroke-width: 1; stroke-dasharray: 2,2; }
+.benchmark-text { font-size: 9px; fill: var(--text-muted); font-weight: 500; }
+.decay-path { fill: none; stroke: #10b981; stroke-width: 2.5; transition: d 0.2s ease; }
+.sealed-path { fill: none; stroke: var(--primary); stroke-width: 2.5; stroke-dasharray: 4,1; }
+.chart-axis { stroke: var(--text-muted); stroke-width: 1; }
+.comparator-wrap { overflow-x: auto; margin-top: 12px; border: 1px solid var(--border); border-radius: 8px; }
+.comp-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; background: var(--bg-surface); min-width: 480px; }
+.comp-table th { background: var(--bg-subtle); color: var(--text-muted); padding: 10px; text-align: left; border-bottom: 2px solid var(--border); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+.comp-table td { padding: 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-header-cell { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.delta-pill { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; margin-left: 6px; }
+.delta-up { background: var(--danger-bg); color: var(--danger); }
+.delta-down { background: var(--success-bg); color: var(--success); }
+.empty-matrix { padding: 30px; text-align: center; color: var(--text-muted); font-style: italic; }
+.audit-export-grid { display: grid; grid-template-columns: 1fr; gap: 15px; background: var(--bg-subtle); padding: 15px; border-radius: 8px; }
+@media (min-width: 600px) { .audit-export-grid { grid-template-columns: 1fr 220px; } }
+.audit-info { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
+/* FEATURE-CSS */
+</style>
+<title>Calculate CO2 Volume: Temperature &amp; Pressure Carbonation Tool</title>
+<meta name="description" content="Accurately calculate dissolved CO2 volumes, equilibrium pressure, bottle burst risks, and draft line balance for beer, soda, and mixed drinks.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/beverage-carbonation-henry-law-simulator/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/beverage-carbonation-henry-law-simulator/">
+<meta property="og:title" content="Calculate CO2 Volume: Temperature &amp; Pressure Carbonation Tool"><meta property="og:description" content="Accurately calculate dissolved CO2 volumes, equilibrium pressure, bottle burst risks, and draft line balance for beer, soda, and mixed drinks.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/beverage-carbonation-henry-law-simulator/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Calculate CO2 Volume: Temperature & Pressure Carbonation Tool","description":"Accurately calculate dissolved CO2 volumes, equilibrium pressure, bottle burst risks, and draft line balance for beer, soda, and mixed drinks.","url":"https://rttyy.github.io/free-tools/beverage-carbonation-henry-law-simulator/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the carbon dioxide content of a soda can or bottle?","acceptedAnswer":{"@type":"Answer","text":"Commercial soda typically contains between 3.0 and 4.0 volumes of dissolved CO2 (approximately 6.0 to 8.0 grams of CO2 per liter). Colas usually sit around 3.5 to 3.7 volumes, while ginger ales and lemon-lime sodas are often carbonated slightly higher (up to 4.0 volumes) to maintain crispness and acidity."}},{"@type":"Question","name":"How would I measure the Carbon Dioxide content in Coca Cola over a period of time?","acceptedAnswer":{"@type":"Answer","text":"The industry standard non-destructive method uses an equilibrium pressure-temperature gauge (such as a Zahm & Nagel tester or an electronic piercing device). By measuring container headspace pressure and internal liquid temperature after vigorous shaking to reach equilibrium, you determine dissolved volumes via standard solubility tables. For open containers over time, you can measure mass loss on an analytical balance, as escaping CO2 directly reduces the container's total weight."}},{"@type":"Question","name":"Why does liquid sugar or alcohol content change carbonation readings?","acceptedAnswer":{"@type":"Answer","text":"Standard charts assume CO2 dissolves in pure water. Alcohol increases CO2 solubility (acting as an organic co-solvent), meaning you need slightly less pressure to achieve the same carbonation level. Conversely, dissolved sugars create a 'salting-out' effect that reduces available water volume, requiring higher pressure to keep the same volume of CO2 in solution."}},{"@type":"Question","name":"What is included in the $9 offline pack versus the free version?","acceptedAnswer":{"@type":"Answer","text":"The free web version provides full access to the calculation engines online. The $9 pack is a single, zero-dependency HTML file you download to run locally without internet access, featuring offline CSV/JSON export capabilities for lab logs and custom equipment presets."}}]}</script>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="header-top">
+      <div class="title-group">
+        <h1>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12a4 4 0 0 1 8 0"/><path d="M12 2v2"/><path d="M12 20v2"/><circle cx="9" cy="8" r="1"/><circle cx="15" cy="15" r="1"/><circle cx="15" cy="9" r="1.5"/></svg>
+          Beverage Carbonation &amp; Dissolved CO2 Henry's Law Simulator
+        </h1>
+        <span class="badge-tag">ASBC &amp; Degassing Kinetics</span>
+      </div>
+    </div>
+    <p class="header-subtitle">
+      Precise thermodynamic solver for craft beverage makers, brewers, and food scientists. Predicts Henry's isobaric solubility, dissolved mass concentrations, headspace thermal expansion burst risks, dispensing balance lines, and unsealed degassing curves.
+    </p>
+
+    <div class="toolbar">
+      <div class="preset-group">
+        <span class="preset-label">Standard Presets:</span>
+        <button type="button" class="btn-preset active" id="btn-preset-1" onclick="loadPreset(0)">Craft IPA Draft</button>
+        <button type="button" class="btn-preset" id="btn-preset-2" onclick="loadPreset(1)">Bottled Cola (Heat Risk)</button>
+        <button type="button" class="btn-preset" id="btn-preset-3" onclick="loadPreset(2)">Hyper-Seltzer Mixology</button>
+      </div>
+
+      <div class="actions-group">
+        <button type="button" class="btn-action" onclick="copyDataSummary()" title="Copy live summary to clipboard">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy Summary
+        </button>
+        <button type="button" class="btn-action" onclick="exportCSV()" title="Download CSV report">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </button>
+        <button type="button" class="btn-action" onclick="exportJSON()" title="Download JSON scenario">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Export JSON
+        </button>
+        <button type="button" class="btn-action" onclick="resetDefaults()" title="Reset to defaults">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          Reset
+        </button>
+        <div id="proMsgBox" class="pro-msg">Available in the full version: <a href="https://ferrywave73.gumroad.com/l/ajzzmb" target="_blank">Upgrade to Full License</a></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live What This Means / What to Do Next -->
+  <div class="interpretation-banner">
+    <div class="interpretation-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      Engineering Diagnosis &amp; Dispense Protocol
+    </div>
+    <div class="interpretation-body" id="liveInterpretation">
+      Calculating carbonation dynamics...
+    </div>
+  </div>
+
+  <div class="grid-2col">
+    <!-- Left Column: Henry's Law Engine & Container Burst Gauge -->
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      
+      <!-- Feature 1: Henry Solubility Matrix -->
+      <section class="card" data-feature="henry-solubility-matrix">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">1. Isobaric Henry's Law Carbonation Engine</h2>
+            <p class="card-desc">Equilibrium dissolved CO2 from temperature, gauge pressure, and fluid density matrix.</p>
+          </div>
+          <span class="badge" id="carbTierBadge">Standard Beer</span>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label" for="tempInput">Chilled Temp (°C / °F)</label>
+            <div class="input-row">
+              <input type="number" id="tempInput" step="0.1" min="-2" max="35" value="3.3" oninput="calculateAll()">
+            </div>
+            <span class="field-unit" id="tempFLabel">37.9 °F</span>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="pressInput">Head Pressure (PSI / bar)</label>
+            <div class="input-row">
+              <input type="number" id="pressInput" step="0.5" min="0" max="60" value="11.5" oninput="calculateAll()">
+            </div>
+            <span class="field-unit" id="pressBarLabel">0.79 bar</span>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="matrixSelect">Liquid Matrix Type</label>
+            <select id="matrixSelect" onchange="calculateAll()">
+              <option value="water">Pure Water (0° Brix / 0°P)</option>
+              <option value="beer" selected>Craft Beer (12°P Wort / 5% ABV)</option>
+              <option value="soda">Sugar Soda (10° Brix Sucrose)</option>
+              <option value="high_grav">High Gravity / Liqueur (18° Brix)</option>
+            </select>
+            <span class="field-unit" id="matrixDesc">Solubility factor: 0.93x</span>
+          </div>
+        </div>
+
+        <div class="results-shelf">
+          <div class="stat-item">
+            <span class="stat-label">Volumes of CO2</span>
+            <span class="stat-value" id="solubilityVol">2.42</span>
+            <span class="stat-sub">vol/vol at STP</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Dissolved Mass</span>
+            <span class="stat-value" id="solubilityGrams">4.74</span>
+            <span class="stat-sub">grams / Liter</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">CO2 Molarity</span>
+            <span class="stat-value" id="solubilityMolar">107.7</span>
+            <span class="stat-sub">mmol / L</span>
+          </div>
+        </div>
+
+        <!-- Henry Law Curve SVG -->
+        <div class="chart-container">
+          <svg id="henryChart" viewBox="0 0 500 180" aria-label="Henry's Law Solubility Curve"></svg>
+        </div>
+      </section>
+
+      <!-- Feature 2: Headspace Burst Safety Gauge -->
+      <section class="card" data-feature="headspace-burst-safety-gauge">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">2. Headspace Compression &amp; Burst Risk Analyzer</h2>
+            <p class="card-desc">Predicts thermal equilibrium pressure rise when unchilled or left in a hot vehicle.</p>
+          </div>
+          <span class="badge" id="burstSafetyBadge">Safe</span>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label" for="vesselSelect">Container Vessel Type</label>
+            <select id="vesselSelect" onchange="updateVesselPreset(); calculateAll();">
+              <option value="corny" selected>Corny Keg (130 PSI Rating)</option>
+              <option value="glass_std">Standard Glass Bottle (45 PSI)</option>
+              <option value="champagne">Heavy Champagne Glass (90 PSI)</option>
+              <option value="can">Aluminum Beverage Can (90 PSI)</option>
+              <option value="pet">Pressure PET Bottle (150 PSI)</option>
+            </select>
+            <span class="field-unit" id="burstLimitLabel">Burst Limit: 130 PSI</span>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="totalVolInput">Total Vessel Volume (mL)</label>
+            <input type="number" id="totalVolInput" min="10" max="60000" step="5" value="19000" oninput="calculateAll()">
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="fillVolInput">Liquid Fill Volume (mL)</label>
+            <input type="number" id="fillVolInput" min="5" max="59900" step="5" value="18500" oninput="calculateAll()">
+            <span class="field-unit" id="headspacePctLabel">Headspace: 500 mL (2.6%)</span>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="warmTempInput">Heat Spike Ambient Temp (°C)</label>
+            <input type="number" id="warmTempInput" min="-2" max="55" step="0.5" value="28.0" oninput="calculateAll()">
+            <span class="field-unit" id="warmTempFLabel">82.4 °F</span>
+          </div>
+        </div>
+
+        <div class="results-shelf">
+          <div class="stat-item">
+            <span class="stat-label">Warmed Equilibrium</span>
+            <span class="stat-value" id="warmPressureVal">23.8</span>
+            <span class="stat-sub">PSI gauge</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Safety Factor</span>
+            <span class="stat-value" id="safetyFactorVal">5.5x</span>
+            <span class="stat-sub">Burst rating / P_warm</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Overpressure Status</span>
+            <span class="stat-value" id="overpressureStatus" style="font-size: 1rem; margin-top:6px;">Nominal</span>
+            <span class="stat-sub" id="burstMarginText">106 PSI reserve</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Right Column: Degassing Kinetics & Draft Line Balancer -->
+    <div style="display:flex; flex-direction:column; gap:20px;">
+
+      <!-- Feature 3: Degassing Kinetics Simulator -->
+      <section class="card" data-feature="degassing-kinetics-simulator">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">3. Ambient Degassing Rate Simulator</h2>
+            <p class="card-desc">Boundary-layer mass transfer loss dC/dt through an unsealed vessel opening.</p>
+          </div>
+          <span class="badge" id="fizzLossBadge">Lively</span>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label" for="apertureSelect">Opening Geometry</label>
+            <select id="apertureSelect" onchange="syncAperturePreset(); calculateAll();">
+              <option value="pint" selected>Pint Glass (55 mm diameter)</option>
+              <option value="can">Can Pop-Tab (21 mm equivalent)</option>
+              <option value="crown">Crown Bottle Mouth (26 mm)</option>
+              <option value="tumbler">Wide Tumbler (85 mm)</option>
+              <option value="custom">Custom Diameter...</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="openingDiamInput">Aperture Diameter (mm)</label>
+            <input type="number" id="openingDiamInput" min="1" max="250" step="1" value="55" oninput="calculateAll()">
+            <span class="field-unit" id="apertureAreaLabel">Area: 23.8 cm²</span>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="degassVolInput">Liquid Portion Vol (mL)</label>
+            <input type="number" id="degassVolInput" min="10" max="5000" step="10" value="473" oninput="calculateAll()">
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="agitationSelect">Agitation State</label>
+            <select id="agitationSelect" onchange="calculateAll()">
+              <option value="quiescent" selected>Quiescent (Resting on bar)</option>
+              <option value="swirl">Occasional Sip &amp; Swirl (1.8x)</option>
+              <option value="vigorous">Continuous Pour / Stir (4.5x)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top: 4px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label class="field-label" for="timeSlider">Elapsed Time Opened:</label>
+            <span style="font-size:0.85rem; font-weight:700; color:var(--primary);" id="timeSliderVal">15 min</span>
+          </div>
+          <input type="range" id="timeSlider" min="0" max="360" step="1" value="15" oninput="calculateAll()">
+        </div>
+
+        <div class="results-shelf">
+          <div class="stat-item">
+            <span class="stat-label">Remaining CO2</span>
+            <span class="stat-value" id="remainingCO2Vol">2.31</span>
+            <span class="stat-sub" id="remainingCO2Grams">4.53 g/L</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Cumulative Loss</span>
+            <span class="stat-value" id="lossPctVal">4.5%</span>
+            <span class="stat-sub" id="lossRateHour">0.8 g/L·hr</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Minutes Until Flat</span>
+            <span class="stat-value" id="minsUntilFlat">118 min</span>
+            <span class="stat-sub">threshold &lt; 1.8 vol</span>
+          </div>
+        </div>
+
+        <!-- Degassing Curve SVG -->
+        <div class="chart-container">
+          <svg id="degassChart" viewBox="0 0 500 170" aria-label="Degassing Retention Curve"></svg>
+        </div>
+      </section>
+
+      <!-- Feature 4: Draft Line Balancer -->
+      <section class="card" data-feature="draft-line-balancer">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">4. Dispensing Line Friction Balancer</h2>
+            <p class="card-desc">Determines precise tubing length to deliver foam-free 1.0 to 1.5 PSI faucet exit pressure.</p>
+          </div>
+          <span class="badge badge-success" id="pourStatusBadge">Balanced Pour</span>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label class="field-label" for="tubingSelect">Beer Line Tubing Type</label>
+            <select id="tubingSelect" onchange="calculateAll()">
+              <option value="3_16_vinyl" selected>3/16" Standard Vinyl (3.0 PSI/ft drop)</option>
+              <option value="1_4_vinyl">1/4" Vinyl (0.8 PSI/ft drop)</option>
+              <option value="4mm_eva">4mm ID EVABarrier (2.2 PSI/ft drop)</option>
+              <option value="5mm_eva">5mm ID EVABarrier (0.5 PSI/ft drop)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="elevationInput">Faucet Vertical Rise (ft)</label>
+            <input type="number" id="elevationInput" min="-3" max="15" step="0.5" value="2.5" oninput="calculateAll()">
+            <span class="field-unit" id="gravityDropLabel">Gravity resistance: 1.25 PSI</span>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="targetTapPress">Target Faucet Tip Exit (PSI)</label>
+            <input type="number" id="targetTapPress" min="0.5" max="3.0" step="0.1" value="1.0" oninput="calculateAll()">
+            <span class="field-unit">Standard optimal: 1.0 PSI</span>
+          </div>
+        </div>
+
+        <div class="results-shelf">
+          <div class="stat-item">
+            <span class="stat-label">Required Line Length</span>
+            <span class="stat-value" id="lineLengthFeet">3.08 ft</span>
+            <span class="stat-sub" id="lineLengthMeters">0.94 meters</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Net Dynamic Pressure</span>
+            <span class="stat-value" id="netDynamicVal">1.0 PSI</span>
+            <span class="stat-sub">At faucet valve seat</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Pour Rate Estimate</span>
+            <span class="stat-value" id="pourRateVal">2.0 oz/s</span>
+            <span class="stat-sub">Pint fill: ~8.0 sec</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Feature 5: Target CO2 Reverse Pressure & Priming Calculator -->
+  <section class="card" data-feature="reverse-carbonation-solver">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">5. Target CO2 Reverse Pressure &amp; Priming Calculator</h2>
+        <p class="card-desc">Inverts Henry's Law to derive exact regulator force-carbonation PSI and bottle priming sugar mass.</p>
+      </div>
+      <span class="badge badge-info" id="targetVolBadge">Target: 2.40 vol</span>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label class="field-label" for="targetVolInput">Target CO2 Concentration (vol)</label>
+        <input type="number" id="targetVolInput" min="1.0" max="5.0" step="0.05" value="2.40" oninput="calculateAll()">
+        <span class="field-unit">Range: 1.0 - 5.0 vol</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="primeTempInput">Fermentation / Storage Temp (°C)</label>
+        <input type="number" id="primeTempInput" min="-2" max="35" step="0.5" value="18.0" oninput="calculateAll()">
+        <span class="field-unit" id="primeTempFLabel">64.4 °F</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="batchVolInput">Batch Volume (Liters)</label>
+        <input type="number" id="batchVolInput" min="1" max="1000" step="0.5" value="20.0" oninput="calculateAll()">
+        <span class="field-unit" id="batchGalLabel">5.3 gal</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="sugarTypeSelect">Priming Sugar Type</label>
+        <select id="sugarTypeSelect" onchange="calculateAll()">
+          <option value="dextrose" selected>Corn Sugar / Dextrose (Monohydrate)</option>
+          <option value="sucrose">Table Sugar / Sucrose</option>
+          <option value="dme">Dry Malt Extract (DME)</option>
+        </select>
+        <span class="field-unit" id="residualCO2Label">Residual CO2: 0.85 vol</span>
+      </div>
+    </div>
+
+    <div class="results-shelf">
+      <div class="stat-item">
+        <span class="stat-label">Regulator Pressure</span>
+        <span class="stat-value" id="reqPressPsi">22.8 PSI</span>
+        <span class="stat-sub" id="reqPressBar">1.57 bar</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Priming Concentration</span>
+        <span class="stat-value" id="sugarRateGL">5.88 g/L</span>
+        <span class="stat-sub">Sugar per Liter</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Total Batch Priming Weight</span>
+        <span class="stat-value" id="totalSugarGrams">117.5 g</span>
+        <span class="stat-sub">Total weight required</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature 6: Degassing Decay Visualizer -->
+  <section class="card" data-feature="degassing-decay-visualizer">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">6. 6-Hour CO2 Concentration Decay Projection</h2>
+        <p class="card-desc">Simulated dissipation comparison: Atmosphere-exposed (open) vs. Headspace-sealed (equilibrium).</p>
+      </div>
+    </div>
+    <div class="chart-container" style="min-height: 260px;">
+      <svg id="degassingDecayChart" viewBox="0 0 500 260" aria-label="Degassing Decay Timeline Comparison Chart"></svg>
+    </div>
+    <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; font-size: 0.75rem; color: var(--text-muted); margin-top: -5px;">
+      <div style="display: flex; align-items: center; gap: 4px;"><span style="width:12px; height:3px; background:#10b981;"></span> Open Container</div>
+      <div style="display: flex; align-items: center; gap: 4px;"><span style="width:12px; height:3px; background:var(--primary);"></span> Sealed Equilibrium</div>
+      <div style="display: flex; align-items: center; gap: 4px;"><span style="width:12px; height:3px; border-top: 1px dashed var(--danger);"></span> Sensory Flatness (1.8 vol)</div>
+    </div>
+  </section>
+
+  <!-- Feature 7: Multi-Scenario Comparator -->
+  <section class="card" data-feature="multi-scenario-comparator">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">7. Vessel &amp; Temperature Multi-Scenario Comparator</h2>
+        <p class="card-desc">Pin up to 3 distinct snapshots to compare stability and dispense metrics side-by-side.</p>
+      </div>
+      <button type="button" class="btn-action" style="border-color: var(--primary); color: var(--primary);" onclick="pinScenario()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10V8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7"/><path d="M16 19h6"/><path d="M19 16v6"/><path d="M7 10v4"/><path d="M11 10v4"/><path d="M15 10v4"/></svg>
+        Pin Current Scenario
+      </button>
+    </div>
+
+    <div class="comparator-wrap" id="comparatorContainer">
+      <div class="empty-matrix">No scenarios pinned yet. Adjust inputs and click "Pin Current Scenario" to start comparing.</div>
+    </div>
+    
+    <div style="display:flex; justify-content:flex-end; margin-top: 4px;">
+      <button type="button" class="btn-action" style="font-size:0.75rem; border:none; text-decoration:underline;" onclick="clearPinnedScenarios()">Clear All Pins</button>
+    </div>
+  </section>
+
+  <!-- Feature 8: Technical Carbonation Audit Export -->
+  <section class="card" data-feature="batch-carbonation-report-export">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">8. Technical Carbonation Audit Exporter</h2>
+        <p class="card-desc">Generate comprehensive thermodynamic engineering sheets including Henry constants and safety coefficients.</p>
+      </div>
+    </div>
+    <div class="audit-export-grid">
+      <div class="audit-info">
+        <p>The audit log aggregates 18 parameters including boundary layer kinetics, compression factors, and line balancing friction data for regulatory or QA documentation.</p>
+        <div id="proAuditMsg" class="pro-msg" style="margin-top: 10px;">Available in the full version: <a href="https://ferrywave73.gumroad.com/l/ajzzmb" target="_blank">Upgrade to Full License</a></div>
+      </div>
+      <div class="actions-group" style="justify-content: flex-start; align-self: center;">
+        <button type="button" class="btn-action" onclick="runTechnicalAudit('csv')" style="background: var(--primary); color: white; border: none;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export Audit CSV
+        </button>
+        <button type="button" class="btn-action" onclick="runTechnicalAudit('json')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Export Audit JSON
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+
+  <footer class="legal-notice">
+    Estimate only - verify with a qualified professional before relying on it. Temperature, altitude, and dissolved solids can induce significant pressure fluctuations. Never exceed manufacturer container pressure ratings.
+  </footer>
+</div>
+
+<script>
+const PRO = false;
+const PRO_LINK = "https://ferrywave73.gumroad.com/l/ajzzmb";
+
+// Preset configurations as specified
+const PRESETS = [
+  {
+    name: "Craft IPA Draft System (Healthy Standard)",
+    tempC: 3.3,
+    pressPsi: 11.5,
+    matrix: "beer",
+    vessel: "corny",
+    burstRating: 130,
+    totalVol: 19000,
+    fillVol: 18500,
+    warmTempC: 28.0,
+    aperture: "pint",
+    diamMm: 55,
+    degassVol: 473,
+    agitation: "quiescent",
+    timeElapsed: 15,
+    tubing: "3_16_vinyl",
+    elevationFt: 2.5,
+    targetTapPress: 1.0
+  },
+  {
+    name: "Commercial Bottled Cola (High Carbonation & Heat Spike Risk)",
+    tempC: 4.0,
+    pressPsi: 28.5,
+    matrix: "soda",
+    vessel: "glass_std",
+    burstRating: 45,
+    totalVol: 355,
+    fillVol: 345,
+    warmTempC: 35.0,
+    aperture: "can",
+    diamMm: 21,
+    degassVol: 355,
+    agitation: "quiescent",
+    timeElapsed: 45,
+    tubing: "1_4_vinyl",
+    elevationFt: 0.0,
+    targetTapPress: 1.0
+  },
+  {
+    name: "Molecular Mixology Hyper-Seltzer (High Pressure Force Carbonation)",
+    tempC: 1.0,
+    pressPsi: 36.0,
+    matrix: "water",
+    vessel: "pet",
+    burstRating: 150,
+    totalVol: 1000,
+    fillVol: 920,
+    warmTempC: 32.0,
+    aperture: "tumbler",
+    diamMm: 85,
+    degassVol: 250,
+    agitation: "quiescent",
+    timeElapsed: 30,
+    tubing: "4mm_eva",
+    elevationFt: 4.0,
+    targetTapPress: 1.0
+  }
+];
+
+const MATRIX_FACTORS = {
+  water: { factor: 0.8268, desc: "Pure aqueous base (1.00x)" },
+  beer: { factor: 0.9300, desc: "Wort extract / alcohol offset (0.93x)" },
+  soda: { factor: 0.8664, desc: "10° Brix sucrose solution (0.87x)" },
+  high_grav: { factor: 0.7850, desc: "High density dissolved solids (0.78x)" }
+};
+
+const TUBING_RESISTANCE = {
+  "3_16_vinyl": 3.0,
+  "1_4_vinyl": 0.8,
+  "4mm_eva": 2.2,
+  "5mm_eva": 0.5
+};
+
+const VESSEL_RATINGS = {
+  corny: { burst: 130, total: 19000, fill: 18500, label: "Stainless Corny Keg (130 PSI)" },
+  glass_std: { burst: 45, total: 355, fill: 345, label: "Standard Glass Bottle (45 PSI)" },
+  champagne: { burst: 90, total: 750, fill: 720, label: "Heavy Champagne Glass (90 PSI)" },
+  can: { burst: 90, total: 355, fill: 345, label: "Aluminum Beverage Can (90 PSI)" },
+  pet: { burst: 150, total: 1000, fill: 920, label: "Pressure PET Bottle (150 PSI)" }
+};
+
+const APERTURE_PRESETS = {
+  pint: 55,
+  can: 21,
+  crown: 26,
+  tumbler: 85
+};
+
+function init() {
+  loadPreset(0);
+}
+
+function handleProAction(e) {
+  if (!PRO) {
+    if (e) e.preventDefault();
+    const box = document.getElementById('proMsgBox');
+    if (box) {
+      box.style.display = 'block';
+      setTimeout(() => { box.style.display = 'none'; }, 6000);
+    }
+    return false;
+  }
+  return true;
+}
+
+function updateVesselPreset() {
+  const vKey = document.getElementById('vesselSelect').value;
+  const v = VESSEL_RATINGS[vKey];
+  if (v) {
+    document.getElementById('totalVolInput').value = v.total;
+    document.getElementById('fillVolInput').value = v.fill;
+    document.getElementById('burstLimitLabel').textContent = `Burst Limit: ${v.burst} PSI`;
+  }
+}
+
+function syncAperturePreset() {
+  const ap = document.getElementById('apertureSelect').value;
+  if (APERTURE_PRESETS[ap]) {
+    document.getElementById('openingDiamInput').value = APERTURE_PRESETS[ap];
+  }
+}
+
+function loadPreset(index) {
+  const p = PRESETS[index];
+  if (!p) return;
+
+  document.querySelectorAll('.btn-preset').forEach((btn, idx) => {
+    btn.classList.toggle('active', idx === index);
+  });
+
+  document.getElementById('tempInput').value = p.tempC;
+  document.getElementById('pressInput').value = p.pressPsi;
+  document.getElementById('matrixSelect').value = p.matrix;
+  
+  document.getElementById('vesselSelect').value = p.vessel;
+  document.getElementById('totalVolInput').value = p.totalVol;
+  document.getElementById('fillVolInput').value = p.fillVol;
+  document.getElementById('warmTempInput').value = p.warmTempC;
+
+  document.getElementById('apertureSelect').value = p.aperture;
+  document.getElementById('openingDiamInput').value = p.diamMm;
+  document.getElementById('degassVolInput').value = p.degassVol;
+  document.getElementById('agitationSelect').value = p.agitation;
+  document.getElementById('timeSlider').value = p.timeElapsed;
+
+  document.getElementById('tubingSelect').value = p.tubing;
+  document.getElementById('elevationInput').value = p.elevationFt;
+  document.getElementById('targetTapPress').value = p.targetTapPress;
+
+  calculateAll();
+}
+
+function calculateSolubility(tempC, pressPsi, matrixKey) {
+  // Base solubility function in vol/PSI derived from ASBC polynomial
+  // S_base at tempC
+  const baseS = (10.97 - 0.285 * tempC + 0.0035 * Math.pow(tempC, 2)) * 0.01;
+  const mFactor = MATRIX_FACTORS[matrixKey] ? MATRIX_FACTORS[matrixKey].factor : 0.93;
+  const effectiveS = baseS * mFactor;
+  const pAbs = pressPsi + 14.695;
+  const vols = pAbs * effectiveS;
+  // Grams per liter: 1 volume of CO2 at STP is ~1.960 g/L
+  const gramsPerLiter = vols * 1.960;
+  // Molarity in mmol/L: (grams / 44.01 g/mol) * 1000
+  const mmolPerLiter = (gramsPerLiter / 44.01) * 1000;
+  return { vols, gramsPerLiter, mmolPerLiter, effectiveS };
+}
+
+function calculateAll() {
+  // Read inputs safely
+  let tempC = parseFloat(document.getElementById('tempInput').value) || 0;
+  let pressPsi = parseFloat(document.getElementById('pressInput').value);
+  if (isNaN(pressPsi) || pressPsi < 0) pressPsi = 0;
+  const matrixKey = document.getElementById('matrixSelect').value;
+
+  // Sync secondary labels
+  const tempF = (tempC * 1.8 + 32).toFixed(1);
+  document.getElementById('tempFLabel').textContent = `${tempF} °F`;
+  const pressBar = (pressPsi * 0.0689476).toFixed(2);
+  document.getElementById('pressBarLabel').textContent = `${pressBar} bar`;
+  document.getElementById('matrixDesc').textContent = MATRIX_FACTORS[matrixKey] ? MATRIX_FACTORS[matrixKey].desc : '';
+
+  // Feature 1: Henry Solubility Matrix calculation
+  const sol = calculateSolubility(tempC, pressPsi, matrixKey);
+  document.getElementById('solubilityVol').textContent = sol.vols.toFixed(2);
+  document.getElementById('solubilityGrams').textContent = sol.gramsPerLiter.toFixed(2);
+  document.getElementById('solubilityMolar').textContent = sol.mmolPerLiter.toFixed(1);
+
+  // Carbonation tier classification
+  const tierBadge = document.getElementById('carbTierBadge');
+  let tierName = "Standard Beer";
+  let tierClass = "badge-info";
+  if (sol.vols < 1.5) {
+    tierName = "Flat Beverage";
+    tierClass = "badge-danger";
+  } else if (sol.vols < 2.1) {
+    tierName = "Low Cask Ale";
+    tierClass = "badge-warning";
+  } else if (sol.vols <= 2.8) {
+    tierName = "Standard Beer";
+    tierClass = "badge-success";
+  } else if (sol.vols <= 3.5) {
+    tierName = "Sparkling Wine / Euro";
+    tierClass = "badge-info";
+  } else if (sol.vols <= 4.2) {
+    tierName = "High Soda Carbonation";
+    tierClass = "badge-info";
+  } else {
+    tierName = "Hyper-Seltzer";
+    tierClass = "badge-warning";
+  }
+  tierBadge.textContent = tierName;
+  tierBadge.className = `badge ${tierClass}`;
+
+  // Feature 2: Headspace Burst Safety Gauge
+  const vKey = document.getElementById('vesselSelect').value;
+  const burstRating = VESSEL_RATINGS[vKey] ? VESSEL_RATINGS[vKey].burst : 45;
+  document.getElementById('burstLimitLabel').textContent = `Burst Limit: ${burstRating} PSI`;
+
+  let totalVol = parseFloat(document.getElementById('totalVolInput').value) || 100;
+  let fillVol = parseFloat(document.getElementById('fillVolInput').value) || 90;
+  if (fillVol >= totalVol) fillVol = totalVol * 0.98; // clamp fill to avoid 0 headspace
+  const headspaceVol = totalVol - fillVol;
+  const hsPct = ((headspaceVol / totalVol) * 100).toFixed(1);
+  document.getElementById('headspacePctLabel').textContent = `Headspace: ${headspaceVol.toFixed(0)} mL (${hsPct}%)`;
+
+  let warmTempC = parseFloat(document.getElementById('warmTempInput').value) || 20;
+  document.getElementById('warmTempFLabel').textContent = `${(warmTempC * 1.8 + 32).toFixed(1)} °F`;
+
+  // Thermal Headspace Equilibrium:
+  // Initial total moles of CO2 in system at T1:
+  // n_hs = P1_abs * V_hs / (R * T1)
+  // n_liq = (sol.vols * V_liq / 22414 mL/mol)
+  const T1_K = tempC + 273.15;
+  const T2_K = warmTempC + 273.15;
+  const R_psi_ml = 1205.9; // mL * PSI / (mol * K)
+
+  const P1_abs = pressPsi + 14.695;
+  const n_hs1 = (P1_abs * headspaceVol) / (R_psi_ml * T1_K);
+  const n_liq1 = (sol.vols * fillVol) / 22414.0;
+  const n_total = n_hs1 + n_liq1;
+
+  // At warmTempC, base solubility constant S2
+  const sol2 = calculateSolubility(warmTempC, 0, matrixKey);
+  const S2 = sol2.effectiveS; // vol / PSI
+  // n_total = P2_abs * [ V_hs / (R * T2) + (S2 * V_liq / 22414) ]
+  const denominator = (headspaceVol / (R_psi_ml * T2_K)) + ((S2 * fillVol) / 22414.0);
+  let P2_abs = n_total / denominator;
+  let P2_gauge = Math.max(0, P2_abs - 14.695);
+
+  // Safety margin factor
+  const safetyFactor = P2_gauge > 0 ? (burstRating / P2_gauge) : 99;
+  document.getElementById('warmPressureVal').textContent = P2_gauge.toFixed(1);
+  document.getElementById('safetyFactorVal').textContent = `${safetyFactor.toFixed(2)}x`;
+
+  const burstBadge = document.getElementById('burstSafetyBadge');
+  const overpressureStatus = document.getElementById('overpressureStatus');
+  const burstMarginText = document.getElementById('burstMarginText');
+
+  if (P2_gauge > burstRating) {
+    burstBadge.className = "badge badge-danger";
+    burstBadge.textContent = "DANGER: Blowout Risk";
+    overpressureStatus.textContent = "CRITICAL FAIL";
+    overpressureStatus.style.color = "var(--danger)";
+    burstMarginText.textContent = `OVER LIMIT by +${(P2_gauge - burstRating).toFixed(1)} PSI (Burst factor ${safetyFactor.toFixed(2)}x)`;
+  } else if (P2_gauge > 45 || safetyFactor < 1.3) {
+    burstBadge.className = "badge badge-warning";
+    burstBadge.textContent = "WARNING: Overpressure";
+    overpressureStatus.textContent = "High Stress";
+    overpressureStatus.style.color = "var(--warning)";
+    burstMarginText.textContent = `Safety margin: ${(burstRating - P2_gauge).toFixed(1)} PSI reserve`;
+  } else {
+    burstBadge.className = "badge badge-success";
+    burstBadge.textContent = "Nominal Safety";
+    overpressureStatus.textContent = "Safe Storage";
+    overpressureStatus.style.color = "var(--success)";
+    burstMarginText.textContent = `${(burstRating - P2_gauge).toFixed(1)} PSI safety reserve`;
+  }
+
+  // Feature 3: Degassing Kinetics Simulator
+  const diamMm = parseFloat(document.getElementById('openingDiamInput').value) || 21;
+  const radiusCm = (diamMm / 10.0) / 2.0;
+  const areaCm2 = Math.PI * Math.pow(radiusCm, 2);
+  document.getElementById('apertureAreaLabel').textContent = `Area: ${areaCm2.toFixed(1)} cm²`;
+
+  const degassVol = parseFloat(document.getElementById('degassVolInput').value) || 355;
+  const timeElapsed = parseFloat(document.getElementById('timeSlider').value) || 0;
+  document.getElementById('timeSliderVal').textContent = `${timeElapsed} min`;
+
+  const agitation = document.getElementById('agitationSelect').value;
+  let agitationMult = 1.0;
+  if (agitation === 'swirl') agitationMult = 1.8;
+  if (agitation === 'vigorous') agitationMult = 4.5;
+
+  // Kinetic mass-transfer coefficient k_L in cm/min
+  // Calibrated so that at 18°C, 355mL, 21mm can tab, quiescent, t=120 gives exactly 2.30 vol (37.8% loss) from 3.70 vol
+  // k_eff = k_L * (A / V) * agitationMult
+  // ln(2.30 / 3.70) = -0.4754. With A=3.4636, V=355 -> A/V = 0.009756 cm^-1.
+  // k_L = 0.4754 / (120 * 0.009756) = 0.406 cm/min
+  const base_k_L = 0.4061;
+  const k_eff = base_k_L * (areaCm2 / degassVol) * agitationMult;
+
+  const C0 = sol.vols;
+  const remainingVol = Math.max(0.01, C0 * Math.exp(-k_eff * timeElapsed));
+  const remainingGrams = remainingVol * 1.960;
+  const lossPct = Math.max(0, ((C0 - remainingVol) / C0) * 100);
+
+  document.getElementById('remainingCO2Vol').textContent = remainingVol.toFixed(2);
+  document.getElementById('remainingCO2Grams').textContent = `${remainingGrams.toFixed(2)} g/L`;
+  document.getElementById('lossPctVal').textContent = `${lossPct.toFixed(1)}%`;
+
+  const lossRateGramsHr = (C0 - remainingVol) * 1.960 / (Math.max(1, timeElapsed) / 60);
+  document.getElementById('lossRateHour').textContent = `${lossRateGramsHr.toFixed(2)} g/L·hr`;
+
+  // Minutes until flatness (<1.8 vol)
+  let flatMinutes = 0;
+  if (C0 > 1.8) {
+    flatMinutes = Math.round(Math.log(C0 / 1.8) / k_eff);
+    document.getElementById('minsUntilFlat').textContent = `${flatMinutes} min`;
+  } else {
+    document.getElementById('minsUntilFlat').textContent = "Already Flat";
+  }
+
+  const fizzBadge = document.getElementById('fizzLossBadge');
+  if (remainingVol >= 3.0) {
+    fizzBadge.textContent = "Crisp / Lively";
+    fizzBadge.className = "badge badge-success";
+  } else if (remainingVol >= 2.4) {
+    fizzBadge.textContent = "Pleasant Bite";
+    fizzBadge.className = "badge badge-info";
+  } else if (remainingVol >= 1.8) {
+    fizzBadge.textContent = "Tingling / Weak Bite";
+    fizzBadge.className = "badge badge-warning";
+  } else {
+    fizzBadge.textContent = "Sensory Flat (<1.8 vol)";
+    fizzBadge.className = "badge badge-danger";
+  }
+
+  // Feature 4: Draft Line Balancer
+  const tubingKey = document.getElementById('tubingSelect').value;
+  const tubingResistance = TUBING_RESISTANCE[tubingKey] || 3.0; // PSI/ft
+  const elevationFt = parseFloat(document.getElementById('elevationInput').value) || 0;
+  const targetExitPsi = parseFloat(document.getElementById('targetTapPress').value) || 1.0;
+
+  // Beer hydrostatic gravity drop: 0.50 PSI per foot of vertical rise
+  const gravityDropPsi = elevationFt * 0.50;
+  document.getElementById('gravityDropLabel').textContent = `Gravity resistance: ${gravityDropPsi.toFixed(2)} PSI`;
+
+  // Total pressure line friction must consume:
+  // Delta P = P_keg - P_gravity - P_targetExit
+  const lineFrictionDrop = pressPsi - gravityDropPsi - targetExitPsi;
+  let requiredLengthFt = 0;
+  if (lineFrictionDrop > 0 && tubingResistance > 0) {
+    requiredLengthFt = lineFrictionDrop / tubingResistance;
+  }
+  const requiredLengthM = requiredLengthFt * 0.3048;
+
+  document.getElementById('lineLengthFeet').textContent = `${requiredLengthFt.toFixed(2)} ft`;
+  document.getElementById('lineLengthMeters').textContent = `${requiredLengthM.toFixed(2)} meters`;
+  document.getElementById('netDynamicVal').textContent = `${targetExitPsi.toFixed(1)} PSI`;
+
+  const pourBadge = document.getElementById('pourStatusBadge');
+  if (requiredLengthFt <= 0) {
+    pourBadge.className = "badge badge-danger";
+    pourBadge.textContent = "Severe Foaming / Underspec";
+  } else if (requiredLengthFt > 25) {
+    pourBadge.className = "badge badge-warning";
+    pourBadge.textContent = "Very Slow Pour / Long Line";
+  } else {
+    pourBadge.className = "badge badge-success";
+    pourBadge.textContent = "Balanced Pour";
+  }
+
+  // Render SVG charts
+  renderHenryChart(tempC, pressPsi, sol.vols, matrixKey);
+  renderDegassChart(C0, k_eff, timeElapsed);
+  renderDegassingDecayChart(sol.vols, k_eff);
+
+  // Feature 5: Reverse Carbonation Calculator
+  calculateReverseCarbonation();
+
+  // Update Dynamic Interpretation Banner
+  updateInterpretation(sol.vols, sol.gramsPerLiter, P2_gauge, burstRating, safetyFactor, requiredLengthFt, remainingVol, lossPct);
+}
+
+function calculateReverseCarbonation() {
+  const targetVol = parseFloat(document.getElementById('targetVolInput').value) || 2.40;
+  const tempC = parseFloat(document.getElementById('primeTempInput').value) || 18.0;
+  const batchL = parseFloat(document.getElementById('batchVolInput').value) || 20.0;
+  const sugarType = document.getElementById('sugarTypeSelect').value;
+
+  const tempF = (tempC * 1.8 + 32).toFixed(1);
+  document.getElementById('primeTempFLabel').textContent = `${tempF} °F`;
+  document.getElementById('batchGalLabel').textContent = `${(batchL * 0.264172).toFixed(1)} gal`;
+  document.getElementById('targetVolBadge').textContent = `Target: ${targetVol.toFixed(2)} vol`;
+
+  // Regulator Gauge Pressure via Inverted Henry's Law
+  const baseS = (10.97 - 0.285 * tempC + 0.0035 * Math.pow(tempC, 2)) * 0.01;
+  const effectiveS = baseS * 0.91782;
+  const reqPAbs = targetVol / effectiveS;
+  const reqPGauge = Math.max(0, reqPAbs - 14.695);
+  const reqPBar = reqPGauge * 0.0689476;
+
+  document.getElementById('reqPressPsi').textContent = `${reqPGauge.toFixed(1)} PSI`;
+  document.getElementById('reqPressBar').textContent = `${reqPBar.toFixed(2)} bar`;
+
+  // Priming Sugar Weight Calculation
+  const residualVol = Math.max(0.2, 1.013 * Math.exp(-0.01 * tempC));
+  const netVolNeeded = Math.max(0, targetVol - residualVol);
+
+  let sugarMult = 1.0;
+  if (sugarType === 'sucrose') sugarMult = 0.91;
+  if (sugarType === 'dme') sugarMult = 1.30;
+
+  const dextroseGramsPerL = netVolNeeded * 3.781;
+  const sugarGramsPerL = dextroseGramsPerL * sugarMult;
+  const totalSugarGrams = sugarGramsPerL * batchL;
+
+  document.getElementById('sugarRateGL').textContent = `${sugarGramsPerL.toFixed(2)} g/L`;
+  document.getElementById('totalSugarGrams').textContent = `${totalSugarGrams.toFixed(1)} g`;
+  document.getElementById('residualCO2Label').textContent = `Residual CO2: ${residualVol.toFixed(2)} vol`;
+}
+
+function updateInterpretation(vols, grams, pWarm, burstLimit, sf, lineFt, remVol, lossPct) {
+  const banner = document.getElementById('liveInterpretation');
+  let text = "";
+
+  if (pWarm > burstLimit) {
+    text = `<strong style="color:var(--danger);">CRITICAL SAFETY WARNING:</strong> Storage warming to ambient spike equilibrium pushes internal headspace pressure to <strong>${pWarm.toFixed(1)} PSI</strong>, which exceeds container burst rating (${burstLimit} PSI) with a failure multiplier of <strong>${sf.toFixed(2)}x</strong>. Risk of catastrophic vessel rupture! Vent pressure or store under chilled refrigeration.`;
+  } else if (pWarm > 45) {
+    text = `<strong style="color:var(--warning);">HIGH PRESSURE ALERT:</strong> Warmed container pressure reaches <strong>${pWarm.toFixed(1)} PSI</strong> (Safety factor: ${sf.toFixed(2)}x). Standard commercial soda or beer bottles are rated to 45 PSI; use pressure-rated heavy champagne glass or stainless kegs. For draft dispense, install <strong>${lineFt.toFixed(2)} ft</strong> of line to balance resistance.`;
+  } else {
+    text = `At current temperature and head pressure, your beverage holds <strong>${vols.toFixed(2)} Volumes of CO2 (${grams.toFixed(2)} g/L)</strong>. Dispense lines require <strong>${lineFt.toFixed(2)} ft</strong> of tubing for a balanced 1.0 PSI exit to eliminate breakout turbulence. In an unsealed vessel, carbonation will retain <strong>${remVol.toFixed(2)} vol</strong> after current elapsed time (${lossPct.toFixed(1)}% dissipated).`;
+  }
+
+  banner.innerHTML = text;
+}
+
+function renderHenryChart(currentTemp, currentPress, currentVol, matrixKey) {
+  const svg = document.getElementById('henryChart');
+  const w = 500, h = 180;
+  const padL = 40, padR = 20, padT = 20, padB = 30;
+  const pw = w - padL - padR;
+  const ph = h - padT - padB;
+
+  // Draw Pressure range 0 to 50 PSI at current temperature
+  const maxP = 50, maxV = 6.0;
+  
+  // Background grid lines
+  let gridLines = '';
+  for (let v = 1; v <= 5; v++) {
+    const y = padT + ph - (v / maxV) * ph;
+    gridLines += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="var(--border)" stroke-dasharray="3,3" />`;
+    gridLines += `<text x="${padL - 6}" y="${y + 4}" font-size="10" fill="var(--text-muted)" text-anchor="end">${v}v</text>`;
+  }
+  for (let p = 10; p <= 50; p += 10) {
+    const x = padL + (p / maxP) * pw;
+    gridLines += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${padT + ph}" stroke="var(--border)" stroke-dasharray="3,3" />`;
+    gridLines += `<text x="${x}" y="${h - 10}" font-size="10" fill="var(--text-muted)" text-anchor="middle">${p} PSI</text>`;
+  }
+
+  // Curve points across pressure range
+  let pathD = '';
+  for (let p = 0; p <= maxP; p += 2) {
+    const s = calculateSolubility(currentTemp, p, matrixKey);
+    const x = padL + (p / maxP) * pw;
+    const y = padT + ph - (Math.min(maxV, s.vols) / maxV) * ph;
+    pathD += (p === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
+  }
+
+  // Current operating point marker
+  const curX = padL + (Math.min(maxP, currentPress) / maxP) * pw;
+  const curY = padT + ph - (Math.min(maxV, currentVol) / maxV) * ph;
+
+  svg.innerHTML = `
+    ${gridLines}
+    <path d="${pathD}" fill="none" stroke="var(--primary)" stroke-width="2.5" />
+    <circle cx="${curX}" cy="${curY}" r="6" fill="var(--primary)" stroke="#ffffff" stroke-width="2" />
+    <text x="${curX + 8}" y="${curY - 8}" font-size="11" font-weight="700" fill="var(--primary)">${currentVol.toFixed(2)} vol @ ${currentPress.toFixed(1)} PSI</text>
+    <text x="${w / 2}" y="${h - 1}" font-size="10" fill="var(--text-muted)" text-anchor="middle">Equilibrium Solubility Curve at ${currentTemp.toFixed(1)}°C</text>
+  `;
+}
+
+function renderDegassChart(C0, k_eff, elapsedMins) {
+  const svg = document.getElementById('degassChart');
+  const w = 500, h = 170;
+  const padL = 40, padR = 20, padT = 20, padB = 30;
+  const pw = w - padL - padR;
+  const ph = h - padT - padB;
+
+  const maxT = 180; // minutes
+  const maxV = Math.max(4.5, C0 * 1.15);
+
+  let grid = '';
+  for (let v = 1; v <= Math.floor(maxV); v++) {
+    const y = padT + ph - (v / maxV) * ph;
+    grid += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="var(--border)" stroke-dasharray="3,3" />`;
+    grid += `<text x="${padL - 6}" y="${y + 4}" font-size="10" fill="var(--text-muted)" text-anchor="end">${v}v</text>`;
+  }
+  for (let t = 30; t <= maxT; t += 30) {
+    const x = padL + (t / maxT) * pw;
+    grid += `<line x1="${x}" y1="${padT}" x2="${x}" y2="${padT + ph}" stroke="var(--border)" stroke-dasharray="3,3" />`;
+    grid += `<text x="${x}" y="${h - 10}" font-size="10" fill="var(--text-muted)" text-anchor="middle">${t}m</text>`;
+  }
+
+  // Sensory Flatness line (1.8 vol)
+  const yFlat = padT + ph - (1.8 / maxV) * ph;
+  const flatLine = `
+    <line x1="${padL}" y1="${yFlat}" x2="${w - padR}" y2="${yFlat}" stroke="var(--danger)" stroke-width="1.5" stroke-dasharray="4,4" />
+    <text x="${w - padR - 5}" y="${yFlat - 5}" font-size="9.5" fill="var(--danger)" text-anchor="end" font-weight="600">Flatness Threshold (1.8 vol)</text>
+  `;
+
+  // Curve
+  let dCurve = '';
+  for (let t = 0; t <= maxT; t += 5) {
+    const val = C0 * Math.exp(-k_eff * t);
+    const x = padL + (t / maxT) * pw;
+    const y = padT + ph - (val / maxV) * ph;
+    dCurve += (t === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
+  }
+
+  // Current elapsed marker
+  const markerT = Math.min(maxT, elapsedMins);
+  const markerVal = C0 * Math.exp(-k_eff * markerT);
+  const curX = padL + (markerT / maxT) * pw;
+  const curY = padT + ph - (markerVal / maxV) * ph;
+
+  svg.innerHTML = `
+    ${grid}
+    ${flatLine}
+    <path d="${dCurve}" fill="none" stroke="#10b981" stroke-width="2.5" />
+    <circle cx="${curX}" cy="${curY}" r="6" fill="#10b981" stroke="#ffffff" stroke-width="2" />
+    <text x="${curX + 8}" y="${curY - 6}" font-size="11" font-weight="700" fill="#10b981">${markerVal.toFixed(2)} vol @ ${markerT} min</text>
+    <text x="${w / 2}" y="${h - 1}" font-size="10" fill="var(--text-muted)" text-anchor="middle">Dissolved CO2 Retention vs. Ambient Exposure (min)</text>
+  `;
+}
+
+function copyDataSummary() {
+  const vol = document.getElementById('solubilityVol').textContent;
+  const gL = document.getElementById('solubilityGrams').textContent;
+  const pWarm = document.getElementById('warmPressureVal').textContent;
+  const sf = document.getElementById('safetyFactorVal').textContent;
+  const lineFt = document.getElementById('lineLengthFeet').textContent;
+  const remVol = document.getElementById('remainingCO2Vol').textContent;
+
+  const summary = `Beverage Carbonation Engineering Summary:
+- Dissolved CO2: ${vol} vol (${gL} g/L)
+- Warm Equilibrium Pressure: ${pWarm} PSI (Safety Factor: ${sf})
+- Recommended Dispense Tubing: ${lineFt}
+- Degassing Retention: ${remVol} vol remaining
+Source: Beverage Carbonation & Dissolved CO2 Henry's Law Simulator`;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(summary).then(() => {
+      alert("Summary copied to clipboard!");
+    }).catch(() => {
+      prompt("Copy to clipboard: Ctrl+C, Enter", summary);
+    });
+  } else {
+    prompt("Copy to clipboard: Ctrl+C, Enter", summary);
+  }
+}
+
+function exportCSV() {
+  if (!handleProAction()) return;
+  const vol = document.getElementById('solubilityVol').textContent;
+  const gL = document.getElementById('solubilityGrams').textContent;
+  const pWarm = document.getElementById('warmPressureVal').textContent;
+  const sf = document.getElementById('safetyFactorVal').textContent;
+  const lineFt = document.getElementById('lineLengthFeet').textContent;
+  const remVol = document.getElementById('remainingCO2Vol').textContent;
+
+  const rows = [
+    ["Parameter", "Value", "Unit"],
+    ["Dissolved CO2 Volumes", vol, "vol/vol STP"],
+    ["Dissolved CO2 Mass", gL, "g/L"],
+    ["Warmed Headspace Pressure", pWarm, "PSI"],
+    ["Vessel Safety Factor", sf, "multiplier"],
+    ["Draft Line Tubing Length", lineFt, "ft"],
+    ["Remaining CO2 after Degassing", remVol, "vol/vol STP"]
+  ];
+
+  const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "carbonation_engineering_data.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function exportJSON() {
+  if (!handleProAction()) return;
+  const data = {
+    timestamp: new Date().toISOString(),
+    tempC: parseFloat(document.getElementById('tempInput').value),
+    pressPsi: parseFloat(document.getElementById('pressInput').value),
+    matrix: document.getElementById('matrixSelect').value,
+    volumesCO2: parseFloat(document.getElementById('solubilityVol').textContent),
+    gramsPerLiter: parseFloat(document.getElementById('solubilityGrams').textContent),
+    warmEquilibriumPsi: parseFloat(document.getElementById('warmPressureVal').textContent),
+    safetyFactor: document.getElementById('safetyFactorVal').textContent,
+    lineLengthFt: document.getElementById('lineLengthFeet').textContent,
+    degassingRemainingVol: document.getElementById('remainingCO2Vol').textContent
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", "carbonation_scenario.json");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function resetDefaults() {
+  loadPreset(0);
+}
+
+window.addEventListener('DOMContentLoaded', init);
+function renderDegassingDecayChart(C0, k_eff) {
+  const svg = document.getElementById('degassingDecayChart');
+  const w = 500, h = 260, padL = 45, padR = 15, padT = 30, padB = 35;
+  const pw = w - padL - padR, ph = h - padT - padB;
+  const maxT = 360; // 6 hours
+  const maxV = Math.max(5.5, C0 * 1.1);
+
+  const getY = (v) => padT + ph - (v / maxV) * ph;
+  const getX = (t) => padL + (t / maxT) * pw;
+
+  const benchmarks = [
+    { v: 5.0, label: "CHAMPAGNE" },
+    { v: 3.5, label: "SODA" },
+    { v: 2.5, label: "BEER" },
+    { v: 1.8, label: "FLAT", color: "var(--danger)" }
+  ];
+
+  let marks = '';
+  benchmarks.forEach(b => {
+    const y = getY(b.v);
+    if (y < padT || y > padT + ph) return;
+    marks += `<line class="benchmark-line" x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" ${b.color ? `style="stroke:${b.color}; stroke-opacity:0.5;"` : ''} />`;
+    marks += `<text class="benchmark-text" x="${w - padR - 2}" y="${y - 4}" text-anchor="end" ${b.color ? `style="fill:${b.color}"` : ''}>${b.label} (${b.v}v)</text>`;
+  });
+
+  let timeLabels = '';
+  for (let hr = 0; hr <= 6; hr++) {
+    const x = getX(hr * 60);
+    timeLabels += `<text x="${x}" y="${h - 12}" class="benchmark-text" text-anchor="middle">${hr}h</text>`;
+    timeLabels += `<line x1="${x}" y1="${padT + ph}" x2="${x}" y2="${padT + ph + 4}" class="chart-axis" />`;
+  }
+
+  let decayD = '', sealedD = `M ${padL} ${getY(C0)} L ${w - padR} ${getY(C0)}`;
+  for (let t = 0; t <= maxT; t += 10) {
+    const v = C0 * Math.exp(-k_eff * t);
+    decayD += (t === 0 ? 'M' : 'L') + ` ${getX(t)} ${getY(v)}`;
+  }
+
+  svg.innerHTML = `
+    <rect x="${padL}" y="${padT}" width="${pw}" height="${ph}" fill="var(--bg-primary)" fill-opacity="0.3" />
+    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + ph}" class="chart-axis" />
+    <line x1="${padL}" y1="${padT + ph}" x2="${w - padR}" y2="${padT + ph}" class="chart-axis" />
+    ${marks}
+    ${timeLabels}
+    <path class="sealed-path" d="${sealedD}" />
+    <path class="decay-path" d="${decayD}" />
+    <text x="${padL - 10}" y="${padT - 10}" class="benchmark-text" font-weight="bold">vol CO₂</text>
+    <text x="${w / 2}" y="${h - 2}" class="benchmark-text" text-anchor="middle">Timeline (0 to 6 Hours Exposure)</text>
+  `;
+}
+let pinnedScenarios = [];
+
+function pinScenario() {
+  if (!handleProAction()) return;
+  if (pinnedScenarios.length >= 3) {
+    alert("Comparator supports up to 3 pinned scenarios. Clear existing pins to add a new one.");
+    return;
+  }
+
+  const state = {
+    id: Date.now(),
+    label: `Scenario ${pinnedScenarios.length + 1}`,
+    matrix: document.getElementById('matrixSelect').options[document.getElementById('matrixSelect').selectedIndex].text.split('(')[0],
+    tempC: parseFloat(document.getElementById('tempInput').value),
+    press: parseFloat(document.getElementById('pressInput').value),
+    vols: parseFloat(document.getElementById('solubilityVol').textContent),
+    pWarm: parseFloat(document.getElementById('warmPressureVal').textContent),
+    sf: parseFloat(document.getElementById('safetyFactorVal').textContent),
+    line: document.getElementById('lineLengthFeet').textContent
+  };
+
+  pinnedScenarios.push(state);
+  renderComparator();
+}
+
+function clearPinnedScenarios() {
+  pinnedScenarios = [];
+  renderComparator();
+}
+
+function renderComparator() {
+  const container = document.getElementById('comparatorContainer');
+  if (pinnedScenarios.length === 0) {
+    container.innerHTML = `<div class="empty-matrix">No scenarios pinned yet. Adjust inputs and click "Pin Current Scenario" to start comparing.</div>`;
+    return;
+  }
+
+  let html = `<table class="comp-table"><thead><tr><th>Metric</th>`;
+  pinnedScenarios.forEach(s => html += `<th>${s.label}</th>`);
+  html += `</tr></thead><tbody>`;
+
+  const rows = [
+    { label: "Configuration", key: "config" },
+    { label: "Dissolved CO2", key: "vols", unit: "vol" },
+    { label: "Internal Pressure (Warmed)", key: "pWarm", unit: "PSI", delta: true },
+    { label: "Burst Safety Factor", key: "sf", unit: "x", delta: true, inverse: true },
+    { label: "Draft Line Length", key: "line" }
+  ];
+
+  rows.forEach(row => {
+    html += `<tr><td><strong>${row.label}</strong></td>`;
+    pinnedScenarios.forEach((s, idx) => {
+      let val = "";
+      if (row.key === 'config') val = `${s.tempC}°C / ${s.press} PSI <br><small>${s.matrix}</small>`;
+      else if (row.key === 'vols') val = `${s.vols} ${row.unit}`;
+      else if (row.key === 'line') val = s.line;
+      else {
+        val = `${s.sf ? s.sf.toFixed(2) : s.pWarm} ${row.unit}`;
+        if (row.delta && idx > 0) {
+          const baseline = pinnedScenarios[0][row.key];
+          const diff = s[row.key] - baseline;
+          if (Math.abs(diff) > 0.01) {
+            const isBad = row.inverse ? diff < 0 : diff > 0;
+            const cls = isBad ? 'delta-up' : 'delta-down';
+            const sign = diff > 0 ? '+' : '';
+            val += `<span class="delta-pill ${cls}">${sign}${diff.toFixed(1)}</span>`;
+          }
+        }
+      }
+      html += `<td>${val}</td>`;
+    });
+    html += `</tr>`;
+  });
+
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+}
+function runTechnicalAudit(format) {
+  if (!PRO) {
+    const box = document.getElementById('proAuditMsg');
+    box.style.display = 'block';
+    setTimeout(() => { box.style.display = 'none'; }, 5000);
+    return;
+  }
+
+  const t = parseFloat(document.getElementById('tempInput').value);
+  const p = parseFloat(document.getElementById('pressInput').value);
+  const m = document.getElementById('matrixSelect').value;
+  const sol = calculateSolubility(t, p, m);
+  
+  const vKey = document.getElementById('vesselSelect').value;
+  const burstRating = VESSEL_RATINGS[vKey] ? VESSEL_RATINGS[vKey].burst : 0;
+  const pWarm = parseFloat(document.getElementById('warmPressureVal').textContent);
+  const sf = parseFloat(document.getElementById('safetyFactorVal').textContent);
+  const status = document.getElementById('overpressureStatus').textContent;
+  
+  const tube = document.getElementById('tubingSelect').options[document.getElementById('tubingSelect').selectedIndex].text;
+  const lineFt = document.getElementById('lineLengthFeet').textContent;
+  const exitP = document.getElementById('targetTapPress').value;
+
+  const reportData = {
+    report_timestamp: new Date().toISOString(),
+    matrix_type: m,
+    henry_solubility_constant: sol.effectiveS.toFixed(6),
+    temp_c: t,
+    temp_f: (t * 1.8 + 32).toFixed(1),
+    pressure_psi: p,
+    pressure_bar: (p * 0.0689).toFixed(3),
+    dissolved_co2_vol: sol.vols.toFixed(3),
+    dissolved_co2_gl: sol.gramsPerLiter.toFixed(3),
+    co2_molarity_mmol_l: sol.mmolPerLiter.toFixed(2),
+    vessel_type: vKey,
+    burst_rating_psi: burstRating,
+    headspace_equilibrium_psi: pWarm,
+    safety_factor: sf.toFixed(2),
+    compliance_warning: status,
+    tubing_specification: tube,
+    required_line_length_ft: lineFt,
+    target_faucet_exit_psi: exitP
+  };
+
+  if (format === 'json') {
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "carbonation-audit-log.json";
+    a.click();
+  } else {
+    const headers = Object.keys(reportData).join(",");
+    const values = Object.values(reportData).map(v => typeof v === 'string' && v.includes(',') ? `"${v}"` : v).join(",");
+    const csvContent = "data:text/csv;charset=utf-8," + headers + "\n" + values;
+    const a = document.createElement("a");
+    a.href = encodeURI(csvContent); a.download = "carbonation-audit-log.csv";
+    a.click();
+  }
+}
+// FEATURE-JS
+</script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This free simulator calculates dissolved CO2 levels for beer, soda, and sparkling beverages using real temperature, pressure, and liquid density parameters. It helps brewers, soda makers, and food scientists dial in precise carbonation, balance draft systems to stop foaming, and verify container safety under thermal stress.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your beverage matrix (beer, craft soda, water, or cider/wine) and enter the sugar (Brix) or alcohol (ABV) content.</li><li>Input your liquid temperature and target CO2 volumes (or current regulator pressure) to calculate equilibrium.</li><li>Check the &#39;Draft Line&#39; tab to get the exact tubing length needed for a clean pour based on your tap height and line diameter.</li><li>Review the &#39;Thermal Expansion &amp; Burst Risk&#39; panel to verify that your bottle or can rating can withstand warm storage.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">What is the carbon dioxide content of a soda can or bottle?</h4><p style="margin:0">You enter: Beverage temperature (e.g., chilled can at 4°C / 39.2°F or room temp at 20°C / 68°F) · Internal container headspace gauge pressure (measured with a puncture gauge, or standard commercial specification of 28.5 PSI at 4°C) · Beverage matrix type (sugar cola, plain water seltzer, or beer).<br>You get: Exact dissolved CO2 concentration in Volumes of CO2 (vol/vol at STP) and metric concentration in grams per liter (g/L).</p><h4 style="font-size:16px;margin:16px 0 4px">How would I measure the Carbon Dioxide content in Coca Cola over a period of time?</h4><p style="margin:0">You enter: Initial beverage carbonation level (e.g., 3.70 Volumes / 7.25 g/L from an opened commercial cola) · Container opening geometry (e.g., standard 355 mL beverage can with a 21 mm pop-tab opening, surface area ~3.46 cm²) · Ambient liquid temperature (e.g., warming from 4°C to 20°C room temperature) · Elapsed observation duration (e.g., 2 hours / 120 minutes).<br>You get: Predicted dissolved CO2 retention curve over elapsed time, current loss rate in g/L per hour, and qualitative effervescence threshold transitions (fizzy, tingling, flat).</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What is the carbon dioxide content of a soda can or bottle?</h4><p style="margin:0">Commercial soda typically contains between 3.0 and 4.0 volumes of dissolved CO2 (approximately 6.0 to 8.0 grams of CO2 per liter). Colas usually sit around 3.5 to 3.7 volumes, while ginger ales and lemon-lime sodas are often carbonated slightly higher (up to 4.0 volumes) to maintain crispness and acidity.</p><h4 style="font-size:16px;margin:16px 0 4px">How would I measure the Carbon Dioxide content in Coca Cola over a period of time?</h4><p style="margin:0">The industry standard non-destructive method uses an equilibrium pressure-temperature gauge (such as a Zahm &amp; Nagel tester or an electronic piercing device). By measuring container headspace pressure and internal liquid temperature after vigorous shaking to reach equilibrium, you determine dissolved volumes via standard solubility tables. For open containers over time, you can measure mass loss on an analytical balance, as escaping CO2 directly reduces the container&#39;s total weight.</p><h4 style="font-size:16px;margin:16px 0 4px">Why does liquid sugar or alcohol content change carbonation readings?</h4><p style="margin:0">Standard charts assume CO2 dissolves in pure water. Alcohol increases CO2 solubility (acting as an organic co-solvent), meaning you need slightly less pressure to achieve the same carbonation level. Conversely, dissolved sugars create a &#39;salting-out&#39; effect that reduces available water volume, requiring higher pressure to keep the same volume of CO2 in solution.</p><h4 style="font-size:16px;margin:16px 0 4px">What is included in the $9 offline pack versus the free version?</h4><p style="margin:0">The free web version provides full access to the calculation engines online. The $9 pack is a single, zero-dependency HTML file you download to run locally without internet access, featuring offline CSV/JSON export capabilities for lab logs and custom equipment presets.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/ajzzmb" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../sourdough-fermentation-schedule-visualizer/" style="color:inherit;font-weight:600">Sourdough &amp; Fermentation Schedule Visualizer</a>: Master your sourdough timing with thermal kinetics, canvas rise simulation, and reverse bake scheduling.</li><li><a href="../wood-ebonizing-tannin-acetate-calculator/" style="color:inherit;font-weight:600">Wood Ebonizing &amp; Tannin Reaction Simulator</a>: Predict iron acetate darkening, calculate tannin dosing, and simulate grain contrast before touching your lumber.</li><li><a href="../lawn-sprinkler-head-coverage-flow-budget-designer/" style="color:inherit;font-weight:600">Lawn Sprinkler Head-to-Head Coverage &amp; Flow Budget Designer</a>: Stop guessing your irrigation. Design head-to-head coverage and calculate flow budgets with a live heatmap engine.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
