@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #1a202c;
+            --border: #e2e8f0;
+            --accent: #4a5568;
+            --card-bg: #f7fafc;
+            --input-bg: #ffffff;
+            --primary: #3182ce;
+            --primary-hover: #2b6cb0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #1a202c;
+                --text: #f7fafc;
+                --border: #2d3748;
+                --accent: #a0aec0;
+                --card-bg: #2d3748;
+                --input-bg: #1a202c;
+                --primary: #63b3ed;
+                --primary-hover: #4299e1;
+            }
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            color: var(--text);
+            background-color: var(--bg);
+        }
+
+        header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 1024px) {
+            main { grid-template-columns: 1fr; padding: 1rem; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        label { font-size: 0.85rem; font-weight: 600; color: var(--accent); }
+
+        input, select {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 0.9rem;
+            width: 100%;
+            min-width: 0;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        button:hover { background: var(--primary-hover); }
+        button.secondary { background: var(--accent); }
+        button.danger { background: #e53e3e; }
+
+        .palette-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        @media (max-width: 480px) {
+            .palette-row { grid-template-columns: 1fr 1fr auto; }
+            .palette-row input[type="color"] { grid-column: span 2; }
+            .palette-row button { grid-row: 1 / 3; grid-column: 3; align-self: stretch; }
+        }
+
+        .blanket-preview {
+            width: 100%;
+            height: 600px;
+            background: #eee;
+            border-radius: 4px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            border: 4px solid #333;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .blanket-row {
+            width: 100%;
+            flex-shrink: 0;
+            transition: height 0.2s;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-box {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-value { font-size: 1.25rem; font-weight: bold; }
+        .stat-label { font-size: 0.75rem; text-transform: uppercase; color: var(--accent); }
+
+        .usage-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+            .usage-table th { text-align: left; padding: 0.5rem; border-bottom: 2px solid var(--border); }
+            .usage-table td { padding: 0.5rem; border-bottom: 1px solid var(--border); }
+
+        .pro-badge {
+            background: #f6ad55;
+            color: #1a202c;
+            font-size: 0.6rem;
+            padding: 2px 4px;
+            border-radius: 3px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        .interpretation {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-left: 4px solid var(--primary);
+            background: rgba(49, 130, 206, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .preset-bar {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding: 0 1rem 1rem;
+        }
+
+        .preset-btn {
+            white-space: nowrap;
+            background: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            font-size: 0.8rem;
+        }
+
+        .warning-note {
+            font-size: 0.7rem;
+            color: var(--accent);
+            margin-top: 1rem;
+            font-style: italic;
+            border-top: 1px solid var(--border);
+            padding-top: 0.5rem;
+        }
+
+        .validation-error {
+            color: #e53e3e;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            font-weight: bold;
+        }
+
+        @media print {
+            .no-print { display: none; }
+            main { display: block; }
+            .blanket-preview { height: auto; page-break-inside: avoid; }
+        }
+
+        #pro-data-import .pro-lock-overlay {
+            background: rgba(247, 250, 252, 0.9);
+            padding: 1rem;
+            text-align: center;
+            border: 1px dashed var(--accent);
+            border-radius: 4px;
+        }
+        .csv-drop-zone {
+            border: 1px solid var(--border);
+            padding: 0.75rem;
+            border-radius: 4px;
+            background: var(--bg);
+            margin-bottom: 0.5rem;
+        }
+        .dist-chart { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem; }
+        .dist-bar-row { display: flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; }
+        .dist-bar-label { width: 80px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600; }
+        .dist-bar-track { flex-grow: 1; height: 14px; background: var(--border); border-radius: 7px; overflow: hidden; }
+        .dist-bar-fill { height: 100%; transition: width 0.3s ease; }
+        .dist-bar-value { width: 35px; text-align: right; font-size: 0.7rem; color: var(--accent); font-weight: 600; }
+        .stitch-guide-print-container { display: none; }
+@media print {
+    body.printing-stitch-guide main,
+    body.printing-stitch-guide header,
+    body.printing-stitch-guide .preset-bar,
+    body.printing-stitch-guide aside { display: none !important; }
+    body.printing-stitch-guide .stitch-guide-print-container { display: block !important; }
+    .stitch-guide-month-page { page-break-after: always; page-break-inside: avoid; padding: 1rem; box-sizing: border-box; }
+    .stitch-guide-month-page:last-child { page-break-after: auto; }
+    .stitch-guide-month-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 0.75rem; text-align: center; border-bottom: 2px solid #333; padding-bottom: 0.25rem; }
+    .stitch-guide-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .stitch-guide-day { border: 1px solid #ccc; padding: 6px; font-size: 0.75rem; min-height: 55px; border-radius: 3px; display: flex; flex-direction: column; justify-content: space-between; }
+    .stitch-guide-day-num { font-weight: bold; }
+    .stitch-guide-day-temp { font-size: 0.8rem; margin-top: 2px; }
+    .stitch-guide-day-color { height: 16px; border-radius: 2px; border: 1px solid rgba(0,0,0,0.2); font-size: 0.6rem; text-align: center; color: #fff; text-shadow: 0 0 2px #000; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+}
+.scenario-selector { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
+.scenario-btn { flex: 1; min-width: 90px; text-align: center; padding: 0.45rem 0.5rem; font-size: 0.8rem; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+.scenario-btn:hover { background: var(--card-bg); }
+.scenario-btn.active { background: var(--primary); color: white; border-color: var(--primary); font-weight: bold; }
+/* FEATURE-CSS */
+    </style>
+<title>Generative Temperature Blanket &amp; Gradient Planner</title>
+<meta name="description" content="Offline temperature blanket planner with yarn calculator, CSV weather import, and printable stitch guides. No account or installation required.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/generative-temperature-blanket-gradient-planner/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/generative-temperature-blanket-gradient-planner/">
+<meta property="og:title" content="Generative Temperature Blanket &amp; Gradient Planner"><meta property="og:description" content="Offline temperature blanket planner with yarn calculator, CSV weather import, and printable stitch guides. No account or installation required.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/generative-temperature-blanket-gradient-planner/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Generative Temperature Blanket & Gradient Planner","description":"Offline temperature blanket planner with yarn calculator, CSV weather import, and printable stitch guides. No account or installation required.","url":"https://rttyy.github.io/free-tools/generative-temperature-blanket-gradient-planner/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does this tool require an internet connection to work?","acceptedAnswer":{"@type":"Answer","text":"The Gumroad Offline Pack is a single HTML file that runs entirely on your local computer. Once downloaded, you do not need an internet connection to use any of its features, ensuring your data remains private."}},{"@type":"Question","name":"Can I import data from my own weather station?","acceptedAnswer":{"@type":"Answer","text":"Yes. The planner supports CSV imports. As long as your data has a date and a temperature column, you can map it to the tool to generate your specific local gradient."}},{"@type":"Question","name":"How does the yarn calculator work?","acceptedAnswer":{"@type":"Answer","text":"You input the length of yarn used for a single stitch or row from your gauge swatch. The tool then multiplies this by the frequency of each temperature range to give you the total meterage and number of skeins required."}},{"@type":"Question","name":"Is this a subscription service?","acceptedAnswer":{"@type":"Answer","text":"No. This is a one-time purchase of $8 for the offline tool. You own the file and can use it for as many projects and as many years as you like without further fees."}}]}</script>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1 style="margin:0; font-size: 1.5rem;">Generative Temperature Blanket & Gradient Planner</h1>
+            <p style="margin:0; font-size: 0.9rem; color: var(--accent);">Visualize a year of color and plan your yarn purchases.</p>
+        </div>
+        <div class="no-print header-actions">
+            <button id="btn-copy" class="secondary">Copy Summary</button>
+            <button id="btn-export-csv" class="secondary">Export CSV</button>
+            <button id="btn-export-json" class="secondary">Export JSON</button>
+            <button id="btn-print" class="secondary">Print View</button>
+            <button id="btn-reset" class="secondary">Reset</button>
+            <span id="pro-notice-slot"></span>
+        </div>
+    </header>
+
+    <div class="preset-bar no-print" id="preset-container">
+        <!-- Presets injected here -->
+    </div>
+
+    <main>
+        <section>
+            <div id="temperature-palette-manager" data-feature="temperature-palette-manager" class="card">
+                <div class="card-title">
+                    Temperature Ranges & Colors
+                    <button onclick="addRangeRow()" class="secondary" style="font-size: 0.7rem;">+ Add Color</button>
+                </div>
+                <div id="palette-rows-container">
+                    <!-- Rows injected here -->
+                </div>
+                <div class="warning-note">Ensure ranges do not overlap for best results. Temperatures outside ranges default to gray.</div>
+            </div>
+
+            <div id="historical-sim-engine" data-feature="historical-sim-engine">
+                <div class="card">
+                    <div class="card-title">365-Day Blanket Preview</div>
+                    <div id="blanket-visual" class="blanket-preview">
+                        <!-- 365 Rows injected here -->
+                    </div>
+                    <div id="interpretation-block" class="interpretation">
+                        <!-- Dynamic analysis here -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="pro-data-import" data-feature="pro-data-import" class="card">
+                <div class="card-title">
+                    Historical Weather Import
+                    <span class="pro-badge">PRO</span>
+                </div>
+                <div id="import-interface-active">
+                    <p style="font-size: 0.8rem; margin-top: 0;">Replace simulation with real data (2-column CSV: Date, Temp).</p>
+                    <div class="csv-drop-zone">
+                        <input type="file" id="csv-file-input" accept=".csv" style="font-size: 0.75rem;">
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button id="btn-upload-csv" style="flex: 2;">Upload & Process</button>
+                        <button id="btn-sample-csv" class="secondary" style="flex: 1;">Load Sample</button>
+                    </div>
+                    <div id="csv-status" style="margin-top: 0.5rem; font-size: 0.75rem; font-weight: 600;"></div>
+                </div>
+                <div id="import-interface-locked" style="display: none;" class="pro-lock-overlay">
+                    Available in the full version. <a href="#">Upgrade to PRO</a>
+                </div>
+            </div>
+
+            <div id="color-distribution-chart" data-feature="color-distribution-chart" class="card">
+                <div class="card-title">Color Frequency Analysis</div>
+                <div id="dist-chart-container" class="dist-chart">
+                    <!-- Bars injected here -->
+                </div>
+                <div class="warning-note">Visual balance check: Percentage of the 365 days assigned to each color band. Adjust ranges to avoid monochromatic results.</div>
+            </div>
+
+            <div id="pro-stitch-guide-export" data-feature="pro-stitch-guide-export" class="card">
+                <div class="card-title">
+                    12-Month Printable Stitch Guide
+                    <span class="pro-badge">PRO</span>
+                </div>
+                <p style="font-size: 0.8rem; margin-top: 0; color: var(--accent);">Generates a printable 12-page calendar guide with daily temperatures and assigned color codes.</p>
+                <div class="form-group" style="margin-bottom: 0.75rem;">
+                    <label for="stitch-guide-start-month">Start Month</label>
+                    <select id="stitch-guide-start-month">
+                        <option value="0">January</option>
+                        <option value="1">February</option>
+                        <option value="2">March</option>
+                        <option value="3">April</option>
+                        <option value="4">May</option>
+                        <option value="5">June</option>
+                        <option value="6">July</option>
+                        <option value="7">August</option>
+                        <option value="8">September</option>
+                        <option value="9">October</option>
+                        <option value="10">November</option>
+                        <option value="11">December</option>
+                    </select>
+                </div>
+                <button id="btn-export-stitch-guide" style="width: 100%;">Export Printable 12-Page Guide</button>
+                <div id="stitch-guide-notice" style="margin-top: 0.5rem; font-size: 0.8rem;"></div>
+                <div id="stitch-guide-print-area" class="stitch-guide-print-container"></div>
+            </div>
+
+            <div id="multi-scenario-comparator" data-feature="multi-scenario-comparator" class="card">
+                <div class="card-title">Historical Variance Checker</div>
+                <p style="font-size: 0.8rem; margin-top: 0; color: var(--accent);">
+                    Simulate extreme weather cycles (El Niño / La Niña) to evaluate shifts in warm vs cold yarn requirements.
+                </p>
+                <div class="scenario-selector" role="radiogroup" aria-label="Climate Scenario">
+                    <button type="button" class="scenario-btn active" data-scenario="average" onclick="setClimateScenario('average')">Average</button>
+                    <button type="button" class="scenario-btn" data-scenario="el-nino" onclick="setClimateScenario('el-nino')">El Niño (Hot)</button>
+                    <button type="button" class="scenario-btn" data-scenario="la-nina" onclick="setClimateScenario('la-nina')">La Niña (Cold)</button>
+                </div>
+                <div id="scenario-impact-summary" style="margin-top: 0.75rem;"></div>
+            </div>
+
+            <!-- FEATURES -->
+        </section>
+
+        <aside>
+            <div id="physical-dimension-calculator" data-feature="physical-dimension-calculator" class="card">
+                <div class="card-title">Project Settings</div>
+                <div class="controls-grid">
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <select id="input-unit" onchange="handleUnitSelect(this.value)">
+                            <option value="Celsius">Celsius (°C)</option>
+                            <option value="Fahrenheit">Fahrenheit (°F)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Row Height (mm)</label>
+                        <input type="number" id="input-stitch-height" min="1" max="50" value="5" step="0.5" oninput="updateProject()">
+                    </div>
+                    <div class="form-group">
+                        <label>Blanket Width (cm)</label>
+                        <input type="number" id="input-width" min="10" max="500" value="150" oninput="updateProject()">
+                    </div>
+                    <div class="form-group">
+                        <label>Yarn Multiplier</label>
+                        <input type="number" id="input-gauge-factor" min="0.1" max="5" value="1.2" step="0.1" oninput="updateProject()">
+                    </div>
+                    <div class="form-group">
+                        <label>Skein Length (m)</label>
+                        <input type="number" id="input-skein-length" min="10" max="2000" value="180" step="10" oninput="updateProject()">
+                    </div>
+                    <div class="form-group">
+                        <label>Safety Buffer (%)</label>
+                        <input type="number" id="input-safety-margin" min="0" max="50" value="10" step="1" oninput="updateProject()">
+                    </div>
+                </div>
+                <div id="dim-error" class="validation-error" style="display:none;"></div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Total Length</div>
+                        <div class="stat-value" id="res-total-length">182.5 cm</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Total Area</div>
+                        <div class="stat-value" id="res-total-area">2.7 m²</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Total Yarn (+Buffer)</div>
+                        <div class="stat-value" id="res-total-yarn">0 m</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Total Skeins Needed</div>
+                        <div class="stat-value" id="res-total-skeins">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="yarn-usage-estimator" data-feature="yarn-usage-estimator" class="card">
+                <div class="card-title">Yarn Consumption Estimator</div>
+                <div style="overflow-x: auto;">
+                    <table class="usage-table">
+                        <thead>
+                            <tr>
+                                <th>Color</th>
+                                <th>Days</th>
+                                <th>Total Yardage</th>
+                            </tr>
+                        </thead>
+                        <tbody id="yarn-usage-body">
+                            <!-- Injected -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="warning-note">Estimate only - verify with a qualified professional before relying on it. Verify with a physical gauge swatch before purchasing all yarn.</div>
+            </div>
+
+            <div class="card no-print">
+                <div class="card-title">Climate Simulation</div>
+                <div class="form-group">
+                    <label>Seasonal Variance</label>
+                    <select id="input-climate-profile" onchange="updateProject()">
+                        <option value="extreme">Extreme Seasons (Hot summers, Snowy winters)</option>
+                        <option value="moderate">Moderate Seasons (Temperate)</option>
+                        <option value="stable">Stable/Tropical (Minimal variation)</option>
+                    </select>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--accent); margin-top: 0.5rem;">
+                    This generates a simulated year of historical data based on your chosen profile to help you visualize the distribution.
+                </p>
+                <button onclick="regenerateData()" class="secondary" style="width: 100%; margin-top: 0.5rem;">Shuffle Year Data</button>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        const PRO = false;
+        const PRO_LINK = "https://ferrywave73.gumroad.com/l/rsiogw";
+
+        const PRESETS = [
+            {
+                name: "High Desert Extremes",
+                values: {"unit":"Celsius","climate":"extreme","ranges":[{"min":-10,"max":0,"color":"#1a365d"},{"min":1,"max":10,"color":"#2b6cb0"},{"min":11,"max":20,"color":"#48bb78"},{"min":21,"max":30,"color":"#ed8936"},{"min":31,"max":45,"color":"#c53030"}],"stitchHeight":5,"width":150,"gaugeFactor":1.2}
+            },
+            {
+                name: "Mild Coastal Gradient",
+                values: {"unit":"Celsius","climate":"moderate","ranges":[{"min":5,"max":12,"color":"#e2e8f0"},{"min":13,"max":16,"color":"#cbd5e0"},{"min":17,"max":19,"color":"#a0aec0"},{"min":20,"max":22,"color":"#718096"},{"min":23,"max":26,"color":"#4a5568"}],"stitchHeight":6,"width":180,"gaugeFactor":1.1}
+            },
+            {
+                name: "Four Seasons Pastel",
+                values: {"unit":"Fahrenheit","climate":"extreme","ranges":[{"min":0,"max":32,"color":"#d6bcfa"},{"min":33,"max":50,"color":"#bee3f8"},{"min":51,"max":70,"color":"#c6f6d5"},{"min":71,"max":85,"color":"#feebc8"},{"min":86,"max":110,"color":"#fed7d7"}],"stitchHeight":4,"width":140,"gaugeFactor":1.3}
+            }
+        ];
+
+        let state = {
+            unit: 'Celsius',
+            ranges: [],
+            stitchHeight: 5,
+            width: 150,
+            gaugeFactor: 1.2,
+            skeinLength: 180,
+            safetyMargin: 10,
+            climate: 'extreme',
+            dailyTemps: []
+        };
+
+        function triggerProNotice() {
+            const slot = document.getElementById('pro-notice-slot');
+            slot.innerHTML = `<span class="pro-notice" style="background:#fefcbf; color:#744210; padding:4px 8px; border-radius:4px; font-size:0.8rem;"><a href="${PRO_LINK}">Available in the full version</a></span>`;
+            setTimeout(() => { slot.innerHTML = ''; }, 4500);
+        }
+
+        function init() {
+            let loaded = false;
+            try {
+                const saved = localStorage.getItem('temp_blanket_state');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && Array.isArray(parsed.ranges) && parsed.ranges.length) {
+                        state = { ...state, ...parsed };
+                        applyStateToForm();
+                        if (!state.dailyTemps || state.dailyTemps.length !== 365) {
+                            regenerateData();
+                        } else {
+                            updateProject(true);
+                        }
+                        loaded = true;
+                    }
+                }
+            } catch (e) {}
+
+            if (!loaded) {
+                loadPreset(PRESETS[0]);
+            }
+            setupEventListeners();
+            renderPresets();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('btn-export-json').onclick = () => {
+                if (!PRO) { triggerProNotice(); return; }
+                const blob = new Blob([JSON.stringify(state, null, 2)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'temperature-blanket-plan.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            };
+
+            document.getElementById('btn-export-csv').onclick = () => {
+                if (!PRO) { triggerProNotice(); return; }
+                let csv = 'Day,Simulated_Temp_' + (state.unit === 'Celsius' ? 'C' : 'F') + ',Assigned_Color\n';
+                state.dailyTemps.forEach((temp, i) => {
+                    csv += `${i + 1},${temp},${getColorForTemp(temp)}\n`;
+                });
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'temperature-blanket-schedule.csv';
+                a.click();
+                URL.revokeObjectURL(url);
+            };
+
+            document.getElementById('btn-copy').onclick = () => {
+                const totalLength = ((365 * state.stitchHeight) / 10).toFixed(1);
+                const totalArea = ((state.width * (365 * state.stitchHeight / 10)) / 10000).toFixed(2);
+                const summary = `Temperature Blanket Plan\nUnit: ${state.unit}\nDimensions: ${state.width} cm W x ${totalLength} cm L (${totalArea} m²)\nColor Ranges: ${state.ranges.length}\nClimate: ${state.climate}`;
+                navigator.clipboard.writeText(summary).then(() => {
+                    const btn = document.getElementById('btn-copy');
+                    const orig = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    setTimeout(() => { btn.textContent = orig; }, 2000);
+                }).catch(() => {});
+            };
+
+            document.getElementById('btn-print').onclick = () => {
+                if (!PRO) { triggerProNotice(); return; }
+                window.print();
+            };
+
+            document.getElementById('btn-reset').onclick = () => {
+                try { localStorage.removeItem('temp_blanket_state'); } catch(e) {}
+                loadPreset(PRESETS[0]);
+            };
+        }
+
+        function renderPresets() {
+            const container = document.getElementById('preset-container');
+            PRESETS.forEach(p => {
+                const btn = document.createElement('button');
+                btn.className = 'preset-btn';
+                btn.textContent = p.name;
+                btn.onclick = () => loadPreset(p);
+                container.appendChild(btn);
+            });
+        }
+
+        function applyStateToForm() {
+            document.getElementById('input-unit').value = state.unit;
+            document.getElementById('input-stitch-height').value = state.stitchHeight;
+            document.getElementById('input-width').value = state.width;
+            document.getElementById('input-gauge-factor').value = state.gaugeFactor;
+            document.getElementById('input-skein-length').value = state.skeinLength || 180;
+            document.getElementById('input-safety-margin').value = state.safetyMargin !== undefined ? state.safetyMargin : 10;
+            document.getElementById('input-climate-profile').value = state.climate || 'extreme';
+        }
+
+        function handleUnitSelect(newUnit) {
+            if (state.unit === newUnit) return;
+            state.unit = newUnit;
+            // Convert existing range thresholds appropriately
+            state.ranges = state.ranges.map(r => {
+                if (newUnit === 'Fahrenheit') {
+                    return { ...r, min: Math.round(r.min * 9/5 + 32), max: Math.round(r.max * 9/5 + 32) };
+                } else {
+                    return { ...r, min: Math.round((r.min - 32) * 5/9), max: Math.round((r.max - 32) * 5/9) };
+                }
+            });
+            regenerateData();
+        }
+
+        function loadPreset(preset) {
+            const val = typeof preset.values === 'string' ? JSON.parse(preset.values) : preset.values;
+            state = { ...state, skeinLength: 180, safetyMargin: 10, ...val };
+            applyStateToForm();
+            regenerateData();
+        }
+
+        function regenerateData() {
+            const temps = [];
+            const profile = document.getElementById('input-climate-profile').value;
+            state.climate = profile;
+
+            // Generate synthetic year data using a sine wave + noise
+            const isF = state.unit === 'Fahrenheit';
+            const baseMin = isF ? 20 : -5;
+            const baseMax = isF ? 95 : 35;
+            const range = baseMax - baseMin;
+            
+            let volatility = 0.2;
+            if (profile === 'moderate') volatility = 0.1;
+            if (profile === 'stable') volatility = 0.05;
+
+            for (let i = 0; i < 365; i++) {
+                // Seasonal curve: sin(i / 365 * 2PI - offset)
+                const season = (Math.sin((i / 365) * 2 * Math.PI - (Math.PI / 2)) + 1) / 2;
+                let dayTemp = baseMin + (season * range);
+                
+                // Add daily noise
+                dayTemp += (Math.random() - 0.5) * (range * volatility);
+                temps.push(Math.round(dayTemp));
+            }
+            state.dailyTemps = temps;
+            state.baseDailyTemps = [...temps];
+            updateProject();
+        }
+
+        function addRangeRow() {
+            state.ranges.push({ min: 0, max: 10, color: '#cccccc' });
+            updateProject();
+        }
+
+        function removeRangeRow(index) {
+            state.ranges.splice(index, 1);
+            updateProject();
+        }
+
+        function updateRange(index, field, value) {
+            if (field === 'color') {
+                state.ranges[index][field] = value;
+            } else {
+                const num = parseFloat(value);
+                state.ranges[index][field] = isNaN(num) ? 0 : num;
+            }
+            updateProject(false);
+        }
+
+        function updateProject(rebuildPaletteTable = true) {
+            state.unit = document.getElementById('input-unit').value;
+            const sh = parseFloat(document.getElementById('input-stitch-height').value);
+            const w = parseFloat(document.getElementById('input-width').value);
+            const gf = parseFloat(document.getElementById('input-gauge-factor').value);
+            const sk = parseFloat(document.getElementById('input-skein-length').value);
+            const sm = parseFloat(document.getElementById('input-safety-margin').value);
+
+            const errEl = document.getElementById('dim-error');
+            let hasError = false;
+            let errMsg = '';
+
+            if (isNaN(sh) || sh <= 0) { errMsg = 'Row height must be greater than 0 mm.'; hasError = true; }
+            else if (isNaN(w) || w <= 0) { errMsg = 'Blanket width must be greater than 0 cm.'; hasError = true; }
+            else if (isNaN(gf) || gf <= 0) { errMsg = 'Yarn multiplier must be positive.'; hasError = true; }
+            else if (isNaN(sk) || sk <= 0) { errMsg = 'Skein length must be greater than 0 m.'; hasError = true; }
+            else if (isNaN(sm) || sm < 0) { errMsg = 'Safety buffer must be 0% or higher.'; hasError = true; }
+
+            if (hasError) {
+                errEl.textContent = errMsg;
+                errEl.style.display = 'block';
+            } else {
+                errEl.textContent = '';
+                errEl.style.display = 'none';
+            }
+
+            state.stitchHeight = isNaN(sh) || sh <= 0 ? 5 : sh;
+            state.width = isNaN(w) || w <= 0 ? 150 : w;
+            state.gaugeFactor = isNaN(gf) || gf <= 0 ? 1.2 : gf;
+            state.skeinLength = isNaN(sk) || sk <= 0 ? 180 : sk;
+            state.safetyMargin = isNaN(sm) || sm < 0 ? 0 : sm;
+
+            if (rebuildPaletteTable) renderPaletteTable();
+            renderBlanket();
+            renderCalculations();
+            
+            try {
+                localStorage.setItem('temp_blanket_state', JSON.stringify(state));
+            } catch(e) {}
+        }
+
+        function renderPaletteTable() {
+            const container = document.getElementById('palette-rows-container');
+            container.innerHTML = '';
+            state.ranges.forEach((range, idx) => {
+                const div = document.createElement('div');
+                div.className = 'palette-row';
+                div.innerHTML = `
+                    <input type="number" value="${range.min}" placeholder="Min" oninput="updateRange(${idx}, 'min', this.value)">
+                    <input type="number" value="${range.max}" placeholder="Max" oninput="updateRange(${idx}, 'max', this.value)">
+                    <input type="color" value="${range.color}" oninput="updateRange(${idx}, 'color', this.value)">
+                    <button class="danger" onclick="removeRangeRow(${idx})" style="padding: 0.2rem 0.5rem;">&times;</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function getColorForTemp(temp) {
+            const match = state.ranges.find(r => {
+                const rMin = parseFloat(r.min);
+                const rMax = parseFloat(r.max);
+                const min = Math.min(rMin, rMax);
+                const max = Math.max(rMin, rMax);
+                return temp >= min && temp <= max;
+            });
+            return match ? match.color : '#888888';
+        }
+
+        function renderBlanket() {
+            const visual = document.getElementById('blanket-visual');
+            visual.innerHTML = '';
+            
+            state.dailyTemps.forEach(temp => {
+                const row = document.createElement('div');
+                row.className = 'blanket-row';
+                row.style.backgroundColor = getColorForTemp(temp);
+                row.style.height = `${state.stitchHeight}px`;
+                row.title = `${temp}°${state.unit === 'Celsius' ? 'C' : 'F'}`;
+                visual.appendChild(row);
+            });
+        }
+
+        function renderCalculations() {
+            const totalLengthCm = (365 * state.stitchHeight) / 10;
+            document.getElementById('res-total-length').textContent = `${totalLengthCm.toFixed(1)} cm`;
+            
+            const areaM2 = (state.width * totalLengthCm) / 10000;
+            document.getElementById('res-total-area').textContent = `${areaM2.toFixed(2)} m²`;
+
+            const counts = {};
+            state.ranges.forEach((r, idx) => counts[idx] = { days: 0, range: r });
+
+            let unmatchedDays = 0;
+            state.dailyTemps.forEach(temp => {
+                const matchIdx = state.ranges.findIndex(r => {
+                    const min = Math.min(r.min, r.max);
+                    const max = Math.max(r.min, r.max);
+                    return temp >= min && temp <= max;
+                });
+                if (matchIdx !== -1) {
+                    counts[matchIdx].days++;
+                } else {
+                    unmatchedDays++;
+                }
+            });
+
+            const tbody = document.getElementById('yarn-usage-body');
+            tbody.innerHTML = '';
+
+            let overallYardageWithBuffer = 0;
+            let overallSkeins = 0;
+            let colorAnalysis = [];
+            const bufferMultiplier = 1 + (state.safetyMargin / 100);
+
+            state.ranges.forEach((range, idx) => {
+                const data = counts[idx];
+                const rMin = parseFloat(range.min);
+                const rMax = parseFloat(range.max);
+                const rowAreaCm2 = state.width * (state.stitchHeight / 10);
+                const totalAreaCm2 = data.days * rowAreaCm2;
+                const netMeters = totalAreaCm2 * 0.05 * state.gaugeFactor;
+                const bufferedMeters = netMeters * bufferMultiplier;
+                const skeins = state.skeinLength > 0 ? Math.ceil(bufferedMeters / state.skeinLength) : 0;
+                
+                overallYardageWithBuffer += bufferedMeters;
+                overallSkeins += skeins;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><div style="display:inline-block; width:12px; height:12px; background:${range.color}; margin-right:5px; border-radius:2px; vertical-align:middle;"></div> ${Math.min(rMin, rMax)}° to ${Math.max(rMin, rMax)}°</td>
+                    <td>${data.days} days</td>
+                    <td>${Math.ceil(bufferedMeters)} m (${skeins} skein${skeins === 1 ? '' : 's'})</td>
+                `;
+                tbody.appendChild(tr);
+
+                const pct = Math.round((data.days / 365) * 100);
+                if (data.days > 0) colorAnalysis.push({ range, pct, days: data.days, skeins });
+            });
+
+            if (unmatchedDays > 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><div style="display:inline-block; width:12px; height:12px; background:#888888; margin-right:5px; border-radius:2px; vertical-align:middle;"></div> Unmatched default</td>
+                    <td>${unmatchedDays} days</td>
+                    <td>Gray fallback</td>
+                `;
+                tbody.appendChild(tr);
+            }
+
+            document.getElementById('res-total-yarn').textContent = `${Math.ceil(overallYardageWithBuffer)} m`;
+            document.getElementById('res-total-skeins').textContent = `${overallSkeins}`;
+
+            const interpretation = document.getElementById('interpretation-block');
+            const dominant = colorAnalysis.sort((a,b) => b.days - a.days)[0];
+            const sizeLabel = totalLengthCm > 210 ? 'King/Queen bed size' : totalLengthCm > 170 ? 'Generous adult throw' : 'Compact lap throw';
+
+            let meaningText = `At <strong>${state.width} cm × ${totalLengthCm.toFixed(0)} cm</strong>, this will make a <strong>${sizeLabel}</strong>. `;
+            if (dominant) {
+                const dMin = parseFloat(dominant.range.min);
+                const dMax = parseFloat(dominant.range.max);
+                meaningText += `The range ${Math.min(dMin, dMax)}°–${Math.max(dMin, dMax)}° covers <strong>${dominant.pct}% of days</strong> (${dominant.days} rows).`;
+            }
+
+            let nextText = '';
+            if (dominant && dominant.pct > 32) {
+                nextText = `The most common range will dominate visual stripe density. Consider splitting it into 2 tiers with subtle tone shifts for richer gradient rhythm. `;
+            } else {
+                nextText = `Your temperature bands are well distributed across the seasons. `;
+            }
+            nextText += `Order roughly <strong>${overallSkeins} skeins</strong> (${Math.ceil(overallYardageWithBuffer)} m, including ${state.safetyMargin}% safety allowance). Knit or crochet a 10×10 cm gauge swatch before casting on to verify row height.`;
+
+            interpretation.innerHTML = `
+                <div><strong>What this means:</strong> ${meaningText}</div>
+                <div style="margin-top:0.5rem;"><strong>What to do next:</strong> ${nextText}</div>
+            `;
+
+            renderFrequencyChart(counts);
+        }
+
+        function initDataImport() {
+            const activeUI = document.getElementById('import-interface-active');
+            const lockedUI = document.getElementById('import-interface-locked');
+            
+            if (!PRO) {
+                activeUI.style.display = 'none';
+                lockedUI.style.display = 'block';
+                const link = lockedUI.querySelector('a');
+                if (link) link.href = PRO_LINK;
+                return;
+            }
+
+            document.getElementById('btn-upload-csv').onclick = () => {
+                const fileInput = document.getElementById('csv-file-input');
+                if (!fileInput.files.length) {
+                    updateCsvStatus('Please select a file first.', '#e53e3e');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => parseAndApplyCsv(e.target.result);
+                reader.readAsText(fileInput.files[0]);
+            };
+
+            document.getElementById('btn-sample-csv').onclick = () => {
+                const sample = "Date,Temp\n2023-01-01,2\n2023-02-01,8\n2023-03-01,12\n2023-04-01,18\n2023-05-01,22\n2023-06-01,28\n2023-07-01,31\n2023-08-01,29\n2023-09-01,24\n2023-10-01,16\n2023-11-01,9\n2023-12-01,4";
+                parseAndApplyCsv(sample);
+                updateCsvStatus('Sample data loaded (12 months representative).', 'var(--primary)');
+            };
+        }
+
+        function parseAndApplyCsv(text) {
+            try {
+                const lines = text.split(/\r?\n/);
+                const newTemps = [];
+                lines.forEach(line => {
+                    const parts = line.split(',');
+                    if (parts.length >= 2) {
+                        const val = parseFloat(parts[1]);
+                        if (!isNaN(val)) newTemps.push(val);
+                    }
+                });
+
+                if (newTemps.length === 0) throw new Error("No numeric values found in second column.");
+                
+                // If the CSV is too short, we loop it or stretch it to 365. 
+                // For this tool, we'll replace the dataset with the CSV values directly.
+                state.dailyTemps = newTemps;
+                // If it's a small sample (like 12 months), we pad to 365 for visual consistency
+                if (newTemps.length < 50) {
+                    const expanded = [];
+                    for(let i=0; i<365; i++) expanded.push(newTemps[i % newTemps.length]);
+                    state.dailyTemps = expanded;
+                }
+                state.baseDailyTemps = [...state.dailyTemps];
+                
+                updateCsvStatus(`Success! Applied ${newTemps.length} data points.`, 'var(--primary)');
+                updateProject();
+            } catch (err) {
+                updateCsvStatus('Error: ' + err.message, '#e53e3e');
+            }
+        }
+
+        function updateCsvStatus(msg, color) {
+            const el = document.getElementById('csv-status');
+            el.textContent = msg;
+            el.style.color = color;
+        }
+
+        const originalInit = init;
+        init = function() {
+            originalInit();
+            initDataImport();
+        };
+
+        window.onload = init;
+
+        function renderFrequencyChart(counts) {
+            const container = document.getElementById('dist-chart-container');
+            if (!container) return;
+            container.innerHTML = '';
+            Object.values(counts).forEach(data => {
+                const pct = Math.round((data.days / 365) * 100);
+                const row = document.createElement('div');
+                row.className = 'dist-bar-row';
+                const labelText = `${data.range.min}° to ${data.range.max}°`;
+                row.innerHTML = `
+                    <div class="dist-bar-label" title="${labelText}">${labelText}</div>
+                    <div class="dist-bar-track"><div class="dist-bar-fill" style="width: ${pct}%; background: ${data.range.color}"></div></div>
+                    <div class="dist-bar-value">${pct}%</div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function initStitchGuideExport() {
+            const btn = document.getElementById('btn-export-stitch-guide');
+            const notice = document.getElementById('stitch-guide-notice');
+            if (!btn) return;
+
+            btn.onclick = () => {
+                if (!PRO) {
+                    notice.innerHTML = `<span style="color:#e53e3e;">Available in the full version. <a href="${PRO_LINK}">Upgrade to PRO</a></span>`;
+                    return;
+                }
+                notice.innerHTML = '';
+                generateAndPrintStitchGuide();
+            };
+        }
+
+        function generateAndPrintStitchGuide() {
+            const printArea = document.getElementById('stitch-guide-print-area');
+            if (!printArea) return;
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            const startMonthIdx = parseInt(document.getElementById('stitch-guide-start-month').value || '0', 10);
+            
+            let html = '';
+            let currentDayIndex = 0;
+            const unitSymbol = state.unit === 'Celsius' ? '°C' : '°F';
+
+            for (let m = 0; m < 12; m++) {
+                const mIdx = (startMonthIdx + m) % 12;
+                const mName = monthNames[mIdx];
+                const daysInM = monthDays[mIdx];
+                
+                html += `<div class="stitch-guide-month-page">`;
+                html += `<div class="stitch-guide-month-title">${mName} Stitch Guide</div>`;
+                html += `<div class="stitch-guide-grid">`;
+                
+                for (let d = 1; d <= daysInM; d++) {
+                    const temp = state.dailyTemps[currentDayIndex % state.dailyTemps.length];
+                    const color = getColorForTemp(temp);
+                    html += `
+                        <div class="stitch-guide-day">
+                            <div>
+                                <span class="stitch-guide-day-num">Day ${d}</span>
+                                <div class="stitch-guide-day-temp">${temp}${unitSymbol}</div>
+                            </div>
+                            <div class="stitch-guide-day-color" style="background:${color};">${color}</div>
+                        </div>
+                    `;
+                    currentDayIndex++;
+                }
+                html += `</div></div>`;
+            }
+
+            printArea.innerHTML = html;
+            document.body.classList.add('printing-stitch-guide');
+            
+            const cleanup = () => {
+                document.body.classList.remove('printing-stitch-guide');
+                window.removeEventListener('afterprint', cleanup);
+            };
+            window.addEventListener('afterprint', cleanup);
+            window.print();
+            setTimeout(cleanup, 2000);
+        }
+
+        const prevInitStitchGuide = init;
+        init = function() {
+            prevInitStitchGuide();
+            initStitchGuideExport();
+        };
+
+        function applyScenarioShift() {
+            if (!state.baseDailyTemps || !state.baseDailyTemps.length) {
+                if (state.dailyTemps && state.dailyTemps.length) {
+                    state.baseDailyTemps = [...state.dailyTemps];
+                } else {
+                    return;
+                }
+            }
+            const shift = state.selectedScenario === 'el-nino' ? (state.unit === 'Celsius' ? 5 : 9) :
+                          state.selectedScenario === 'la-nina' ? (state.unit === 'Celsius' ? -5 : -9) : 0;
+            state.dailyTemps = state.baseDailyTemps.map(t => Math.round(t + shift));
+        }
+
+        function setClimateScenario(scenario) {
+            state.selectedScenario = scenario;
+            document.querySelectorAll('.scenario-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.scenario === scenario);
+            });
+            updateProject();
+        }
+
+        function renderScenarioImpact() {
+            const el = document.getElementById('scenario-impact-summary');
+            if (!el) return;
+            const scenario = state.selectedScenario || 'average';
+            const shiftVal = scenario === 'el-nino' ? (state.unit === 'Celsius' ? '+5°C' : '+9°F') :
+                             scenario === 'la-nina' ? (state.unit === 'Celsius' ? '-5°C' : '-9°F') : '0°';
+            
+            let warmRange = null;
+            if (state.ranges && state.ranges.length > 0) {
+                warmRange = [...state.ranges].sort((a,b) => Math.max(b.min, b.max) - Math.max(a.min, a.max))[0];
+            }
+
+            if (!warmRange) {
+                el.innerHTML = `<div style="font-size:0.8rem; color:var(--accent);">Scenario active: ${scenario.toUpperCase()} (${shiftVal}).</div>`;
+                return;
+            }
+
+            const warmMin = Math.min(warmRange.min, warmRange.max);
+            const warmMax = Math.max(warmRange.min, warmRange.max);
+            const baseWarmDays = (state.baseDailyTemps || []).filter(t => t >= warmMin && t <= warmMax).length;
+            const currWarmDays = state.dailyTemps.filter(t => t >= warmMin && t <= warmMax).length;
+            
+            const rowAreaCm2 = state.width * (state.stitchHeight / 10);
+            const bufferMultiplier = 1 + (state.safetyMargin / 100);
+            const baseYardage = Math.ceil(baseWarmDays * rowAreaCm2 * 0.05 * state.gaugeFactor * bufferMultiplier);
+            const currYardage = Math.ceil(currWarmDays * rowAreaCm2 * 0.05 * state.gaugeFactor * bufferMultiplier);
+            const diff = currYardage - baseYardage;
+            const diffStr = diff > 0 ? `+${diff} m` : `${diff} m`;
+
+            el.innerHTML = `
+                <div style="font-size:0.85rem; padding:0.5rem; background:var(--bg); border-radius:4px; border:1px solid var(--border);">
+                    <div><strong>Active Scenario:</strong> ${scenario === 'el-nino' ? 'El Niño (Hot)' : scenario === 'la-nina' ? 'La Niña (Cold)' : 'Average baseline'} (${shiftVal})</div>
+                    <div style="margin-top:0.25rem; font-size:0.8rem; color:var(--accent);">
+                        Warmest Palette Band (${warmMin}° to ${warmMax}°): <strong>${currYardage} m</strong> (${diffStr} vs average baseline).
+                    </div>
+                </div>
+            `;
+        }
+
+        const origUpdateProject = updateProject;
+        updateProject = function(rebuildPaletteTable = true) {
+            applyScenarioShift();
+            origUpdateProject(rebuildPaletteTable);
+            renderScenarioImpact();
+        };
+
+        // FEATURE-JS
+    </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This tool helps you visualize and plan your temperature blanket using real-world data and precise yarn math. While the basic version is free online, the Offline Pack provides a private, standalone file with full CSV import/export and printable guides.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Define your temperature ranges and assign your yarn colors.</li><li>Import historical weather data via CSV or enter it manually to see a 365-day preview.</li><li>Input your swatch measurements to calculate the exact number of skeins needed per color.</li><li>Export your data to JSON/CSV or print the 12-month stitch guide to track your daily progress offline.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">How should I divide my temperature ranges so that my 8 colors are evenly distributed across the year without one color dominating the whole blanket?</h4><p style="margin:0">You enter: Local historical average temperatures for their location · The number of yarn colors they want to use (e.g., 8).<br>You get: A visualization of the blanket based on historical data and a breakdown of what percentage of the year each color will occupy.</p><h4 style="font-size:16px;margin:16px 0 4px">How much yarn of each color do I actually need to buy, and how long will the finished blanket be if I use a specific stitch?</h4><p style="margin:0">You enter: Yarn weight/WPI (Wraps Per Inch) · Stitch height (mm or inches) · Stitch width (planned blanket width) · Historical or simulated daily temperatures.<br>You get: Total yardage or grams required per color and the final physical dimensions (Length x Width) of the project.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">Does this tool require an internet connection to work?</h4><p style="margin:0">The Gumroad Offline Pack is a single HTML file that runs entirely on your local computer. Once downloaded, you do not need an internet connection to use any of its features, ensuring your data remains private.</p><h4 style="font-size:16px;margin:16px 0 4px">Can I import data from my own weather station?</h4><p style="margin:0">Yes. The planner supports CSV imports. As long as your data has a date and a temperature column, you can map it to the tool to generate your specific local gradient.</p><h4 style="font-size:16px;margin:16px 0 4px">How does the yarn calculator work?</h4><p style="margin:0">You input the length of yarn used for a single stitch or row from your gauge swatch. The tool then multiplies this by the frequency of each temperature range to give you the total meterage and number of skeins required.</p><h4 style="font-size:16px;margin:16px 0 4px">Is this a subscription service?</h4><p style="margin:0">No. This is a one-time purchase of $8 for the offline tool. You own the file and can use it for as many projects and as many years as you like without further fees.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $8, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/rsiogw" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $8</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../beverage-carbonation-henry-law-simulator/" style="color:inherit;font-weight:600">Beverage Carbonation &amp; Dissolved CO2 Simulator</a>: Thermodynamic dissolved CO2 solver, burst risk analyzer, and draft line balancer in a single offline HTML file.</li><li><a href="../lawn-sprinkler-head-coverage-flow-budget-designer/" style="color:inherit;font-weight:600">Lawn Sprinkler Head-to-Head Coverage &amp; Flow Budget Designer</a>: Stop guessing your irrigation. Design head-to-head coverage and calculate flow budgets with a live heatmap engine.</li><li><a href="../vegetable-garden-fertilizer-npk-calculator/" style="color:inherit;font-weight:600">Vegetable Garden Fertilizer &amp; NPK Application Calculator</a>: Calculate exact N-P-K fertilizer weights, balance organic amendments, prevent root burn, and export plan.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $8</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $8"});</script>
+</body>
+</html>
