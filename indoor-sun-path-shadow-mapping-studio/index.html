@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #f59e0b;
+      --accent-hover: #d97706;
+      --accent-light: rgba(245, 158, 11, 0.15);
+      --success: #10b981;
+      --success-light: rgba(16, 185, 129, 0.15);
+      --danger: #ef4444;
+      --danger-light: rgba(239, 68, 68, 0.15);
+      --info: #3b82f6;
+      --info-light: rgba(59, 130, 246, 0.15);
+      --input-bg: #0f172a;
+      --input-border: #475569;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --card-bg: #ffffff;
+        --card-border: #e2e8f0;
+        --text: #0f172a;
+        --text-muted: #64748b;
+        --accent: #d97706;
+        --accent-hover: #b45309;
+        --accent-light: rgba(217, 119, 6, 0.1);
+        --input-bg: #f1f5f9;
+        --input-border: #cbd5e1;
+        --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.03);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header-titles h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .header-titles p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 0.25rem;
+    }
+
+    .pro-badge {
+      background: var(--accent-light);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 1024px) {
+      .layout-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .full-width-col {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.5rem;
+    }
+
+    .preset-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid var(--card-border);
+      padding: 0.5rem 0.85rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.775rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text);
+      padding: 0.45rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      width: 100%;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .status-direct {
+      background: var(--accent-light);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .status-shade {
+      background: var(--card-border);
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+    }
+
+    .svg-container {
+      width: 100%;
+      background: var(--input-bg);
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      overflow: hidden;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .metric-card {
+      background: var(--input-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+    }
+
+    .metric-val {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.2;
+    }
+
+    .metric-lbl {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .action-box {
+      border-left: 4px solid var(--accent);
+      background: var(--accent-light);
+      padding: 1rem;
+      border-radius: 0 8px 8px 0;
+      margin-top: 1rem;
+    }
+
+    .action-box.good {
+      border-left-color: var(--success);
+      background: var(--success-light);
+    }
+
+    .action-box.bad {
+      border-left-color: var(--danger);
+      background: var(--danger-light);
+    }
+
+    .action-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .action-desc {
+      font-size: 0.875rem;
+      color: var(--text);
+    }
+
+    .toast-msg {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid var(--accent);
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      display: none;
+      z-index: 1000;
+      font-size: 0.875rem;
+    }
+
+    .footer-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .visualizer-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .visualizer-wrapper {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .tab-group {
+      display: flex;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 1rem;
+      gap: 0.5rem;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 0.5rem 0.75rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .pro-lock-msg {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+        padding: 0;
+      }
+      header, .preset-bar, .btn, .slider-group {
+        display: none !important;
+      }
+      .card {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+        margin-bottom: 1rem;
+      }
+      .svg-container {
+        background: #ffffff !important;
+        border: 1px solid #ccc !important;
+      }
+    }
+
+    .heatmap-wrap {
+      overflow-x: auto;
+      margin-top: 0.5rem;
+    }
+    .heatmap-matrix {
+      display: grid;
+      grid-template-columns: 36px repeat(24, minmax(12px, 1fr)) 52px;
+      gap: 2px;
+      font-size: 0.7rem;
+      min-width: 520px;
+      text-align: center;
+      align-items: center;
+    }
+    .heatmap-header {
+      font-weight: 700;
+      color: var(--text-muted);
+      padding: 2px 0;
+      font-size: 0.65rem;
+    }
+    .heatmap-cell {
+      height: 18px;
+      border-radius: 2px;
+      transition: transform 0.1s ease;
+    }
+    .heatmap-cell:hover {
+      transform: scale(1.25);
+      outline: 1px solid var(--text);
+      z-index: 2;
+    }
+    .heatmap-legend {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+    .heatmap-gradient {
+      width: 100px;
+      height: 10px;
+      border-radius: 5px;
+      background: linear-gradient(to right, #0f172a, #1e3a8a, #d97706, #facc15);
+    }
+    .spot-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+    .spot-table th, .spot-table td {
+      padding: 0.5rem 0.65rem;
+      border: 1px solid var(--card-border);
+      text-align: left;
+    }
+    .spot-table th {
+      background: var(--input-bg);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .badge-deficit {
+      background: var(--danger-light);
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+    .badge-optimal {
+      background: var(--success-light);
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+    .exporter-pro-notice {
+      background: var(--accent-light);
+      border: 1px solid var(--accent);
+      color: var(--text);
+      padding: 0.65rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+    .exporter-pro-notice a {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: underline;
+    }
+    /* FEATURE-CSS */
+  </style>
+<title>Indoor Sun Path &amp; Shadow Mapping Studio</title>
+<meta name="description" content="Calculate indoor sunlight angles, seasonal shadow paths, and plant light levels in your browser. Free online tool &amp; $9 offline export pack.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/indoor-sun-path-shadow-mapping-studio/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/indoor-sun-path-shadow-mapping-studio/">
+<meta property="og:title" content="Indoor Sun Path &amp; Shadow Mapping Studio"><meta property="og:description" content="Calculate indoor sunlight angles, seasonal shadow paths, and plant light levels in your browser. Free online tool &amp; $9 offline export pack.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/indoor-sun-path-shadow-mapping-studio/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Indoor Sun Path & Shadow Mapping Studio","description":"Calculate indoor sunlight angles, seasonal shadow paths, and plant light levels in your browser. Free online tool & $9 offline export pack.","url":"https://rttyy.github.io/free-tools/indoor-sun-path-shadow-mapping-studio/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How does the free online web page differ from the $9 paid pack?","acceptedAnswer":{"@type":"Answer","text":"The interactive web version is completely free for mapping rooms directly in your web browser. The $9 paid pack contains self-contained HTML/JS files that run locally without an internet connection, along with CSV and JSON data export tools for 365-day hourly schedules."}},{"@type":"Question","name":"Do I need to install software or set up an account to use this?","acceptedAnswer":{"@type":"Answer","text":"No. The core tool runs on standard web technologies inside modern browsers like Chrome, Firefox, Edge, or Safari without any installations or sign-ups."}},{"@type":"Question","name":"How accurate are the calculated sun angles and shadows?","acceptedAnswer":{"@type":"Answer","text":"The studio uses standard astronomical algorithms for solar position (azimuth and elevation) combined with geometric ray-tracing based on your room dimensions. External obstructions like trees or neighboring buildings are not calculated automatically and should be estimated."}},{"@type":"Question","name":"Can this tool be used for interior design projects other than houseplants?","acceptedAnswer":{"@type":"Answer","text":"Yes. Interior designers use it to check screen glare on desks, identify areas prone to floor fading, and plan room layouts based on seasonal daylight availability."}}]}</script>
+</head>
+<body>
+
+  <header>
+    <div class="header-titles">
+      <h1>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        Indoor Sun Path &amp; Shadow Mapping Studio
+      </h1>
+      <p>Architectural indoor sunlight, solar ray casting, and plant light requirement simulator.</p>
+    </div>
+    <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+      <span class="pro-badge" id="pro-header-badge">PRO EDITION</span>
+      <button class="btn btn-sm" id="btn-reset">Reset</button>
+      <button class="btn btn-sm" id="btn-export-csv">Export Monthly CSV</button>
+      <button class="btn btn-sm" id="btn-export-json">Export JSON</button>
+      <button class="btn btn-sm" id="btn-print">Print</button>
+    </div>
+  </header>
+
+  <!-- Multi-Spot Plant Location Comparison Table Feature -->
+  <div class="card" style="margin-bottom: 1.5rem;" data-feature="multi-spot-comparator" id="multi-spot-comparator">
+    <div class="card-title">
+      <span>Multi-Spot Plant Location Comparison Table</span>
+      <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">Compare up to 4 candidate plant spots side-by-side</span>
+    </div>
+    <form id="spot-add-form" onsubmit="return false;" style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:flex-end; margin-bottom:1rem;">
+      <div class="form-group" style="flex:2; min-width:110px;">
+        <label for="spot-name-inp">Spot Label</label>
+        <input type="text" id="spot-name-inp" class="form-control" placeholder="e.g. Window Sill" value="Window Sill">
+      </div>
+      <div class="form-group" style="flex:1; min-width:55px;">
+        <label for="spot-x-inp">X (m)</label>
+        <input type="number" id="spot-x-inp" class="form-control" step="0.1" value="2.0">
+      </div>
+      <div class="form-group" style="flex:1; min-width:55px;">
+        <label for="spot-y-inp">Y (m)</label>
+        <input type="number" id="spot-y-inp" class="form-control" step="0.1" value="0.5">
+      </div>
+      <div class="form-group" style="flex:1; min-width:55px;">
+        <label for="spot-z-inp">Z (m)</label>
+        <input type="number" id="spot-z-inp" class="form-control" step="0.1" value="0.9">
+      </div>
+      <button class="btn btn-primary" id="btn-add-spot" type="button">Add Spot</button>
+    </form>
+    <div style="overflow-x:auto;">
+      <table class="spot-table">
+        <thead>
+          <tr>
+            <th>Spot Name</th>
+            <th>Pos (X, Y, Z)</th>
+            <th>Summer Direct (Jun 21)</th>
+            <th>Winter Direct (Dec 21)</th>
+            <th>Peak Lux</th>
+            <th>Stability Score</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="spot-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Plant Species Sun Needs & Seasonal Relocation Advisor Feature -->
+  <div class="card" style="margin-bottom: 1.5rem;" data-feature="plant-suitability-checker" id="plant-suitability-checker">
+    <div class="card-title">
+      <span>Plant Species Sun Needs &amp; Seasonal Relocation Advisor</span>
+      <span id="checker-badge" class="status-badge badge-optimal">OPTIMAL</span>
+    </div>
+    <div class="form-grid" style="margin-bottom:1rem;">
+      <div class="form-group" style="grid-column: span 2;">
+        <label for="checker-plant-select">Target Plant Category</label>
+        <select id="checker-plant-select" class="form-control">
+          <option value="succulent">Succulent / Cactus (&gt;25 kLux-h/d, Bright Direct)</option>
+          <option value="fiddle">Fiddle Leaf / Monstera (15-25 kLux-h/d, Medium Bright)</option>
+          <option value="pothos" selected>Pothos / Fern (5-15 kLux-h/d, Low Light)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="checker-season-select">Evaluation Season</label>
+        <select id="checker-season-select" class="form-control">
+          <option value="winter">Winter Solstice (Dec)</option>
+          <option value="summer">Summer Solstice (Jun)</option>
+          <option value="annual" selected>Annual Average</option>
+        </select>
+      </div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-val" id="checker-score-val">0%</div>
+        <div class="metric-lbl">Compatibility Score</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val" id="checker-light-val">0.0</div>
+        <div class="metric-lbl">Spot Light (kLux-h/d)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val" id="checker-target-val">0.0</div>
+        <div class="metric-lbl">Min Requirement</div>
+      </div>
+    </div>
+    <div id="checker-advice-box" class="action-box">
+      <div class="action-title" id="checker-advice-title">Relocation Advice</div>
+      <div class="action-desc" id="checker-advice-desc">Evaluating plant suitability...</div>
+    </div>
+  </div>
+
+  <!-- Sun Schedule Export & Audit Report Generator Feature -->
+  <div class="card" style="margin-bottom: 1.5rem;" data-feature="sun-schedule-exporter" id="sun-schedule-exporter">
+    <div class="card-title">
+      <span>Sun Schedule Export &amp; Audit Report Generator</span>
+      <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">365-Day Hourly Solar Penetration &amp; Light Level Audit</span>
+    </div>
+    <div class="form-grid" style="margin-bottom:1rem;">
+      <div class="form-group">
+        <label for="exporter-interval">Sampling Step</label>
+        <select id="exporter-interval" class="form-control">
+          <option value="1" selected>1 Hour (8,760 records)</option>
+          <option value="2">2 Hours (4,380 records)</option>
+          <option value="3">3 Hours (2,920 records)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="exporter-threshold">Direct Sun Threshold</label>
+        <select id="exporter-threshold" class="form-control">
+          <option value="5000">5,000 Lux (Filtered Direct)</option>
+          <option value="10000" selected>10,000 Lux (Standard Direct)</option>
+          <option value="20000">20,000 Lux (Intense Direct)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="exporter-target-loc">Target Coordinate</label>
+        <select id="exporter-target-loc" class="form-control">
+          <option value="current" selected>Current Spot (X, Y, Z)</option>
+          <option value="sill">Window Sill Center (Y=0.2m)</option>
+          <option value="deep">Deep Room Center (Y=60% Room D)</option>
+        </select>
+      </div>
+    </div>
+    <div class="metrics-grid" style="margin-bottom: 1rem;">
+      <div class="metric-card">
+        <div class="metric-val" id="exporter-annual-hours">0.0 hrs</div>
+        <div class="metric-lbl">Annual Direct Sun</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val" id="exporter-annual-energy">0 kLux-h</div>
+        <div class="metric-lbl">Annual Light Cumulative</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val" id="exporter-peak-day">--</div>
+        <div class="metric-lbl">Peak Solar Exposure Date</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val" id="exporter-sun-pct">0%</div>
+        <div class="metric-lbl">Sun Penetration Ratio</div>
+      </div>
+    </div>
+    <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+      <button class="btn btn-primary" id="btn-exporter-csv">Export CSV</button>
+      <button class="btn" id="btn-exporter-json">Export JSON</button>
+      <span style="font-size:0.75rem; color:var(--text-muted);">Generates full-year chronological hourly audit file for selected coordinates</span>
+    </div>
+    <div id="exporter-pro-notice" class="exporter-pro-notice" style="display:none; margin-top:0.75rem;"></div>
+  </div>
+
+  <!-- FEATURES -->
+
+  <!-- Annual Heatmap Grid Feature -->
+  <div class="card" style="margin-bottom: 1.5rem;" data-feature="annual-heatmap-matrix" id="annual-heatmap-matrix">
+    <div class="card-title">
+      <span>12-Month Seasonal Light Heatmap Grid (12×24 Matrix)</span>
+      <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">288-Cell Spot Illuminance (X, Y, Z) Across Solstices &amp; Months</span>
+    </div>
+    <div class="heatmap-wrap">
+      <div id="heatmap-grid-matrix"></div>
+    </div>
+    <div class="heatmap-legend">
+      <span>Dark Blue: Diffuse / Shade</span>
+      <div class="heatmap-gradient"></div>
+      <span>Bright Yellow: Direct Sun (&gt;30k Lux)</span>
+    </div>
+  </div>
+
+  <!-- Preset Selector Feature -->
+  <div class="card" style="margin-bottom: 1.5rem;" data-feature="preset-scenario-loader">
+    <div class="card-title">
+      <span>Architectural Layout Presets</span>
+      <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">Quick-load real-world room profiles</span>
+    </div>
+    <div class="preset-bar">
+      <button class="btn btn-primary" data-preset="south-shelf">South-Facing Living Room Shelf</button>
+      <button class="btn" data-preset="north-sill">North-Facing Apartment Window Sill</button>
+      <button class="btn" data-preset="deep-bay">Deep Southern Bay Window Floor</button>
+    </div>
+  </div>
+
+  <div class="layout-grid">
+    
+    <!-- Visualizer Panel -->
+    <div class="card" data-feature="room-light-projector">
+      <div class="card-title">
+        <span>Interactive Light &amp; Beam Projector</span>
+        <div id="live-status-badge" class="status-badge status-direct">DIRECT SUNLIGHT</div>
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span>Time of Day (Local Solar Time): <strong id="lbl-time-val" style="color:var(--accent);">12:00</strong></span>
+          <span id="lbl-sun-alt-az">Alt: 0° | Az: 0°</span>
+        </div>
+        <input type="range" id="slider-time" min="0" max="24" step="0.1" value="12">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span>Day of Year / Date: <strong id="lbl-date-val" style="color:var(--accent);">Jun 21 (Day 172)</strong></span>
+          <span>Season Scrub</span>
+        </div>
+        <input type="range" id="slider-day" min="1" max="365" step="1" value="172">
+      </div>
+
+      <div class="visualizer-wrapper">
+        <div>
+          <div style="font-size:0.8rem; font-weight:700; margin-bottom:0.3rem; color:var(--text-muted); text-align:center;">TOP-DOWN FLOOR PLAN (Z = Target Height)</div>
+          <div class="svg-container">
+            <svg id="svg-floor" viewBox="0 0 400 400"></svg>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:0.8rem; font-weight:700; margin-bottom:0.3rem; color:var(--text-muted); text-align:center;">SIDE-SECTION ELEVATION VIEW</div>
+          <div class="svg-container">
+            <svg id="svg-elevation" viewBox="0 0 400 400"></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Solar & Plant Metrics Panel -->
+    <div class="card" data-feature="spot-sun-hours-calculator">
+      <div class="card-title">
+        <span>Daily Direct Sun &amp; Energy Metrics</span>
+        <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">Selected Date Analysis</span>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-val" id="met-sun-hours">0.0 hrs</div>
+          <div class="metric-lbl">Direct Sun Exposure</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="met-sun-window">--:--</div>
+          <div class="metric-lbl">Sun Window (Enter - Exit)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="met-peak-lux">0 Lux</div>
+          <div class="metric-lbl">Peak Spot Illuminance</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" id="met-daily-klux">0.0</div>
+          <div class="metric-lbl">Daily Light (kLux-h/day)</div>
+        </div>
+      </div>
+
+      <!-- Solstice Comparison (Question 1 Answer) -->
+      <div style="background:var(--input-bg); border:1px solid var(--card-border); border-radius:8px; padding:0.85rem; margin-top:1rem;">
+        <div style="font-size:0.85rem; font-weight:700; margin-bottom:0.5rem; color:var(--accent);">Solstice Light Comparison (June 21 vs Dec 21)</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; text-align:center; font-size:0.85rem;">
+          <div style="border-right:1px solid var(--card-border); padding-right:0.5rem;">
+            <div style="font-weight:600;">June 21 (Summer)</div>
+            <div id="solstice-june-hrs" style="font-size:1.1rem; font-weight:700; color:var(--text);">--</div>
+            <div id="solstice-june-energy" style="font-size:0.75rem; color:var(--text-muted);">--</div>
+          </div>
+          <div>
+            <div style="font-weight:600;">Dec 21 (Winter)</div>
+            <div id="solstice-dec-hrs" style="font-size:1.1rem; font-weight:700; color:var(--text);">--</div>
+            <div id="solstice-dec-energy" style="font-size:0.75rem; color:var(--text-muted);">--</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- What this means / Action Box (Question 2 Answer) -->
+      <div id="action-recommendation" class="action-box">
+        <div class="action-title" id="action-title">Evaluating spot suitability...</div>
+        <div class="action-desc" id="action-desc">Input room dimensions and select a plant to see seasonal relocation recommendations.</div>
+      </div>
+    </div>
+
+    <!-- Solar Calculation Geometry Deck -->
+    <div class="card" data-feature="solar-position-calc">
+      <div class="card-title">
+        <span>Room &amp; Window Parameters</span>
+        <button class="btn btn-sm" id="btn-copy-summary">Copy Summary</button>
+      </div>
+
+      <form id="param-form" onsubmit="return false;">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="inp-lat">Latitude (°N/S)</label>
+            <input type="number" id="inp-lat" class="form-control" step="0.01" min="-90" max="90" value="40.71">
+          </div>
+          <div class="form-group">
+            <label for="inp-orient">Window Orientation (°)</label>
+            <input type="number" id="inp-orient" class="form-control" min="0" max="360" step="1" value="180">
+            <span style="font-size:0.65rem; color:var(--text-muted);">0=N, 90=E, 180=S, 270=W</span>
+          </div>
+          <div class="form-group">
+            <label for="inp-win-w">Window Width (m)</label>
+            <input type="number" id="inp-win-w" class="form-control" min="0.1" max="20" step="0.1" value="1.8">
+          </div>
+          <div class="form-group">
+            <label for="inp-win-h">Window Height (m)</label>
+            <input type="number" id="inp-win-h" class="form-control" min="0.1" max="10" step="0.1" value="1.6">
+          </div>
+          <div class="form-group">
+            <label for="inp-win-sill">Sill Height (m)</label>
+            <input type="number" id="inp-win-sill" class="form-control" min="0" max="5" step="0.1" value="0.8">
+          </div>
+          <div class="form-group">
+            <label for="inp-overhang">Roof Overhang (m)</label>
+            <input type="number" id="inp-overhang" class="form-control" min="0" max="5" step="0.05" value="0.3">
+          </div>
+          <div class="form-group">
+            <label for="inp-trans">Glass Transmittance (%)</label>
+            <input type="number" id="inp-trans" class="form-control" min="10" max="100" step="1" value="85">
+          </div>
+          <div class="form-group">
+            <label for="inp-room-w">Room Width (m)</label>
+            <input type="number" id="inp-room-w" class="form-control" min="1" max="30" step="0.1" value="4.0">
+          </div>
+          <div class="form-group">
+            <label for="inp-room-d">Room Depth (m)</label>
+            <input type="number" id="inp-room-d" class="form-control" min="1" max="30" step="0.1" value="5.0">
+          </div>
+          <div class="form-group">
+            <label for="inp-room-h">Room Height (m)</label>
+            <input type="number" id="inp-room-h" class="form-control" min="1.5" max="10" step="0.1" value="2.8">
+          </div>
+          <div class="form-group">
+            <label for="inp-spot-x">Plant Spot X (m)</label>
+            <input type="number" id="inp-spot-x" class="form-control" step="0.1" value="2.0">
+            <span style="font-size:0.65rem; color:var(--text-muted);">From left wall</span>
+          </div>
+          <div class="form-group">
+            <label for="inp-spot-y">Plant Spot Y (m)</label>
+            <input type="number" id="inp-spot-y" class="form-control" step="0.1" value="1.8">
+            <span style="font-size:0.65rem; color:var(--text-muted);">Depth from window wall</span>
+          </div>
+          <div class="form-group">
+            <label for="inp-spot-z">Plant Spot Z (m)</label>
+            <input type="number" id="inp-spot-z" class="form-control" step="0.1" value="0.9">
+            <span style="font-size:0.65rem; color:var(--text-muted);">Shelf/Pot height</span>
+          </div>
+          <div class="form-group">
+            <label for="inp-plant-req">Target Plant Species</label>
+            <select id="inp-plant-req" class="form-control">
+              <option value="fiddle">Fiddle Leaf Fig (High: >15 kLux-h/day)</option>
+              <option value="monstera">Monstera Deliciosa (Med-High: 8-15 kLux-h/day)</option>
+              <option value="calathea">Calathea / Prayer Plant (Medium: 5-10 kLux-h/day)</option>
+              <option value="snake">Snake Plant / ZZ Plant (Low: 2-5 kLux-h/day)</option>
+            </select>
+          </div>
+        </div>
+        <div id="form-validation-msg" style="display:none; margin-top:0.75rem; padding:0.5rem 0.75rem; background:var(--danger-light); border:1px solid var(--danger); color:var(--text); border-radius:6px; font-size:0.8rem;"></div>
+      </form>
+    </div>
+
+    <!-- Annual 12-Month Profile Chart -->
+    <div class="card" data-feature="annual-light-chart">
+      <div class="card-title">
+        <span>12-Month Light Availability Profile</span>
+        <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">Seasonal Lux-Hour Accumulation</span>
+      </div>
+      <div class="svg-container" style="padding:0.5rem;">
+        <svg id="svg-chart" viewBox="0 0 600 220"></svg>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="toast-message" class="toast-msg"></div>
+
+  <div class="footer-note">
+    Estimate only - verify with a qualified professional before relying on it. Solar ray tracing based on standard solar declination geometry.
+  </div>
+
+  <script>
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/kaoxwr";
+
+    // Scenario Presets
+    const PRESETS = {
+      'south-shelf': {
+        lat: 40.71,
+        orient: 180,
+        winW: 1.8,
+        winH: 1.6,
+        winSill: 0.8,
+        overhang: 0.3,
+        trans: 85,
+        roomW: 4.0,
+        roomD: 5.0,
+        roomH: 2.8,
+        spotX: 2.0,
+        spotY: 1.8,
+        spotZ: 0.9,
+        plant: 'fiddle'
+      },
+      'north-sill': {
+        lat: 51.50,
+        orient: 0,
+        winW: 1.2,
+        winH: 1.4,
+        winSill: 0.9,
+        overhang: 0.1,
+        trans: 80,
+        roomW: 3.5,
+        roomD: 4.0,
+        roomH: 2.5,
+        spotX: 1.75,
+        spotY: 0.2,
+        spotZ: 0.9,
+        plant: 'calathea'
+      },
+      'deep-bay': {
+        lat: 34.05,
+        orient: 165,
+        winW: 2.4,
+        winH: 2.0,
+        winSill: 0.4,
+        overhang: 0.5,
+        trans: 90,
+        roomW: 5.0,
+        roomD: 6.0,
+        roomH: 3.0,
+        spotX: 2.5,
+        spotY: 3.0,
+        spotZ: 0.2,
+        plant: 'monstera'
+      }
+    };
+
+    const PLANT_TARGETS = {
+      fiddle: { name: "Fiddle Leaf Fig", reqMin: 15, reqOptimal: 25 },
+      monstera: { name: "Monstera Deliciosa", reqMin: 8, reqOptimal: 15 },
+      calathea: { name: "Calathea / Prayer Plant", reqMin: 5, reqOptimal: 10 },
+      snake: { name: "Snake Plant / ZZ Plant", reqMin: 2, reqOptimal: 5 }
+    };
+
+    const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const MONTH_DAYS = [17, 46, 75, 105, 135, 172, 198, 228, 258, 288, 318, 355];
+
+    // Helper functions
+    function showToast(msg) {
+      const toast = document.getElementById('toast-message');
+      toast.innerHTML = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    }
+
+    function checkProAction(actionName, callback) {
+      if (PRO) {
+        callback();
+      } else {
+        showToast(`Available in the full version <a href="${PRO_LINK}" style="color:var(--accent);font-weight:bold;">Upgrade</a>`);
+      }
+    }
+
+    // Solar Math Engine
+    function calculateSolarPosition(latDeg, dayOfYear, solarTimeHours) {
+      const latRad = latDeg * Math.PI / 180;
+      // Solar Declination
+      const declinationRad = 23.45 * Math.sin((360 / 365) * (dayOfYear - 81) * Math.PI / 180) * Math.PI / 180;
+      
+      // Hour Angle (15 deg per hour from noon)
+      const hourAngleRad = (solarTimeHours - 12) * 15 * Math.PI / 180;
+
+      // Solar Altitude
+      const sinAlt = Math.sin(latRad) * Math.sin(declinationRad) + Math.cos(latRad) * Math.cos(declinationRad) * Math.cos(hourAngleRad);
+      const altRad = Math.asin(Math.max(-1, Math.min(1, sinAlt)));
+      const altDeg = altRad * 180 / Math.PI;
+
+      // Solar Azimuth (0° North, 90° East, 180° South, 270° West)
+      const denom = Math.cos(altRad) * Math.cos(latRad);
+      let cosAz = Math.abs(denom) < 0.00001 ? 0 : (Math.sin(altRad) * Math.sin(latRad) - Math.sin(declinationRad)) / denom;
+      if (isNaN(cosAz)) cosAz = 0;
+      cosAz = Math.max(-1, Math.min(1, cosAz));
+      let azDeg = Math.acos(cosAz) * 180 / Math.PI;
+      if (Math.sin(hourAngleRad) > 0) {
+        azDeg = 360 - azDeg;
+      }
+
+      return { altDeg, azDeg, altRad, declinationRad };
+    }
+
+    // Check if target plant spot receives direct sun at a given time
+    function evaluateSpotSunlight(inputs, sunPos) {
+      if (sunPos.altDeg <= 0) return { direct: false, lux: 0, reason: "Night/Below Horizon" };
+
+      // Relative azimuth between sun and window orientation
+      // Window orientation: 180 = South (facing into room direction +Y)
+      let relAz = sunPos.azDeg - inputs.orient;
+      while (relAz > 180) relAz -= 360;
+      while (relAz < -180) relAz += 360;
+
+      // If relAz is outside -90° to +90°, sun is behind window wall
+      if (Math.abs(relAz) >= 90) {
+        return { direct: false, lux: calculateDiffuseLux(inputs, sunPos), reason: "Behind Wall" };
+      }
+
+      const relAzRad = relAz * Math.PI / 180;
+
+      // Ray direction into room
+      const dx = -Math.sin(relAzRad) * Math.cos(sunPos.altRad);
+      const dy = Math.cos(relAzRad) * Math.cos(sunPos.altRad);
+      const dz = -Math.sin(sunPos.altRad);
+
+      if (dy <= 0.001) return { direct: false, lux: calculateDiffuseLux(inputs, sunPos), reason: "Glancing Angle" };
+
+      // Trace back from plant spot (spotX, spotY, spotZ) to window plane Y = 0
+      const tWall = inputs.spotY / dy;
+      const xWall = inputs.spotX - tWall * dx;
+      const zWall = inputs.spotZ - tWall * dz;
+
+      // Window bounds at Y = 0
+      const winLeft = (inputs.roomW - inputs.winW) / 2;
+      const winRight = winLeft + inputs.winW;
+      const winBottom = inputs.winSill;
+      const winTop = inputs.winSill + inputs.winH;
+
+      // Overhang Shading Check:
+      // Overhang extends outside by overhang depth D
+      // Ray from (xWall, zWall) towards sun passes Y = -overhang at height zWall + overhang * tan(alt) / cos(relAz)
+      const overhangEffectiveTop = winTop - inputs.overhang * Math.tan(sunPos.altRad) / Math.cos(relAzRad);
+
+      const effectiveWinTop = Math.min(winTop, overhangEffectiveTop);
+
+      const isDirect = (xWall >= winLeft && xWall <= winRight && zWall >= winBottom && zWall <= effectiveWinTop);
+
+      // Illuminance calculations
+      const directOutsideLux = 100000 * Math.sin(sunPos.altRad);
+      const cosIncidence = Math.cos(sunPos.altRad) * Math.cos(relAzRad);
+      const directLux = isDirect ? directOutsideLux * Math.max(0, cosIncidence) * (inputs.trans / 100) : 0;
+      const diffuseLux = calculateDiffuseLux(inputs, sunPos);
+
+      return {
+        direct: isDirect,
+        lux: Math.round(directLux + diffuseLux),
+        directLux: Math.round(directLux),
+        diffuseLux: Math.round(diffuseLux),
+        xWall,
+        zWall
+      };
+    }
+
+    function calculateDiffuseLux(inputs, sunPos) {
+      if (sunPos.altDeg <= 0) return 0;
+      const skyLux = 15000 * Math.sin(sunPos.altRad);
+      const winArea = inputs.winW * inputs.winH;
+      const roomArea = inputs.roomW * inputs.roomD;
+      const distSq = 1 + inputs.spotY * inputs.spotY;
+      return Math.max(100, Math.round((skyLux * winArea / roomArea * (inputs.trans / 100)) / distSq));
+    }
+
+    // Daily Integration (Spot Sun Hours Accumulator)
+    function calculateDailyProfile(inputs, dayOfYear) {
+      let directMinutes = 0;
+      let enterTime = null;
+      let exitTime = null;
+      let peakLux = 0;
+      let totalLuxHours = 0;
+
+      for (let m = 0; m < 24 * 60; m += 10) {
+        const hours = m / 60;
+        const sunPos = calculateSolarPosition(inputs.lat, dayOfYear, hours);
+        const evalSpot = evaluateSpotSunlight(inputs, sunPos);
+
+        if (evalSpot.direct) {
+          directMinutes += 10;
+          if (enterTime === null) enterTime = hours;
+          exitTime = hours;
+        }
+
+        if (evalSpot.lux > peakLux) {
+          peakLux = evalSpot.lux;
+        }
+
+        totalLuxHours += (evalSpot.lux * (10 / 60)) / 1000; // kLux-hours
+      }
+
+      const directHours = directMinutes / 60;
+      return {
+        directHours: Math.round(directHours * 10) / 10,
+        enterTime: enterTime !== null ? formatTime(enterTime) : "--:--",
+        exitTime: exitTime !== null ? formatTime(exitTime) : "--:--",
+        peakLux,
+        dailyKLuxHours: Math.round(totalLuxHours * 10) / 10
+      };
+    }
+
+    function formatTime(decimalHours) {
+      const h = Math.floor(decimalHours);
+      const m = Math.floor((decimalHours - h) * 60);
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+
+    // Read & validate current form inputs safely
+    function getInputs() {
+      const errors = [];
+      function parseVal(id, fallback, label, min, max) {
+        const el = document.getElementById(id);
+        const raw = el ? el.value.trim() : '';
+        const num = parseFloat(raw);
+        if (raw === '' || isNaN(num)) {
+          errors.push(`${label}: Invalid or empty input (using ${fallback}).`);
+          return fallback;
+        }
+        if (min !== undefined && num < min) {
+          errors.push(`${label}: Min value is ${min}.`);
+          return min;
+        }
+        if (max !== undefined && num > max) {
+          errors.push(`${label}: Max value is ${max}.`);
+          return max;
+        }
+        return num;
+      }
+
+      const roomW = parseVal('inp-room-w', 4.0, 'Room Width', 0.5, 30);
+      const roomD = parseVal('inp-room-d', 5.0, 'Room Depth', 0.5, 30);
+      const roomH = parseVal('inp-room-h', 2.8, 'Room Height', 0.5, 10);
+
+      const winW = Math.min(roomW, parseVal('inp-win-w', 1.8, 'Window Width', 0.1, 20));
+      const winH = Math.min(roomH, parseVal('inp-win-h', 1.6, 'Window Height', 0.1, 10));
+      const winSill = Math.min(roomH - winH, parseVal('inp-win-sill', 0.8, 'Sill Height', 0, 5));
+
+      const spotX = parseVal('inp-spot-x', 2.0, 'Plant Spot X', 0, roomW);
+      const spotY = parseVal('inp-spot-y', 1.8, 'Plant Spot Y', 0.01, roomD);
+      const spotZ = parseVal('inp-spot-z', 0.9, 'Plant Spot Z', 0, roomH);
+
+      const msgEl = document.getElementById('form-validation-msg');
+      if (msgEl) {
+        if (errors.length > 0) {
+          msgEl.style.display = 'block';
+          msgEl.innerHTML = '<strong>Input Warning:</strong> ' + errors.join(' ');
+        } else {
+          msgEl.style.display = 'none';
+          msgEl.innerHTML = '';
+        }
+      }
+
+      return {
+        lat: parseVal('inp-lat', 40.71, 'Latitude', -90, 90),
+        orient: (parseVal('inp-orient', 180, 'Orientation', 0, 360) % 360 + 360) % 360,
+        winW,
+        winH,
+        winSill,
+        overhang: parseVal('inp-overhang', 0.3, 'Overhang', 0, 5),
+        trans: parseVal('inp-trans', 85, 'Transmittance', 1, 100),
+        roomW,
+        roomD,
+        roomH,
+        spotX,
+        spotY,
+        spotZ,
+        plantKey: document.getElementById('inp-plant-req')?.value || 'fiddle'
+      };
+    }
+
+    // Render SVG Visualizers
+    function renderVisualizers(inputs, sunPos, evalSpot) {
+      // 1. TOP-DOWN FLOOR PLAN
+      const svgFloor = document.getElementById('svg-floor');
+      const pad = 30;
+      const drawW = 340;
+      const drawH = 340;
+      const scaleX = drawW / inputs.roomW;
+      const scaleY = drawH / inputs.roomD;
+
+      let floorHTML = `
+        <defs>
+          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--card-border)" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="400" height="400" fill="var(--input-bg)"/>
+        <!-- Room Bounds -->
+        <rect x="${pad}" y="${pad}" width="${drawW}" height="${drawH}" fill="url(#grid)" stroke="var(--text-muted)" stroke-width="2"/>
+        <!-- Exterior Wall (Y=0, Top in diagram) -->
+        <line x1="${pad}" y1="${pad}" x2="${pad + drawW}" y2="${pad}" stroke="var(--text)" stroke-width="4"/>
+      `;
+
+      // Window position on top wall
+      const winLeftX = pad + ((inputs.roomW - inputs.winW) / 2) * scaleX;
+      const winRightX = winLeftX + inputs.winW * scaleX;
+      floorHTML += `<line x1="${winLeftX}" y1="${pad}" x2="${winRightX}" y2="${pad}" stroke="var(--info)" stroke-width="6"/>`;
+
+      // Overhang representation outside room (above top wall)
+      if (inputs.overhang > 0) {
+        const overhangH = Math.min(20, inputs.overhang * scaleY);
+        floorHTML += `<rect x="${winLeftX}" y="${pad - overhangH}" width="${inputs.winW * scaleX}" height="${overhangH}" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3,3"/>`;
+      }
+
+      // Calculate Direct Sun Patch Polygon on target Z plane
+      let relAz = sunPos.azDeg - inputs.orient;
+      while (relAz > 180) relAz -= 360;
+      while (relAz < -180) relAz += 360;
+
+      if (sunPos.altDeg > 0 && Math.abs(relAz) < 90) {
+        const relAzRad = relAz * Math.PI / 180;
+        const tanAlt = Math.tan(sunPos.altRad);
+        const tanRelAz = Math.tan(relAzRad);
+
+        const zTop = inputs.winSill + inputs.winH;
+        const zBottom = inputs.winSill;
+        const targetZ = inputs.spotZ;
+
+        // Effective top considering overhang
+        const overhangEffTop = zTop - inputs.overhang * tanAlt / Math.cos(relAzRad);
+        const effZTop = Math.min(zTop, overhangEffTop);
+
+        if (effZTop > targetZ && effZTop > zBottom) {
+          // Ray distances from window to target Z plane
+          const yDistTop = (effZTop - targetZ) / tanAlt * Math.cos(relAzRad);
+          const yDistBottom = Math.max(0, (zBottom - targetZ) / tanAlt * Math.cos(relAzRad));
+
+          const winLeftReal = (inputs.roomW - inputs.winW) / 2;
+          const winRightReal = winLeftReal + inputs.winW;
+
+          // Projected corners on target plane
+          const p1X = pad + (winLeftReal - yDistTop * tanRelAz) * scaleX;
+          const p1Y = pad + yDistTop * scaleY;
+
+          const p2X = pad + (winRightReal - yDistTop * tanRelAz) * scaleX;
+          const p2Y = pad + yDistTop * scaleY;
+
+          const p3X = pad + (winRightReal - yDistBottom * tanRelAz) * scaleX;
+          const p3Y = pad + yDistBottom * scaleY;
+
+          const p4X = pad + (winLeftReal - yDistBottom * tanRelAz) * scaleX;
+          const p4Y = pad + yDistBottom * scaleY;
+
+          floorHTML += `<polygon points="${p1X},${p1Y} ${p2X},${p2Y} ${p3X},${p3Y} ${p4X},${p4Y}" fill="rgba(245, 158, 11, 0.4)" stroke="var(--accent)" stroke-width="1.5"/>`;
+        }
+      }
+
+      // Plant Spot Marker
+      const plantSvgX = pad + inputs.spotX * scaleX;
+      const plantSvgY = pad + inputs.spotY * scaleY;
+      const plantColor = evalSpot.direct ? "var(--accent)" : "var(--text-muted)";
+
+      floorHTML += `
+        <circle cx="${plantSvgX}" cy="${plantSvgY}" r="7" fill="${plantColor}" stroke="#fff" stroke-width="2"/>
+        <text x="${plantSvgX}" y="${plantSvgY - 10}" fill="var(--text)" font-size="10" font-weight="bold" text-anchor="middle">Plant Spot</text>
+      `;
+
+      svgFloor.innerHTML = floorHTML;
+
+      // 2. SIDE-SECTION ELEVATION VIEW
+      const svgElev = document.getElementById('svg-elevation');
+      const scaleElevY = drawH / inputs.roomH;
+
+      let elevHTML = `
+        <rect width="400" height="400" fill="var(--input-bg)"/>
+        <!-- Room Box -->
+        <rect x="${pad}" y="${pad}" width="${drawW}" height="${drawH}" fill="url(#grid)" stroke="var(--text-muted)" stroke-width="2"/>
+        <!-- Floor Line -->
+        <line x1="${pad}" y1="${pad + drawH}" x2="${pad + drawW}" y2="${pad + drawH}" stroke="var(--text)" stroke-width="4"/>
+      `;
+
+      // Window on Left Wall (Y=0)
+      const winTopY = pad + (inputs.roomH - (inputs.winSill + inputs.winH)) * scaleElevY;
+      const winH = inputs.winH * scaleElevY;
+      elevHTML += `<line x1="${pad}" y1="${winTopY}" x2="${pad}" y2="${winTopY + winH}" stroke="var(--info)" stroke-width="6"/>`;
+
+      // Overhang on elevation
+      if (inputs.overhang > 0) {
+        const overhangW = Math.min(20, inputs.overhang * scaleY);
+        elevHTML += `<line x1="${pad - overhangW}" y1="${winTopY}" x2="${pad}" y2="${winTopY}" stroke="var(--accent)" stroke-width="3"/>`;
+      }
+
+      // Sun Rays Projection in Elevation
+      if (sunPos.altDeg > 0 && Math.abs(relAz) < 90) {
+        const tanAlt = Math.tan(sunPos.altRad);
+        const relAzRad = relAz * Math.PI / 180;
+        const effectiveTan = tanAlt / Math.cos(relAzRad);
+
+        const zTop = inputs.winSill + inputs.winH;
+        const zBottom = inputs.winSill;
+
+        const overhangEffTop = zTop - inputs.overhang * effectiveTan;
+        const effZTop = Math.min(zTop, overhangEffTop);
+
+        if (effZTop > 0) {
+          // Ray from effective top window
+          const rayTopFloorY = effZTop / effectiveTan;
+          const rayBottomFloorY = Math.max(0, zBottom / effectiveTan);
+
+          const r1X = pad;
+          const r1Y = pad + (inputs.roomH - effZTop) * scaleElevY;
+          const r2X = pad + Math.min(inputs.roomD, rayTopFloorY) * scaleY;
+          const r2Y = pad + (inputs.roomH - Math.max(0, effZTop - rayTopFloorY * effectiveTan)) * scaleElevY;
+
+          const r3X = pad + Math.min(inputs.roomD, rayBottomFloorY) * scaleY;
+          const r3Y = pad + (inputs.roomH - Math.max(0, zBottom - rayBottomFloorY * effectiveTan)) * scaleElevY;
+          const r4X = pad;
+          const r4Y = pad + (inputs.roomH - zBottom) * scaleElevY;
+
+          elevHTML += `<polygon points="${r1X},${r1Y} ${r2X},${r2Y} ${r3X},${r3Y} ${r4X},${r4Y}" fill="rgba(245, 158, 11, 0.25)" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4,2"/>`;
+        }
+      }
+
+      // Plant Spot in Elevation
+      const plantElevX = pad + inputs.spotY * scaleY;
+      const plantElevY = pad + (inputs.roomH - inputs.spotZ) * scaleElevY;
+
+      // Shelf / Surface Line
+      elevHTML += `<line x1="${plantElevX - 15}" y1="${plantElevY}" x2="${plantElevX + 15}" y2="${plantElevY}" stroke="var(--text-muted)" stroke-width="2"/>`;
+      elevHTML += `<circle cx="${plantElevX}" cy="${plantElevY}" r="7" fill="${plantColor}" stroke="#fff" stroke-width="2"/>`;
+
+      svgElev.innerHTML = elevHTML;
+    }
+
+    // Render Annual Light Bar Chart
+    function renderAnnualChart(inputs) {
+      const svgChart = document.getElementById('svg-chart');
+      const plantReq = PLANT_TARGETS[inputs.plantKey] || PLANT_TARGETS.fiddle;
+      
+      const monthlyData = MONTH_DAYS.map((day, idx) => {
+        const prof = calculateDailyProfile(inputs, day);
+        return { month: MONTH_NAMES[idx], kLux: prof.dailyKLuxHours, directHrs: prof.directHours };
+      });
+
+      const maxKLux = Math.max(30, ...monthlyData.map(d => d.kLux));
+      const chartW = 540;
+      const chartH = 150;
+      const padLeft = 40;
+      const padTop = 20;
+
+      let chartHTML = `<rect width="600" height="220" fill="var(--input-bg)"/>`;
+
+      // Target light threshold line
+      const targetY = padTop + chartH - (plantReq.reqMin / maxKLux) * chartH;
+      chartHTML += `
+        <line x1="${padLeft}" y1="${targetY}" x2="${padLeft + chartW}" y2="${targetY}" stroke="var(--danger)" stroke-width="1.5" stroke-dasharray="4,4"/>
+        <text x="${padLeft + chartW}" y="${targetY - 4}" fill="var(--danger)" font-size="9" text-anchor="end">Min Target (${plantReq.reqMin} kLux-h)</text>
+      `;
+
+      // Render monthly bars
+      const barWidth = chartW / 12 - 8;
+      monthlyData.forEach((d, idx) => {
+        const x = padLeft + idx * (chartW / 12) + 4;
+        const bH = (d.kLux / maxKLux) * chartH;
+        const y = padTop + chartH - bH;
+        const color = d.kLux >= plantReq.reqMin ? "var(--accent)" : "var(--danger)";
+
+        chartHTML += `
+          <rect x="${x}" y="${y}" width="${barWidth}" height="${bH}" fill="${color}" rx="3"/>
+          <text x="${x + barWidth/2}" y="${y - 4}" fill="var(--text)" font-size="9" font-weight="bold" text-anchor="middle">${d.kLux}</text>
+          <text x="${x + barWidth/2}" y="${padTop + chartH + 15}" fill="var(--text-muted)" font-size="10" text-anchor="middle">${d.month}</text>
+        `;
+      });
+
+      svgChart.innerHTML = chartHTML;
+
+      return monthlyData;
+    }
+
+    // Main Update Cycle
+    function updateStudio() {
+      const inputs = getInputs();
+      const selectedDay = parseInt(document.getElementById('slider-day').value);
+      const selectedTime = parseFloat(document.getElementById('slider-time').value);
+
+      // Labels
+      document.getElementById('lbl-time-val').textContent = formatTime(selectedTime);
+      
+      const dateObj = new Date(2024, 0, selectedDay);
+      const monthStr = dateObj.toLocaleString('default', { month: 'short' });
+      const dayStr = dateObj.getDate();
+      document.getElementById('lbl-date-val').textContent = `${monthStr} ${dayStr} (Day ${selectedDay})`;
+
+      // 1. Solar Engine Calc (`solar-position-calc`)
+      const sunPos = calculateSolarPosition(inputs.lat, selectedDay, selectedTime);
+      document.getElementById('lbl-sun-alt-az').textContent = `Alt: ${sunPos.altDeg.toFixed(1)}° | Az: ${sunPos.azDeg.toFixed(1)}°`;
+
+      // 2. Spot Evaluation & Visualizers (`room-light-projector`)
+      const evalSpot = evaluateSpotSunlight(inputs, sunPos);
+      
+      const badge = document.getElementById('live-status-badge');
+      if (evalSpot.direct) {
+        badge.textContent = 'DIRECT SUNLIGHT';
+        badge.className = 'status-badge status-direct';
+      } else {
+        badge.textContent = 'IN SHADE / INDIRECT';
+        badge.className = 'status-badge status-shade';
+      }
+
+      renderVisualizers(inputs, sunPos, evalSpot);
+
+      // 3. Daily Direct Sun & Lux-Hour Accumulator (`spot-sun-hours-calculator`)
+      const dailyProf = calculateDailyProfile(inputs, selectedDay);
+      document.getElementById('met-sun-hours').textContent = `${dailyProf.directHours} hrs`;
+      document.getElementById('met-sun-window').textContent = `${dailyProf.enterTime} - ${dailyProf.exitTime}`;
+      document.getElementById('met-peak-lux').textContent = `${dailyProf.peakLux.toLocaleString()} Lux`;
+      document.getElementById('met-daily-klux').textContent = `${dailyProf.dailyKLuxHours}`;
+
+      // Solstice Comparison
+      const juneProf = calculateDailyProfile(inputs, 172); // June 21
+      const decProf = calculateDailyProfile(inputs, 355);  // Dec 21
+
+      document.getElementById('solstice-june-hrs').textContent = `${juneProf.directHours} hrs/day`;
+      document.getElementById('solstice-june-energy').textContent = `${juneProf.dailyKLuxHours} kLux-h/day`;
+      document.getElementById('solstice-dec-hrs').textContent = `${decProf.directHours} hrs/day`;
+      document.getElementById('solstice-dec-energy').textContent = `${decProf.dailyKLuxHours} kLux-h/day`;
+
+      // 4. Annual Profile Chart & Recommendation Generator (Question 2 Solution)
+      const monthlyData = renderAnnualChart(inputs);
+      const plantReq = PLANT_TARGETS[inputs.plantKey] || PLANT_TARGETS.fiddle;
+
+      const summerPeak = monthlyData[5].kLux; // June
+      const winterTrough = monthlyData[11].kLux; // Dec
+      const actionBox = document.getElementById('action-recommendation');
+      const actionTitle = document.getElementById('action-title');
+      const actionDesc = document.getElementById('action-desc');
+
+      if (winterTrough >= plantReq.reqMin) {
+        actionBox.className = 'action-box good';
+        actionTitle.textContent = `Optimal Spot Year-Round for ${plantReq.name}`;
+        actionDesc.textContent = `This spot receives sufficient light even in winter (${winterTrough} kLux-h/day vs ${plantReq.reqMin} required). No relocation needed!`;
+      } else if (summerPeak >= plantReq.reqMin) {
+        const deficitPct = Math.round((1 - winterTrough / plantReq.reqMin) * 100);
+        actionBox.className = 'action-box bad';
+        actionTitle.textContent = `Seasonal Light Deficit Alert (${deficitPct}% Deficit in Winter)`;
+        
+        // Calculate required move distance closer to window
+        const recommendedY = Math.max(0.3, Math.round((inputs.spotY * 0.5) * 10) / 10);
+        actionDesc.textContent = `Summer peak is good (${summerPeak} kLux-h/day), but winter light drops to ${winterTrough} kLux-h/day for ${plantReq.name}. Action: Relocate plant ~${inputs.spotY - recommendedY}m closer to the window (to Y=${recommendedY}m) between November and February, or add a supplemental grow light.`;
+      } else {
+        actionBox.className = 'action-box bad';
+        actionTitle.textContent = `Insufficient Light Spot for ${plantReq.name}`;
+        actionDesc.textContent = `This spot is too dark year-round (Max ${summerPeak} kLux-h/day vs ${plantReq.reqMin} required). Move closer to window or switch to a shade-tolerant plant like Snake Plant or ZZ Plant.`;
+      }
+
+      renderAnnualHeatmap(inputs);
+      renderSpotComparator(inputs);
+      updatePlantSuitability(inputs);
+      updateScheduleAuditPreview(inputs);
+    }
+
+    // Preset Loader Handler (`preset-scenario-loader`)
+    function loadPreset(presetKey) {
+      const p = PRESETS[presetKey];
+      if (!p) return;
+
+      document.getElementById('inp-lat').value = p.lat;
+      document.getElementById('inp-orient').value = p.orient;
+      document.getElementById('inp-win-w').value = p.winW;
+      document.getElementById('inp-win-h').value = p.winH;
+      document.getElementById('inp-win-sill').value = p.winSill;
+      document.getElementById('inp-overhang').value = p.overhang;
+      document.getElementById('inp-trans').value = p.trans;
+      document.getElementById('inp-room-w').value = p.roomW;
+      document.getElementById('inp-room-d').value = p.roomD;
+      document.getElementById('inp-room-h').value = p.roomH;
+      document.getElementById('inp-spot-x').value = p.spotX;
+      document.getElementById('inp-spot-y').value = p.spotY;
+      document.getElementById('inp-spot-z').value = p.spotZ;
+      document.getElementById('inp-plant-req').value = p.plant;
+
+      // Highlight active preset button
+      document.querySelectorAll('[data-preset]').forEach(btn => {
+        if (btn.getAttribute('data-preset') === presetKey) {
+          btn.className = 'btn btn-primary';
+        } else {
+          btn.className = 'btn';
+        }
+      });
+
+      updateStudio();
+    }
+
+    // Event Listeners Wiring
+    document.addEventListener('DOMContentLoaded', () => {
+      // Sliders & Form input listeners
+      document.getElementById('slider-time').addEventListener('input', updateStudio);
+      document.getElementById('slider-day').addEventListener('input', updateStudio);
+
+      const formInputs = document.querySelectorAll('#param-form input, #param-form select');
+      formInputs.forEach(input => {
+        input.addEventListener('input', updateStudio);
+      });
+
+      // Presets
+      document.querySelectorAll('[data-preset]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          loadPreset(e.target.getAttribute('data-preset'));
+        });
+      });
+
+      // Actions & Export Controls
+      document.getElementById('btn-reset').addEventListener('click', () => {
+        loadPreset('south-shelf');
+        showToast('Studio reset to default parameters.');
+      });
+
+      document.getElementById('btn-export-csv').addEventListener('click', () => {
+        checkProAction('Export CSV', () => {
+          const inputs = getInputs();
+          let csv = "Month,DayOfYear,DirectSunHours,PeakLux,DailyKLuxHours\n";
+          MONTH_DAYS.forEach((day, idx) => {
+            const p = calculateDailyProfile(inputs, day);
+            csv += `${MONTH_NAMES[idx]},${day},${p.directHours},${p.peakLux},${p.dailyKLuxHours}\n`;
+          });
+          const blob = new Blob([csv], { type: 'text/csv' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'sun_path_light_report.csv';
+          a.click();
+        });
+      });
+
+      document.getElementById('btn-export-json').addEventListener('click', () => {
+        checkProAction('Export JSON', () => {
+          const inputs = getInputs();
+          const data = {
+            inputs,
+            juneSolstice: calculateDailyProfile(inputs, 172),
+            decemberSolstice: calculateDailyProfile(inputs, 355)
+          };
+          const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'sun_path_scenario.json';
+          a.click();
+        });
+      });
+
+      document.getElementById('btn-print').addEventListener('click', () => {
+        checkProAction('Print', () => {
+          window.print();
+        });
+      });
+
+      document.getElementById('btn-copy-summary').addEventListener('click', () => {
+        const inputs = getInputs();
+        const juneProf = calculateDailyProfile(inputs, 172);
+        const decProf = calculateDailyProfile(inputs, 355);
+        const summary = `Indoor Sun Path Studio Summary:\n` +
+          `Latitude: ${inputs.lat}°, Window Orientation: ${inputs.orient}°\n` +
+          `Plant Spot: (${inputs.spotX}m, ${inputs.spotY}m, ${inputs.spotZ}m)\n` +
+          `June 21 Direct Sun: ${juneProf.directHours} hrs/day (${juneProf.dailyKLuxHours} kLux-h/day)\n` +
+          `Dec 21 Direct Sun: ${decProf.directHours} hrs/day (${decProf.dailyKLuxHours} kLux-h/day)`;
+
+        navigator.clipboard.writeText(summary).then(() => {
+          showToast('Summary copied to clipboard!');
+        }).catch(() => {
+          showToast('Failed to copy to clipboard.');
+        });
+      });
+
+      // PRO badge update check
+      const badgeEl = document.getElementById('pro-header-badge');
+      if (badgeEl && !PRO) {
+        badgeEl.textContent = 'FREE EDITION';
+      }
+
+      // Try loading saved settings from localStorage safely
+      try {
+        const saved = localStorage.getItem('sunpath_studio_settings');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.lat !== undefined) {
+            Object.keys(parsed).forEach(k => {
+              const inputId = k === 'plantKey' ? 'inp-plant-req' : 'inp-' + k.replace(/([A-Z])/g, '-$1').toLowerCase();
+              const el = document.getElementById(inputId);
+              if (el) el.value = parsed[k];
+            });
+          }
+        }
+      } catch (e) {
+        // Safe fallback if localStorage is blocked
+      }
+
+      // Save to localStorage on input change
+      document.getElementById('param-form').addEventListener('change', () => {
+        try {
+          localStorage.setItem('sunpath_studio_settings', JSON.stringify(getInputs()));
+        } catch (e) {}
+      });
+
+      // Initial Load
+      updateStudio();
+    });
+
+    function renderAnnualHeatmap(inputs) {
+      const container = document.getElementById('heatmap-grid-matrix');
+      if (!container) return;
+
+      let html = `<div class="heatmap-matrix">`;
+      html += `<div class="heatmap-header">Mo</div>`;
+      for (let h = 0; h < 24; h++) {
+        html += `<div class="heatmap-header">${h % 3 === 0 ? h + 'h' : ''}</div>`;
+      }
+      html += `<div class="heatmap-header">kLux-h</div>`;
+
+      for (let m = 0; m < 12; m++) {
+        const day = MONTH_DAYS[m];
+        html += `<div class="heatmap-header">${MONTH_NAMES[m]}</div>`;
+        let monthLuxSum = 0;
+
+        for (let h = 0; h < 24; h++) {
+          const sunPos = calculateSolarPosition(inputs.lat, day, h + 0.5);
+          const evalSpot = evaluateSpotSunlight(inputs, sunPos);
+          monthLuxSum += (evalSpot.lux / 1000);
+
+          let bg = '#0f172a';
+          if (evalSpot.direct) {
+            const ratio = Math.min(1, evalSpot.lux / 40000);
+            if (ratio > 0.6) bg = '#facc15';
+            else if (ratio > 0.25) bg = '#f59e0b';
+            else bg = '#d97706';
+          } else if (evalSpot.lux > 100) {
+            bg = '#1e3a8a';
+          }
+
+          const title = `${MONTH_NAMES[m]} ${h}:00 - ${evalSpot.lux.toLocaleString()} Lux (${evalSpot.direct ? 'Direct Sun' : 'Shade'})`;
+          html += `<div class="heatmap-cell" style="background:${bg};" title="${title}"></div>`;
+        }
+
+        const dailyKLux = Math.round(monthLuxSum * 10) / 10;
+        html += `<div class="heatmap-header" style="color:var(--accent);">${dailyKLux}</div>`;
+      }
+
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    // Multi-Spot Plant Location Comparison Table Script
+    let candidateSpots = [
+      { id: 'spot-a', name: 'Spot A (Deep Table)', x: 2.0, y: 2.0, z: 0.9 },
+      { id: 'spot-b', name: 'Spot B (Window Sill)', x: 2.0, y: 0.5, z: 0.9 }
+    ];
+
+    function renderSpotComparator(currentInputs) {
+      const tbody = document.getElementById('spot-table-body');
+      if (!tbody) return;
+      const inputs = currentInputs || getInputs();
+      tbody.innerHTML = '';
+
+      candidateSpots.forEach(spot => {
+        const spotInputs = { ...inputs, spotX: spot.x, spotY: spot.y, spotZ: spot.z };
+        const sumProf = calculateDailyProfile(spotInputs, 172);
+        const winProf = calculateDailyProfile(spotInputs, 355);
+        const peakLux = Math.max(sumProf.peakLux, winProf.peakLux);
+        const stability = sumProf.dailyKLuxHours > 0
+          ? Math.max(0, Math.min(100, Math.round((winProf.dailyKLuxHours / sumProf.dailyKLuxHours) * 100)))
+          : 0;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-weight:600;">${spot.name}</td>
+          <td>(${spot.x}m, ${spot.y}m, ${spot.z}m)</td>
+          <td>${sumProf.directHours} hrs (${sumProf.dailyKLuxHours} kLux-h)</td>
+          <td style="color:${winProf.directHours > 0 ? 'var(--accent)' : 'var(--text-muted)'};">${winProf.directHours} hrs (${winProf.dailyKLuxHours} kLux-h)</td>
+          <td>${peakLux.toLocaleString()} Lux</td>
+          <td><span style="font-weight:bold; color:${stability >= 50 ? 'var(--success)' : 'var(--accent)'};">${stability}%</span></td>
+          <td><button class="btn btn-sm" style="color:var(--danger);" onclick="removeCandidateSpot('${spot.id}')">Remove</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function removeCandidateSpot(id) {
+      candidateSpots = candidateSpots.filter(s => s.id !== id);
+      renderSpotComparator();
+    }
+
+    document.getElementById('btn-add-spot')?.addEventListener('click', () => {
+      if (candidateSpots.length >= 4) {
+        showToast('Maximum 4 comparison spots allowed.');
+        return;
+      }
+      const name = (document.getElementById('spot-name-inp')?.value || '').trim() || `Spot ${candidateSpots.length + 1}`;
+      const x = parseFloat(document.getElementById('spot-x-inp')?.value) || 2.0;
+      const y = parseFloat(document.getElementById('spot-y-inp')?.value) || 1.0;
+      const z = parseFloat(document.getElementById('spot-z-inp')?.value) || 0.9;
+
+      candidateSpots.push({ id: 'spot-' + Date.now(), name, x, y, z });
+      renderSpotComparator();
+      showToast(`Added '${name}' to comparison table.`);
+    });
+
+    // Plant Species Sun Needs & Seasonal Relocation Advisor Logic
+    const ADVISOR_PROFILES = {
+      succulent: { name: "Succulent / Cactus", minKLux: 25.0, label: ">25 kLux-h/d (Bright Direct)" },
+      fiddle: { name: "Fiddle Leaf / Monstera", minKLux: 15.0, label: "15-25 kLux-h/d (Medium Bright)" },
+      pothos: { name: "Pothos / Fern", minKLux: 5.0, label: "5-15 kLux-h/d (Low Light)" }
+    };
+
+    function updatePlantSuitability(inputs) {
+      const plantSelect = document.getElementById('checker-plant-select');
+      const seasonSelect = document.getElementById('checker-season-select');
+      if (!plantSelect || !seasonSelect) return;
+
+      const pKey = plantSelect.value;
+      const sKey = seasonSelect.value;
+      const profile = ADVISOR_PROFILES[pKey] || ADVISOR_PROFILES.succulent;
+
+      let spotKLux = 0;
+      if (sKey === 'winter') {
+        spotKLux = calculateDailyProfile(inputs, 355).dailyKLuxHours;
+      } else if (sKey === 'summer') {
+        spotKLux = calculateDailyProfile(inputs, 172).dailyKLuxHours;
+      } else {
+        let sum = 0;
+        MONTH_DAYS.forEach(d => { sum += calculateDailyProfile(inputs, d).dailyKLuxHours; });
+        spotKLux = Math.round((sum / 12) * 10) / 10;
+      }
+
+      const score = Math.min(100, Math.round((spotKLux / profile.minKLux) * 100));
+
+      const scoreEl = document.getElementById('checker-score-val');
+      const lightEl = document.getElementById('checker-light-val');
+      const targetEl = document.getElementById('checker-target-val');
+      const badgeEl = document.getElementById('checker-badge');
+      const adviceBox = document.getElementById('checker-advice-box');
+      const adviceTitle = document.getElementById('checker-advice-title');
+      const adviceDesc = document.getElementById('checker-advice-desc');
+
+      if (scoreEl) scoreEl.textContent = `${score}%`;
+      if (lightEl) lightEl.textContent = `${spotKLux.toFixed(1)}`;
+      if (targetEl) targetEl.textContent = `${profile.minKLux.toFixed(1)}`;
+
+      if (score < 100) {
+        if (badgeEl) {
+          badgeEl.textContent = 'LIGHT DEFICIT';
+          badgeEl.className = 'status-badge badge-deficit';
+        }
+        if (adviceBox) adviceBox.className = 'action-box bad';
+        if (adviceTitle) adviceTitle.textContent = `Light Deficit Alert for ${profile.name}`;
+
+        const idealY = Math.max(0.2, Math.round((inputs.spotY * (spotKLux / profile.minKLux)) * 10) / 10);
+        const shiftDist = Math.max(0.3, Math.round((inputs.spotY - idealY) * 10) / 10);
+
+        if (adviceDesc) {
+          adviceDesc.textContent = `Spot receives only ${spotKLux} kLux-h/day (Needs ${profile.minKLux} kLux-h/day). Move plant ${shiftDist}m closer to window (to Y=${idealY}m) from Nov to Feb or provide grow light.`;
+        }
+      } else {
+        if (badgeEl) {
+          badgeEl.textContent = 'OPTIMAL MATCH';
+          badgeEl.className = 'status-badge badge-optimal';
+        }
+        if (adviceBox) adviceBox.className = 'action-box good';
+        if (adviceTitle) adviceTitle.textContent = `Excellent Conditions for ${profile.name}`;
+        if (adviceDesc) {
+          adviceDesc.textContent = `Spot provides ${spotKLux} kLux-h/day, meeting requirement of ${profile.minKLux} kLux-h/day. No seasonal relocation required.`;
+        }
+      }
+    }
+
+    document.getElementById('checker-plant-select')?.addEventListener('change', updateStudio);
+    document.getElementById('checker-season-select')?.addEventListener('change', updateStudio);
+
+    // Sun Schedule Export & Audit Report Generator Script
+    function getAuditSpotCoords(inputs) {
+      const locSel = document.getElementById('exporter-target-loc')?.value || 'current';
+      let x = inputs.spotX, y = inputs.spotY, z = inputs.spotZ;
+      if (locSel === 'sill') {
+        x = inputs.roomW / 2;
+        y = 0.2;
+        z = inputs.winSill + 0.1;
+      } else if (locSel === 'deep') {
+        x = inputs.roomW / 2;
+        y = Math.min(inputs.roomD - 0.2, inputs.roomD * 0.6);
+        z = 0.8;
+      }
+      return { spotX: x, spotY: y, spotZ: z };
+    }
+
+    function generateAuditData(inputs) {
+      const step = parseFloat(document.getElementById('exporter-interval')?.value || '1');
+      const threshold = parseFloat(document.getElementById('exporter-threshold')?.value || '10000');
+      const coords = getAuditSpotCoords(inputs);
+      const spotInputs = { ...inputs, ...coords };
+
+      let totalDirectHrs = 0;
+      let totalKLuxHrs = 0;
+      let daylightHrs = 0;
+      let maxDayEnergy = -1;
+      let peakDayNum = 172;
+
+      const records = [];
+
+      for (let day = 1; day <= 365; day++) {
+        let dayEnergy = 0;
+        const dObj = new Date(2024, 0, day);
+        const dateStr = dObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+        for (let h = 0; h < 24; h += step) {
+          const sunPos = calculateSolarPosition(spotInputs.lat, day, h);
+          const evalSpot = evaluateSpotSunlight(spotInputs, sunPos);
+
+          if (sunPos.altDeg > 0) {
+            daylightHrs += step;
+          }
+
+          const isDirect = evalSpot.direct && evalSpot.lux >= threshold;
+          if (isDirect) {
+            totalDirectHrs += step;
+          }
+
+          const kLuxH = (evalSpot.lux * step) / 1000;
+          totalKLuxHrs += kLuxH;
+          dayEnergy += kLuxH;
+
+          records.push({
+            day,
+            date: dateStr,
+            hour: formatTime(h),
+            solarTime: h.toFixed(1),
+            alt: sunPos.altDeg.toFixed(1),
+            az: sunPos.azDeg.toFixed(1),
+            isDirect: isDirect ? 'Yes' : 'No',
+            lux: evalSpot.lux,
+            x: spotInputs.spotX.toFixed(2),
+            y: spotInputs.spotY.toFixed(2),
+            z: spotInputs.spotZ.toFixed(2)
+          });
+        }
+
+        if (dayEnergy > maxDayEnergy) {
+          maxDayEnergy = dayEnergy;
+          peakDayNum = day;
+        }
+      }
+
+      const peakDateObj = new Date(2024, 0, peakDayNum);
+      const peakDateStr = peakDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+      return {
+        records,
+        summary: {
+          totalDirectHrs: Math.round(totalDirectHrs * 10) / 10,
+          totalKLuxHrs: Math.round(totalKLuxHrs),
+          sunPct: daylightHrs > 0 ? Math.round((totalDirectHrs / daylightHrs) * 1000) / 10 : 0,
+          peakDay: `${peakDateStr} (Day ${peakDayNum})`,
+          coords: spotInputs
+        }
+      };
+    }
+
+    function updateScheduleAuditPreview(inputs) {
+      if (!document.getElementById('exporter-annual-hours')) return;
+      const { summary } = generateAuditData(inputs);
+
+      document.getElementById('exporter-annual-hours').textContent = `${summary.totalDirectHrs.toLocaleString()} hrs`;
+      document.getElementById('exporter-annual-energy').textContent = `${summary.totalKLuxHrs.toLocaleString()} kLux-h`;
+      document.getElementById('exporter-peak-day').textContent = summary.peakDay;
+      document.getElementById('exporter-sun-pct').textContent = `${summary.sunPct}% daylight`;
+    }
+
+    function exportAuditCSV() {
+      const notice = document.getElementById('exporter-pro-notice');
+      if (!PRO) {
+        if (notice) {
+          notice.style.display = 'block';
+          notice.innerHTML = `Available in the full version <a href="${PRO_LINK}">Upgrade to Full Version</a>`;
+        }
+        return;
+      }
+      if (notice) notice.style.display = 'none';
+
+      const inputs = getInputs();
+      const { records, summary } = generateAuditData(inputs);
+
+      let csv = `# Indoor Sun Path & Shadow Mapping Studio - 365-Day Solar Penetration Audit\n`;
+      csv += `# Lat: ${inputs.lat}, Window Orient: ${inputs.orient}deg, Spot: X=${summary.coords.spotX}m Y=${summary.coords.spotY}m Z=${summary.coords.spotZ}m\n`;
+      csv += `DayOfYear,Date,Hour,SolarTime,Altitude_deg,Azimuth_deg,DirectSun,Illuminance_Lux,Target_X_m,Target_Y_m,Target_Z_m\n`;
+
+      records.forEach(r => {
+        csv += `${r.day},"${r.date}",${r.hour},${r.solarTime},${r.alt},${r.az},${r.isDirect},${r.lux},${r.x},${r.y},${r.z}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sun_schedule_audit.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Downloaded sun_schedule_audit.csv successfully.');
+    }
+
+    function exportAuditJSON() {
+      const notice = document.getElementById('exporter-pro-notice');
+      if (!PRO) {
+        if (notice) {
+          notice.style.display = 'block';
+          notice.innerHTML = `Available in the full version <a href="${PRO_LINK}">Upgrade to Full Version</a>`;
+        }
+        return;
+      }
+      if (notice) notice.style.display = 'none';
+
+      const inputs = getInputs();
+      const audit = generateAuditData(inputs);
+      const data = {
+        title: "Indoor Sun Path & Shadow Mapping Studio - 365-Day Hourly Audit",
+        generatedAt: new Date().toISOString(),
+        inputs,
+        summary: audit.summary,
+        records: audit.records
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'sun_schedule_audit.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Downloaded sun_schedule_audit.json successfully.');
+    }
+
+    document.getElementById('btn-exporter-csv')?.addEventListener('click', exportAuditCSV);
+    document.getElementById('btn-exporter-json')?.addEventListener('click', exportAuditJSON);
+    document.getElementById('exporter-interval')?.addEventListener('change', () => updateStudio());
+    document.getElementById('exporter-threshold')?.addEventListener('change', () => updateStudio());
+    document.getElementById('exporter-target-loc')?.addEventListener('change', () => updateStudio());
+
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Indoor Sun Path &amp; Shadow Mapping Studio helps houseplant owners and interior designers simulate solar angles and light intensity inside any room. The interactive web tool is completely free to use in your browser with no account setup required. For users needing local storage and data exports, an offline desktop pack is available for $9.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Enter your room dimensions, ceiling height, latitude, and window orientation.</li><li>Place up to 4 virtual plant shelves or candidate furniture spots inside the grid.</li><li>Scrub through the 365-day timeline to watch real-time shadow movement and sun penetration.</li><li>Review daily direct sun hours to match your plants with their ideal light requirements.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">How many hours of direct sunlight will a plant on a shelf 1.8 meters back from a South-facing window get in June versus December?</h4><p style="margin:0">You enter: Location latitude (e.g. 40.7°N New York) · Window orientation (180° South) · Window dimensions (1.8m wide, 1.6m high, sill height 0.8m) · Plant spot location (X=2.0m centered, Y=1.8m depth into room, Z=0.9m shelf height).<br>You get: Daily direct sunlight duration in hours on June 21 vs. December 21, exact enter/exit times, and peak illumination level at that spot.</p><h4 style="font-size:16px;margin:16px 0 4px">Is my current indoor plant location bright enough for a light-hungry plant like a Fiddle Leaf Fig, or will I need to relocate it during winter?</h4><p style="margin:0">You enter: Room dimensions and window orientation · Plant spot distance from window · Current season/month.<br>You get: Integrated daily Lux-Hours (kLux-hours/day) for each month of the year, target plant light requirement match percentage, and a seasonal relocation recommendation.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">How does the free online web page differ from the $9 paid pack?</h4><p style="margin:0">The interactive web version is completely free for mapping rooms directly in your web browser. The $9 paid pack contains self-contained HTML/JS files that run locally without an internet connection, along with CSV and JSON data export tools for 365-day hourly schedules.</p><h4 style="font-size:16px;margin:16px 0 4px">Do I need to install software or set up an account to use this?</h4><p style="margin:0">No. The core tool runs on standard web technologies inside modern browsers like Chrome, Firefox, Edge, or Safari without any installations or sign-ups.</p><h4 style="font-size:16px;margin:16px 0 4px">How accurate are the calculated sun angles and shadows?</h4><p style="margin:0">The studio uses standard astronomical algorithms for solar position (azimuth and elevation) combined with geometric ray-tracing based on your room dimensions. External obstructions like trees or neighboring buildings are not calculated automatically and should be estimated.</p><h4 style="font-size:16px;margin:16px 0 4px">Can this tool be used for interior design projects other than houseplants?</h4><p style="margin:0">Yes. Interior designers use it to check screen glare on desks, identify areas prone to floor fading, and plan room layouts based on seasonal daylight availability.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/kaoxwr" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../generative-temperature-blanket-gradient-planner/" style="color:inherit;font-weight:600">Generative Temperature Blanket &amp; Gradient Planner</a>: Offline temperature blanket planner with yarn calculator, CSV weather import, and printable stitch guides.</li><li><a href="../beverage-carbonation-henry-law-simulator/" style="color:inherit;font-weight:600">Beverage Carbonation &amp; Dissolved CO2 Simulator</a>: Thermodynamic dissolved CO2 solver, burst risk analyzer, and draft line balancer in a single offline HTML file.</li><li><a href="../lawn-sprinkler-head-coverage-flow-budget-designer/" style="color:inherit;font-weight:600">Lawn Sprinkler Head-to-Head Coverage &amp; Flow Budget Designer</a>: Stop guessing your irrigation. Design head-to-head coverage and calculate flow budgets with a live heatmap engine.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
