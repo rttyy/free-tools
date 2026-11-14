@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-secondary: #f1f5f9;
+      --bg-tertiary: #e2e8f0;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --border-focus: #3b82f6;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --accent-teal: #0d9488;
+      --accent-green: #16a34a;
+      --accent-amber: #d97706;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --danger-border: #fca5a5;
+      --radius-sm: 4px;
+      --radius: 8px;
+      --radius-lg: 12px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #0f172a;
+        --bg-card: #1e293b;
+        --bg-secondary: #334155;
+        --bg-tertiary: #475569;
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --text-muted: #94a3b8;
+        --border-color: #334155;
+        --border-focus: #60a5fa;
+        --primary: #3b82f6;
+        --primary-hover: #60a5fa;
+        --primary-light: #1e3a8a;
+        --accent-teal: #14b8a6;
+        --accent-green: #22c55e;
+        --accent-amber: #f59e0b;
+        --danger: #ef4444;
+        --danger-bg: #450a0a;
+        --danger-border: #991b1b;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      padding: 1rem;
+      min-height: 100vh;
+    }
+
+    header {
+      max-width: 1400px;
+      margin: 0 auto 1.5rem auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand-title h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-title p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    button, input, select {
+      font-family: inherit;
+      font-size: 0.875rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.375rem;
+      padding: 0.5rem 0.875rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background-color: var(--bg-secondary);
+      border-color: var(--text-muted);
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      border-color: var(--primary-hover);
+    }
+
+    .btn-danger {
+      background-color: transparent;
+      color: var(--danger);
+      border-color: transparent;
+    }
+
+    .btn-danger:hover {
+      background-color: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.4rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-pro {
+      background-color: var(--accent-amber);
+      color: #ffffff;
+    }
+
+    .app-layout {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 1024px) {
+      .app-layout {
+        grid-template-columns: 460px 1fr;
+      }
+    }
+
+    .panel-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--bg-secondary);
+    }
+
+    .panel-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* PRESETS STYLING */
+    .preset-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .preset-btn {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.8rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .preset-btn:hover, .preset-btn.active {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* INPUT CONTROLS */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .input-with-unit {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background-color: var(--bg-card);
+    }
+
+    .input-with-unit:focus-within {
+      border-color: var(--border-focus);
+      ring: 2px var(--border-focus);
+    }
+
+    .input-with-unit input {
+      width: 100%;
+      padding: 0.4rem 0.6rem;
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .input-unit-label {
+      padding: 0.4rem 0.5rem;
+      background-color: var(--bg-secondary);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      border-left: 1px solid var(--border-color);
+      user-select: none;
+    }
+
+    .unit-toggle-group {
+      display: flex;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .unit-toggle-btn {
+      flex: 1;
+      padding: 0.35rem 0.5rem;
+      border: none;
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .unit-toggle-btn.active {
+      background-color: var(--primary);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* DYNAMIC TABLE */
+    .table-container {
+      overflow-x: auto;
+      margin-top: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+    }
+
+    .pieces-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+
+    .pieces-table th {
+      background-color: var(--bg-secondary);
+      color: var(--text-secondary);
+      padding: 0.6rem 0.5rem;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    .pieces-table td {
+      padding: 0.4rem 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    .pieces-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .pieces-table tr.highlighted {
+      background-color: var(--primary-light);
+    }
+
+    .table-input {
+      width: 100%;
+      padding: 0.3rem 0.4rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    .table-input:focus {
+      border-color: var(--border-focus);
+      outline: none;
+    }
+
+    .table-input.invalid {
+      border-color: var(--danger);
+      background-color: var(--danger-bg);
+    }
+
+    .checkbox-cell {
+      text-align: center;
+    }
+
+    .checkbox-cell input[type="checkbox"] {
+      cursor: pointer;
+      width: 1rem;
+      height: 1rem;
+    }
+
+    /* METRICS SUMMARY */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .metric-card {
+      background-color: var(--bg-secondary);
+      border-radius: var(--radius);
+      padding: 1rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .metric-sub {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    /* ADVISORY CARD */
+    .advisory-box {
+      background-color: var(--primary-light);
+      border: 1px solid var(--primary);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .advisory-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .advisory-list {
+      list-style-type: disc;
+      padding-left: 1.25rem;
+      color: var(--text-primary);
+    }
+
+    .advisory-list li {
+      margin-bottom: 0.35rem;
+    }
+
+    .alert-banner {
+      background-color: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      color: var(--danger);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    /* SVG VISUALIZER */
+    .visualizer-container {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .visualizer-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    .canvas-scroll-viewport {
+      width: 100%;
+      min-height: 420px;
+      max-height: 680px;
+      overflow: auto;
+      border: 1px dashed var(--border-color);
+      background-color: var(--bg-secondary);
+      border-radius: var(--radius);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 1rem;
+      position: relative;
+    }
+
+    svg.fabric-canvas {
+      background-color: var(--bg-card);
+      box-shadow: var(--shadow);
+      display: block;
+      transition: transform 0.2s ease;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .input-with-unit.invalid {
+      border-color: var(--danger);
+      background-color: var(--danger-bg);
+    }
+
+    .piece-rect {
+      transition: opacity 0.15s, stroke-width 0.15s;
+      cursor: pointer;
+    }
+
+    .piece-rect:hover {
+      stroke: var(--primary) !important;
+      stroke-width: 3px !important;
+      opacity: 0.95;
+    }
+
+    .piece-text {
+      font-family: var(--font-stack);
+      font-size: 11px;
+      font-weight: 600;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .piece-dim {
+      font-family: var(--font-stack);
+      font-size: 9.5px;
+      fill: var(--text-secondary);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* DISCLAIMER & TOAST */
+    .disclaimer-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .toast-message {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--text-primary);
+      color: var(--bg-card);
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-lg);
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateY(10px);
+    }
+
+    .toast-message.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .toast-message a {
+      color: #60a5fa;
+      text-decoration: underline;
+    }
+
+    /* PRINT STYLES */
+    @media print {
+      body {
+        background: #ffffff;
+        color: #000000;
+        padding: 0;
+      }
+      .header-actions, .preset-bar, .btn, .unit-toggle-group {
+        display: none !important;
+      }
+      .app-layout {
+        display: block;
+      }
+      .panel-card, .visualizer-container {
+        border: 1px solid #ccc;
+        box-shadow: none;
+        break-inside: avoid;
+        margin-bottom: 1rem;
+      }
+      .canvas-scroll-viewport {
+        max-height: none;
+        overflow: visible;
+      }
+    }
+
+    .bwc-summary {
+      cursor: pointer;
+      outline: none;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .bwc-summary::-webkit-details-marker {
+      display: none;
+    }
+    .export-actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+    .epl-pro-notice {
+      margin-top: 0.75rem;
+      padding: 0.55rem 0.85rem;
+      background-color: var(--primary-light);
+      border: 1px solid var(--primary);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+    .epl-pro-notice a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+    .grainline-select {
+      padding: 0.25rem 0.4rem;
+      font-size: 0.8rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-card);
+      color: var(--text-primary);
+    }
+    .grainline-status-ok {
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+    .grainline-status-warn {
+      color: var(--accent-amber);
+      font-weight: 600;
+    }
+    /* FEATURE-CSS */
+  </style>
+<title>Zero-Waste Fabric Cutting &amp; Layout Optimizer</title>
+<meta name="description" content="Calculate exact sewing yardage, generate 2D cutting layouts, and prevent scrap waste across standard bolt widths. Free online browser tool.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/zero-waste-fabric-cutting-layout-optimizer/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/zero-waste-fabric-cutting-layout-optimizer/">
+<meta property="og:title" content="Zero-Waste Fabric Cutting &amp; Layout Optimizer"><meta property="og:description" content="Calculate exact sewing yardage, generate 2D cutting layouts, and prevent scrap waste across standard bolt widths. Free online browser tool.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/zero-waste-fabric-cutting-layout-optimizer/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Zero-Waste Fabric Cutting & Layout Optimizer","description":"Calculate exact sewing yardage, generate 2D cutting layouts, and prevent scrap waste across standard bolt widths. Free online browser tool.","url":"https://rttyy.github.io/free-tools/zero-waste-fabric-cutting-layout-optimizer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How does the optimizer handle directional prints and grainline orientation?","acceptedAnswer":{"@type":"Answer","text":"You can lock pieces to a specific grainline axis or flag fabrics with directional nap. The algorithm will only rotate pieces 180 degrees (or keep them fixed in one orientation) instead of rotating 90 degrees across the grain, preventing inverted patterns and mismatched fabric sheen."}},{"@type":"Question","name":"What is the difference between the free web tool and the $9 Gumroad pack?","acceptedAnswer":{"@type":"Answer","text":"The web version is free to use online in any browser. The $9 paid pack is a self-contained, single HTML file you download to run completely offline without an internet connection, plus it enables direct CSV cut list exports, JSON project save/reload files, and print-ready cut layout diagrams."}},{"@type":"Question","name":"Can this tool handle non-rectangular garment pattern pieces?","acceptedAnswer":{"@type":"Answer","text":"The current packing engine calculates layouts based on the bounding box (maximum width and height) of each pattern piece. While irregular curves are treated as rectangles, it provides a safe, realistic yardage estimate that accounts for pattern boundaries without accidental overlap."}},{"@type":"Question","name":"Does the yardage calculator account for fabric pre-wash shrinkage?","acceptedAnswer":{"@type":"Answer","text":"The tool calculates exact raw cutting space based on the dimensions you enter. We recommend adding your fabric's expected shrinkage rate (typically 3-5% for cotton or linen) to your initial bolt width and piece dimensions before generating the final layout."}}]}</script>
+</head>
+<body>
+
+  <header>
+    <div class="brand-title">
+      <h1>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="6" cy="6" r="3"/>
+          <circle cx="6" cy="18" r="3"/>
+          <line x1="20" y1="4" x2="8.12" y2="15.88"/>
+          <line x1="14.47" y1="14.48" x2="20" y2="20"/>
+          <line x1="8.12" y1="8.12" x2="12" y2="12"/>
+        </svg>
+        Zero-Waste Fabric Optimizer
+      </h1>
+      <p>Calculate exact bolt yardage, optimize pattern cutting layout, and reduce fabric scrap waste.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn" id="btn-reset" title="Reset to initial values">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset
+      </button>
+      <button class="btn" id="btn-copy-summary" title="Copy summary metrics to clipboard">Copy Summary</button>
+      <button class="btn" id="btn-export-csv" title="Export pieces table as CSV">Export CSV</button>
+      <button class="btn" id="btn-export-json" title="Export layout data as JSON">Export JSON</button>
+      <button class="btn btn-primary" id="btn-print" title="Print cutting diagram">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print Diagram
+      </button>
+    </div>
+  </header>
+
+  <main class="app-layout">
+
+    <!-- LEFT COLUMN: CONTROLS & INPUTS -->
+    <section class="left-column">
+      
+      <!-- PRESET SCENARIOS -->
+      <div class="panel-card" data-feature="preset-scenarios">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Project Presets
+          </h2>
+          <button class="btn btn-sm" id="btn-save-scenario" title="Save current layout scenario">Save Scenario</button>
+        </div>
+        <div class="preset-bar" id="preset-container">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- INPUT & PIECES MANAGER -->
+      <div class="panel-card" data-feature="pattern-pieces-manager">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            Fabric &amp; Piece Parameters
+          </h2>
+          <div class="unit-toggle-group">
+            <button class="unit-toggle-btn active" id="unit-in-btn">Inches (in)</button>
+            <button class="unit-toggle-btn" id="unit-cm-btn">Metric (cm)</button>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="bolt-width-input">Usable Bolt Width</label>
+            <div class="input-with-unit">
+              <input type="number" id="bolt-width-input" step="0.1" min="1" value="44" aria-label="Usable Bolt Width">
+              <span class="input-unit-label" id="unit-width-label">in</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="margin-input">Cut Margin / Seam Gap</label>
+            <div class="input-with-unit">
+              <input type="number" id="margin-input" step="0.0625" min="0" value="0.5" aria-label="Cutting Margin Gap">
+              <span class="input-unit-label" id="unit-margin-label">in</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <h3 style="font-size: 0.9rem; font-weight: 600;">Pattern Pieces</h3>
+          <button class="btn btn-primary btn-sm" id="add-piece-btn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Piece
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table class="pieces-table" id="pieces-table">
+            <thead>
+              <tr>
+                <th style="width: 30%;">Name</th>
+                <th style="width: 20%;">Width</th>
+                <th style="width: 20%;">Height</th>
+                <th style="width: 12%;">Qty</th>
+                <th style="width: 10%; text-align: center;" title="Allow 90 deg rotation">Rot?</th>
+                <th style="width: 8%;"></th>
+              </tr>
+            </thead>
+            <tbody id="pieces-tbody">
+              <!-- Dynamic Rows Added by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN: RESULTS & VISUALIZER -->
+    <section class="right-column">
+
+      <!-- METRICS & ADVISORY -->
+      <div class="panel-card" data-feature="metrics-summary">
+        <div class="panel-header">
+          <h2 class="panel-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            Yardage &amp; Efficiency Summary
+          </h2>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-label">Required Fabric Length</div>
+            <div class="metric-value" id="metric-length">0.0 in</div>
+            <div class="metric-sub" id="metric-yardage">0.00 yards</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Recommended Purchase</div>
+            <div class="metric-value" style="color: var(--primary);" id="metric-rec-buy">0 Yds</div>
+            <div class="metric-sub" id="metric-rec-sub">Rounded up for cut safety</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Fabric Layout Efficiency</div>
+            <div class="metric-value" id="metric-efficiency">0.0%</div>
+            <div class="metric-sub" id="metric-scrap">Scrap: 0 sq in</div>
+          </div>
+        </div>
+
+        <div id="oversize-alert-container"></div>
+
+        <div class="advisory-box" id="advisory-panel">
+          <div class="advisory-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            What this means / What to do next
+          </div>
+          <ul class="advisory-list" id="advisory-list">
+            <!-- Advisory Items Populated by JS -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- 2D BIN-PACKING VISUALIZER -->
+      <div class="visualizer-container" data-feature="packing-visualizer">
+        <div class="visualizer-toolbar">
+          <div style="font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+            Visual 2D Cutting Layout Blueprint
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <label style="font-size: 0.75rem; color: var(--text-muted);">
+              <input type="checkbox" id="toggle-grid" checked> Show Grid
+            </label>
+            <span style="font-size: 0.75rem; color: var(--text-muted); opacity: 0.5;">|</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted);" id="pieces-placed-count">0/0 placed</span>
+          </div>
+        </div>
+
+        <div class="canvas-scroll-viewport" id="viewport">
+          <svg class="fabric-canvas" id="fabric-svg" width="400" height="600" viewBox="0 0 400 600">
+            <!-- SVG Cutting Diagram rendered here -->
+          </svg>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <section class="panel-card" data-feature="bolt-width-comparator" style="max-width: 1400px; margin: 0 auto 1.5rem auto;">
+    <details id="bwc-drawer" open>
+      <summary class="bwc-summary">
+        <h2 class="panel-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Bolt Width Comparison Scenario Matrix
+        </h2>
+        <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Toggle Matrix &#9660;</span>
+      </summary>
+      <div style="margin-top: 0.75rem;">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.75rem;">
+          <p style="font-size: 0.85rem; color: var(--text-secondary); max-width: 650px;">
+            Evaluate current pattern pieces across standard commercial bolt widths (36", 44", 54", 60") to compare yardage, waste percentage, and total estimated cost.
+          </p>
+          <div class="form-group" style="width: 210px;">
+            <label for="bwc-price-input" id="bwc-price-label">Fabric Price / Yard ($)</label>
+            <div class="input-with-unit">
+              <span class="input-unit-label">$</span>
+              <input type="number" id="bwc-price-input" min="0" step="0.50" value="12.50" aria-label="Fabric Price per yard or meter">
+            </div>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="pieces-table">
+            <thead>
+              <tr>
+                <th>Bolt Width</th>
+                <th>Req. Length</th>
+                <th>Req. Yardage</th>
+                <th>Scrap %</th>
+                <th>Est. Total Cost</th>
+                <th>Recommendation</th>
+              </tr>
+            </thead>
+            <tbody id="bwc-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section class="panel-card" data-feature="export-pattern-layout" style="max-width: 1400px; margin: 0 auto 1.5rem auto;">
+    <div class="panel-header">
+      <h2 class="panel-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Cut List &amp; Layout Export
+      </h2>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+      Export exact cutting coordinates (X, Y, Width, Height, Rotated) as CSV for workshop cut lists or cutting tools, and save full project settings to JSON backup.
+    </p>
+    <div class="export-actions-row">
+      <button class="btn btn-primary" id="epl-export-csv-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Export Cut List (CSV)
+      </button>
+      <button class="btn" id="epl-export-json-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M10 12h4"/><path d="M10 16h4"/></svg>
+        Export Project Settings (JSON)
+      </button>
+    </div>
+    <div id="epl-pro-notice" class="epl-pro-notice" style="display:none;">
+      Available in the full version <a href="https://ferrywave73.gumroad.com/l/mkmrba">Upgrade to PRO</a>
+    </div>
+  </section>
+
+  <section class="panel-card" data-feature="grainline-bias-analyzer" style="max-width: 1400px; margin: 0 auto 1.5rem auto;">
+    <div class="panel-header">
+      <h2 class="panel-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="3" x2="12" y2="21"/><polyline points="8 7 12 3 16 7"/><polyline points="8 17 12 21 16 17"/></svg>
+        Grainline Alignment &amp; Directional Nap Checker
+      </h2>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+      Set pattern grainline &amp; nap alignment constraints per piece (Strict Warp parallel to selvage, Cross-Grain, 45° Bias, or Any).
+    </p>
+    <div class="table-container" style="margin-bottom: 0.75rem;">
+      <table class="pieces-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Piece Name</th>
+            <th style="width: 35%;">Grainline / Nap Constraint</th>
+            <th style="width: 20%;">Placed Angle</th>
+            <th style="width: 20%;">Nap / Stretch Status</th>
+          </tr>
+        </thead>
+        <tbody id="grainline-tbody"></tbody>
+      </table>
+    </div>
+    <div id="grainline-summary-alert" class="advisory-box" style="margin-bottom: 0;"></div>
+  </section>
+
+  <!-- FEATURES -->
+
+  <p class="disclaimer-note">Estimate only - verify with a qualified professional before relying on it.</p>
+
+  <div class="toast-message" id="toast"></div>
+
+  <script>
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/mkmrba";
+
+    // Standard presets dataset
+    const PRESETS = [
+      {
+        id: "tote-bag",
+        name: "Tote Bag with Pockets (Canvas)",
+        unit: "in",
+        boltWidth: 44,
+        margin: 0.5,
+        pieces: [
+          { name: "Main Body", width: 18, height: 16, qty: 2, allowRotation: true },
+          { name: "Straps", width: 4, height: 28, qty: 2, allowRotation: true },
+          { name: "Front Pocket", width: 10, height: 8, qty: 1, allowRotation: true },
+          { name: "Inner Pocket", width: 8, height: 7, qty: 2, allowRotation: true },
+          { name: "Base Gusset", width: 6, height: 16, qty: 1, allowRotation: true }
+        ]
+      },
+      {
+        id: "kimono-robe",
+        name: "Simple Robe / Kimono (Linen)",
+        unit: "in",
+        boltWidth: 54,
+        margin: 0.625,
+        pieces: [
+          { name: "Back Panel", width: 24, height: 36, qty: 1, allowRotation: false },
+          { name: "Front Panels", width: 12, height: 36, qty: 2, allowRotation: false },
+          { name: "Sleeves", width: 18, height: 14, qty: 2, allowRotation: true },
+          { name: "Neckband Collar", width: 5, height: 48, qty: 1, allowRotation: true },
+          { name: "Tie Belt", width: 4, height: 52, qty: 1, allowRotation: true }
+        ]
+      },
+      {
+        id: "quilt-block",
+        name: "Modular Quilt Block Batch (Cotton)",
+        unit: "in",
+        boltWidth: 42,
+        margin: 0.25,
+        pieces: [
+          { name: "Center Blocks", width: 8.5, height: 8.5, qty: 6, allowRotation: true },
+          { name: "Corner Squares", width: 4.5, height: 4.5, qty: 12, allowRotation: true },
+          { name: "Border Strips", width: 3.5, height: 24, qty: 4, allowRotation: true },
+          { name: "Sashing Strips", width: 2.5, height: 18, qty: 8, allowRotation: true }
+        ]
+      }
+    ];
+
+    // Distinct colors for pattern pieces
+    const PIECE_COLORS = [
+      { fill: "#3b82f622", stroke: "#2563eb", text: "#1d4ed8" },
+      { fill: "#0d948822", stroke: "#0d9488", text: "#0f766e" },
+      { fill: "#d9770622", stroke: "#d97706", text: "#b45309" },
+      { fill: "#8b5cf622", stroke: "#8b5cf6", text: "#6d28d9" },
+      { fill: "#ec489922", stroke: "#ec4899", text: "#be185d" },
+      { fill: "#10b98122", stroke: "#10b981", text: "#047857" },
+      { fill: "#6366f122", stroke: "#6366f1", text: "#4338ca" },
+      { fill: "#f43f5e22", stroke: "#f43f5e", text: "#be123c" }
+    ];
+
+    // App State
+    let currentUnit = "in"; // "in" or "cm"
+    let currentPresetId = "tote-bag";
+    let pieces = [];
+    let highlightRowIndex = null;
+
+    // DOM Elements
+    const presetContainer = document.getElementById("preset-container");
+    const boltWidthInput = document.getElementById("bolt-width-input");
+    const marginInput = document.getElementById("margin-input");
+    const unitInBtn = document.getElementById("unit-in-btn");
+    const unitCmBtn = document.getElementById("unit-cm-btn");
+    const unitWidthLabel = document.getElementById("unit-width-label");
+    const unitMarginLabel = document.getElementById("unit-margin-label");
+    const piecesTbody = document.getElementById("pieces-tbody");
+    const addPieceBtn = document.getElementById("add-piece-btn");
+
+    const metricLength = document.getElementById("metric-length");
+    const metricYardage = document.getElementById("metric-yardage");
+    const metricRecBuy = document.getElementById("metric-rec-buy");
+    const metricRecSub = document.getElementById("metric-rec-sub");
+    const metricEfficiency = document.getElementById("metric-efficiency");
+    const metricScrap = document.getElementById("metric-scrap");
+    const oversizeAlertContainer = document.getElementById("oversize-alert-container");
+    const advisoryList = document.getElementById("advisory-list");
+
+    const fabricSvg = document.getElementById("fabric-svg");
+    const toggleGrid = document.getElementById("toggle-grid");
+    const piecesPlacedCount = document.getElementById("pieces-placed-count");
+    const toast = document.getElementById("toast");
+
+    // Initialize Tool
+    function init() {
+      renderPresetButtons();
+      loadPreset("tote-bag");
+      setupEventListeners();
+    }
+
+    function setupEventListeners() {
+      // Preset Buttons
+      presetContainer.addEventListener("click", (e) => {
+        const btn = e.target.closest(".preset-btn");
+        if (btn && btn.dataset.preset) {
+          if (!PRO && btn.dataset.preset !== PRESETS[0].id) {
+            showToast(`Available in the full version <a href="${PRO_LINK}">Upgrade</a>`);
+            return;
+          }
+          loadPreset(btn.dataset.preset);
+        }
+      });
+
+      document.getElementById("btn-save-scenario").addEventListener("click", () => {
+        if (!PRO) {
+          showToast(`Available in the full version <a href="${PRO_LINK}">Upgrade</a>`);
+          return;
+        }
+        try {
+          localStorage.setItem("fabric_saved_scenario", JSON.stringify({
+            unit: currentUnit,
+            boltWidth: parseFloat(boltWidthInput.value) || 0,
+            margin: parseFloat(marginInput.value) || 0,
+            pieces: pieces
+          }));
+          showToast("Scenario saved successfully.");
+        } catch (e) {
+          showToast("Scenario saved for this session.");
+        }
+      });
+
+      // Units Switcher
+      unitInBtn.addEventListener("click", () => switchUnit("in"));
+      unitCmBtn.addEventListener("click", () => switchUnit("cm"));
+
+      // Direct Inputs
+      boltWidthInput.addEventListener("input", recalculate);
+      marginInput.addEventListener("input", recalculate);
+      toggleGrid.addEventListener("change", recalculate);
+
+      // Add Piece
+      addPieceBtn.addEventListener("click", () => {
+        pieces.push({
+          name: `Piece ${pieces.length + 1}`,
+          width: 10,
+          height: 10,
+          qty: 1,
+          allowRotation: true
+        });
+        renderTable();
+        recalculate();
+      });
+
+      // Actions & Exports
+      document.getElementById("btn-reset").addEventListener("click", () => loadPreset(currentPresetId));
+      document.getElementById("btn-copy-summary").addEventListener("click", copySummary);
+      document.getElementById("btn-export-csv").addEventListener("click", exportCSV);
+      document.getElementById("btn-export-json").addEventListener("click", exportJSON);
+      document.getElementById("btn-print").addEventListener("click", printDiagram);
+    }
+
+    function copySummary() {
+      const text = `Zero-Waste Fabric Cutting Summary:
+Bolt Width: ${boltWidthInput.value} ${currentUnit}
+Required Length: ${metricLength.textContent} (${metricYardage.textContent})
+Recommended Purchase: ${metricRecBuy.textContent}
+Efficiency: ${metricEfficiency.textContent}
+${metricScrap.textContent}`;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => showToast("Summary copied to clipboard!")).catch(() => showToast("Unable to copy to clipboard."));
+      } else {
+        showToast("Clipboard not supported in this browser.");
+      }
+    }
+
+    function renderPresetButtons() {
+      presetContainer.innerHTML = PRESETS.map(p => `
+        <button class="preset-btn ${p.id === currentPresetId ? 'active' : ''}" data-preset="${p.id}">
+          ${p.name}
+        </button>
+      `).join("");
+    }
+
+    function loadPreset(presetId) {
+      const p = PRESETS.find(item => item.id === presetId);
+      if (!p) return;
+
+      currentPresetId = presetId;
+      currentUnit = p.unit;
+      
+      // Update unit buttons
+      unitInBtn.classList.toggle("active", currentUnit === "in");
+      unitCmBtn.classList.toggle("active", currentUnit === "cm");
+      unitWidthLabel.textContent = currentUnit;
+      unitMarginLabel.textContent = currentUnit;
+
+      boltWidthInput.value = p.boltWidth;
+      marginInput.value = p.margin;
+
+      // Clone pieces
+      pieces = p.pieces.map(pc => ({ ...pc }));
+
+      renderPresetButtons();
+      renderTable();
+      recalculate();
+    }
+
+    function switchUnit(newUnit) {
+      if (currentUnit === newUnit) return;
+      const factor = newUnit === "cm" ? 2.54 : 1 / 2.54;
+
+      currentUnit = newUnit;
+      unitInBtn.classList.toggle("active", currentUnit === "in");
+      unitCmBtn.classList.toggle("active", currentUnit === "cm");
+      unitWidthLabel.textContent = currentUnit;
+      unitMarginLabel.textContent = currentUnit;
+
+      // Convert Bolt Width & Margin
+      const bw = parseFloat(boltWidthInput.value) || 0;
+      const mg = parseFloat(marginInput.value) || 0;
+      boltWidthInput.value = (bw * factor).toFixed(1);
+      marginInput.value = (mg * factor).toFixed(2);
+
+      // Convert Pieces
+      pieces.forEach(p => {
+        p.width = parseFloat((p.width * factor).toFixed(1));
+        p.height = parseFloat((p.height * factor).toFixed(1));
+      });
+
+      renderTable();
+      recalculate();
+    }
+
+    function renderTable() {
+      piecesTbody.innerHTML = "";
+      if (pieces.length === 0) {
+        piecesTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:1rem; color:var(--text-muted);">No pattern pieces added. Click 'Add Piece' or select a preset.</td></tr>`;
+        return;
+      }
+
+      pieces.forEach((p, idx) => {
+        const tr = document.createElement("tr");
+        if (highlightRowIndex === idx) tr.classList.add("highlighted");
+
+        tr.innerHTML = `
+          <td>
+            <input type="text" class="table-input" value="${escapeHtml(p.name)}" data-idx="${idx}" data-field="name">
+          </td>
+          <td>
+            <input type="number" step="0.1" min="0.1" class="table-input ${p.width <= 0 ? 'invalid' : ''}" value="${p.width}" data-idx="${idx}" data-field="width">
+          </td>
+          <td>
+            <input type="number" step="0.1" min="0.1" class="table-input ${p.height <= 0 ? 'invalid' : ''}" value="${p.height}" data-idx="${idx}" data-field="height">
+          </td>
+          <td>
+            <input type="number" min="1" step="1" class="table-input ${p.qty < 1 ? 'invalid' : ''}" value="${p.qty}" data-idx="${idx}" data-field="qty">
+          </td>
+          <td class="checkbox-cell">
+            <input type="checkbox" ${p.allowRotation ? 'checked' : ''} data-idx="${idx}" data-field="allowRotation">
+          </td>
+          <td>
+            <button class="btn btn-danger btn-sm" data-idx="${idx}" action="delete" title="Delete Piece">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </td>
+        `;
+
+        // Event listeners for inputs inside row
+        tr.querySelectorAll("input").forEach(input => {
+          input.addEventListener("input", (e) => {
+            const index = parseInt(e.target.dataset.idx, 10);
+            const field = e.target.dataset.field;
+            if (field === "name") {
+              pieces[index].name = e.target.value;
+            } else if (field === "allowRotation") {
+              pieces[index].allowRotation = e.target.checked;
+            } else {
+              const val = parseFloat(e.target.value);
+              pieces[index][field] = isNaN(val) ? 0 : val;
+              e.target.classList.toggle("invalid", isNaN(val) || val <= 0);
+            }
+            recalculate();
+          });
+        });
+
+        tr.querySelector('[action="delete"]').addEventListener("click", () => {
+          pieces.splice(idx, 1);
+          renderTable();
+          recalculate();
+        });
+
+        tr.addEventListener("mouseenter", () => highlightPieceInSvg(idx, true));
+        tr.addEventListener("mouseleave", () => highlightPieceInSvg(idx, false));
+
+        piecesTbody.appendChild(tr);
+      });
+    }
+
+    function escapeHtml(str) {
+      return (str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // MaxRects 2D Bin Packing Heuristic Engine
+    function packPatternPieces(boltWidth, margin, pieceList) {
+      // Generate individual piece instances
+      let items = [];
+      pieceList.forEach((p, origIdx) => {
+        if (p.width > 0 && p.height > 0 && p.qty > 0) {
+          for (let q = 0; q < p.qty; q++) {
+            items.push({
+              origIdx: origIdx,
+              name: p.name,
+              width: p.width,
+              height: p.height,
+              allowRotation: p.allowRotation,
+              color: PIECE_COLORS[origIdx % PIECE_COLORS.length],
+              instanceIdx: q + 1,
+              totalQty: p.qty
+            });
+          }
+        }
+      });
+
+      // Check for oversize pieces that can't fit width-wise in any orientation
+      const oversizeItems = items.filter(item => {
+        const fitsNormal = item.width <= boltWidth;
+        const fitsRotated = item.allowRotation && (item.height <= boltWidth);
+        return !fitsNormal && !fitsRotated;
+      });
+
+      const validItems = items.filter(item => !oversizeItems.includes(item));
+
+      // Sort items by Area descending for maximum packing density
+      validItems.sort((a, b) => (b.width * b.height) - (a.width * a.height));
+
+      // Free Rectangles list for MaxRects Bin Packing
+      // Usable width capacity is boltWidth + margin so that piece + right margin fits exactly when x + w <= boltWidth
+      const effectiveBoltWidth = boltWidth + margin;
+      let freeRects = [{ x: 0, y: 0, w: effectiveBoltWidth, h: 1000000 }];
+      let placedItems = [];
+
+      validItems.forEach(item => {
+        let bestRectIndex = -1;
+        let bestRotated = false;
+        let bestShortSideFit = Infinity;
+        let bestLongSideFit = Infinity;
+
+        // Effective dimensions with margin included
+        const wNorm = item.width + margin;
+        const hNorm = item.height + margin;
+
+        const wRot = item.height + margin;
+        const hRot = item.width + margin;
+
+        freeRects.forEach((rect, rIdx) => {
+          // Check normal orientation
+          if (item.width <= boltWidth && rect.w >= wNorm - 0.0001 && rect.h >= hNorm - 0.0001) {
+            const leftoverW = Math.abs(rect.w - wNorm);
+            const leftoverH = Math.abs(rect.h - hNorm);
+            const shortSide = Math.min(leftoverW, leftoverH);
+            const longSide = Math.max(leftoverW, leftoverH);
+
+            if (shortSide < bestShortSideFit || (shortSide === bestShortSideFit && longSide < bestLongSideFit)) {
+              bestShortSideFit = shortSide;
+              bestLongSideFit = longSide;
+              bestRectIndex = rIdx;
+              bestRotated = false;
+            }
+          }
+
+          // Check rotated orientation if allowed
+          if (item.allowRotation && item.height <= boltWidth && rect.w >= wRot - 0.0001 && rect.h >= hRot - 0.0001) {
+            const leftoverW = Math.abs(rect.w - wRot);
+            const leftoverH = Math.abs(rect.h - hRot);
+            const shortSide = Math.min(leftoverW, leftoverH);
+            const longSide = Math.max(leftoverW, leftoverH);
+
+            if (shortSide < bestShortSideFit || (shortSide === bestShortSideFit && longSide < bestLongSideFit)) {
+              bestShortSideFit = shortSide;
+              bestLongSideFit = longSide;
+              bestRectIndex = rIdx;
+              bestRotated = true;
+            }
+          }
+        });
+
+        if (bestRectIndex !== -1) {
+          const targetRect = freeRects[bestRectIndex];
+          const placedW = bestRotated ? item.height : item.width;
+          const placedH = bestRotated ? item.width : item.height;
+          const effW = placedW + margin;
+          const effH = placedH + margin;
+
+          const placement = {
+            ...item,
+            x: targetRect.x,
+            y: targetRect.y,
+            placedW: placedW,
+            placedH: placedH,
+            isRotated: bestRotated
+          };
+          placedItems.push(placement);
+
+          // Split remaining free rects (MaxRects algorithm)
+          const placedBox = { x: targetRect.x, y: targetRect.y, w: effW, h: effH };
+          let newFreeRects = [];
+
+          freeRects.forEach(fr => {
+            if (!rectsOverlap(fr, placedBox)) {
+              newFreeRects.push(fr);
+              return;
+            }
+
+            // Split into up to 4 sub-rectangles
+            if (placedBox.x > fr.x && placedBox.x < fr.x + fr.w) {
+              newFreeRects.push({ x: fr.x, y: fr.y, w: placedBox.x - fr.x, h: fr.h });
+            }
+            if (placedBox.x + placedBox.w < fr.x + fr.w) {
+              newFreeRects.push({ x: placedBox.x + placedBox.w, y: fr.y, w: (fr.x + fr.w) - (placedBox.x + placedBox.w), h: fr.h });
+            }
+            if (placedBox.y > fr.y && placedBox.y < fr.y + fr.h) {
+              newFreeRects.push({ x: fr.x, y: fr.y, w: fr.w, h: placedBox.y - fr.y });
+            }
+            if (placedBox.y + placedBox.h < fr.y + fr.h) {
+              newFreeRects.push({ x: fr.x, y: placedBox.y + placedBox.h, w: fr.w, h: (fr.y + fr.h) - (placedBox.y + placedBox.h) });
+            }
+          });
+
+          // Prune non-maximal free rectangles
+          freeRects = filterMaximalRects(newFreeRects);
+        } else {
+          oversizeItems.push(item);
+        }
+      });
+
+      // Calculate max length consumed
+      let maxLen = 0;
+      placedItems.forEach(pi => {
+        const bottomY = pi.y + pi.placedH;
+        if (bottomY > maxLen) maxLen = bottomY;
+      });
+
+      return {
+        placed: placedItems,
+        oversize: oversizeItems,
+        totalItemsCount: items.length,
+        requiredLength: maxLen
+      };
+    }
+
+    function rectsOverlap(a, b) {
+      return !(a.x >= b.x + b.w || a.x + a.w <= b.x || a.y >= b.y + b.h || a.y + a.h <= b.y);
+    }
+
+    function filterMaximalRects(rects) {
+      let result = [];
+      for (let i = 0; i < rects.length; i++) {
+        let isContained = false;
+        for (let j = 0; j < rects.length; j++) {
+          if (i === j) continue;
+          if (rects[i].x >= rects[j].x &&
+              rects[i].y >= rects[j].y &&
+              rects[i].x + rects[i].w <= rects[j].x + rects[j].w &&
+              rects[i].y + rects[i].h <= rects[j].y + rects[j].h) {
+            isContained = true;
+            break;
+          }
+        }
+        if (!isContained) result.push(rects[i]);
+      }
+      return result;
+    }
+
+    // Main Recalculate & Render Function
+    function recalculate() {
+      const rawWidth = parseFloat(boltWidthInput.value);
+      const boltWidth = isNaN(rawWidth) ? 0 : rawWidth;
+      const rawMargin = parseFloat(marginInput.value);
+      const margin = Math.max(0, isNaN(rawMargin) ? 0 : rawMargin);
+
+      boltWidthInput.parentElement.classList.toggle("invalid", boltWidth <= 0);
+      marginInput.parentElement.classList.toggle("invalid", rawMargin < 0);
+
+      if (boltWidth <= 0) {
+        oversizeAlertContainer.innerHTML = `<div class="alert-banner">Please enter a valid usable bolt width (> 0).</div>`;
+        metricLength.textContent = `0.0 ${currentUnit}`;
+        metricYardage.textContent = `0.00 ${currentUnit === "in" ? "yards" : "meters"}`;
+        metricRecBuy.textContent = currentUnit === "in" ? "0 Yards" : "0.00 m";
+        metricRecSub.textContent = "Awaiting valid bolt width";
+        metricEfficiency.textContent = "0.0%";
+        metricScrap.textContent = `Scrap: 0.0 sq ${currentUnit}`;
+        advisoryList.innerHTML = `<li>Enter a positive fabric bolt width to compute cutting layout.</li>`;
+        renderSvgCanvas(44, 0, margin, []);
+        piecesPlacedCount.textContent = "0/0 placed";
+        return;
+      }
+
+      const packResult = packPatternPieces(boltWidth, margin, pieces);
+      const reqLen = packResult.requiredLength;
+
+      // Calculate Total Pattern Area
+      let patternArea = 0;
+      packResult.placed.forEach(p => {
+        patternArea += (p.width * p.height);
+      });
+
+      const totalFabricArea = boltWidth * reqLen;
+      const scrapArea = Math.max(0, totalFabricArea - patternArea);
+      const efficiency = totalFabricArea > 0 ? (patternArea / totalFabricArea) * 100 : 0;
+
+      // Update Summary Cards
+      updateMetricsUI(reqLen, boltWidth, patternArea, totalFabricArea, scrapArea, efficiency);
+
+      // Render Oversize Warnings & Advisory Panel
+      updateAdvisoryUI(packResult, boltWidth, margin, efficiency, scrapArea, reqLen);
+
+      // Render SVG Canvas
+      renderSvgCanvas(boltWidth, reqLen, margin, packResult.placed);
+
+      piecesPlacedCount.textContent = `${packResult.placed.length}/${packResult.totalItemsCount} pieces placed`;
+    }
+
+    function updateMetricsUI(reqLen, boltWidth, patternArea, totalFabricArea, scrapArea, efficiency) {
+      const unitLabel = currentUnit;
+      
+      metricLength.textContent = `${reqLen.toFixed(1)} ${unitLabel}`;
+
+      if (currentUnit === "in") {
+        const yards = reqLen / 36;
+        metricYardage.textContent = `${yards.toFixed(2)} yards (${(reqLen * 2.54).toFixed(1)} cm)`;
+
+        // Calculate store purchase recommendation rounded up to nearest 1/8 yard (0.125)
+        const roundedYards = Math.ceil(yards * 8) / 8;
+        const formattedFraction = formatYardFraction(roundedYards);
+        metricRecBuy.textContent = formattedFraction;
+        metricRecSub.textContent = `Buy min ${formattedFraction} (${(roundedYards * 36).toFixed(0)} in)`;
+      } else {
+        const meters = reqLen / 100;
+        metricYardage.textContent = `${meters.toFixed(2)} meters (${(reqLen / 2.54).toFixed(1)} in)`;
+
+        // European fabric purchase rounded up to nearest 0.1 meter
+        const roundedMeters = Math.ceil(meters * 10) / 10;
+        metricRecBuy.textContent = `${roundedMeters.toFixed(2)} m`;
+        metricRecSub.textContent = `Buy min ${roundedMeters.toFixed(2)} meters`;
+      }
+
+      metricEfficiency.textContent = `${efficiency.toFixed(1)}%`;
+      metricScrap.textContent = `Scrap: ${scrapArea.toFixed(1)} sq ${unitLabel}`;
+    }
+
+    function formatYardFraction(yards) {
+      const whole = Math.floor(yards);
+      const frac = yards - whole;
+      const eighths = Math.round(frac * 8);
+
+      let fracStr = "";
+      if (eighths === 1) fracStr = "1/8";
+      else if (eighths === 2) fracStr = "1/4";
+      else if (eighths === 3) fracStr = "3/8";
+      else if (eighths === 4) fracStr = "1/2";
+      else if (eighths === 5) fracStr = "5/8";
+      else if (eighths === 6) fracStr = "3/4";
+      else if (eighths === 7) fracStr = "7/8";
+
+      if (whole === 0 && fracStr) return `${fracStr} Yard`;
+      if (whole > 0 && fracStr) return `${whole} ${fracStr} Yards`;
+      return `${whole || yards.toFixed(2)} Yards`;
+    }
+
+    function updateAdvisoryUI(packResult, boltWidth, margin, efficiency, scrapArea, reqLen) {
+      // Oversize warning banner
+      if (packResult.oversize.length > 0) {
+        const names = [...new Set(packResult.oversize.map(o => o.name))].join(", ");
+        oversizeAlertContainer.innerHTML = `
+          <div class="alert-banner">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <div>
+              <strong>Oversized Pieces Alert:</strong> The following pieces exceed the usable bolt width (${boltWidth} ${currentUnit}) and cannot fit: <strong>${escapeHtml(names)}</strong>. Consider choosing a wider bolt width or rotating the pattern.
+            </div>
+          </div>
+        `;
+      } else {
+        oversizeAlertContainer.innerHTML = "";
+      }
+
+      // Generate actionable advisory notes
+      let items = [];
+
+      if (packResult.totalItemsCount === 0) {
+        items.push("No valid pattern pieces to lay out. Add or edit pattern pieces with positive width, height, and quantity.");
+        advisoryList.innerHTML = items.map(it => `<li>${it}</li>`).join("");
+        return;
+      }
+
+      // Purchase note
+      if (currentUnit === "in") {
+        const roundedYards = Math.ceil((reqLen / 36) * 8) / 8;
+        items.push(`Purchase Recommendation: Order at least <strong>${formatYardFraction(roundedYards)} (${roundedYards * 36} inches)</strong> of ${boltWidth}" fabric.`);
+      } else {
+        const roundedMeters = Math.ceil((reqLen / 100) * 10) / 10;
+        items.push(`Purchase Recommendation: Order at least <strong>${roundedMeters.toFixed(2)} meters</strong> of ${boltWidth}cm fabric.`);
+      }
+
+      // Efficiency Rating & Scrap Advice
+      if (efficiency >= 75) {
+        items.push(`Excellent Layout Efficiency (<strong>${efficiency.toFixed(1)}%</strong>). Waste is minimized.`);
+      } else if (efficiency >= 50) {
+        items.push(`Moderate Layout Efficiency (<strong>${efficiency.toFixed(1)}%</strong>). You have ${scrapArea.toFixed(0)} sq ${currentUnit} in offcut scraps.`);
+      } else {
+        items.push(`Low Efficiency (<strong>${efficiency.toFixed(1)}%</strong>). Consider adding smaller pocket/lining pieces into the empty space.`);
+      }
+
+      // Multi-Width Bolt Comparison Test
+      if (currentUnit === "in" && [44, 54, 60].includes(boltWidth)) {
+        const altWidth = boltWidth === 44 ? 54 : 44;
+        const altRes = packPatternPieces(altWidth, margin, pieces);
+        const altYards = Math.ceil((altRes.requiredLength / 36) * 8) / 8;
+        items.push(`Bolt Width Comparison: Switching to a <strong>${altWidth}"</strong> bolt requires <strong>${formatYardFraction(altYards)}</strong> of fabric.`);
+      }
+
+      // Rotated summary
+      const rotatedCount = packResult.placed.filter(p => p.isRotated).length;
+      if (rotatedCount > 0) {
+        items.push(`<strong>${rotatedCount} piece(s)</strong> were automatically rotated 90° to optimize fabric fit.`);
+      }
+
+      advisoryList.innerHTML = items.map(it => `<li>${it}</li>`).join("");
+    }
+
+    // Render SVG Visual Canvas
+    function renderSvgCanvas(boltWidth, totalLength, margin, placedPieces) {
+      const padding = 30; // Ruler margin padding
+      const displayWidth = 460;
+      const scale = (displayWidth - padding * 2) / boltWidth;
+      const canvasHeight = Math.max(300, totalLength * scale + padding * 2 + 20);
+
+      fabricSvg.setAttribute("width", displayWidth);
+      fabricSvg.setAttribute("height", canvasHeight);
+      fabricSvg.setAttribute("viewBox", `0 0 ${displayWidth} ${canvasHeight}`);
+
+      let svgHtml = "";
+
+      // Background Pattern Defs
+      svgHtml += `
+        <defs>
+          <pattern id="gridPattern" width="${1 * scale}" height="${1 * scale}" patternUnits="userSpaceOnUse">
+            <path d="M ${1 * scale} 0 L 0 0 0 ${1 * scale}" fill="none" stroke="var(--border-color)" stroke-width="0.5" opacity="0.4"/>
+          </pattern>
+        </defs>
+      `;
+
+      // Main Usable Fabric Rect
+      const fabricX = padding;
+      const fabricY = padding;
+      const fabricW = boltWidth * scale;
+      const fabricH = totalLength * scale;
+
+      // Background Grid
+      if (toggleGrid.checked) {
+        svgHtml += `<rect x="${fabricX}" y="${fabricY}" width="${fabricW}" height="${fabricH}" fill="url(#gridPattern)" />`;
+      } else {
+        svgHtml += `<rect x="${fabricX}" y="${fabricY}" width="${fabricW}" height="${fabricH}" fill="var(--bg-card)" />`;
+      }
+
+      // Fabric Outer Border Line
+      svgHtml += `<rect x="${fabricX}" y="${fabricY}" width="${fabricW}" height="${fabricH}" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="4,4" />`;
+
+      // Top Width Ruler
+      svgHtml += `<line x1="${fabricX}" y1="${fabricY - 5}" x2="${fabricX + fabricW}" y2="${fabricY - 5}" stroke="var(--text-muted)" stroke-width="1"/>`;
+      svgHtml += `<text x="${fabricX + fabricW / 2}" y="${fabricY - 10}" text-anchor="middle" font-size="10" fill="var(--text-muted)">Bolt Width: ${boltWidth} ${currentUnit}</text>`;
+
+      // Left Length Ruler
+      svgHtml += `<line x1="${fabricX - 5}" y1="${fabricY}" x2="${fabricX - 5}" y2="${fabricY + fabricH}" stroke="var(--text-muted)" stroke-width="1"/>`;
+      svgHtml += `<text x="${fabricX - 10}" y="${fabricY + fabricH / 2}" text-anchor="middle" font-size="10" fill="var(--text-muted)" transform="rotate(-90 ${fabricX - 10} ${fabricY + fabricH / 2})">Required Length: ${totalLength.toFixed(1)} ${currentUnit}</text>`;
+
+      // Render Placed Pieces
+      placedPieces.forEach((p, idx) => {
+        const px = fabricX + (p.x * scale);
+        const py = fabricY + (p.y * scale);
+        const pw = p.placedW * scale;
+        const ph = p.placedH * scale;
+
+        const isHighlighted = highlightRowIndex === p.origIdx;
+        const strokeWidth = isHighlighted ? 3 : 1.5;
+
+        // Bounding Rect
+        svgHtml += `
+          <g class="piece-group" data-orig-idx="${p.origIdx}">
+            <rect class="piece-rect" x="${px}" y="${py}" width="${pw}" height="${ph}" 
+                  fill="${p.color.fill}" stroke="${isHighlighted ? 'var(--primary)' : p.color.stroke}" 
+                  stroke-width="${strokeWidth}" rx="3" ry="3">
+              <title>${escapeHtml(p.name)} (${p.width}x${p.height} ${currentUnit})${p.isRotated ? ' [Rotated 90deg]' : ''}</title>
+            </rect>
+        `;
+
+        // Text Labels if rectangle is large enough to show
+        if (pw > 24 && ph > 16) {
+          const labelText = p.totalQty > 1 ? `${p.name} (#${p.instanceIdx})` : p.name;
+          const dimText = `${p.placedW}×${p.placedH} ${currentUnit}${p.isRotated ? ' (Rot)' : ''}`;
+
+          svgHtml += `
+            <text class="piece-text" x="${px + 5}" y="${py + 14}" fill="${p.color.text}">${escapeHtml(truncateText(labelText, pw - 8))}</text>
+          `;
+          if (ph > 28) {
+            svgHtml += `
+              <text class="piece-dim" x="${px + 5}" y="${py + 26}">${escapeHtml(truncateText(dimText, pw - 8))}</text>
+            `;
+          }
+        }
+
+        // Grainline directional arrow overlay
+        const cx = px + pw / 2;
+        const cy = py + ph / 2;
+        const arrowLen = Math.max(12, Math.min(pw, ph) * 0.4);
+        const gc = p.grainConstraint || (p.allowRotation ? "any" : "warp");
+
+        if (gc === "bias") {
+          const d = arrowLen / 2.8;
+          svgHtml += `<line x1="${cx - d}" y1="${cy - d}" x2="${cx + d}" y2="${cy + d}" stroke="${p.color.text}" stroke-width="1.5" stroke-dasharray="2,1"/>`;
+          svgHtml += `<path d="M ${cx - d + 3} ${cy - d} L ${cx - d} ${cy - d} L ${cx - d} ${cy - d + 3}" fill="none" stroke="${p.color.text}" stroke-width="1.5"/>`;
+          svgHtml += `<path d="M ${cx + d - 3} ${cy + d} L ${cx + d} ${cy + d} L ${cx + d} ${cy + d - 3}" fill="none" stroke="${p.color.text}" stroke-width="1.5"/>`;
+        } else if (p.isRotated) {
+          const half = arrowLen / 2;
+          svgHtml += `<line x1="${cx - half}" y1="${cy}" x2="${cx + half}" y2="${cy}" stroke="${p.color.text}" stroke-width="1.5"/>`;
+          svgHtml += `<path d="M ${cx - half + 3} ${cy - 3} L ${cx - half} ${cy} L ${cx - half + 3} ${cy + 3}" fill="none" stroke="${p.color.text}" stroke-width="1.5"/>`;
+          svgHtml += `<path d="M ${cx + half - 3} ${cy - 3} L ${cx + half} ${cy} L ${cx + half - 3} ${cy + 3}" fill="none" stroke="${p.color.text}" stroke-width="1.5"/>`;
+        } else {
+          const half = arrowLen / 2;
+          svgHtml += `<line x1="${cx}" y1="${cy - half}" x2="${cx}" y2="${cy + half}" stroke="${p.color.text}" stroke-width="1.5"/>`;
+          svgHtml += `<path d="M ${cx - 3} ${cy - half + 3} L ${cx} ${cy - half} L ${cx + 3} ${cy - half + 3}" fill="none" stroke="${p.color.text}" stroke-width="1.5"/>`;
+          svgHtml += `<path d="M ${cx - 3} ${cy + half - 3} L ${cx} ${cy + half} L ${cx + 3} ${cy + half - 3}" fill="none" stroke="${p.color.text}" stroke-width="1.5"/>`;
+        }
+
+        svgHtml += `</g>`;
+      });
+
+      fabricSvg.innerHTML = svgHtml;
+
+      // Add interactivity to SVG elements
+      fabricSvg.querySelectorAll(".piece-group").forEach(el => {
+        const origIdx = parseInt(el.dataset.origIdx, 10);
+        el.addEventListener("mouseenter", () => highlightPieceInTable(origIdx, true));
+        el.addEventListener("mouseleave", () => highlightPieceInTable(origIdx, false));
+      });
+    }
+
+    function truncateText(str, maxPixels) {
+      const approxCharWidth = 6.5;
+      const maxChars = Math.floor(maxPixels / approxCharWidth);
+      if (str.length <= maxChars) return str;
+      return str.substring(0, Math.max(1, maxChars - 2)) + "…";
+    }
+
+    function highlightPieceInSvg(origIdx, highlight) {
+      highlightRowIndex = highlight ? origIdx : null;
+      fabricSvg.querySelectorAll(".piece-group").forEach(el => {
+        const idx = parseInt(el.dataset.origIdx, 10);
+        const rect = el.querySelector("rect");
+        if (rect) {
+          if (highlight && idx === origIdx) {
+            rect.setAttribute("stroke", "var(--primary)");
+            rect.setAttribute("stroke-width", "3");
+          } else {
+            const itemColor = PIECE_COLORS[idx % PIECE_COLORS.length];
+            rect.setAttribute("stroke", itemColor.stroke);
+            rect.setAttribute("stroke-width", "1.5");
+          }
+        }
+      });
+    }
+
+    function highlightPieceInTable(origIdx, highlight) {
+      highlightRowIndex = highlight ? origIdx : null;
+      const rows = piecesTbody.querySelectorAll("tr");
+      rows.forEach((row, i) => {
+        if (i === origIdx && highlight) {
+          row.classList.add("highlighted");
+        } else {
+          row.classList.remove("highlighted");
+        }
+      });
+    }
+
+    // Export & Toast Actions
+    function showToast(msg) {
+      toast.innerHTML = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    function exportCSV() {
+      if (!PRO) {
+        showToast(`Available in the full version <a href="${PRO_LINK}">Upgrade</a>`);
+        return;
+      }
+
+      let csv = "Name,Width,Height,Quantity,AllowRotation\n";
+      pieces.forEach(p => {
+        csv += `"${p.name.replace(/"/g, '""')}",${p.width},${p.height},${p.qty},${p.allowRotation}\n`;
+      });
+
+      downloadFile(csv, "fabric-pieces-layout.csv", "text/csv");
+    }
+
+    function exportJSON() {
+      if (!PRO) {
+        showToast(`Available in the full version <a href="${PRO_LINK}">Upgrade</a>`);
+        return;
+      }
+
+      const data = {
+        unit: currentUnit,
+        boltWidth: parseFloat(boltWidthInput.value) || 0,
+        margin: parseFloat(marginInput.value) || 0,
+        pieces: pieces
+      };
+
+      downloadFile(JSON.stringify(data, null, 2), "fabric-layout-data.json", "application/json");
+    }
+
+    function printDiagram() {
+      if (!PRO) {
+        showToast(`Available in the full version <a href="${PRO_LINK}">Upgrade</a>`);
+        return;
+      }
+      window.print();
+    }
+
+    function downloadFile(content, fileName, mimeType) {
+      try {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        console.error("Export failed:", err);
+      }
+    }
+
+    // Run Initialization on Load
+    document.addEventListener("DOMContentLoaded", init);
+
+    function updateBoltWidthComparator() {
+      const tbody = document.getElementById("bwc-tbody");
+      const priceInput = document.getElementById("bwc-price-input");
+      const priceLabel = document.getElementById("bwc-price-label");
+      if (!tbody || !priceInput) return;
+
+      if (priceLabel) {
+        priceLabel.textContent = `Fabric Price / ${currentUnit === "in" ? "Yard" : "Meter"} ($)`;
+      }
+
+      const pricePerUnit = Math.max(0, parseFloat(priceInput.value) || 0);
+      const margin = Math.max(0, parseFloat(marginInput.value) || 0);
+      const stdWidthsInches = [36, 44, 54, 60];
+
+      let rowsData = [];
+
+      stdWidthsInches.forEach(wInches => {
+        const wVal = currentUnit === "in" ? wInches : parseFloat((wInches * 2.54).toFixed(1));
+        const packRes = packPatternPieces(wVal, margin, pieces);
+
+        let patternArea = 0;
+        packRes.placed.forEach(p => { patternArea += (p.width * p.height); });
+        const reqLen = packRes.requiredLength;
+        const totalArea = wVal * reqLen;
+        const scrapPct = totalArea > 0 ? Math.max(0, ((totalArea - patternArea) / totalArea) * 100) : 0;
+
+        let yds = 0;
+        let cost = 0;
+        if (currentUnit === "in") {
+          yds = Math.ceil((reqLen / 36) * 8) / 8;
+          cost = yds * pricePerUnit;
+        } else {
+          yds = Math.ceil((reqLen / 100) * 10) / 10;
+          cost = yds * pricePerUnit;
+        }
+
+        const hasOversize = packRes.oversize.length > 0;
+
+        rowsData.push({
+          widthInches: wInches,
+          widthVal: wVal,
+          reqLen: reqLen,
+          yardage: yds,
+          scrapPct: scrapPct,
+          cost: cost,
+          hasOversize: hasOversize
+        });
+      });
+
+      const validRows = rowsData.filter(r => !r.hasOversize && r.reqLen > 0);
+      let minCost = Infinity;
+      if (validRows.length > 0) {
+        minCost = Math.min(...validRows.map(r => r.cost));
+      }
+
+      const labelUnit = currentUnit === "in" ? "yd" : "m";
+
+      tbody.innerHTML = rowsData.map(r => {
+        const isBest = !r.hasOversize && r.cost === minCost && r.reqLen > 0;
+        const widthStr = `${r.widthInches}" ${currentUnit === "cm" ? "(" + r.widthVal + " cm)" : ""}`;
+
+        let recBadge = "";
+        if (r.hasOversize) {
+          recBadge = `<span class="badge" style="background-color:var(--danger); color:#fff;">Oversized pieces</span>`;
+        } else if (isBest) {
+          recBadge = `<span class="badge" style="background-color:var(--accent-green); color:#fff;">★ Best Value</span>`;
+        } else {
+          recBadge = `<span style="color:var(--text-muted); font-size:0.75rem;">Standard</span>`;
+        }
+
+        return `
+          <tr class="${isBest ? 'highlighted' : ''}">
+            <td><strong>${widthStr}</strong></td>
+            <td>${r.reqLen.toFixed(1)} ${currentUnit}</td>
+            <td>${r.yardage.toFixed(2)} ${labelUnit}</td>
+            <td>${r.scrapPct.toFixed(1)}%</td>
+            <td><strong>$${r.cost.toFixed(2)}</strong></td>
+            <td>${recBadge}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    document.getElementById("bwc-price-input")?.addEventListener("input", updateBoltWidthComparator);
+
+    const _prevRecalculate = recalculate;
+    recalculate = function() {
+      _prevRecalculate();
+      updateBoltWidthComparator();
+    };
+
+    updateBoltWidthComparator();
+
+    (function initExportPatternLayout() {
+      const csvBtn = document.getElementById("epl-export-csv-btn");
+      const jsonBtn = document.getElementById("epl-export-json-btn");
+      const proNotice = document.getElementById("epl-pro-notice");
+
+      function handleExport(type) {
+        if (!PRO) {
+          if (proNotice) proNotice.style.display = "block";
+          return;
+        }
+        if (proNotice) proNotice.style.display = "none";
+
+        const rawWidth = parseFloat(boltWidthInput.value) || 0;
+        const margin = Math.max(0, parseFloat(marginInput.value) || 0);
+        const packRes = packPatternPieces(rawWidth, margin, pieces);
+
+        if (type === "csv") {
+          let csv = `Piece Name,Instance,X (${currentUnit}),Y (${currentUnit}),Width (${currentUnit}),Height (${currentUnit}),Rotated\n`;
+          packRes.placed.forEach(p => {
+            csv += `"${p.name.replace(/"/g, '""')}",${p.instanceIdx},${p.x},${p.y},${p.placedW},${p.placedH},${p.isRotated ? "Yes" : "No"}\n`;
+          });
+          downloadFile(csv, `fabric-cut-list-${currentUnit}.csv`, "text/csv");
+        } else if (type === "json") {
+          const payload = {
+            version: "1.0",
+            settings: {
+              unit: currentUnit,
+              boltWidth: rawWidth,
+              margin: margin
+            },
+            pieces: pieces,
+            placedPieces: packRes.placed.map(p => ({
+              name: p.name,
+              instance: p.instanceIdx,
+              x: p.x,
+              y: p.y,
+              width: p.placedW,
+              height: p.placedH,
+              rotated: p.isRotated
+            }))
+          };
+          downloadFile(JSON.stringify(payload, null, 2), "fabric-project-settings.json", "application/json");
+        }
+      }
+
+      csvBtn?.addEventListener("click", () => handleExport("csv"));
+      jsonBtn?.addEventListener("click", () => handleExport("json"));
+    })();
+
+    function updateGrainlineChecker(packResult) {
+      const tbody = document.getElementById("grainline-tbody");
+      const summaryDiv = document.getElementById("grainline-summary-alert");
+      if (!tbody || !summaryDiv) return;
+
+      if (pieces.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:1rem; color:var(--text-muted);">No pieces available.</td></tr>`;
+        summaryDiv.innerHTML = `<div class="advisory-title">Grainline Analysis</div><div>No pattern pieces loaded.</div>`;
+        return;
+      }
+
+      let warningsCount = 0;
+      let rowsHtml = "";
+
+      pieces.forEach((p, idx) => {
+        if (!p.grainConstraint) {
+          p.grainConstraint = p.allowRotation ? "any" : "warp";
+        }
+
+        const placedItem = packResult.placed.find(item => item.origIdx === idx);
+        const isRotated = placedItem ? placedItem.isRotated : false;
+        let angleStr = placedItem ? (isRotated ? "90° (Cross)" : "0° (Warp)") : "Unplaced";
+        if (p.grainConstraint === "bias") angleStr += " / 45° Bias";
+
+        let statusHtml = "";
+        if (p.grainConstraint === "warp" && isRotated) {
+          statusHtml = `<span class="grainline-status-warn">⚠️ Grainline Violation</span>`;
+          warningsCount++;
+        } else if (p.grainConstraint === "cross" && !isRotated) {
+          statusHtml = `<span class="grainline-status-ok">✓ Parallel Warp</span>`;
+        } else if (p.grainConstraint === "cross" && isRotated) {
+          statusHtml = `<span class="grainline-status-ok">✓ Cross-grain Allowed</span>`;
+        } else if (p.grainConstraint === "bias") {
+          statusHtml = `<span class="grainline-status-ok">✓ 45° Bias Marked</span>`;
+        } else if (isRotated) {
+          statusHtml = `<span class="grainline-status-warn">ℹ️ Rotated 90° (Cross-Nap)</span>`;
+        } else {
+          statusHtml = `<span class="grainline-status-ok">✓ Parallel Warp</span>`;
+        }
+
+        rowsHtml += `
+          <tr>
+            <td><strong>${escapeHtml(p.name)}</strong></td>
+            <td>
+              <select class="grainline-select" data-idx="${idx}">
+                <option value="warp" ${p.grainConstraint === "warp" ? "selected" : ""}>Strict Warp (No Rotation)</option>
+                <option value="cross" ${p.grainConstraint === "cross" ? "selected" : ""}>Cross-Grain Allowed</option>
+                <option value="bias" ${p.grainConstraint === "bias" ? "selected" : ""}>True 45° Bias Allowed</option>
+                <option value="any" ${p.grainConstraint === "any" ? "selected" : ""}>Any / Free Rotation</option>
+              </select>
+            </td>
+            <td>${angleStr}</td>
+            <td>${statusHtml}</td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = rowsHtml;
+
+      tbody.querySelectorAll(".grainline-select").forEach(sel => {
+        sel.addEventListener("change", (e) => {
+          const index = parseInt(e.target.dataset.idx, 10);
+          const val = e.target.value;
+          pieces[index].grainConstraint = val;
+          if (val === "warp") {
+            pieces[index].allowRotation = false;
+          } else if (val === "cross" || val === "any" || val === "bias") {
+            pieces[index].allowRotation = true;
+          }
+          renderTable();
+          recalculate();
+        });
+      });
+
+      if (warningsCount > 0) {
+        summaryDiv.innerHTML = `
+          <div class="advisory-title" style="color:var(--accent-amber);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Nap &amp; Grainline Advisory (${warningsCount} Attention Required)
+          </div>
+          <div>${warningsCount} piece(s) violate strict warp grainline alignment. Ensure velvet/nap or directional prints match fabric run direction.</div>
+        `;
+      } else {
+        summaryDiv.innerHTML = `
+          <div class="advisory-title" style="color:var(--accent-green);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Grainline &amp; Nap Alignment Validated
+          </div>
+          <div>All pattern pieces satisfy selected grainline constraints. Directional grain arrows rendered on cutting blueprint.</div>
+        `;
+      }
+    }
+
+    const _prevRecalcForGrain = recalculate;
+    recalculate = function() {
+      _prevRecalcForGrain();
+      const rawWidth = parseFloat(boltWidthInput.value) || 0;
+      const margin = Math.max(0, parseFloat(marginInput.value) || 0);
+      const packRes = packPatternPieces(rawWidth, margin, pieces);
+      updateGrainlineChecker(packRes);
+    };
+
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Zero-Waste Fabric Cutting &amp; Layout Optimizer helps sewists, quilters, and garment makers calculate exact yardage and organize cut pieces with minimal waste. It automatically packs pattern measurements across standard bolt widths while respecting fabric grainline and directional nap. Use the free online visualizer to plan your cuts before purchasing expensive fabric.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your target fabric bolt width (36&quot;, 44&quot;, 54&quot;, or 60&quot;) and set your selvedge allowance.</li><li>Enter pattern piece dimensions, quantities, and toggle directional nap or grainline requirements.</li><li>Click optimize to generate an automated 2D cutting map and calculated linear yardage.</li><li>Inspect the layout diagram or export cut lists to guide your work at the cutting table.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">How many yards or meters of fabric do I actually need to buy for all my rectangular pattern pieces, and can they all fit across my specific bolt width?</h4><p style="margin:0">You enter: Fabric bolt usable width (e.g., 44 inches or 110 cm) · Desired seam allowance / cut margin between pieces (e.g., 0.5 inches) · List of rectangular pattern pieces with width, height, quantity, and whether 90-degree rotation is allowed (directional fabric vs plain).<br>You get: The minimum continuous length of fabric bolt required (in inches/yards and cm/meters), whether any piece is too wide to fit the bolt, and a visual 2D layout showing exactly where each piece sits.</p><h4 style="font-size:16px;margin:16px 0 4px">How much fabric am I wasting as unusable scraps with this layout, and is it worth buying a wider bolt (e.g. 54 in or 60 in) instead?</h4><p style="margin:0">You enter: Total pattern area (sum of all piece width * height * quantity) · Bolt usable width under consideration · Required length calculated by the packing visualizer.<br>You get: Efficiency percentage (Pattern Area / Total Consumed Fabric Area * 100), total scrap area in square inches/cm, and actionable advice on whether a different bolt width or piece rotation would significantly cut waste.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">How does the optimizer handle directional prints and grainline orientation?</h4><p style="margin:0">You can lock pieces to a specific grainline axis or flag fabrics with directional nap. The algorithm will only rotate pieces 180 degrees (or keep them fixed in one orientation) instead of rotating 90 degrees across the grain, preventing inverted patterns and mismatched fabric sheen.</p><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free web tool and the $9 Gumroad pack?</h4><p style="margin:0">The web version is free to use online in any browser. The $9 paid pack is a self-contained, single HTML file you download to run completely offline without an internet connection, plus it enables direct CSV cut list exports, JSON project save/reload files, and print-ready cut layout diagrams.</p><h4 style="font-size:16px;margin:16px 0 4px">Can this tool handle non-rectangular garment pattern pieces?</h4><p style="margin:0">The current packing engine calculates layouts based on the bounding box (maximum width and height) of each pattern piece. While irregular curves are treated as rectangles, it provides a safe, realistic yardage estimate that accounts for pattern boundaries without accidental overlap.</p><h4 style="font-size:16px;margin:16px 0 4px">Does the yardage calculator account for fabric pre-wash shrinkage?</h4><p style="margin:0">The tool calculates exact raw cutting space based on the dimensions you enter. We recommend adding your fabric&#39;s expected shrinkage rate (typically 3-5% for cotton or linen) to your initial bolt width and piece dimensions before generating the final layout.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/mkmrba" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../generative-temperature-blanket-gradient-planner/" style="color:inherit;font-weight:600">Generative Temperature Blanket &amp; Gradient Planner</a>: Offline temperature blanket planner with yarn calculator, CSV weather import, and printable stitch guides.</li><li><a href="../indoor-sun-path-shadow-mapping-studio/" style="color:inherit;font-weight:600">Indoor Sun Path &amp; Shadow Mapping Studio</a>: Simulate real-world interior solar angles, shadow paths, and seasonal plant light levels in your browser.</li><li><a href="../beverage-carbonation-henry-law-simulator/" style="color:inherit;font-weight:600">Beverage Carbonation &amp; Dissolved CO2 Simulator</a>: Thermodynamic dissolved CO2 solver, burst risk analyzer, and draft line balancer in a single offline HTML file.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
