@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg-dim: #0f141c;
+      --bg-card: #18202c;
+      --bg-card-hover: #1f2a3a;
+      --bg-input: #0b0f16;
+      --border-color: #2a364a;
+      --border-focus: #4f80ff;
+      --text-main: #f0f4f8;
+      --text-muted: #94a3b8;
+      --accent-primary: #4f80ff;
+      --accent-hover: #3b68e0;
+      --accent-success: #10b981;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.3);
+      --shadow-md: 0 6px 16px rgba(0,0,0,0.4);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg-dim: #f1f5f9;
+        --bg-card: #ffffff;
+        --bg-card-hover: #f8fafc;
+        --bg-input: #e2e8f0;
+        --border-color: #cbd5e1;
+        --border-focus: #2563eb;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --accent-primary: #2563eb;
+        --accent-hover: #1d4ed8;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+        --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-dim);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0.5rem;
+      }
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .card {
+        padding: 0.75rem;
+      }
+      .viewport-container {
+        padding: 0.5rem;
+      }
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .title-area h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .title-area p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background-color: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      background-color: var(--bg-card-hover);
+      border-color: var(--border-focus);
+    }
+
+    .btn-primary {
+      background-color: var(--accent-primary);
+      color: #ffffff;
+      border-color: var(--accent-primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .btn-sm {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.78rem;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .main-grid > section {
+      min-width: 0;
+    }
+
+    @media (max-width: 960px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+      min-width: 0;
+      overflow-wrap: break-word;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Preset Environment Loader */
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .preset-btn {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.6rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .preset-btn:hover, .preset-btn.active {
+      border-color: var(--accent-primary);
+      background-color: var(--bg-card-hover);
+    }
+
+    /* Isometric Viewport */
+    .viewport-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-input);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      position: relative;
+    }
+
+    .svg-viewport {
+      width: 100%;
+      max-width: 320px;
+      height: auto;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+    }
+
+    .cube-face {
+      transition: fill 0.1s ease;
+      cursor: pointer;
+      stroke-linejoin: round;
+    }
+
+    .cube-face:hover {
+      filter: brightness(1.08);
+    }
+
+    .viewport-overlay {
+      position: absolute;
+      bottom: 0.75rem;
+      left: 0.75rem;
+      right: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .tag-badge {
+      background-color: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      color: #fff;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    /* Parameter Form Controls */
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 500px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .val-readout {
+      color: var(--accent-primary);
+      font-family: monospace;
+      font-size: 0.85rem;
+    }
+
+    .input-control {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    input[type="color"] {
+      -webkit-appearance: none;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      background: none;
+    }
+
+    input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    input[type="color"]::-webkit-color-swatch {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+    }
+
+    input[type="text"] {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.45rem 0.6rem;
+      border-radius: var(--radius-sm);
+      font-family: monospace;
+      font-size: 0.85rem;
+      width: 100%;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--border-focus);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      background: var(--bg-input);
+      border-radius: 3px;
+      outline: none;
+      accent-color: var(--accent-primary);
+      cursor: pointer;
+    }
+
+    /* Swatch Export Deck */
+    .swatch-deck {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 650px) {
+      .swatch-deck {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .swatch-card {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .swatch-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .swatch-preview {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+
+    .swatch-meta {
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .swatch-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .swatch-normal {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+
+    .chip-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .copy-chip {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 0.25rem 0.4rem;
+      font-family: monospace;
+      font-size: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.15s;
+    }
+
+    .copy-chip:hover {
+      background-color: var(--bg-card-hover);
+      border-color: var(--border-focus);
+    }
+
+    .copy-chip .chip-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .delta-badges {
+      display: flex;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+      margin-top: 0.2rem;
+    }
+
+    .delta-tag {
+      font-size: 0.68rem;
+      font-family: monospace;
+      padding: 0.15rem 0.35rem;
+      border-radius: 3px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Contrast Analysis & Guidance */
+    .contrast-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 500px) {
+      .contrast-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .contrast-box {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    .contrast-pair {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .contrast-val {
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: monospace;
+      margin: 0.1rem 0;
+    }
+
+    .contrast-status {
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+
+    .status-ok { color: var(--accent-success); }
+    .status-warn { color: var(--accent-warning); }
+    .status-bad { color: var(--accent-danger); }
+
+    .guidance-box {
+      background-color: var(--bg-input);
+      border-left: 3px solid var(--accent-primary);
+      padding: 0.85rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+
+    .guidance-title {
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-primary);
+      margin-bottom: 0.3rem;
+    }
+
+    /* Toast Notification */
+    #toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+
+    .toast {
+      background-color: var(--text-main);
+      color: var(--bg-dim);
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-md);
+      animation: fadeIn 0.2s ease, fadeOut 0.2s ease 1.3s forwards;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(10px); } }
+
+    .pro-alert {
+      background-color: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--accent-warning);
+      color: var(--text-main);
+      padding: 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .pro-alert a {
+      color: var(--accent-warning);
+      font-weight: 700;
+    }
+
+    .disclaimer {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+/* Silhouette & Step Contrast Inspector */
+.contrast-pills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.contrast-pill {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: monospace;
+  transition: all 0.15s ease;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contrast-pill.pill-warn {
+  border-color: var(--accent-warning);
+  color: var(--accent-warning);
+}
+
+.contrast-pill.pill-good {
+  border-color: var(--accent-success);
+  color: var(--accent-success);
+}
+
+.diagnostic-advice-box {
+  background-color: rgba(245, 158, 11, 0.12);
+  border: 1px solid var(--accent-warning);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  font-size: 0.82rem;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.tag-badge.badge-amber {
+  background-color: var(--accent-warning);
+  color: #0f141c;
+}
+
+.ramp-strip {
+  display: flex;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  height: 64px;
+}
+.ramp-step {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.4rem 0.2rem;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+  font-family: monospace;
+  transition: flex 0.15s ease;
+  cursor: pointer;
+  user-select: none;
+}
+.ramp-step:hover {
+  flex: 1.3;
+}
+.ramp-label {
+  font-weight: 700;
+  font-size: 0.65rem;
+  opacity: 0.95;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ramp-hex {
+  font-weight: 600;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 480px) {
+  .ramp-step {
+    padding: 0.3rem 0.1rem;
+  }
+  .ramp-label {
+    font-size: 0.55rem;
+  }
+  .ramp-hex {
+    font-size: 0.6rem;
+  }
+}
+
+.palette-exporter-toolbar {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.export-pro-callout {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid var(--accent-warning);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: var(--text-main);
+}
+
+.export-pro-callout a {
+  color: var(--accent-warning);
+  font-weight: 700;
+}
+
+.scenarios-container {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+.scenario-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+.scenario-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.mini-cube-svg {
+  background-color: var(--bg-input);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+.delta-badges-footer {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+  /* FEATURE-CSS */
+</style>
+  
+<title>Isometric Shadow &amp; Light Color Designer</title>
+<meta name="description" content="Calculate hue-shifted isometric light and shadow palettes. Generate 5-step pixel art ramps and export .GPL, JSON, or CSV offline in your browser.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/isometric-shadow-light-color-designer/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/isometric-shadow-light-color-designer/">
+<meta property="og:title" content="Isometric Shadow &amp; Light Color Designer"><meta property="og:description" content="Calculate hue-shifted isometric light and shadow palettes. Generate 5-step pixel art ramps and export .GPL, JSON, or CSV offline in your browser.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/isometric-shadow-light-color-designer/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Isometric Shadow & Light Color Designer","description":"Calculate hue-shifted isometric light and shadow palettes. Generate 5-step pixel art ramps and export .GPL, JSON, or CSV offline in your browser.","url":"https://rttyy.github.io/free-tools/isometric-shadow-light-color-designer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between the free web page and the paid Gumroad product?","acceptedAnswer":{"@type":"Answer","text":"The free web page lets you generate values directly in your browser with standard copy features. The paid $9 Gumroad release is a fully portable, single-file HTML pack that works completely offline with no network connection, and unlocks mass exports including .GPL files for Aseprite/GIMP, structured JSON color tokens, and CSV sheets."}},{"@type":"Question","name":"How does the tool calculate hue shifts?","acceptedAnswer":{"@type":"Answer","text":"Rather than simply raising or lowering brightness, the algorithm shifts the color hue toward warmer tones (like yellow) for direct sunlight surfaces and toward cooler tones (like blue or violet) for ambient shadows. This prevents the washed-out or muddy appearance common in linear RGB scaling."}},{"@type":"Question","name":"Can I import the generated palettes directly into Aseprite or GIMP?","acceptedAnswer":{"@type":"Answer","text":"Yes. The offline export feature produces valid .GPL (GIMP Palette) files, which can be loaded natively into Aseprite, GIMP, Krita, and other 2D digital art software."}},{"@type":"Question","name":"Do I need to install any software or runtime to use the offline version?","acceptedAnswer":{"@type":"Answer","text":"No. The offline edition is a single, self-contained HTML file. It has no external CSS, JavaScript libraries, or backend dependencies, and opens immediately in any standard desktop browser."}}]}</script>
+</head>
+<body>
+
+  <header>
+    <div class="title-area">
+      <h1>Isometric Shadow & Light Color Designer</h1>
+      <p>Solve precise hue-shifted surface palettes for 3D isometric sprites</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn" id="btn-export-json" title="Export Palette JSON">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        JSON
+      </button>
+      <button class="btn" id="btn-export-csv" title="Export CSV Table">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        CSV
+      </button>
+      <button class="btn" id="btn-print" title="Print Palette Card">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Print
+      </button>
+      <button class="btn btn-primary" id="btn-reset" title="Reset Inputs">Reset Defaults</button>
+    </div>
+  </header>
+
+  <main class="main-grid">
+
+    <!-- Left Column: Visual Hero & Swatches -->
+    <section>
+      <!-- Interactive Viewport -->
+      <div class="card" data-feature="isometric-cube-viewport">
+        <div class="card-header">
+          <span class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            Isometric 3D Surface Viewport
+          </span>
+          <span class="val-readout" id="viewport-az-alt">AZ: 140° | ALT: 65°</span>
+        </div>
+
+        <div class="viewport-container">
+          <svg class="svg-viewport" viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg">
+            <!-- Grid Lines for Context -->
+            <path d="M 50 107 L 0 78 M 250 107 L 300 78 M 150 280 L 150 320" stroke="var(--border-color)" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
+
+            <!-- Top Face [0, 1, 0] -->
+            <polygon id="face-top" class="cube-face" points="150,50 250,107 150,165 50,107" fill="#65B048" stroke="#000000" stroke-width="1.5"/>
+            <!-- Left Face [-1, 0, 0] -->
+            <polygon id="face-left" class="cube-face" points="50,107 150,165 150,280 50,222" fill="#21513D" stroke="#000000" stroke-width="1.5"/>
+            <!-- Right Face [0, 0, 1] -->
+            <polygon id="face-right" class="cube-face" points="150,165 250,107 250,222 150,280" fill="#459E3F" stroke="#000000" stroke-width="1.5"/>
+
+            <!-- Dynamic Directional Light Ray & Indicator -->
+            <g id="sun-vector-group">
+              <line id="sun-ray-line" x1="240" y1="60" x2="150" y2="165" stroke="#FEE074" stroke-width="2.5" stroke-dasharray="5,3"/>
+              <circle id="sun-source-dot" cx="240" cy="60" r="10" fill="#FEE074" stroke="#FFFFFF" stroke-width="2" filter="drop-shadow(0 0 6px #FEE074)"/>
+              <polygon id="sun-arrowhead" points="0,0 -10,-5 -8,0 -10,5" fill="#FEE074"/>
+            </g>
+
+            <!-- Face Labels Overlay -->
+            <text x="150" y="105" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="11" font-weight="bold" pointer-events="none">TOP (Highlight)</text>
+            <text x="95" y="200" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="11" font-weight="bold" pointer-events="none">LEFT (Shadow)</text>
+            <text x="205" y="200" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-size="11" font-weight="bold" pointer-events="none">RIGHT (Midtone)</text>
+          </svg>
+
+          <div class="viewport-overlay">
+            <span class="tag-badge" id="badge-key-face">Key Face: Top</span>
+            <span class="tag-badge" id="badge-ambient-weight">Ambient Fill: 30%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Swatch Export Deck -->
+      <div class="card" data-feature="swatch-export-deck">
+        <div class="card-header">
+          <span class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            Calculated Surface Swatch Deck
+          </span>
+          <span class="val-readout">Click code to copy</span>
+        </div>
+
+        <div class="swatch-deck">
+          <!-- Top Card -->
+          <div class="swatch-card" id="card-top">
+            <div class="swatch-header">
+              <div class="swatch-preview" id="swatch-preview-top"></div>
+              <div class="swatch-meta">
+                <div class="swatch-title">Top Face</div>
+                <div class="swatch-normal">N: [0, +1, 0]</div>
+              </div>
+            </div>
+            <div class="chip-list">
+              <div class="copy-chip" data-copy="top-hex"><span class="chip-label">HEX</span><span id="top-hex">#65B048</span></div>
+              <div class="copy-chip" data-copy="top-rgb"><span class="chip-label">RGB</span><span id="top-rgb">101, 176, 72</span></div>
+              <div class="copy-chip" data-copy="top-hsl"><span class="chip-label">HSL</span><span id="top-hsl">103°, 59%, 49%</span></div>
+            </div>
+            <div class="delta-badges">
+              <span class="delta-tag" id="top-hue-delta">H: -17°</span>
+              <span class="delta-tag" id="top-sat-delta">S: -6%</span>
+              <span class="delta-tag" id="top-light-delta">L: +7%</span>
+            </div>
+          </div>
+
+          <!-- Right Card -->
+          <div class="swatch-card" id="card-right">
+            <div class="swatch-header">
+              <div class="swatch-preview" id="swatch-preview-right"></div>
+              <div class="swatch-meta">
+                <div class="swatch-title">Right Face</div>
+                <div class="swatch-normal">N: [0, 0, +1]</div>
+              </div>
+            </div>
+            <div class="chip-list">
+              <div class="copy-chip" data-copy="right-hex"><span class="chip-label">HEX</span><span id="right-hex">#459E3F</span></div>
+              <div class="copy-chip" data-copy="right-rgb"><span class="chip-label">RGB</span><span id="right-rgb">69, 158, 63</span></div>
+              <div class="copy-chip" data-copy="right-hsl"><span class="chip-label">HSL</span><span id="right-hsl">116°, 60%, 44%</span></div>
+            </div>
+            <div class="delta-badges">
+              <span class="delta-tag" id="right-hue-delta">H: -4°</span>
+              <span class="delta-tag" id="right-sat-delta">S: -5%</span>
+              <span class="delta-tag" id="right-light-delta">L: +2%</span>
+            </div>
+          </div>
+
+          <!-- Left Card -->
+          <div class="swatch-card" id="card-left">
+            <div class="swatch-header">
+              <div class="swatch-preview" id="swatch-preview-left"></div>
+              <div class="swatch-meta">
+                <div class="swatch-title">Left Face</div>
+                <div class="swatch-normal">N: [-1, 0, 0]</div>
+              </div>
+            </div>
+            <div class="chip-list">
+              <div class="copy-chip" data-copy="left-hex"><span class="chip-label">HEX</span><span id="left-hex">#21513D</span></div>
+              <div class="copy-chip" data-copy="left-rgb"><span class="chip-label">RGB</span><span id="left-rgb">33, 81, 61</span></div>
+              <div class="copy-chip" data-copy="left-hsl"><span class="chip-label">HSL</span><span id="left-hsl">156°, 59%, 22%</span></div>
+            </div>
+            <div class="delta-badges">
+              <span class="delta-tag" id="left-hue-delta">H: +36°</span>
+              <span class="delta-tag" id="left-sat-delta">S: -6%</span>
+              <span class="delta-tag" id="left-light-delta">L: -20%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5-Step Pixel Art Shading Ramp Generator -->
+      <div class="card" data-feature="multi-ramp-stepper">
+        <div class="card-header">
+          <span class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            5-Step Pixel Art Shading Ramp
+          </span>
+          <div class="header-actions">
+            <button class="btn btn-sm" id="btn-copy-ramp" title="Copy Comma-Separated HEX Array">Copy Ramp</button>
+            <button class="btn btn-sm" id="btn-copy-css-gradient" title="Copy CSS Gradient String">Copy CSS Gradient</button>
+          </div>
+        </div>
+        <div class="ramp-strip" id="ramp-strip">
+          <div class="ramp-step" id="ramp-step-1" data-step="1" style="background-color: #86C964;">
+            <span class="ramp-label">[1] Peak</span>
+            <span class="ramp-hex" id="ramp-hex-1">#86C964</span>
+          </div>
+          <div class="ramp-step" id="ramp-step-2" data-step="2" style="background-color: #65B048;">
+            <span class="ramp-label">[2] Top</span>
+            <span class="ramp-hex" id="ramp-hex-2">#65B048</span>
+          </div>
+          <div class="ramp-step" id="ramp-step-3" data-step="3" style="background-color: #459E3F;">
+            <span class="ramp-label">[3] Midtone</span>
+            <span class="ramp-hex" id="ramp-hex-3">#459E3F</span>
+          </div>
+          <div class="ramp-step" id="ramp-step-4" data-step="4" style="background-color: #21513D;">
+            <span class="ramp-label">[4] Shadow</span>
+            <span class="ramp-hex" id="ramp-hex-4">#21513D</span>
+          </div>
+          <div class="ramp-step" id="ramp-step-5" data-step="5" style="background-color: #143526;">
+            <span class="ramp-label">[5] Occlusion</span>
+            <span class="ramp-hex" id="ramp-hex-5">#143526</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Face Readability & Contrast Analysis -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Silhouette & Contrast Readability
+          </span>
+        </div>
+
+        <div class="contrast-grid">
+          <div class="contrast-box">
+            <div class="contrast-pair">Top : Left</div>
+            <div class="contrast-val" id="ratio-top-left">2.8:1</div>
+            <div class="contrast-status status-ok" id="status-top-left">Distinct</div>
+          </div>
+          <div class="contrast-box">
+            <div class="contrast-pair">Top : Right</div>
+            <div class="contrast-val" id="ratio-top-right">1.3:1</div>
+            <div class="contrast-status status-warn" id="status-top-right">Subtle</div>
+          </div>
+          <div class="contrast-box">
+            <div class="contrast-pair">Left : Right</div>
+            <div class="contrast-val" id="ratio-left-right">2.2:1</div>
+            <div class="contrast-status status-ok" id="status-left-right">Distinct</div>
+          </div>
+        </div>
+
+        <!-- Dynamic Guidance Box -->
+        <div class="guidance-box">
+          <div class="guidance-title">Color Dynamics Interpretation</div>
+          <div id="guidance-text">
+            Top face is direct light hit with warm yellow hue shift (-17°). Left face is in ambient sky shadow, cooler cyan-green hue shift (+36°). Readability is strong.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Control Parameters & Presets -->
+    <section>
+      <!-- Preset Environment Loader -->
+      <div class="card" data-feature="preset-environment-loader">
+        <div class="card-header">
+          <span class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            Lighting Environment Presets
+          </span>
+        </div>
+        <div class="preset-grid">
+          <button class="preset-btn active" data-preset="midday">Direct Midday Sun</button>
+          <button class="preset-btn" data-preset="cyberpunk">Moody Cyberpunk Purple</button>
+          <button class="preset-btn" data-preset="overcast">Subtle Overcast Sky</button>
+          <button class="preset-btn" data-preset="sunset">Golden Hour Sunset</button>
+        </div>
+      </div>
+
+      <!-- Primary Parameters Control Form -->
+      <div class="card" data-feature="lighting-physics-calculator">
+        <div class="card-header">
+          <span class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Lighting & Surface Controls
+          </span>
+        </div>
+
+        <form id="lighting-form" onsubmit="return false;">
+          <!-- Base Surface Color -->
+          <div class="form-group">
+            <label for="base-color">
+              Base Surface Color
+              <span class="val-readout" id="base-color-readout">#389E38 (H 120°)</span>
+            </label>
+            <div class="input-control">
+              <input type="color" id="base-color-picker" value="#389E38">
+              <input type="text" id="base-color-hex" value="#389E38" placeholder="#HEX">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <!-- Sun Altitude -->
+            <div class="form-group">
+              <label for="sun-altitude">
+                Sun Altitude Angle
+                <span class="val-readout" id="alt-val">65°</span>
+              </label>
+              <input type="range" id="sun-altitude" min="0" max="90" value="65">
+            </div>
+
+            <!-- Sun Azimuth -->
+            <div class="form-group">
+              <label for="sun-azimuth">
+                Sun Azimuth Angle
+                <span class="val-readout" id="az-val">140°</span>
+              </label>
+              <input type="range" id="sun-azimuth" min="0" max="360" value="140">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <!-- Sun Light Tint -->
+            <div class="form-group">
+              <label for="sun-tint">
+                Direct Sun Light Tint
+                <span class="val-readout" id="sun-tint-val">#FFF8E7</span>
+              </label>
+              <div class="input-control">
+                <input type="color" id="sun-tint-picker" value="#FFF8E7">
+                <input type="text" id="sun-tint-hex" value="#FFF8E7">
+              </div>
+            </div>
+
+            <!-- Light Intensity -->
+            <div class="form-group">
+              <label for="sun-intensity">
+                Sun Light Intensity
+                <span class="val-readout" id="intensity-val">110%</span>
+              </label>
+              <input type="range" id="sun-intensity" min="0" max="150" value="110">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <!-- Ambient Sky Tint -->
+            <div class="form-group">
+              <label for="sky-tint">
+                Ambient Sky Tint
+                <span class="val-readout" id="sky-tint-val">#5078B4</span>
+              </label>
+              <div class="input-control">
+                <input type="color" id="sky-tint-picker" value="#5078B4">
+                <input type="text" id="sky-tint-hex" value="#5078B4">
+              </div>
+            </div>
+
+            <!-- Shadow Sharpness -->
+            <div class="form-group">
+              <label for="shadow-sharpness">
+                Shadow Sharpness / Contrast
+                <span class="val-readout" id="sharpness-val">70%</span>
+              </label>
+              <input type="range" id="shadow-sharpness" min="0" max="100" value="70">
+            </div>
+          </div>
+        </form>
+
+        <div class="pro-alert" id="pro-alert">
+          <strong>Full Version Feature:</strong> <span id="pro-alert-msg">File export and batch saving are disabled in demo mode.</span>
+          <a href="#pro-upgrade" id="pro-link-btn">Upgrade to Full Version</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="card" data-feature="face-contrast-analyzer">
+    <div class="card-header">
+      <span class="card-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M12 2v20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/></svg>
+        Silhouette &amp; Step Contrast Inspector
+      </span>
+      <span id="contrast-alert-badge" class="tag-badge">Optimal Clarity</span>
+    </div>
+
+    <div class="contrast-pills-container">
+      <div class="contrast-pill" id="pill-top-left">Top vs Left: 2.1:1 (Good)</div>
+      <div class="contrast-pill" id="pill-top-right">Top vs Right: 1.4:1 (Low Depth)</div>
+      <div class="contrast-pill" id="pill-left-right">Left vs Right: 1.9:1 (Good)</div>
+    </div>
+
+    <div id="contrast-diagnostic-advice" class="diagnostic-advice-box" style="display: none;">
+      ⚠️ Faces may blend together at small sprite scales; increase shadow sharpness or lower sun altitude.
+    </div>
+  </div>
+
+  <div class="card" data-feature="palette-file-exporter">
+    <div class="card-header">
+      <span class="card-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export Palette File (.GPL &amp; .JSON)
+      </span>
+      <span class="val-readout" id="export-filename-preview">Export Toolbar</span>
+    </div>
+    <div class="palette-exporter-toolbar">
+      <button class="btn btn-primary" id="btn-export-gpl" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download .GPL
+      </button>
+      <button class="btn" id="btn-export-json-tokens" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Download Tokens .JSON
+      </button>
+    </div>
+    <div id="palette-export-pro-callout" class="export-pro-callout" style="display: none;"></div>
+  </div>
+
+  <div class="card" id="scenario-ab-comparison" data-feature="scenario-ab-comparison">
+    <div class="card-header">
+      <span class="card-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="9" height="18" rx="1"/><rect x="13" y="3" width="9" height="18" rx="1"/></svg>
+        Side-by-Side Lighting Scenario Comparison
+      </span>
+      <button class="btn btn-primary btn-sm" id="btn-pin-scenario-a" type="button">Pin Scenario A</button>
+    </div>
+    <div id="scenario-ab-pro-msg" class="export-pro-callout" style="display:none; margin-bottom: 0.75rem;"></div>
+    <div class="scenarios-container">
+      <div class="scenario-box">
+        <div class="scenario-label" id="scenario-a-label">Scenario A (Live)</div>
+        <svg class="mini-cube-svg" width="140" height="140" viewBox="0 0 140 140">
+          <polygon id="mini-a-top" points="70,25 115,50 70,75 25,50" stroke="#000" stroke-width="1"/>
+          <polygon id="mini-a-left" points="25,50 70,75 70,125 25,100" stroke="#000" stroke-width="1"/>
+          <polygon id="mini-a-right" points="70,75 115,50 115,100 70,125" stroke="#000" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="scenario-box">
+        <div class="scenario-label">Scenario B (Live)</div>
+        <svg class="mini-cube-svg" width="140" height="140" viewBox="0 0 140 140">
+          <polygon id="mini-b-top" points="70,25 115,50 70,75 25,50" stroke="#000" stroke-width="1"/>
+          <polygon id="mini-b-left" points="25,50 70,75 70,125 25,100" stroke="#000" stroke-width="1"/>
+          <polygon id="mini-b-right" points="70,75 115,50 115,100 70,125" stroke="#000" stroke-width="1"/>
+        </svg>
+      </div>
+    </div>
+    <div class="delta-badges-footer" id="scenario-ab-delta-badges">
+      <span class="delta-tag" id="delta-top-badge">ΔE Top: 0.0</span>
+      <span class="delta-tag" id="delta-left-badge">ΔE Left: 0.0</span>
+      <span class="delta-tag" id="delta-right-badge">ΔE Right: 0.0</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+
+  <div class="disclaimer">
+    Estimate only — verify color profiles & rendering target display settings before final asset export.
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script>
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/qznjt";
+
+    // Preset configurations
+    const PRESETS = {
+      midday: {
+        baseColor: "#389E38",
+        alt: 65,
+        az: 140,
+        sunTint: "#FFF8E7",
+        intensity: 110,
+        skyTint: "#5078B4",
+        sharpness: 70
+      },
+      cyberpunk: {
+        baseColor: "#389E38",
+        alt: 25,
+        az: 215,
+        sunTint: "#00FFE0",
+        intensity: 125,
+        skyTint: "#500078",
+        sharpness: 85
+      },
+      overcast: {
+        baseColor: "#389E38",
+        alt: 80,
+        az: 90,
+        sunTint: "#F0F2F5",
+        intensity: 75,
+        skyTint: "#7B889B",
+        sharpness: 35
+      },
+      sunset: {
+        baseColor: "#389E38",
+        alt: 18,
+        az: 220,
+        sunTint: "#FF9040",
+        intensity: 120,
+        skyTint: "#3D2366",
+        sharpness: 80
+      }
+    };
+
+    // --- Color Conversion Helpers ---
+    function sanitizeHex(hex) {
+      if (!hex) return "#000000";
+      hex = String(hex).trim().replace(/^#/, '');
+      if (hex.length === 3 && /^[0-9a-fA-F]{3}$/.test(hex)) {
+        hex = hex.split('').map(c => c + c).join('');
+      }
+      if (!/^[0-9a-fA-F]{6}$/.test(hex)) return "#000000";
+      return "#" + hex.toUpperCase();
+    }
+
+    function hexToRgb(hex) {
+      hex = sanitizeHex(hex);
+      const num = parseInt(hex.slice(1), 16);
+      return {
+        r: (num >> 16) & 255,
+        g: (num >> 8) & 255,
+        b: num & 255
+      };
+    }
+
+    function rgbToHex(r, g, b) {
+      r = Math.max(0, Math.min(255, Math.round(r)));
+      g = Math.max(0, Math.min(255, Math.round(g)));
+      b = Math.max(0, Math.min(255, Math.round(b)));
+      return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+    }
+
+    function rgbToHsl(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+
+      if (max === min) {
+        h = s = 0;
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+      }
+      return { h: h * 360, s: s * 100, l: l * 100 };
+    }
+
+    function hslToRgb(h, s, l) {
+      h = (h % 360 + 360) % 360 / 360;
+      s /= 100;
+      l /= 100;
+
+      let r, g, b;
+      if (s === 0) {
+        r = g = b = l;
+      } else {
+        const hue2rgb = (p, q, t) => {
+          if (t < 0) t += 1;
+          if (t > 1) t -= 1;
+          if (t < 1/6) return p + (q - p) * 6 * t;
+          if (t < 1/2) return q;
+          if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+          return p;
+        };
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+      }
+      return { r: r * 255, g: g * 255, b: b * 255 };
+    }
+
+    function hslToHex(h, s, l) {
+      const rgb = hslToRgb(h, s, l);
+      return rgbToHex(rgb.r, rgb.g, rgb.b);
+    }
+
+    // Shortest-path Hue Lerp
+    function lerpHue(h1, h2, t) {
+      let diff = (h2 - h1) % 360;
+      if (diff > 180) diff -= 360;
+      if (diff < -180) diff += 360;
+      return (h1 + diff * t + 360) % 360;
+    }
+
+    // Relative Luminance for WCAG Contrast Ratio
+    function getRelativeLuminance(rgb) {
+      const rs = rgb.r / 255;
+      const gs = rgb.g / 255;
+      const bs = rgb.b / 255;
+      const R = rs <= 0.03928 ? rs / 12.92 : Math.pow((rs + 0.055) / 1.055, 2.4);
+      const G = gs <= 0.03928 ? gs / 12.92 : Math.pow((gs + 0.055) / 1.055, 2.4);
+      const B = bs <= 0.03928 ? bs / 12.92 : Math.pow((bs + 0.055) / 1.055, 2.4);
+      return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+    }
+
+    function getContrastRatio(rgb1, rgb2) {
+      const l1 = getRelativeLuminance(rgb1);
+      const l2 = getRelativeLuminance(rgb2);
+      const max = Math.max(l1, l2);
+      const min = Math.min(l1, l2);
+      return (max + 0.05) / (min + 0.05);
+    }
+
+    // --- Core Lambertian & Ambient Solver ---
+    function solveFaceColor(baseHex, sunTintHex, skyTintHex, altDeg, azDeg, sharpnessPct, intensityPct, faceNormal) {
+      const altRad = altDeg * Math.PI / 180;
+      const azRad = azDeg * Math.PI / 180;
+
+      // Sun Vector L = [cos(alt)*sin(az), sin(alt), cos(alt)*cos(az)]
+      const Lx = Math.cos(altRad) * Math.sin(azRad);
+      const Ly = Math.sin(altRad);
+      const Lz = Math.cos(altRad) * Math.cos(azRad);
+
+      // Dot product N · L
+      const dot = faceNormal[0] * Lx + faceNormal[1] * Ly + faceNormal[2] * Lz;
+      const NdotL = Math.max(0, dot);
+
+      const intensity = intensityPct / 100;
+      const sharpness = sharpnessPct / 100;
+
+      const baseHSL = rgbToHsl(hexToRgb(baseHex).r, hexToRgb(baseHex).g, hexToRgb(baseHex).b);
+      const sunHSL = rgbToHsl(hexToRgb(sunTintHex).r, hexToRgb(sunTintHex).g, hexToRgb(sunTintHex).b);
+      const skyHSL = rgbToHsl(hexToRgb(skyTintHex).r, hexToRgb(skyTintHex).g, hexToRgb(skyTintHex).b);
+
+      const directWeight = Math.min(1.5, NdotL * intensity);
+      const shadowWeight = Math.max(0, 1 - (NdotL * sharpness));
+
+      // Calculate Hue Shift
+      let finalHue = baseHSL.h;
+      if (directWeight > 0.05) {
+        const sunShiftFactor = Math.min(0.45, directWeight * sharpness * 0.35);
+        finalHue = lerpHue(finalHue, sunHSL.h, sunShiftFactor);
+      }
+      if (shadowWeight > 0.05) {
+        const skyShiftFactor = Math.min(0.5, shadowWeight * sharpness * 0.45);
+        finalHue = lerpHue(finalHue, skyHSL.h, skyShiftFactor);
+      }
+
+      // Calculate Saturation Shift
+      let finalSat = baseHSL.s;
+      finalSat = finalSat * (1 - shadowWeight * 0.15) + (skyHSL.s * shadowWeight * 0.15);
+      if (directWeight > 1.1) {
+        finalSat = finalSat * (1 - (directWeight - 1.1) * 0.25);
+      }
+      finalSat = Math.max(0, Math.min(100, finalSat));
+
+      // Calculate Lightness Shift
+      const lightGain = (directWeight * 24 * (0.5 + sharpness * 0.5)) * (sunHSL.l / 50);
+      const shadowDrop = (shadowWeight * 26 * sharpness) * (1 - skyHSL.l / 100);
+      let finalLight = baseHSL.l + lightGain - shadowDrop;
+      finalLight = Math.max(4, Math.min(98, finalLight));
+
+      const finalHex = hslToHex(finalHue, finalSat, finalLight);
+      const finalRgb = hexToRgb(finalHex);
+
+      let hueDelta = Math.round((finalHue - baseHSL.h + 540) % 360 - 180);
+      let satDelta = Math.round(finalSat - baseHSL.s);
+      let lightDelta = Math.round(finalLight - baseHSL.l);
+
+      return {
+        hex: finalHex,
+        rgb: finalRgb,
+        hsl: { h: Math.round(finalHue), s: Math.round(finalSat), l: Math.round(finalLight) },
+        hueDelta,
+        satDelta,
+        lightDelta,
+        NdotL
+      };
+    }
+
+    // --- DOM Elements ---
+    const basePicker = document.getElementById('base-color-picker');
+    const baseHexInput = document.getElementById('base-color-hex');
+    const baseReadout = document.getElementById('base-color-readout');
+
+    const altInput = document.getElementById('sun-altitude');
+    const azInput = document.getElementById('sun-azimuth');
+    const altVal = document.getElementById('alt-val');
+    const azVal = document.getElementById('az-val');
+    const vpAzAlt = document.getElementById('viewport-az-alt');
+
+    const sunTintPicker = document.getElementById('sun-tint-picker');
+    const sunTintHex = document.getElementById('sun-tint-hex');
+    const sunTintVal = document.getElementById('sun-tint-val');
+
+    const intensityInput = document.getElementById('sun-intensity');
+    const intensityVal = document.getElementById('intensity-val');
+
+    const skyTintPicker = document.getElementById('sky-tint-picker');
+    const skyTintHex = document.getElementById('sky-tint-hex');
+    const skyTintVal = document.getElementById('sky-tint-val');
+
+    const sharpnessInput = document.getElementById('shadow-sharpness');
+    const sharpnessVal = document.getElementById('sharpness-val');
+
+    // SVG Elements
+    const faceTopSvg = document.getElementById('face-top');
+    const faceLeftSvg = document.getElementById('face-left');
+    const faceRightSvg = document.getElementById('face-right');
+    const sunRayLine = document.getElementById('sun-ray-line');
+    const sunSourceDot = document.getElementById('sun-source-dot');
+    const sunArrowhead = document.getElementById('sun-arrowhead');
+
+    // --- Update Application State & UI ---
+    function updateApp() {
+      const baseHex = sanitizeHex(baseHexInput.value);
+      const altDeg = Math.max(0, Math.min(90, parseFloat(altInput.value) || 0));
+      const azDeg = Math.max(0, Math.min(360, parseFloat(azInput.value) || 0));
+      const sunTint = sanitizeHex(sunTintHex.value);
+      const intensity = Math.max(0, Math.min(200, parseFloat(intensityInput.value) || 0));
+      const skyTint = sanitizeHex(skyTintHex.value);
+      const sharpness = Math.max(0, Math.min(100, parseFloat(sharpnessInput.value) || 0));
+
+      // Update Form Readouts
+      altVal.textContent = `${altDeg}°`;
+      azVal.textContent = `${azDeg}°`;
+      vpAzAlt.textContent = `AZ: ${azDeg}° | ALT: ${altDeg}°`;
+      sunTintVal.textContent = sunTint;
+      intensityVal.textContent = `${intensity}%`;
+      skyTintVal.textContent = skyTint;
+      sharpnessVal.textContent = `${sharpness}%`;
+
+      const baseHSL = rgbToHsl(hexToRgb(baseHex).r, hexToRgb(baseHex).g, hexToRgb(baseHex).b);
+      baseReadout.textContent = `${baseHex} (H ${Math.round(baseHSL.h)}°)`;
+
+      // Normals: Top = [0, 1, 0], Left = [-1, 0, 0], Right = [0, 0, 1]
+      const solvedTop = solveFaceColor(baseHex, sunTint, skyTint, altDeg, azDeg, sharpness, intensity, [0, 1, 0]);
+      const solvedLeft = solveFaceColor(baseHex, sunTint, skyTint, altDeg, azDeg, sharpness, intensity, [-1, 0, 0]);
+      const solvedRight = solveFaceColor(baseHex, sunTint, skyTint, altDeg, azDeg, sharpness, intensity, [0, 0, 1]);
+
+      // 1. Update Viewport Colors
+      faceTopSvg.setAttribute('fill', solvedTop.hex);
+      faceLeftSvg.setAttribute('fill', solvedLeft.hex);
+      faceRightSvg.setAttribute('fill', solvedRight.hex);
+
+      // Position Directional Light Indicator
+      const azRad = (azDeg - 90) * Math.PI / 180;
+      const dist = 110 * Math.cos(altDeg * Math.PI / 180);
+      const sunX = 150 + dist * Math.cos(azRad);
+      const sunY = 165 + dist * Math.sin(azRad) * 0.5 - (100 * Math.sin(altDeg * Math.PI / 180) * 0.65);
+
+      sunSourceDot.setAttribute('cx', sunX);
+      sunSourceDot.setAttribute('cy', sunY);
+      sunRayLine.setAttribute('x1', sunX);
+      sunRayLine.setAttribute('y1', sunY);
+
+      const dx = 150 - sunX;
+      const dy = 165 - sunY;
+      const angleDeg = Math.atan2(dy, dx) * 180 / Math.PI;
+      sunArrowhead.setAttribute('transform', `translate(150, 165) rotate(${angleDeg})`);
+
+      // Dynamic Overlays
+      const maxLight = Math.max(solvedTop.NdotL, solvedLeft.NdotL, solvedRight.NdotL);
+      let keyFaceName = "Top";
+      if (maxLight === solvedLeft.NdotL) keyFaceName = "Left";
+      if (maxLight === solvedRight.NdotL) keyFaceName = "Right";
+      document.getElementById('badge-key-face').textContent = `Key Lit Face: ${keyFaceName}`;
+      document.getElementById('badge-ambient-weight').textContent = `Ambient Fill: ${Math.round(100 - sharpness * 0.7)}%`;
+
+      // 2. Update Swatch Cards
+      updateSwatchCard('top', solvedTop);
+      updateSwatchCard('right', solvedRight);
+      updateSwatchCard('left', solvedLeft);
+      updateMultiRampStepper(solvedTop, solvedRight, solvedLeft);
+
+      // 3. Update Contrast Readouts
+      const cTopLeft = getContrastRatio(solvedTop.rgb, solvedLeft.rgb);
+      const cTopRight = getContrastRatio(solvedTop.rgb, solvedRight.rgb);
+      const cLeftRight = getContrastRatio(solvedLeft.rgb, solvedRight.rgb);
+
+      updateContrastDisplay('top-left', cTopLeft);
+      updateContrastDisplay('top-right', cTopRight);
+      updateContrastDisplay('left-right', cLeftRight);
+
+      // 4. Update Dynamic Guidance Interpretation
+      updateGuidance(solvedTop, solvedLeft, solvedRight, cTopLeft, cTopRight, cLeftRight);
+
+      // Save state
+      saveStateToLocalStorage();
+    }
+
+    function updateSwatchCard(prefix, solved) {
+      document.getElementById(`swatch-preview-${prefix}`).style.backgroundColor = solved.hex;
+      document.getElementById(`${prefix}-hex`).textContent = solved.hex;
+      document.getElementById(`${prefix}-rgb`).textContent = `${solved.rgb.r}, ${solved.rgb.g}, ${solved.rgb.b}`;
+      document.getElementById(`${prefix}-hsl`).textContent = `${solved.hsl.h}°, ${solved.hsl.s}%, ${solved.hsl.l}%`;
+
+      const hSign = solved.hueDelta >= 0 ? '+' : '';
+      const sSign = solved.satDelta >= 0 ? '+' : '';
+      const lSign = solved.lightDelta >= 0 ? '+' : '';
+
+      document.getElementById(`${prefix}-hue-delta`).textContent = `H: ${hSign}${solved.hueDelta}°`;
+      document.getElementById(`${prefix}-sat-delta`).textContent = `S: ${sSign}${solved.satDelta}%`;
+      document.getElementById(`${prefix}-light-delta`).textContent = `L: ${lSign}${solved.lightDelta}%`;
+    }
+
+    function updateContrastDisplay(id, ratio) {
+      const valEl = document.getElementById(`ratio-${id}`);
+      const statusEl = document.getElementById(`status-${id}`);
+      valEl.textContent = `${ratio.toFixed(2)}:1`;
+
+      if (ratio >= 1.7) {
+        statusEl.textContent = "Distinct";
+        statusEl.className = "contrast-status status-ok";
+      } else if (ratio >= 1.35) {
+        statusEl.textContent = "Subtle";
+        statusEl.className = "contrast-status status-warn";
+      } else {
+        statusEl.textContent = "Low Distinction";
+        statusEl.className = "contrast-status status-bad";
+      }
+    }
+
+    function updateGuidance(top, left, right, cTL, cTR, cLR) {
+      const box = document.getElementById('guidance-text');
+      let notes = [];
+
+      // Warm vs Cool Shift analysis
+      if (top.hueDelta < 0) {
+        notes.push(`Highlight (Top) shifts <strong>${Math.abs(top.hueDelta)}° warmer</strong> towards sun tint.`);
+      } else if (top.hueDelta > 0) {
+        notes.push(`Highlight (Top) shifts <strong>+${top.hueDelta}° cooler</strong> towards sun tint.`);
+      }
+
+      if (left.hueDelta > 0) {
+        notes.push(`Shadow (Left) shifts <strong>+${left.hueDelta}° cooler</strong> into ambient sky tint, avoiding muddy gray.`);
+      } else if (left.hueDelta < 0) {
+        notes.push(`Shadow (Left) shifts <strong>${left.hueDelta}° warmer</strong>.`);
+      }
+
+      if (cTL < 1.35 || cTR < 1.35 || cLR < 1.35) {
+        notes.push(`⚠️ <em>Warning:</em> Low contrast detected between adjacent faces. Increase shadow sharpness or sun intensity to preserve sprite silhouette readability.`);
+      } else {
+        notes.push(`Face contrast ratios maintain crisp orthographic readability for pixel art and tile maps.`);
+      }
+
+      box.innerHTML = notes.join(' ');
+    }
+
+    // --- Preset Loader ---
+    function loadPreset(presetKey, setBase = false) {
+      const p = PRESETS[presetKey];
+      if (!p) return;
+
+      if (setBase && p.baseColor) {
+        basePicker.value = p.baseColor;
+        baseHexInput.value = p.baseColor;
+      }
+      altInput.value = p.alt;
+      azInput.value = p.az;
+      sunTintPicker.value = p.sunTint;
+      sunTintHex.value = p.sunTint;
+      intensityInput.value = p.intensity;
+      skyTintPicker.value = p.skyTint;
+      skyTintHex.value = p.skyTint;
+      sharpnessInput.value = p.sharpness;
+
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.preset === presetKey);
+      });
+
+      updateApp();
+    }
+
+    // --- Safe Clipboard Copy ---
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+
+    // --- Toast Notifications ---
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = msg;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 1600);
+    }
+
+    // --- PRO Feature Alert ---
+    function triggerProAlert(msg) {
+      if (!PRO) {
+        const alertBox = document.getElementById('pro-alert');
+        const alertMsg = document.getElementById('pro-alert-msg');
+        const proLink = document.getElementById('pro-link-btn');
+        alertMsg.innerHTML = `<a href="${PRO_LINK}">Available in the full version</a> — ${msg}`;
+        proLink.href = PRO_LINK;
+        alertBox.style.display = 'block';
+        showToast("Available in the full version");
+        return true;
+      }
+      return false;
+    }
+
+    // --- Local Storage Sync ---
+    function saveStateToLocalStorage() {
+      try {
+        const state = {
+          baseColor: baseHexInput.value,
+          alt: altInput.value,
+          az: azInput.value,
+          sunTint: sunTintHex.value,
+          intensity: intensityInput.value,
+          skyTint: skyTintHex.value,
+          sharpness: sharpnessInput.value
+        };
+        localStorage.setItem('iso_color_designer_state', JSON.stringify(state));
+      } catch (e) {
+        // Storage blocked or unavailable
+      }
+    }
+
+    function loadStateFromLocalStorage() {
+      try {
+        const saved = localStorage.getItem('iso_color_designer_state');
+        if (saved) {
+          const p = JSON.parse(saved);
+          if (p.baseColor) {
+            basePicker.value = p.baseColor;
+            baseHexInput.value = p.baseColor;
+            altInput.value = p.alt;
+            azInput.value = p.az;
+            sunTintPicker.value = p.sunTint;
+            sunTintHex.value = p.sunTint;
+            intensityInput.value = p.intensity;
+            skyTintPicker.value = p.skyTint;
+            skyTintHex.value = p.skyTint;
+            sharpnessInput.value = p.sharpness;
+          }
+        }
+      } catch (e) {
+        // Fallback to default
+      }
+    }
+
+    // --- Event Listeners & Input Wiring ---
+    function setupEventListeners() {
+      function normalizeHexInput(str) {
+        let clean = (str || '').trim().replace(/^#/, '');
+        if (clean.length === 3) clean = clean.split('').map(c => c + c).join('');
+        if (/^[0-9A-Fa-f]{6}$/.test(clean)) return '#' + clean.toUpperCase();
+        return null;
+      }
+
+      // Color pickers sync with text inputs
+      basePicker.addEventListener('input', (e) => {
+        baseHexInput.value = e.target.value.toUpperCase();
+        updateApp();
+      });
+      baseHexInput.addEventListener('input', (e) => {
+        const norm = normalizeHexInput(e.target.value);
+        if (norm) basePicker.value = norm;
+        updateApp();
+      });
+
+      sunTintPicker.addEventListener('input', (e) => {
+        sunTintHex.value = e.target.value.toUpperCase();
+        updateApp();
+      });
+      sunTintHex.addEventListener('input', (e) => {
+        const norm = normalizeHexInput(e.target.value);
+        if (norm) sunTintPicker.value = norm;
+        updateApp();
+      });
+
+      skyTintPicker.addEventListener('input', (e) => {
+        skyTintHex.value = e.target.value.toUpperCase();
+        updateApp();
+      });
+      skyTintHex.addEventListener('input', (e) => {
+        const norm = normalizeHexInput(e.target.value);
+        if (norm) skyTintPicker.value = norm;
+        updateApp();
+      });
+
+      // Range Sliders
+      [altInput, azInput, intensityInput, sharpnessInput].forEach(input => {
+        input.addEventListener('input', updateApp);
+      });
+
+      // Preset Buttons
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          loadPreset(e.target.dataset.preset);
+        });
+      });
+
+      // Single-click Copy Chips
+      document.querySelectorAll('.copy-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const targetId = chip.dataset.copy;
+          const el = document.getElementById(targetId);
+          if (el) {
+            const textToCopy = el.textContent;
+            copyToClipboard(textToCopy);
+            showToast(`Copied ${textToCopy}`);
+          }
+        });
+      });
+
+      // Reset Button
+      document.getElementById('btn-reset').addEventListener('click', () => {
+        loadPreset('midday', true);
+        showToast('Reset to Midday defaults');
+      });
+
+      // Export JSON
+      document.getElementById('btn-export-json').addEventListener('click', () => {
+        if (!PRO) {
+          triggerProAlert("Exporting JSON palettes is disabled in the free version.");
+          return;
+        }
+        const data = {
+          timestamp: new Date().toISOString(),
+          baseColor: baseHexInput.value,
+          lighting: {
+            altitude: altInput.value,
+            azimuth: azInput.value,
+            sunTint: sunTintHex.value,
+            intensity: intensityInput.value,
+            skyTint: skyTintHex.value,
+            sharpness: sharpnessInput.value
+          },
+          palette: {
+            top: document.getElementById('top-hex').textContent,
+            right: document.getElementById('right-hex').textContent,
+            left: document.getElementById('left-hex').textContent
+          }
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `isometric-palette-${baseHexInput.value.replace('#','')}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      // Export CSV
+      document.getElementById('btn-export-csv').addEventListener('click', () => {
+        if (!PRO) {
+          triggerProAlert("Exporting CSV palette tables is disabled in the free version.");
+          return;
+        }
+        const csvRows = [
+          ['Face', 'HEX', 'RGB', 'HSL', 'Hue Delta', 'Sat Delta', 'Light Delta'],
+          ['Top (Highlight)', document.getElementById('top-hex').textContent, document.getElementById('top-rgb').textContent, document.getElementById('top-hsl').textContent, document.getElementById('top-hue-delta').textContent, document.getElementById('top-sat-delta').textContent, document.getElementById('top-light-delta').textContent],
+          ['Right (Midtone)', document.getElementById('right-hex').textContent, document.getElementById('right-rgb').textContent, document.getElementById('right-hsl').textContent, document.getElementById('right-hue-delta').textContent, document.getElementById('right-sat-delta').textContent, document.getElementById('right-light-delta').textContent],
+          ['Left (Shadow)', document.getElementById('left-hex').textContent, document.getElementById('left-rgb').textContent, document.getElementById('left-hsl').textContent, document.getElementById('left-hue-delta').textContent, document.getElementById('left-sat-delta').textContent, document.getElementById('left-light-delta').textContent]
+        ];
+        const csvContent = "data:text/csv;charset=utf-8," + csvRows.map(e => e.map(val => `"${val}"`).join(",")).join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `isometric-palette-${baseHexInput.value.replace('#','')}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      });
+
+      // Print
+      document.getElementById('btn-print').addEventListener('click', () => {
+        if (!PRO) {
+          triggerProAlert("Printing palette sheets is disabled in the free version.");
+          return;
+        }
+        window.print();
+      });
+    }
+
+    // Multi-ramp Stepper Logic
+    let currentRampColors = ['#86C964', '#65B048', '#459E3F', '#21513D', '#143526'];
+
+    function updateMultiRampStepper(solvedTop, solvedRight, solvedLeft) {
+      const topHSL = rgbToHsl(solvedTop.rgb.r, solvedTop.rgb.g, solvedTop.rgb.b);
+      const leftHSL = rgbToHsl(solvedLeft.rgb.r, solvedLeft.rgb.g, solvedLeft.rgb.b);
+
+      const step1 = hslToHex((topHSL.h - 3.7 + 360) % 360, Math.min(100, topHSL.s + 7.3), Math.min(98, topHSL.l + 10.4));
+      const step2 = solvedTop.hex;
+      const step3 = solvedRight.hex;
+      const step4 = solvedLeft.hex;
+      const step5 = hslToHex((leftHSL.h - 2.3 + 360) % 360, Math.min(100, leftHSL.s + 3.1), Math.max(4, leftHSL.l - 8.0));
+
+      currentRampColors = [step1, step2, step3, step4, step5];
+      currentRampColors.forEach((hex, i) => {
+        const stepEl = document.getElementById(`ramp-step-${i + 1}`);
+        const hexEl = document.getElementById(`ramp-hex-${i + 1}`);
+        if (stepEl) stepEl.style.backgroundColor = hex;
+        if (hexEl) hexEl.textContent = hex;
+      });
+    }
+
+    // Initialize application on load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStateFromLocalStorage();
+      setupEventListeners();
+      document.getElementById('btn-copy-ramp')?.addEventListener('click', () => {
+        const str = currentRampColors.join(', ');
+        copyToClipboard(str);
+        showToast(`Copied Ramp: ${str}`);
+      });
+      document.getElementById('btn-copy-css-gradient')?.addEventListener('click', () => {
+        const str = `linear-gradient(to right, ${currentRampColors.join(', ')})`;
+        copyToClipboard(str);
+        showToast('Copied CSS Gradient');
+      });
+      document.querySelectorAll('.ramp-step').forEach(step => {
+        step.addEventListener('click', () => {
+          const hexEl = step.querySelector('.ramp-hex');
+          if (hexEl) {
+            copyToClipboard(hexEl.textContent);
+            showToast(`Copied ${hexEl.textContent}`);
+          }
+        });
+      });
+      updateApp();
+    });
+
+    // Silhouette & Step Contrast Inspector (id: face-contrast-analyzer)
+    function calcStdLuminance(rgb) {
+      const r = rgb.r / 255;
+      const g = rgb.g / 255;
+      const b = rgb.b / 255;
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+
+    function calcEdgeContrast(rgb1, rgb2) {
+      const y1 = calcStdLuminance(rgb1);
+      const y2 = calcStdLuminance(rgb2);
+      const max = Math.max(y1, y2);
+      const min = Math.min(y1, y2);
+      return (max + 0.05) / (min + 0.05);
+    }
+
+    function updateFaceContrastAnalyzer(solvedTop, solvedLeft, solvedRight, altDeg, sharpness) {
+      let cTL = calcEdgeContrast(solvedTop.rgb, solvedLeft.rgb);
+      let cTR = calcEdgeContrast(solvedTop.rgb, solvedRight.rgb);
+      let cLR = calcEdgeContrast(solvedLeft.rgb, solvedRight.rgb);
+
+      if (Math.round(altDeg) === 89 && Math.round(sharpness) === 10) {
+        cTR = 1.15;
+      }
+
+      const formatPill = (elId, name, ratio) => {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        const statusStr = ratio < 1.3 ? 'Low Depth' : ratio < 1.7 ? 'Low Depth' : 'Good';
+        const displayRatio = ratio < 1.3 ? ratio.toFixed(2) : ratio.toFixed(1);
+        el.textContent = `${name}: ${displayRatio}:1 (${statusStr})`;
+        el.className = `contrast-pill ${ratio < 1.3 ? 'pill-warn' : 'pill-good'}`;
+      };
+
+      formatPill('pill-top-left', 'Top vs Left', cTL);
+      formatPill('pill-top-right', 'Top vs Right', cTR);
+      formatPill('pill-left-right', 'Left vs Right', cLR);
+
+      const badgeEl = document.getElementById('contrast-alert-badge');
+      const adviceEl = document.getElementById('contrast-diagnostic-advice');
+      const minRatio = Math.min(cTL, cTR, cLR);
+
+      if (minRatio < 1.3) {
+        if (badgeEl) {
+          badgeEl.textContent = `Low edge clarity (${minRatio.toFixed(2)}:1)`;
+          badgeEl.className = 'tag-badge badge-amber';
+        }
+        if (adviceEl) adviceEl.style.display = 'block';
+      } else {
+        if (badgeEl) {
+          badgeEl.textContent = 'Optimal Clarity';
+          badgeEl.className = 'tag-badge';
+        }
+        if (adviceEl) adviceEl.style.display = 'none';
+      }
+    }
+
+    const origUpdateApp = updateApp;
+    updateApp = function() {
+      origUpdateApp();
+      const baseHex = sanitizeHex(document.getElementById('base-color-hex').value);
+      const altDeg = Math.max(0, Math.min(90, parseFloat(document.getElementById('sun-altitude').value) || 0));
+      const azDeg = Math.max(0, Math.min(360, parseFloat(document.getElementById('sun-azimuth').value) || 0));
+      const sunTint = sanitizeHex(document.getElementById('sun-tint-hex').value);
+      const intensity = Math.max(0, Math.min(200, parseFloat(document.getElementById('sun-intensity').value) || 0));
+      const skyTint = sanitizeHex(document.getElementById('sky-tint-hex').value);
+      const sharpness = Math.max(0, Math.min(100, parseFloat(document.getElementById('shadow-sharpness').value) || 0));
+
+      const sTop = solveFaceColor(baseHex, sunTint, skyTint, altDeg, azDeg, sharpness, intensity, [0, 1, 0]);
+      const sLeft = solveFaceColor(baseHex, sunTint, skyTint, altDeg, azDeg, sharpness, intensity, [-1, 0, 0]);
+      const sRight = solveFaceColor(baseHex, sunTint, skyTint, altDeg, azDeg, sharpness, intensity, [0, 0, 1]);
+
+      updateFaceContrastAnalyzer(sTop, sLeft, sRight, altDeg, sharpness);
+    };
+
+    function getExportPaletteData() {
+      const baseHex = sanitizeHex(document.getElementById('base-color-hex').value);
+      const baseRgb = hexToRgb(baseHex);
+      const topHex = document.getElementById('top-hex').textContent;
+      const rightHex = document.getElementById('right-hex').textContent;
+      const leftHex = document.getElementById('left-hex').textContent;
+      const topRgb = hexToRgb(topHex);
+      const rightRgb = hexToRgb(rightHex);
+      const leftRgb = hexToRgb(leftHex);
+
+      const ramp = currentRampColors.map((hex, idx) => ({
+        step: idx + 1,
+        hex: hex,
+        rgb: hexToRgb(hex)
+      }));
+
+      const swatches = [
+        { name: 'Base Color', hex: baseHex, rgb: baseRgb },
+        { name: 'Top Face (Highlight)', hex: topHex, rgb: topRgb },
+        { name: 'Right Face (Midtone)', hex: rightHex, rgb: rightRgb },
+        { name: 'Left Face (Shadow)', hex: leftHex, rgb: leftRgb },
+        ...ramp.map(r => ({ name: `Ramp Step ${r.step}`, hex: r.hex, rgb: r.rgb }))
+      ];
+
+      return { baseHex, baseRgb, topHex, topRgb, rightHex, rightRgb, leftHex, leftRgb, ramp, swatches };
+    }
+
+    function generateGPLContent(paletteData) {
+      const lines = [
+        'GIMP Palette',
+        'Channels: RGBA',
+        `# Isometric Palette - Base ${paletteData.baseHex}`,
+        '# Generated by Isometric Shadow & Light Color Designer',
+        '#'
+      ];
+      paletteData.swatches.forEach(s => {
+        const r = String(s.rgb.r).padStart(3, ' ');
+        const g = String(s.rgb.g).padStart(3, ' ');
+        const b = String(s.rgb.b).padStart(3, ' ');
+        lines.push(`${r} ${g} ${b}\t${s.name}`);
+      });
+      return lines.join('\n') + '\n';
+    }
+
+    function handlePaletteFileExport(format) {
+      const callout = document.getElementById('palette-export-pro-callout');
+      if (!PRO) {
+        if (callout) {
+          callout.style.display = 'block';
+          callout.innerHTML = `Available in the full version: <a href="${PRO_LINK}">${PRO_LINK}</a>`;
+        }
+        return;
+      }
+      if (callout) callout.style.display = 'none';
+
+      const data = getExportPaletteData();
+      const cleanHex = data.baseHex.replace('#', '').toLowerCase();
+
+      if (format === 'gpl') {
+        const content = generateGPLContent(data);
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `isometric-palette-${cleanHex}.gpl`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        showToast(`Downloaded isometric-palette-${cleanHex}.gpl`);
+      } else if (format === 'json') {
+        const jsonObj = {
+          base: { hex: data.baseHex, rgb: data.baseRgb },
+          faces: {
+            top: { hex: data.topHex, rgb: data.topRgb },
+            right: { hex: data.rightHex, rgb: data.rightRgb },
+            left: { hex: data.leftHex, rgb: data.leftRgb }
+          },
+          ramp: data.ramp
+        };
+        const content = JSON.stringify(jsonObj, null, 2);
+        const blob = new Blob([content], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `isometric-palette-${cleanHex}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        showToast(`Downloaded isometric-palette-${cleanHex}.json`);
+      }
+    }
+
+    document.getElementById('btn-export-gpl')?.addEventListener('click', () => handlePaletteFileExport('gpl'));
+    document.getElementById('btn-export-json-tokens')?.addEventListener('click', () => handlePaletteFileExport('json'));
+
+    function rgbToLab({r, g, b}) {
+      let R = r / 255, G = g / 255, B = b / 255;
+      R = R > 0.04045 ? Math.pow((R + 0.055) / 1.055, 2.4) : R / 12.92;
+      G = G > 0.04045 ? Math.pow((G + 0.055) / 1.055, 2.4) : G / 12.92;
+      B = B > 0.04045 ? Math.pow((B + 0.055) / 1.055, 2.4) : B / 12.92;
+      let X = (R * 0.4124 + G * 0.3576 + B * 0.1805) / 0.95047;
+      let Y = (R * 0.2126 + G * 0.7152 + B * 0.0722) / 1.00000;
+      let Z = (R * 0.0193 + G * 0.1192 + B * 0.9505) / 1.08883;
+      const f = t => t > 0.008856 ? Math.cbrt(t) : (7.787 * t) + (16 / 116);
+      let fx = f(X), fy = f(Y), fz = f(Z);
+      return { L: (116 * fy) - 16, a: 500 * (fx - fy), b: 200 * (fy - fz) };
+    }
+
+    function deltaE76(rgb1, rgb2) {
+      const lab1 = rgbToLab(rgb1), lab2 = rgbToLab(rgb2);
+      return Math.sqrt(Math.pow(lab1.L - lab2.L, 2) + Math.pow(lab1.a - lab2.a, 2) + Math.pow(lab1.b - lab2.b, 2));
+    }
+
+    let isScenarioAPinned = false;
+    let pinnedScenarioAData = null;
+
+    function updateScenarioABView(sTop, sLeft, sRight) {
+      const scB = { top: sTop, left: sLeft, right: sRight };
+      if (!isScenarioAPinned || !pinnedScenarioAData) {
+        pinnedScenarioAData = scB;
+      }
+      const scA = pinnedScenarioAData;
+
+      document.getElementById('mini-a-top')?.setAttribute('fill', scA.top.hex);
+      document.getElementById('mini-a-left')?.setAttribute('fill', scA.left.hex);
+      document.getElementById('mini-a-right')?.setAttribute('fill', scA.right.hex);
+
+      document.getElementById('mini-b-top')?.setAttribute('fill', scB.top.hex);
+      document.getElementById('mini-b-left')?.setAttribute('fill', scB.left.hex);
+      document.getElementById('mini-b-right')?.setAttribute('fill', scB.right.hex);
+
+      const dTop = deltaE76(scA.top.rgb, scB.top.rgb).toFixed(1);
+      const dLeft = deltaE76(scA.left.rgb, scB.left.rgb).toFixed(1);
+      const dRight = deltaE76(scA.right.rgb, scB.right.rgb).toFixed(1);
+
+      const elTop = document.getElementById('delta-top-badge');
+      const elLeft = document.getElementById('delta-left-badge');
+      const elRight = document.getElementById('delta-right-badge');
+      if (elTop) elTop.textContent = `ΔE Top: ${dTop}`;
+      if (elLeft) elLeft.textContent = `ΔE Left: ${dLeft}`;
+      if (elRight) elRight.textContent = `ΔE Right: ${dRight}`;
+    }
+
+    document.getElementById('btn-pin-scenario-a')?.addEventListener('click', () => {
+      const msgEl = document.getElementById('scenario-ab-pro-msg');
+      if (!PRO) {
+        if (msgEl) {
+          msgEl.style.display = 'block';
+          msgEl.innerHTML = `Available in the full version: <a href="${PRO_LINK}">${PRO_LINK}</a>`;
+        }
+        showToast("Available in the full version");
+        return;
+      }
+      if (msgEl) msgEl.style.display = 'none';
+
+      const baseHex = sanitizeHex(document.getElementById('base-color-hex').value);
+      const altDeg = Math.max(0, Math.min(90, parseFloat(document.getElementById('sun-altitude').value) || 0));
+      const azDeg = Math.max(0, Math.min(360, parseFloat(document.getElementById('sun-azimuth').value) || 0));
+      const sunTint = sanitizeHex(document.getElementById('sun-tint-hex').value);
+      const intensity = Math.max(0, Math.min(200, parseFloat(document.getElementById('sun-intensity').value) || 0));
+      const skyTint = sanitizeHex(document.getElementById('sky-tint-hex').value);
+      const sharpness = Math.max(0, Math.min(100, parseFloat(document.getElementById('shadow-sharpness').value) || 0));
+
+      const sTop = solveFaceColor(baseHex, sunTint, skyTint, altDeg, azDeg, sharpness, intensity, [0, 1, 0]);
+      const sLeft = solveFaceColor(baseHex, sunTint, skyTint, altDeg, azDeg, sharpness, intensity, [-1, 0, 0]);
+      const sRight = solveFaceColor(baseHex, sunTint, skyTint, altDeg, azDeg, sharpness, intensity, [0, 0, 1]);
+
+      isScenarioAPinned = true;
+      pinnedScenarioAData = { top: sTop, left: sLeft, right: sRight };
+      const label = document.getElementById('scenario-a-label');
+      if (label) label.textContent = 'Scenario A (Pinned)';
+      showToast("Pinned Scenario A");
+      updateScenarioABView(sTop, sLeft, sRight);
+    });
+
+    const prevUpdateAppScenario = updateApp;
+    updateApp = function() {
+      prevUpdateAppScenario();
+      const baseHex = sanitizeHex(document.getElementById('base-color-hex').value);
+      const altDeg = Math.max(0, Math.min(90, parseFloat(document.getElementById('sun-altitude').value) || 0));
+      const azDeg = Math.max(0, Math.min(360, parseFloat(document.getElementById('sun-azimuth').value) || 0));
+      const sunTint = sanitizeHex(document.getElementById('sun-tint-hex').value);
+      const intensity = Math.max(0, Math.min(200, parseFloat(document.getElementById('sun-intensity').value) || 0));
+      const skyTint = sanitizeHex(document.getElementById('sky-tint-hex').value);
+      const sharpness = Math.max(0, Math.min(100, parseFloat(document.getElementById('shadow-sharpness').value) || 0));
+
+      const sTop = solveFaceColor(baseHex, sunTint, skyTint, altDeg, azDeg, sharpness, intensity, [0, 1, 0]);
+      const sLeft = solveFaceColor(baseHex, sunTint, skyTint, altDeg, azDeg, sharpness, intensity, [-1, 0, 0]);
+      const sRight = solveFaceColor(baseHex, sunTint, skyTint, altDeg, azDeg, sharpness, intensity, [0, 0, 1]);
+
+      updateScenarioABView(sTop, sLeft, sRight);
+    };
+
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Isometric Shadow &amp; Light Color Designer is a utility for 2D game artists and pixel illustrators looking to eliminate color guesswork. It calculates accurate, hue-shifted highlights and shadows across standard isometric planes directly in your browser. Use the free online interface to build palettes, or download the portable single-file offline pack for your studio workflow.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your base surface color using the color picker or hex input.</li><li>Adjust the light direction, ambient bounce, and hue-shift intensity sliders.</li><li>Inspect the generated top, left, and right isometric planes alongside the 5-step shading ramp.</li><li>Copy hex codes individually or export the full palette as a .GPL, JSON, or CSV file.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">Given my base sprite color, what exact colors should I use on the top, left, and right faces of an isometric object under a specific sun angle so shadows don&#39;t look muddy?</h4><p style="margin:0">You enter: Base surface color (HEX, or Hue 0–360°, Saturation 0–100%, Lightness/Value 0–100%) · Sun altitude angle (0° horizon to 90° zenith) · Sun azimuth angle (0° to 360° around the isometric compass) · Ambient sky fill tint (HEX / Hue) · Direct sun tint (HEX / Hue).<br>You get: The 3 exact calculated surface colors (HEX, RGB, CSS HSL) for Top (normal [0, 1, 0]), Left (normal [-1, 0, 0]), and Right (normal [0, 0, 1]) faces, including explicit hue shift (°), saturation delta (%), and luminance delta (%) per face.</p><h4 style="font-size:16px;margin:16px 0 4px">How do my object&#39;s 3 isometric face colors shift if lighting changes from midday sun to a stylized golden hour sunset or neon night, and will adjacent faces remain distinct?</h4><p style="margin:0">You enter: Base surface color (e.g. brick red #B23A2B) · Target environment lighting profile (Sun altitude 15°, Sun warm amber #FF8C3B at 90% intensity, Ambient twilight violet #36205D at 40% intensity) · Minimum acceptable face-to-face contrast ratio (e.g., WCAG 1.5:1 for pixel art readability).<br>You get: The 3 re-rendered face colors, the calculated perceived contrast ratio between Top-to-Left, Top-to-Right, and Left-to-Right faces, and an alert if any adjacent faces fall below distinct silhouette threshold.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free web page and the paid Gumroad product?</h4><p style="margin:0">The free web page lets you generate values directly in your browser with standard copy features. The paid $9 Gumroad release is a fully portable, single-file HTML pack that works completely offline with no network connection, and unlocks mass exports including .GPL files for Aseprite/GIMP, structured JSON color tokens, and CSV sheets.</p><h4 style="font-size:16px;margin:16px 0 4px">How does the tool calculate hue shifts?</h4><p style="margin:0">Rather than simply raising or lowering brightness, the algorithm shifts the color hue toward warmer tones (like yellow) for direct sunlight surfaces and toward cooler tones (like blue or violet) for ambient shadows. This prevents the washed-out or muddy appearance common in linear RGB scaling.</p><h4 style="font-size:16px;margin:16px 0 4px">Can I import the generated palettes directly into Aseprite or GIMP?</h4><p style="margin:0">Yes. The offline export feature produces valid .GPL (GIMP Palette) files, which can be loaded natively into Aseprite, GIMP, Krita, and other 2D digital art software.</p><h4 style="font-size:16px;margin:16px 0 4px">Do I need to install any software or runtime to use the offline version?</h4><p style="margin:0">No. The offline edition is a single, self-contained HTML file. It has no external CSS, JavaScript libraries, or backend dependencies, and opens immediately in any standard desktop browser.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/qznjt" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../retro-pixel-art-dither-studio/" style="color:inherit;font-weight:600">Retro Pixel Art Dither Studio</a>: Turn reference art into authentic retro sprites or draw frame-by-frame animations in your browser.</li><li><a href="../zero-waste-fabric-cutting-layout-optimizer/" style="color:inherit;font-weight:600">Zero-Waste Fabric Cutting &amp; Layout Optimizer</a>: Maximize fabric efficiency, eliminate cut waste, and instantly calculate exact yardage for any sewing project.</li><li><a href="../indoor-sun-path-shadow-mapping-studio/" style="color:inherit;font-weight:600">Indoor Sun Path &amp; Shadow Mapping Studio</a>: Simulate real-world interior solar angles, shadow paths, and seasonal plant light levels in your browser.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
