@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel-bg: #1e293b;
+    --panel-border: #334155;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent-primary: #f97316;
+    --accent-primary-hover: #ea580c;
+    --accent-secondary: #06b6d4;
+    --accent-target: #38bdf8;
+    --accent-current: #f97316;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --success: #10b981;
+    --card-bg: #182232;
+    --input-bg: #0f172a;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f8fafc;
+      --panel-bg: #ffffff;
+      --panel-border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent-primary: #ea580c;
+      --accent-primary-hover: #c2410c;
+      --accent-secondary: #0891b2;
+      --accent-target: #0284c7;
+      --accent-current: #ea580c;
+      --card-bg: #f1f5f9;
+      --input-bg: #ffffff;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background-color: var(--bg);
+    color: var(--text-main);
+    line-height: 1.5;
+    padding: 1rem;
+    min-height: 100vh;
+  }
+
+  .app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  header {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    box-shadow: var(--shadow);
+  }
+
+  .brand-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .brand-title svg {
+    width: 32px;
+    height: 32px;
+    color: var(--accent-primary);
+    flex-shrink: 0;
+  }
+  .brand-title h1 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
+  }
+  .brand-title p {
+    font-size: 0.825rem;
+    color: var(--text-muted);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--panel-border);
+    background: var(--card-bg);
+    color: var(--text-main);
+    transition: all 0.15s ease;
+  }
+  .btn:hover {
+    background: var(--panel-border);
+  }
+  .btn-primary {
+    background: var(--accent-primary);
+    color: #ffffff;
+    border-color: var(--accent-primary);
+  }
+  .btn-primary:hover {
+    background: var(--accent-primary-hover);
+    border-color: var(--accent-primary-hover);
+  }
+  .btn svg { width: 16px; height: 16px; }
+
+  /* Presets Bar */
+  .presets-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+  .preset-chip {
+    padding: 0.4rem 0.75rem;
+    border-radius: 20px;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.15s ease;
+  }
+  .preset-chip:hover, .preset-chip.active {
+    color: var(--text-main);
+    border-color: var(--accent-primary);
+    background: rgba(249, 115, 22, 0.1);
+  }
+
+  /* Main Grid */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 1.25rem;
+  }
+  @media (max-width: 992px) {
+    .main-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .panel-title {
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--panel-border);
+    padding-bottom: 0.65rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .form-label {
+    font-size: 0.825rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .form-control, select {
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--panel-border);
+    background: var(--input-bg);
+    color: var(--text-main);
+    font-size: 0.875rem;
+    font-family: inherit;
+    outline: none;
+  }
+  .form-control:focus, select:focus {
+    border-color: var(--accent-primary);
+  }
+
+  /* Slider Row */
+  .slider-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    background: var(--card-bg);
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--panel-border);
+  }
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .slider-header .score-badge {
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: var(--input-bg);
+    border: 1px solid var(--panel-border);
+  }
+  .slider-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  input[type="range"] {
+    flex: 1;
+    accent-color: var(--accent-primary);
+    cursor: pointer;
+    height: 6px;
+  }
+
+  .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .viz-engine-grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 1.25rem;
+  }
+  @media (max-width: 1200px) {
+    .viz-engine-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* SVG Radar Chart */
+  .radar-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 1rem;
+    background: var(--card-bg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--panel-border);
+  }
+  .radar-svg {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    overflow: visible;
+  }
+
+  .radar-legend {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.75rem;
+    font-size: 0.775rem;
+    font-weight: 600;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* Correction Engine Card */
+  .engine-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .status-banner {
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--accent-primary);
+    background: var(--card-bg);
+    font-size: 0.9rem;
+  }
+  .status-banner strong {
+    color: var(--accent-primary);
+  }
+
+  .section-subtitle {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .action-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .action-card {
+    background: var(--card-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.1s ease;
+  }
+  .action-card.deficit { border-left: 4px solid var(--accent-secondary); }
+  .action-card.excess { border-left: 4px solid var(--danger); }
+  .action-card.balanced { border-left: 4px solid var(--success); }
+
+  .action-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+  .action-tag {
+    font-size: 0.725rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .deficit .action-tag { background: rgba(6, 182, 212, 0.15); color: var(--accent-secondary); }
+  .excess .action-tag { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+  .balanced .action-tag { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+
+  .biochem-note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .pantry-fix {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    background: var(--input-bg);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.825rem;
+    border: 1px solid var(--panel-border);
+  }
+  .pantry-fix .dose {
+    font-weight: 700;
+    color: var(--accent-primary);
+  }
+
+  .disclaimer-bar {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 0.65rem;
+    border-top: 1px solid var(--panel-border);
+    margin-top: 0.5rem;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    background: var(--panel-bg);
+    border: 1px solid var(--accent-primary);
+    color: var(--text-main);
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.25s ease;
+    pointer-events: none;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .unit-toggle {
+    display: inline-flex;
+    background: var(--input-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+  }
+  .unit-toggle button {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .unit-toggle button.active {
+    background: var(--accent-primary);
+    color: #fff;
+  }
+
+  @media print {
+    body { background: white; color: black; }
+    .header-actions, .presets-bar, input, select { display: none !important; }
+    .panel { border: 1px solid #ccc; box-shadow: none; }
+  }
+.rescue-wizard-card { border-left: 4px solid var(--accent-secondary); }
+.rescue-step { background: var(--input-bg); border: 1px solid var(--panel-border); border-radius: var(--radius-md); padding: 0.85rem; display: flex; flex-direction: column; gap: 0.65rem; }
+.rescue-step-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 0.85rem; }
+.rescue-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; background: var(--card-bg); padding: 0.55rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--panel-border); cursor: pointer; }
+.rescue-timer { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--accent-target); background: rgba(56, 189, 248, 0.1); padding: 0.4rem 0.65rem; border-radius: var(--radius-sm); border: 1px solid rgba(56, 189, 248, 0.2); }
+.pantry-mapper-card { background: var(--card-bg); border: 1px solid var(--panel-border); border-radius: var(--radius-md); padding: 0.75rem; margin-top: 0.75rem; }
+.pantry-impact-badge { background: var(--input-bg); border: 1px solid var(--panel-border); border-radius: var(--radius-sm); padding: 0.6rem; font-size: 0.8rem; }
+.pantry-delta-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.35rem; }
+.pantry-chip { background: rgba(249, 115, 22, 0.15); color: var(--accent-primary); padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; font-size: 0.75rem; }
+.pantry-preview-note { font-size: 0.775rem; color: var(--accent-target); font-style: italic; }
+.comparator-panel { margin-top: 0.5rem; }
+.comparator-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-top: 0.75rem; }
+.comp-card { background: var(--card-bg); border: 1px solid var(--panel-border); border-radius: var(--radius-md); padding: 0.75rem; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.8rem; }
+.comp-card-header { font-weight: 700; font-size: 0.85rem; color: var(--text-main); display: flex; justify-content: space-between; border-bottom: 1px solid var(--panel-border); padding-bottom: 0.35rem; }
+.comp-metric { display: flex; justify-content: space-between; padding: 0.1rem 0; font-size: 0.775rem; }
+.comp-metric .delta { font-weight: 700; font-size: 0.75rem; }
+.comp-chart-box { margin-top: 0.75rem; background: var(--card-bg); border: 1px solid var(--panel-border); border-radius: var(--radius-md); padding: 0.75rem; }
+.comp-bar-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; font-size: 0.75rem; }
+.comp-bar-label { width: 50px; font-weight: 600; text-align: right; color: var(--text-muted); }
+.comp-bar-track { flex: 1; height: 10px; background: var(--input-bg); border-radius: 5px; overflow: hidden; display: flex; }
+.comp-bar-fill { height: 100%; transition: width 0.3s ease; }
+.dossier-exporter-wrap { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+.dossier-inline-msg { font-size: 0.75rem; color: var(--danger); background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); border-radius: var(--radius-sm); padding: 0.2rem 0.5rem; white-space: nowrap; }
+.dossier-inline-msg a { color: var(--accent-target); font-weight: 700; text-decoration: underline; }
+/* FEATURE-CSS */
+</style>
+<title>Culinary Flavor Profile &amp; Balance Architect</title>
+<meta name="description" content="Diagnose flat or unbalanced dishes offline in your browser. Visualize salt, acid, fat, sweet, heat, and umami to rescue recipes with confidence.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/culinary-flavor-profile-balance-architect/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/culinary-flavor-profile-balance-architect/">
+<meta property="og:title" content="Culinary Flavor Profile &amp; Balance Architect"><meta property="og:description" content="Diagnose flat or unbalanced dishes offline in your browser. Visualize salt, acid, fat, sweet, heat, and umami to rescue recipes with confidence.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/culinary-flavor-profile-balance-architect/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Culinary Flavor Profile & Balance Architect","description":"Diagnose flat or unbalanced dishes offline in your browser. Visualize salt, acid, fat, sweet, heat, and umami to rescue recipes with confidence.","url":"https://rttyy.github.io/free-tools/culinary-flavor-profile-balance-architect/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Do I need an active internet connection to use the tool?","acceptedAnswer":{"@type":"Answer","text":"The online web app is free to access anytime with an internet connection. The paid $9 Gumroad pack includes a self-contained offline HTML file that runs entirely in your web browser without needing internet or software installation."}},{"@type":"Question","name":"How do live ingredient ghost lines work?","acceptedAnswer":{"@type":"Answer","text":"When you hover over potential fixes like lemon juice or soy sauce, the tool overlays a translucent secondary line on your radar chart. This lets you visually preview how an ingredient shifts your 6-axis balance before committing it to the pot."}},{"@type":"Question","name":"Is this tool suitable for beginner cooks?","acceptedAnswer":{"@type":"Answer","text":"Yes. It is designed specifically for home cooks who know basic steps but struggle when a dish tastes flat, overly salty, or too acidic. It translates abstract taste balancing into concrete visual feedback."}},{"@type":"Question","name":"What file formats can I export my recipe fixes to?","acceptedAnswer":{"@type":"Answer","text":"You can export your flavor logs and recipe dossiers as CSV, JSON, formatted text dossiers, or print kitchen-ready fix sheets directly from your browser."}}]}</script>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+      </svg>
+      <div>
+        <h1>Culinary Flavor Profile & Balance Architect</h1>
+        <p>Interactive equilibrium analyzer & incremental pantry fix guide</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="dossier-exporter-wrap" data-feature="culinary-dossier-exporter">
+        <button class="btn btn-primary" id="btn-export-dossier">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Export Recipe Dossier
+        </button>
+        <div id="dossier-msg" class="dossier-inline-msg" style="display:none;"></div>
+      </div>
+      <button class="btn" id="btn-copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy Fix Summary
+      </button>
+      <button class="btn" id="btn-export-csv">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export CSV
+      </button>
+      <button class="btn" id="btn-export-json">Export JSON</button>
+      <button class="btn" id="btn-print">Print</button>
+      <button class="btn" id="btn-reset">Reset</button>
+    </div>
+  </header>
+
+  <!-- Presets Bar -->
+  <div class="presets-bar">
+    <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted); margin-right:0.25rem;">Presets:</span>
+    <button class="preset-chip active" data-preset="0">Garden Minestrone (Healthy)</button>
+    <button class="preset-chip" data-preset="1">Dull & Greasy Tomato Bisque</button>
+    <button class="preset-chip" data-preset="2">Fiery Thai Red Curry</button>
+  </div>
+
+  <div class="panel rescue-wizard-card" data-feature="step-by-step-rescue-wizard">
+    <div class="panel-title">
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--accent-secondary)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span>Safe Incremental Rescue Sequence</span>
+      </div>
+      <button class="btn btn-primary" id="btn-start-rescue">Start Rescue Sequence</button>
+    </div>
+    <div id="rescue-wizard-content" style="display:none;">
+      <div id="rescue-step-display" style="margin-top:0.75rem;"></div>
+    </div>
+  </div>
+
+  <div class="panel comparator-panel" data-feature="recipe-rescue-history-comparator">
+    <div class="panel-title">
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--accent-primary)" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        <span>Taste Evolution Scenario Comparator (A/B Tasting)</span>
+      </div>
+      <div style="display:flex; gap:0.5rem;">
+        <button class="btn btn-primary" id="btn-snapshot-state">Save Step (Snapshot State)</button>
+      </div>
+    </div>
+    <div id="comparator-pro-message" style="display:none; font-size:0.825rem; padding:0.6rem 0.8rem; background:rgba(239,68,68,0.1); border:1px solid var(--danger); border-radius:var(--radius-sm); margin-top:0.75rem;">
+      Available in the full version <a id="comparator-pro-link" href="#" style="color:var(--accent-target); font-weight:700; text-decoration:underline;">Upgrade to PRO</a>
+    </div>
+    <div id="comparator-cards-container" class="comparator-cards-grid"></div>
+    <div id="comparator-chart-container" class="comp-chart-box"></div>
+  </div>
+
+  <!-- FEATURES -->
+  <main class="main-layout">
+    <!-- Left Column: Inputs & Selector -->
+    <section class="panel">
+      <div class="panel-title">
+        <span>Dish Parameters</span>
+        <div class="unit-toggle">
+          <button id="unit-imp" class="active">US (cups)</button>
+          <button id="unit-met">Metric (mL)</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="dish-name">Dish Title</label>
+        <input type="text" id="dish-name" class="form-control" value="Garden Minestrone" placeholder="e.g. Tomato Soup, Beef Stew">
+      </div>
+
+      <div class="form-group" data-feature="target-profile-selector">
+        <label class="form-label" for="target-profile-select">
+          Target Culinary Profile
+          <span id="target-desc-icon" style="cursor:help;" title="Defines the standard taste balance target vector.">ⓘ</span>
+        </label>
+        <select id="target-profile-select" class="form-control">
+          <option value="Bright & Fresh">Bright & Fresh (Salt 6, Acid 7, Fat 3, Sweet 3, Heat 2, Umami 5)</option>
+          <option value="Rich & Comforting">Rich & Comforting (Salt 6, Acid 4, Fat 6, Sweet 4, Heat 2, Umami 7)</option>
+          <option value="Sharp & Spicy">Sharp & Spicy (Salt 6, Acid 5, Fat 4, Sweet 3, Heat 7, Umami 6)</option>
+          <option value="Savory & Deep Umami">Savory & Deep Umami (Salt 7, Acid 4, Fat 5, Sweet 2, Heat 2, Umami 8)</option>
+          <option value="Subtle & Delicate">Subtle & Delicate (Salt 4, Acid 3, Fat 3, Sweet 2, Heat 1, Umami 4)</option>
+          <option value="Custom Target">Custom Target Profile</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="batch-size">
+          Batch Volume In Pot
+          <span id="batch-unit-label">cups</span>
+        </label>
+        <select id="batch-size" class="form-control">
+          <option value="1">1 cup (~250 mL)</option>
+          <option value="2">2 cups (~500 mL)</option>
+          <option value="4" selected>4 cups (~1 Liter / 1 Quart)</option>
+          <option value="6">6 cups (~1.5 Liters)</option>
+          <option value="8">8 cups (~2 Liters / 2 Quarts)</option>
+          <option value="16">16 cups (~4 Liters / 1 Gallon)</option>
+        </select>
+      </div>
+
+      <div class="panel-title" style="margin-top:0.5rem; font-size:0.9rem;">
+        Current Taste Intensities (0–10)
+      </div>
+
+      <div data-feature="flavor-intensity-inputs" class="form-group" style="gap:0.75rem;">
+        <!-- Salt -->
+        <div class="slider-row">
+          <div class="slider-header">
+            <span>Saltiness</span>
+            <span class="score-badge" id="badge-salt">6 / 10</span>
+          </div>
+          <div class="slider-controls">
+            <input type="range" id="slider-salt" min="0" max="10" step="1" value="6">
+          </div>
+        </div>
+
+        <!-- Acid -->
+        <div class="slider-row">
+          <div class="slider-header">
+            <span>Acidity</span>
+            <span class="score-badge" id="badge-acid">6 / 10</span>
+          </div>
+          <div class="slider-controls">
+            <input type="range" id="slider-acid" min="0" max="10" step="1" value="6">
+          </div>
+        </div>
+
+        <!-- Fat -->
+        <div class="slider-row">
+          <div class="slider-header">
+            <span>Fat / Richness</span>
+            <span class="score-badge" id="badge-fat">4 / 10</span>
+          </div>
+          <div class="slider-controls">
+            <input type="range" id="slider-fat" min="0" max="10" step="1" value="4">
+          </div>
+        </div>
+
+        <!-- Sweet -->
+        <div class="slider-row">
+          <div class="slider-header">
+            <span>Sweetness</span>
+            <span class="score-badge" id="badge-sweet">3 / 10</span>
+          </div>
+          <div class="slider-controls">
+            <input type="range" id="slider-sweet" min="0" max="10" step="1" value="3">
+          </div>
+        </div>
+
+        <!-- Heat -->
+        <div class="slider-row">
+          <div class="slider-header">
+            <span>Piquancy / Heat</span>
+            <span class="score-badge" id="badge-heat">2 / 10</span>
+          </div>
+          <div class="slider-controls">
+            <input type="range" id="slider-heat" min="0" max="10" step="1" value="2">
+          </div>
+        </div>
+
+        <!-- Umami -->
+        <div class="slider-row">
+          <div class="slider-header">
+            <span>Savory Umami</span>
+            <span class="score-badge" id="badge-umami">5 / 10</span>
+          </div>
+          <div class="slider-controls">
+            <input type="range" id="slider-umami" min="0" max="10" step="1" value="5">
+          </div>
+        </div>
+      </div>
+
+      <div class="pantry-mapper-card" data-feature="pantry-ingredient-mapper">
+        <div class="form-group">
+          <label class="form-label" for="pantry-select">
+            <span>Pantry Impact Matrix & Ghost Line</span>
+          </label>
+          <select id="pantry-select" class="form-control">
+            <option value="">-- Select Ingredient to Preview Impact --</option>
+            <option value="Lime Juice">Lime Juice (+4 Acid, +1 Sweet)</option>
+            <option value="Soy Sauce">Soy Sauce (+3 Salt, +2 Umami, +1 Acid)</option>
+            <option value="Parmesan">Parmesan (+2 Salt, +3 Umami, +2 Fat)</option>
+            <option value="Dijon Mustard">Dijon Mustard (+3 Acid, +1 Heat, +1 Salt)</option>
+            <option value="Honey">Honey (+4 Sweet, +1 Acid)</option>
+            <option value="Toasted Sesame Oil">Toasted Sesame Oil (+4 Fat, +2 Umami)</option>
+          </select>
+        </div>
+        <div id="pantry-impact-output" class="pantry-impact-badge" style="display:none; margin-top:0.5rem;">
+          <div id="pantry-delta-tags" class="pantry-delta-tags"></div>
+          <div id="pantry-preview-note" class="pantry-preview-note"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Visualizer & Correction Engine -->
+    <section class="right-column">
+      <div class="viz-engine-grid">
+        <!-- SVG Hexagonal Radar Chart Card -->
+        <div class="panel radar-card" data-feature="radar-balance-visualizer">
+          <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <span style="font-weight:700; font-size:0.9rem;">Taste Hexagon Radar</span>
+            <span id="overall-balance-tag" class="score-badge" style="background:rgba(16,185,129,0.15); color:var(--success); padding:0.2rem 0.5rem; border-radius:12px; font-size:0.75rem; font-weight:700;">Balanced</span>
+          </div>
+
+          <svg class="radar-svg" viewBox="0 0 360 360" id="radar-svg">
+            <!-- Grid generated by JS -->
+          </svg>
+
+          <div class="radar-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--accent-current);"></div>
+              <span>Current Dish</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="border: 2px dashed var(--accent-target); background:transparent;"></div>
+              <span>Target Matrix</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Correction Engine & Live Action Guide -->
+        <div class="panel engine-card" data-feature="dynamic-correction-engine">
+          <div class="panel-title">
+            <span>Equilibrium Correction Engine</span>
+            <span style="font-size:0.75rem; color:var(--text-muted); font-weight:normal;">Live Incremental Fixes</span>
+          </div>
+
+          <div class="status-banner" id="status-banner">
+            Dish equilibrium is optimal for <strong>Bright & Fresh</strong>. No immediate corrective additions required.
+          </div>
+
+          <div>
+            <div class="section-subtitle">Ranked Priority Action Sequence</div>
+            <div class="action-list" id="action-list">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="disclaimer-bar">
+        Estimate only - verify with a qualified professional before relying on it. Taste incrementally as you add ingredients to avoid over-correcting.
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast">Message copied to clipboard</div>
+
+<script>
+const PRO = false;
+const PRO_LINK = "https://ferrywave73.gumroad.com/l/yovus";
+
+// Taste Vector Indices
+const TASTES = ['Salt', 'Acid', 'Fat', 'Sweet', 'Heat', 'Umami'];
+const TASTE_KEYS = ['salt', 'acid', 'fat', 'sweet', 'heat', 'umami'];
+
+// Standard Target Profiles Matrix
+const TARGET_PROFILES = {
+  'Bright & Fresh': { salt: 6, acid: 7, fat: 3, sweet: 3, heat: 2, umami: 5, desc: "High acidity, light fat, crisp & vibrant mouthfeel." },
+  'Rich & Comforting': { salt: 6, acid: 4, fat: 6, sweet: 4, heat: 2, umami: 7, desc: "Deep savory umami, luscious fat coating, moderate acid." },
+  'Sharp & Spicy': { salt: 6, acid: 5, fat: 4, sweet: 3, heat: 7, umami: 6, desc: "High piquancy balanced by acidity and umami backbone." },
+  'Savory & Deep Umami': { salt: 7, acid: 4, fat: 5, sweet: 2, heat: 2, umami: 8, desc: "Intense glutamates, rounded salinity, low sweetness." },
+  'Subtle & Delicate': { salt: 4, acid: 3, fat: 3, sweet: 2, heat: 1, umami: 4, desc: "Gentle seasoning preserving raw ingredient nuances." },
+  'Custom Target': { salt: 5, acid: 5, fat: 5, sweet: 5, heat: 5, umami: 5, desc: "User-configured baseline vector." }
+};
+
+// Preset Scenarios
+const PRESETS = [
+  {
+    name: "Garden Minestrone",
+    batchSize: 4,
+    target: "Bright & Fresh",
+    salt: 6, acid: 6, fat: 4, sweet: 3, heat: 2, umami: 5
+  },
+  {
+    name: "Over-creamed Tomato Bisque",
+    batchSize: 4,
+    target: "Rich & Comforting",
+    salt: 3, acid: 2, fat: 8, sweet: 4, heat: 0, umami: 4
+  },
+  {
+    name: "Fiery Red Coconut Curry",
+    batchSize: 6,
+    target: "Sharp & Spicy",
+    salt: 7, acid: 2, fat: 8, sweet: 1, heat: 9, umami: 6
+  }
+];
+
+// Kitchen Pantry Recommendations & Dosing per 4 cups per +1 unit delta deficit
+const PANTRY_DATABASE = {
+  Salt: {
+    rule: "Salt elevates food volatiles, suppresses bitter tannins, and enhances perception of sweetness.",
+    fixes: [
+      { name: "Fine Sea Salt / Kosher Salt", dosePerUnitImp: "1/8 tsp", dosePerUnitMet: "0.75 g" },
+      { name: "Light Soy Sauce / Tamari", dosePerUnitImp: "1/4 tsp", dosePerUnitMet: "1.25 mL" },
+      { name: "Fish Sauce (Nam Pla)", dosePerUnitImp: "1/8 tsp", dosePerUnitMet: "0.75 mL" }
+    ]
+  },
+  Acid: {
+    rule: "Acid stimulates salivary flow, cuts heavy lipid coatings, and brightens flat or dull ingredients.",
+    fixes: [
+      { name: "Fresh Lemon or Lime Juice", dosePerUnitImp: "1/4 tsp", dosePerUnitMet: "1.25 mL" },
+      { name: "Apple Cider / Sherry Vinegar", dosePerUnitImp: "1/4 tsp", dosePerUnitMet: "1.25 mL" },
+      { name: "Red / White Wine Vinegar", dosePerUnitImp: "1/4 tsp", dosePerUnitMet: "1.25 mL" }
+    ]
+  },
+  Fat: {
+    rule: "Fat acts as a flavor carrier, coats taste receptor cells to smooth out harsh spice, and adds body.",
+    fixes: [
+      { name: "Extra Virgin Olive Oil / Butter", dosePerUnitImp: "1/2 tsp", dosePerUnitMet: "2.5 mL" },
+      { name: "Heavy Cream / Coconut Milk", dosePerUnitImp: "1 tsp", dosePerUnitMet: "5 mL" },
+      { name: "Toasted Sesame Oil", dosePerUnitImp: "1/4 tsp", dosePerUnitMet: "1.25 mL" }
+    ]
+  },
+  Sweet: {
+    rule: "Sweetness blunts aggressive piquancy (heat), softens sharp acidity, and masks excess bitter tannin.",
+    fixes: [
+      { name: "Honey or Agave Nectar", dosePerUnitImp: "1/4 tsp", dosePerUnitMet: "1.25 mL" },
+      { name: "Granulated / Brown Sugar", dosePerUnitImp: "1/4 tsp", dosePerUnitMet: "1 g" },
+      { name: "Mirin or Sweet Wine", dosePerUnitImp: "1/2 tsp", dosePerUnitMet: "2.5 mL" }
+    ]
+  },
+  Heat: {
+    rule: "Capsaicin stimulates pain receptors to release endorphins, expanding flavor width and accentuating fat.",
+    fixes: [
+      { name: "Red Pepper Flakes / Cayenne", dosePerUnitImp: "1/8 tsp", dosePerUnitMet: "0.5 g" },
+      { name: "Sriracha / Hot Sauce", dosePerUnitImp: "1/4 tsp", dosePerUnitMet: "1.25 mL" },
+      { name: "Fresh Chilis (Finely Minsed)", dosePerUnitImp: "1/4 tsp", dosePerUnitMet: "1 g" }
+    ]
+  },
+  Umami: {
+    rule: "Glutamates and inosinates trigger savory receptors, creating depth, richness, and mouthwatering length.",
+    fixes: [
+      { name: "Tomato Paste or Sun-Dried Tomato", dosePerUnitImp: "1/2 tsp", dosePerUnitMet: "2.5 g" },
+      { name: "Miso Paste / Worcestershire", dosePerUnitImp: "1/4 tsp", dosePerUnitMet: "1.25 mL" },
+      { name: "Nutritional Yeast or Mushroom Powder", dosePerUnitImp: "1/4 tsp", dosePerUnitMet: "1 g" }
+    ]
+  }
+};
+
+// Countermeasures for Excesses
+const EXCESS_COUNTERMEASURES = {
+  Heat: {
+    rule: "Capsaicin is lipid-soluble and neutralized by sweetness and dairy proteins (casein).",
+    fixes: [
+      { name: "Add Sweetener (Honey/Sugar)", doseImp: "1/2 tsp", doseMet: "2.5 g", desc: "Blunts perceived capsaicin heat activation." },
+      { name: "Stir in Dairy / Coconut Cream", doseImp: "1 tbsp", doseMet: "15 mL", desc: "Casein/Fat binds capsaicin molecules away from receptors." },
+      { name: "Add Lime / Lemon Juice", doseImp: "1/2 tsp", doseMet: "2.5 mL", desc: "Acidity cuts through heavy chili oil build-up." }
+    ]
+  },
+  Fat: {
+    rule: "Fat coats the tongue, masking flavor resolution. Acid cuts lipid films; starch absorbs oil.",
+    fixes: [
+      { name: "Add Fresh Lemon Juice / Vinegar", doseImp: "1/2 tsp", doseMet: "2.5 mL", desc: "Cleanses palate and breaks greasy mouthfeel." },
+      { name: "Skim Surface Oil", doseImp: "Manual step", doseMet: "Manual step", desc: "Ladle or paper-towel skim liquid surface." },
+      { name: "Stir in Chopped Fresh Herbs", doseImp: "1 tbsp", doseMet: "5 g", desc: "Parsley/cilantro tannic acid cuts fat." }
+    ]
+  },
+  Salt: {
+    rule: "Excess sodium cannot be chemically neutralized; it requires volume dilution or masking.",
+    fixes: [
+      { name: "Add Unsalted Stock / Water", doseImp: "1/2 cup", doseMet: "120 mL", desc: "Increases overall batch volume to dilute sodium." },
+      { name: "Add Acid + Pinch of Sweet", doseImp: "1/2 tsp acid + 1/4 tsp sweet", doseMet: "2.5 mL acid + 1 g sweet", desc: "Distracts palate from harsh salt sharpness." },
+      { name: "Simmer Raw Potato Chunks", doseImp: "1 medium potato", doseMet: "1 medium potato", desc: "Absorbs salty broth during cooking (remove before serving)." }
+    ]
+  },
+  Sweet: {
+    rule: "Over-sweetness creates cloying heavy dishes. Acid counteracts sweet; heat/salt provides balance.",
+    fixes: [
+      { name: "Add Acid (Lemon Juice / Vinegar)", doseImp: "1/2 tsp", doseMet: "2.5 mL", desc: "Cuts through cloying sugar sharpness." },
+      { name: "Add Bitters / Hot Sauce", doseImp: "1/8 tsp", doseMet: "0.5 mL", desc: "Introduces bitter or spicy counter-contrast." }
+    ]
+  },
+  Acid: {
+    rule: "Harsh acidity causes sour puckering. Sweetness and baking soda counteract low pH.",
+    fixes: [
+      { name: "Pinch of Baking Soda (Sodium Bicarbonate)", doseImp: "1/16 tsp", doseMet: "0.3 g", desc: "Chemically neutralizes excess acid (foams slightly)." },
+      { name: "Add Honey or Sugar", doseImp: "1/2 tsp", doseMet: "2.5 g", desc: "Softens sharp sour edges on palate." },
+      { name: "Stir in Heavy Cream / Butter", doseImp: "1 tbsp", doseMet: "15 mL", desc: "Fat coats tastebuds to dull acidic bite." }
+    ]
+  },
+  Umami: {
+    rule: "Excessive umami feels heavy, soy-heavy, or muddy.",
+    fixes: [
+      { name: "Add Lemon / Wine Vinegar", doseImp: "1/2 tsp", doseMet: "2.5 mL", desc: "Lifts and brightens dark glutamates." },
+      { name: "Dilute with Fresh Unsalted Stock", doseImp: "1/4 cup", doseMet: "60 mL", desc: "Lightens concentrated intensity." }
+    ]
+  }
+};
+
+// Application State
+let state = {
+  unit: 'imp', // 'imp' or 'met'
+  dishName: "Garden Minestrone",
+  targetProfile: "Bright & Fresh",
+  batchSize: 4, // in cups
+  current: { salt: 6, acid: 6, fat: 4, sweet: 3, heat: 2, umami: 5 },
+  customTarget: { salt: 6, acid: 7, fat: 3, sweet: 3, heat: 2, umami: 5 }
+};
+
+// DOM Elements
+const dishNameInput = document.getElementById('dish-name');
+const targetProfileSelect = document.getElementById('target-profile-select');
+const batchSizeSelect = document.getElementById('batch-size');
+const unitImpBtn = document.getElementById('unit-imp');
+const unitMetBtn = document.getElementById('unit-met');
+const batchUnitLabel = document.getElementById('batch-unit-label');
+const actionListEl = document.getElementById('action-list');
+const statusBannerEl = document.getElementById('status-banner');
+const overallBalanceTag = document.getElementById('overall-balance-tag');
+const toastEl = document.getElementById('toast');
+
+// Initialize App
+function init() {
+  loadStateFromStorage();
+  setupEventListeners();
+  render();
+}
+
+function loadStateFromStorage() {
+  try {
+    const saved = localStorage.getItem('culinary_architect_state');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      state = { ...state, ...parsed };
+    }
+  } catch (e) {
+    console.warn('localStorage disabled or unavailable:', e);
+  }
+}
+
+function saveStateToStorage() {
+  try {
+    localStorage.setItem('culinary_architect_state', JSON.stringify(state));
+  } catch (e) {
+    console.warn('localStorage write failed:', e);
+  }
+}
+
+function setupEventListeners() {
+  dishNameInput.addEventListener('input', (e) => {
+    state.dishName = e.target.value || "Untitled Dish";
+    saveStateToStorage();
+  });
+
+  targetProfileSelect.addEventListener('change', (e) => {
+    state.targetProfile = e.target.value;
+    render();
+    saveStateToStorage();
+  });
+
+  batchSizeSelect.addEventListener('change', (e) => {
+    state.batchSize = parseFloat(e.target.value);
+    render();
+    saveStateToStorage();
+  });
+
+  // Unit Toggles
+  unitImpBtn.addEventListener('click', () => {
+    state.unit = 'imp';
+    unitImpBtn.classList.add('active');
+    unitMetBtn.classList.remove('active');
+    batchUnitLabel.textContent = 'cups';
+    render();
+    saveStateToStorage();
+  });
+
+  unitMetBtn.addEventListener('click', () => {
+    state.unit = 'met';
+    unitMetBtn.classList.add('active');
+    unitImpBtn.classList.remove('active');
+    batchUnitLabel.textContent = 'mL / Liters';
+    render();
+    saveStateToStorage();
+  });
+
+  // Slider Input Listeners
+  TASTE_KEYS.forEach(key => {
+    const slider = document.getElementById(`slider-${key}`);
+    slider.addEventListener('input', (e) => {
+      state.current[key] = parseInt(e.target.value, 10);
+      document.getElementById(`badge-${key}`).textContent = `${state.current[key]} / 10`;
+      renderEngineAndRadar();
+      saveStateToStorage();
+    });
+  });
+
+  // Presets Buttons
+  document.querySelectorAll('.preset-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.preset, 10);
+      if (!PRO && idx !== 0) {
+        checkPro('preset');
+        return;
+      }
+      loadPreset(idx);
+      document.querySelectorAll('.preset-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Header Actions
+  document.getElementById('btn-copy').addEventListener('click', copySummary);
+  document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
+  document.getElementById('btn-export-json').addEventListener('click', exportJSON);
+  document.getElementById('btn-print').addEventListener('click', handlePrint);
+  document.getElementById('btn-reset').addEventListener('click', resetDefaults);
+}
+
+function loadPreset(idx) {
+  const p = PRESETS[idx];
+  if (!p) return;
+  state.dishName = p.name;
+  state.batchSize = p.batchSize;
+  state.targetProfile = p.target;
+  state.current = { salt: p.salt, acid: p.acid, fat: p.fat, sweet: p.sweet, heat: p.heat, umami: p.umami };
+  
+  dishNameInput.value = state.dishName;
+  targetProfileSelect.value = state.targetProfile;
+  batchSizeSelect.value = state.batchSize;
+  
+  TASTE_KEYS.forEach(key => {
+    const slider = document.getElementById(`slider-${key}`);
+    slider.value = state.current[key];
+    document.getElementById(`badge-${key}`).textContent = `${state.current[key]} / 10`;
+  });
+
+  render();
+  saveStateToStorage();
+  showToast(`Loaded preset: ${p.name}`);
+}
+
+function getTargetVector() {
+  if (state.targetProfile === 'Custom Target') {
+    return state.customTarget;
+  }
+  return TARGET_PROFILES[state.targetProfile] || TARGET_PROFILES['Bright & Fresh'];
+}
+
+function render() {
+  dishNameInput.value = state.dishName;
+  targetProfileSelect.value = state.targetProfile;
+  batchSizeSelect.value = state.batchSize;
+
+  TASTE_KEYS.forEach(key => {
+    const slider = document.getElementById(`slider-${key}`);
+    slider.value = state.current[key];
+    document.getElementById(`badge-${key}`).textContent = `${state.current[key]} / 10`;
+  });
+
+  renderEngineAndRadar();
+}
+
+function renderEngineAndRadar() {
+  const target = getTargetVector();
+  const current = state.current;
+  
+  // Compute Deltas
+  const deltas = {};
+  let maxAbsDelta = 0;
+  let totalDeltaSum = 0;
+
+  TASTE_KEYS.forEach((key, idx) => {
+    const d = current[key] - target[key];
+    deltas[key] = d;
+    const absD = Math.abs(d);
+    totalDeltaSum += absD;
+    if (absD > maxAbsDelta) maxAbsDelta = absD;
+  });
+
+  // Render SVG Radar Chart
+  renderRadarSVG(current, target, deltas);
+
+  // Render Action Guide List & Banner
+  renderActionGuide(deltas, target);
+  if (typeof renderComparator === 'function') renderComparator();
+}
+
+function renderRadarSVG(current, target, deltas) {
+  const svg = document.getElementById('radar-svg');
+  const cx = 180, cy = 180, radius = 115;
+  const numAxes = 6;
+
+  let html = '';
+
+  // Background Grid Hexagons (Levels 2, 4, 6, 8, 10)
+  [2, 4, 6, 8, 10].forEach(level => {
+    const r = (radius / 10) * level;
+    let points = [];
+    for (let i = 0; i < numAxes; i++) {
+      const angle = (Math.PI / 3) * i - Math.PI / 2;
+      const x = cx + r * Math.cos(angle);
+      const y = cy + r * Math.sin(angle);
+      points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+    }
+    html += `<polygon points="${points.join(' ')}" fill="none" stroke="var(--panel-border)" stroke-width="1" stroke-dasharray="${level === 10 ? 'none' : '2,2'}"/>`;
+  });
+
+  // Axes lines & Vertex Labels
+  const targetPoints = [];
+  const currentPoints = [];
+
+  for (let i = 0; i < numAxes; i++) {
+    const key = TASTE_KEYS[i];
+    const name = TASTES[i];
+    const angle = (Math.PI / 3) * i - Math.PI / 2;
+    
+    // Axis line
+    const x2 = cx + radius * Math.cos(angle);
+    const y2 = cy + radius * Math.sin(angle);
+    html += `<line x1="${cx}" y1="${cy}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="var(--panel-border)" stroke-width="1"/>`;
+
+    // Calculate Target Point
+    const rTarget = (radius / 10) * target[key];
+    const tx = cx + rTarget * Math.cos(angle);
+    const ty = cy + rTarget * Math.sin(angle);
+    targetPoints.push(`${tx.toFixed(1)},${ty.toFixed(1)}`);
+
+    // Calculate Current Point
+    const rCurrent = (radius / 10) * current[key];
+    const cx_p = cx + rCurrent * Math.cos(angle);
+    const cy_p = cy + rCurrent * Math.sin(angle);
+    currentPoints.push(`${cx_p.toFixed(1)},${cy_p.toFixed(1)}`);
+
+    // Label position (slightly beyond radius)
+    const labelRadius = radius + 24;
+    const lx = cx + labelRadius * Math.cos(angle);
+    const ly = cy + labelRadius * Math.sin(angle);
+
+    const deltaVal = deltas[key];
+    let deltaBadge = '';
+    let deltaColor = 'var(--text-muted)';
+    if (deltaVal > 0) {
+      deltaBadge = `+${deltaVal}`;
+      deltaColor = 'var(--danger)';
+    } else if (deltaVal < 0) {
+      deltaBadge = `${deltaVal}`;
+      deltaColor = 'var(--accent-secondary)';
+    } else {
+      deltaBadge = `✓`;
+      deltaColor = 'var(--success)';
+    }
+
+    // Anchor alignment based on angle
+    let textAnchor = 'middle';
+    if (Math.abs(Math.cos(angle)) > 0.3) {
+      textAnchor = Math.cos(angle) > 0 ? 'start' : 'end';
+    }
+
+    html += `
+      <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${textAnchor}" fill="var(--text-main)" font-size="11" font-weight="700">
+        ${name} <tspan fill="${deltaColor}" font-weight="800">(${deltaBadge})</tspan>
+      </text>
+    `;
+  }
+
+  // Draw Target Polygon (Dashed Overlay)
+  html += `<polygon points="${targetPoints.join(' ')}" fill="rgba(56, 189, 248, 0.08)" stroke="var(--accent-target)" stroke-width="2" stroke-dasharray="4,4"/>`;
+
+  // Draw Projected Pantry Ingredient Ghost Polygon if active
+  const pSelect = document.getElementById('pantry-select');
+  const activeIng = pSelect && typeof PANTRY_INGREDIENTS !== 'undefined' ? PANTRY_INGREDIENTS[pSelect.value] : null;
+  if (activeIng) {
+    const ghostPoints = [];
+    for (let i = 0; i < numAxes; i++) {
+      const k = TASTE_KEYS[i];
+      const gVal = Math.min(10, current[k] + (activeIng[k] || 0));
+      const ang = (Math.PI / 3) * i - Math.PI / 2;
+      const rG = (radius / 10) * gVal;
+      ghostPoints.push(`${(cx + rG * Math.cos(ang)).toFixed(1)},${(cy + rG * Math.sin(ang)).toFixed(1)}`);
+    }
+    html += `<polygon points="${ghostPoints.join(' ')}" fill="rgba(245, 158, 11, 0.12)" stroke="var(--warning)" stroke-width="2" stroke-dasharray="3,3"/>`;
+  }
+
+  // Draw Current Polygon (Filled Primary Accent)
+  html += `<polygon points="${currentPoints.join(' ')}" fill="rgba(249, 115, 22, 0.25)" stroke="var(--accent-current)" stroke-width="3"/>`;
+
+  // Draw vertex dots for current dish
+  for (let i = 0; i < numAxes; i++) {
+    const pt = currentPoints[i].split(',');
+    html += `<circle cx="${pt[0]}" cy="${pt[1]}" r="4" fill="var(--accent-current)" stroke="#fff" stroke-width="1.5"/>`;
+  }
+
+  svg.innerHTML = html;
+}
+
+function renderActionGuide(deltas, target) {
+  // Sort deltas by severity (|delta| descending)
+  const items = TASTE_KEYS.map((key, i) => ({
+    key,
+    name: TASTES[i],
+    current: state.current[key],
+    target: target[key],
+    delta: deltas[key],
+    absDelta: Math.abs(deltas[key])
+  })).sort((a, b) => b.absDelta - a.absDelta);
+
+  const significantActions = items.filter(item => item.absDelta > 0);
+
+  // Overall status calculation
+  if (significantActions.length === 0) {
+    overallBalanceTag.textContent = "Equilibrium Met";
+    overallBalanceTag.style.background = "rgba(16, 185, 129, 0.15)";
+    overallBalanceTag.style.color = "var(--success)";
+
+    statusBannerEl.innerHTML = `Dish is in complete taste equilibrium for target <strong>${state.targetProfile}</strong>. No adjustments needed!`;
+    actionListEl.innerHTML = `
+      <div class="action-card balanced">
+        <div class="action-header">
+          <span>Perfect Culinary Balance</span>
+          <span class="action-tag">Balanced</span>
+        </div>
+        <p style="font-size:0.825rem; color:var(--text-muted);">
+          All six taste intensity axes match the desired reference profile. Taste test one final time before serving.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  const primary = significantActions[0];
+  if (primary.absDelta >= 4) {
+    overallBalanceTag.textContent = "Major Imbalance";
+    overallBalanceTag.style.background = "rgba(239, 68, 68, 0.15)";
+    overallBalanceTag.style.color = "var(--danger)";
+  } else {
+    overallBalanceTag.textContent = "Minor Adjustment";
+    overallBalanceTag.style.background = "rgba(245, 158, 11, 0.15)";
+    overallBalanceTag.style.color = "var(--warning)";
+  }
+
+  // Generate Banner Summary
+  const topDeficit = items.find(i => i.delta < 0);
+  const topExcess = items.find(i => i.delta > 0);
+
+  let bannerMsg = `Primary gap: <strong>${primary.name} ${primary.delta > 0 ? 'excess (+' + primary.delta + ')' : 'deficit (' + primary.delta + ')'}</strong>. `;
+  if (topDeficit && topExcess && topDeficit.key === 'acid' && topExcess.key === 'fat') {
+    bannerMsg += `Culinary rule: <strong>Acid is required to cut excess Fat coating</strong> and restore brightness.`;
+  } else if (topExcess && topExcess.key === 'heat' && (topDeficit && (topDeficit.key === 'sweet' || topDeficit.key === 'fat'))) {
+    bannerMsg += `Culinary rule: <strong>Sweetness & Fat counteract capsaicin heat</strong> without swelling liquid volume.`;
+  } else if (topDeficit && topDeficit.key === 'salt') {
+    bannerMsg += `Culinary rule: <strong>Salt opens taste receptors</strong> and pulls out background volatile aromas.`;
+  } else {
+    bannerMsg += `Follow the prioritized kitchen additions below incrementally.`;
+  }
+  statusBannerEl.innerHTML = bannerMsg;
+
+  // Render Ranked Action Cards
+  let cardsHtml = '';
+  const batchMultiplier = state.batchSize / 4; // Normalized to 4-cup baseline
+
+  significantActions.forEach((item) => {
+    const isExcess = item.delta > 0;
+    const absD = item.absDelta;
+    const cardClass = isExcess ? 'excess' : 'deficit';
+    const tagLabel = isExcess ? `Excess (+${item.delta})` : `Deficit (${item.delta})`;
+
+    let ruleText = "";
+    let fixesHtml = "";
+
+    if (isExcess) {
+      // Handle Excess
+      const excessData = EXCESS_COUNTERMEASURES[item.name];
+      ruleText = excessData ? excessData.rule : "Counteract excess with opposing taste balances or physical removal.";
+      
+      if (excessData) {
+        fixesHtml = excessData.fixes.map(fix => {
+          let doseDisplay = fix.doseImp;
+          if (state.unit === 'met' && fix.doseMet) {
+            doseDisplay = fix.doseMet;
+          }
+          return `
+            <div class="pantry-fix">
+              <div>
+                <strong>${fix.name}</strong>: ${fix.desc}
+              </div>
+              <span class="dose">${doseDisplay}</span>
+            </div>
+          `;
+        }).join('');
+      }
+    } else {
+      // Handle Deficit
+      const pantryData = PANTRY_DATABASE[item.name];
+      ruleText = pantryData ? pantryData.rule : "Add pure taste concentrates in small increments.";
+
+      if (pantryData) {
+        fixesHtml = pantryData.fixes.map(fix => {
+          let scaledDose = "";
+          if (state.unit === 'imp') {
+            scaledDose = scaleDoseString(fix.dosePerUnitImp, absD * batchMultiplier);
+          } else {
+            scaledDose = scaleDoseStringMetric(fix.dosePerUnitMet, absD * batchMultiplier);
+          }
+          return `
+            <div class="pantry-fix">
+              <span><strong>${fix.name}</strong></span>
+              <span class="dose">Add ~${scaledDose}</span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    cardsHtml += `
+      <div class="action-card ${cardClass}">
+        <div class="action-header">
+          <span>${item.name} Alignment</span>
+          <span class="action-tag">${tagLabel}</span>
+        </div>
+        <div class="biochem-note">"${ruleText}"</div>
+        <div style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.25rem;">
+          ${fixesHtml}
+        </div>
+      </div>
+    `;
+  });
+
+  actionListEl.innerHTML = cardsHtml;
+}
+
+// Dose Scaler Utilities
+function scaleDoseString(baseStr, factor) {
+  // Parses e.g. "1/4 tsp" or "1/8 tsp" or "1 tsp"
+  if (baseStr.includes('1/8 tsp')) {
+    const val = 0.125 * factor;
+    return formatTeaspoons(val);
+  } else if (baseStr.includes('1/4 tsp')) {
+    const val = 0.25 * factor;
+    return formatTeaspoons(val);
+  } else if (baseStr.includes('1/2 tsp')) {
+    const val = 0.5 * factor;
+    return formatTeaspoons(val);
+  } else if (baseStr.includes('1 tsp')) {
+    const val = 1.0 * factor;
+    return formatTeaspoons(val);
+  }
+  return baseStr;
+}
+
+function formatTeaspoons(val) {
+  if (val < 0.1875) return "1/8 tsp";
+  if (val < 0.375) return "1/4 tsp";
+  if (val < 0.625) return "1/2 tsp";
+  if (val < 0.875) return "3/4 tsp";
+  if (val < 1.25) return "1 tsp";
+  if (val < 2.5) return `${(val).toFixed(1)} tsp (${(val/3).toFixed(1)} tbsp)`;
+  return `${(val / 3).toFixed(1)} tbsp`;
+}
+
+function scaleDoseStringMetric(baseStr, factor) {
+  // Parses e.g. "1.25 mL" or "0.75 g"
+  const parts = baseStr.split(' ');
+  const num = parseFloat(parts[0]);
+  const unit = parts[1] || '';
+  if (isNaN(num)) return baseStr;
+  const scaled = num * factor;
+  return `${scaled < 10 ? scaled.toFixed(1) : Math.round(scaled)} ${unit}`;
+}
+
+// Pro Feature Checks
+function checkPro(actionName) {
+  if (!PRO) {
+    showToast(`Available in the full version <a href="${PRO_LINK}" style="color:var(--accent-target);text-decoration:underline;">Upgrade</a>`);
+    return false;
+  }
+  return true;
+}
+
+// Actions
+function copySummary() {
+  const target = getTargetVector();
+  let summary = `FLAVOR BALANCE SUMMARY: ${state.dishName}\n`;
+  summary += `Target Profile: ${state.targetProfile}\n`;
+  summary += `Batch Volume: ${state.batchSize} cups\n\n`;
+  summary += `CURRENT TASTE SCORES:\n`;
+  TASTE_KEYS.forEach((k, i) => {
+    summary += `- ${TASTES[i]}: ${state.current[k]}/10 (Target: ${target[k]}/10, Delta: ${state.current[k] - target[k]})\n`;
+  });
+  summary += `\nRECOMMENDED CORRECTIONS:\n`;
+
+  const statusText = statusBannerEl.innerText;
+  summary += `${statusText}\n\n`;
+
+  document.querySelectorAll('.action-card').forEach(card => {
+    const title = card.querySelector('.action-header')?.innerText || '';
+    const note = card.querySelector('.biochem-note')?.innerText || '';
+    summary += `${title}\n${note}\n`;
+    card.querySelectorAll('.pantry-fix').forEach(fix => {
+      summary += `  * ${fix.innerText.replace('\n', ': ')}\n`;
+    });
+    summary += `\n`;
+  });
+
+  navigator.clipboard.writeText(summary).then(() => {
+    showToast('Summary copied to clipboard!');
+  }).catch(() => {
+    showToast('Failed to copy to clipboard.');
+  });
+}
+
+function exportCSV() {
+  if (!checkPro('export')) return;
+
+  const target = getTargetVector();
+  let csv = 'Dish Name,Target Profile,Batch Size (cups),Taste Axis,Current Score,Target Score,Delta\n';
+  
+  TASTE_KEYS.forEach((k, i) => {
+    csv += `"${state.dishName}","${state.targetProfile}",${state.batchSize},"${TASTES[i]}",${state.current[k]},${target[k]},${state.current[k] - target[k]}\n`;
+  });
+
+  downloadFile(csv, `${state.dishName.replace(/\s+/g, '_')}_flavor_profile.csv`, 'text/csv');
+  showToast('Exported CSV file');
+}
+
+function exportJSON() {
+  if (!checkPro('export')) return;
+
+  const data = {
+    dishName: state.dishName,
+    targetProfile: state.targetProfile,
+    batchSize: state.batchSize,
+    unit: state.unit,
+    currentScores: state.current,
+    targetVector: getTargetVector(),
+    timestamp: new Date().toISOString()
+  };
+
+  downloadFile(JSON.stringify(data, null, 2), `${state.dishName.replace(/\s+/g, '_')}_flavor_profile.json`, 'application/json');
+  showToast('Exported JSON file');
+}
+
+function downloadFile(content, filename, contentType) {
+  const blob = new Blob([content], { type: contentType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function handlePrint() {
+  if (!checkPro('print')) return;
+  window.print();
+}
+
+function resetDefaults() {
+  loadPreset(0);
+  showToast('Reset to default Minestrone preset');
+}
+
+function showToast(msg) {
+  toastEl.innerHTML = msg;
+  toastEl.classList.add('show');
+  setTimeout(() => {
+    toastEl.classList.remove('show');
+  }, 2500);
+}
+
+// Launch App
+document.addEventListener('DOMContentLoaded', init);
+
+// Step-by-Step Rescue Wizard Feature
+const SENSITIVITY_PRIORITY = { salt: 1, acid: 1, sweet: 2, heat: 2, fat: 3, umami: 3 };
+let rescueCurrentStepIdx = 0;
+let rescueTimerInterval = null;
+
+function getOrderedRescueSteps() {
+  const target = getTargetVector();
+  const steps = [];
+  TASTE_KEYS.forEach((key, idx) => {
+    const delta = Math.round((state.current[key] - target[key]) * 10) / 10;
+    if (Math.abs(delta) > 0) {
+      steps.push({
+        key,
+        name: TASTES[idx],
+        delta,
+        absDelta: Math.abs(delta),
+        priority: SENSITIVITY_PRIORITY[key]
+      });
+    }
+  });
+  steps.sort((a, b) => a.priority - b.priority || b.absDelta - a.absDelta);
+  return steps;
+}
+
+function renderRescueWizard() {
+  const container = document.getElementById('rescue-step-display');
+  if (!container) return;
+  const steps = getOrderedRescueSteps();
+  if (steps.length === 0) {
+    container.innerHTML = `
+      <div class="rescue-step" style="border-left:4px solid var(--success);">
+        <strong style="color:var(--success);">Equilibrium Achieved!</strong>
+        <p style="font-size:0.825rem; color:var(--text-muted);">No further taste adjustments required. Your dish profile matches target specifications.</p>
+      </div>`;
+    return;
+  }
+  if (rescueCurrentStepIdx >= steps.length) rescueCurrentStepIdx = 0;
+  const step = steps[rescueCurrentStepIdx];
+  const isExcess = step.delta > 0;
+  const fixIngredient = isExcess ? "acid / sweetener countermeasure" : (PANTRY_DATABASE[step.name]?.fixes[0]?.name || "seasoning");
+  const tierName = step.priority === 1 ? "Salt/Acid First (High Sensitivity)" : step.priority === 2 ? "Sweet/Heat Second (Medium Sensitivity)" : "Fat/Umami Last (Low Sensitivity)";
+
+  container.innerHTML = `
+    <div class="rescue-step">
+      <div class="rescue-step-header">
+        <span>Step ${rescueCurrentStepIdx + 1} of ${steps.length}: ${step.name} ${isExcess ? 'Excess' : 'Deficit'} (${step.delta > 0 ? '+' : ''}${step.delta})</span>
+        <span class="action-tag" style="background:rgba(6,182,212,0.15); color:var(--accent-secondary);">${tierName}</span>
+      </div>
+      <label class="rescue-item">
+        <input type="checkbox" id="chk-step-dose" checked style="accent-color:var(--accent-primary);">
+        <span>Add verified dose: <strong>1/4 tsp</strong> ${fixIngredient} (Safe increment cap)</span>
+      </label>
+      <div class="rescue-timer">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="rescue-timer-text">Rest Checkpoint: Pause 15s & stir before tasting</span>
+        <button class="btn" id="btn-start-timer" style="padding:0.15rem 0.4rem; font-size:0.75rem; margin-left:auto;">Start 15s Timer</button>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-top:0.25rem;">
+        <button class="btn btn-primary" id="btn-mark-tasted">Mark Tasted & Recalculate</button>
+        <span style="font-size:0.75rem; color:var(--text-muted);">Lowers delta by 0.5 increment</span>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('btn-mark-tasted').addEventListener('click', () => recalculateRescueStep(step.key));
+  document.getElementById('btn-start-timer').addEventListener('click', startRescueTimer);
+}
+
+function startRescueTimer() {
+  let sec = 15;
+  const label = document.getElementById('rescue-timer-text');
+  const btn = document.getElementById('btn-start-timer');
+  if (rescueTimerInterval) clearInterval(rescueTimerInterval);
+  if (btn) btn.disabled = true;
+  rescueTimerInterval = setInterval(() => {
+    sec--;
+    if (label) label.textContent = `Tasting Checkpoint: Wait ${sec}s for flavors to meld...`;
+    if (sec <= 0) {
+      clearInterval(rescueTimerInterval);
+      if (label) label.textContent = `✓ Ready to taste! Palate refreshed.`;
+      if (btn) { btn.disabled = false; btn.textContent = 'Restart Timer'; }
+    }
+  }, 1000);
+}
+
+function recalculateRescueStep(key) {
+  const target = getTargetVector();
+  const cur = state.current[key];
+  if (cur < target[key]) {
+    state.current[key] = Math.min(10, Math.round((cur + 0.5) * 2) / 2);
+  } else if (cur > target[key]) {
+    state.current[key] = Math.max(0, Math.round((cur - 0.5) * 2) / 2);
+  }
+  const slider = document.getElementById(`slider-${key}`);
+  if (slider) {
+    slider.step = "0.5";
+    slider.value = state.current[key];
+  }
+  const badge = document.getElementById(`badge-${key}`);
+  if (badge) badge.textContent = `${state.current[key]} / 10`;
+
+  saveStateToStorage();
+  renderEngineAndRadar();
+  renderRescueWizard();
+  showToast(`Recalculated ${key}: delta lowered by 0.5`);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('btn-start-rescue');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const content = document.getElementById('rescue-wizard-content');
+      if (content) {
+        content.style.display = content.style.display === 'none' ? 'block' : 'none';
+        if (content.style.display === 'block') {
+          rescueCurrentStepIdx = 0;
+          renderRescueWizard();
+        }
+      }
+    });
+  }
+  TASTE_KEYS.forEach(key => {
+    const slider = document.getElementById(`slider-${key}`);
+    if (slider) slider.step = "0.5";
+  });
+});
+
+const PANTRY_INGREDIENTS = {
+  'Lime Juice': { acid: 4, sweet: 1, note: 'Cuts perceived fat by ~25%' },
+  'Soy Sauce': { salt: 3, umami: 2, acid: 1, note: 'Deepens savory base and elevates aromas' },
+  'Parmesan': { umami: 3, salt: 2, fat: 2, note: 'Adds creamy richness and intense glutamates' },
+  'Dijon Mustard': { acid: 3, heat: 1, salt: 1, note: 'Emulsifies fat and adds sharp tang' },
+  'Honey': { sweet: 4, acid: 1, note: 'Softens sharp acid and dampens capsaicin heat' },
+  'Toasted Sesame Oil': { fat: 4, umami: 2, note: 'Coats palate and provides nutty aroma' }
+};
+
+function updatePantryMapper() {
+  const select = document.getElementById('pantry-select');
+  const output = document.getElementById('pantry-impact-output');
+  const tagsEl = document.getElementById('pantry-delta-tags');
+  const noteEl = document.getElementById('pantry-preview-note');
+  if (!select || !output) return;
+
+  const ingName = select.value;
+  const ing = PANTRY_INGREDIENTS[ingName];
+
+  if (!ing) {
+    output.style.display = 'none';
+    renderEngineAndRadar();
+    return;
+  }
+
+  output.style.display = 'block';
+  let deltaHtml = '';
+  TASTE_KEYS.forEach((key, idx) => {
+    if (ing[key]) {
+      deltaHtml += `<span class="pantry-chip">+${ing[key]} ${TASTES[idx]}</span>`;
+    }
+  });
+  tagsEl.innerHTML = deltaHtml;
+  noteEl.textContent = ing.note || '';
+
+  renderEngineAndRadar();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const pSelect = document.getElementById('pantry-select');
+  if (pSelect) {
+    pSelect.addEventListener('change', updatePantryMapper);
+  }
+});
+
+// Scenario History Comparator
+let comparatorSnapshots = [
+  { label: 'Original Pot', values: { salt: 3, acid: 2, fat: 8, sweet: 4, heat: 0, umami: 4 } },
+  { label: 'After Acid Addition', values: { salt: 3, acid: 6, fat: 8, sweet: 4, heat: 0, umami: 4 } }
+];
+
+function renderComparator() {
+  const container = document.getElementById('comparator-cards-container');
+  const chartBox = document.getElementById('comparator-chart-container');
+  if (!container || !chartBox) return;
+
+  const targetVector = getTargetVector();
+  const displayItems = [
+    ...comparatorSnapshots,
+    { label: 'Current', values: { ...state.current } }
+  ];
+
+  let cardsHtml = '';
+  displayItems.forEach((item, idx) => {
+    let metricsHtml = '';
+    TASTE_KEYS.forEach((k, tIdx) => {
+      const val = item.values[k];
+      const targetVal = targetVector[k];
+      const delta = val - targetVal;
+      const deltaStr = delta > 0 ? `+${delta}` : `${delta}`;
+      const deltaColor = delta > 0 ? 'var(--danger)' : delta < 0 ? 'var(--accent-secondary)' : 'var(--success)';
+      metricsHtml += `
+        <div class="comp-metric">
+          <span>${TASTES[tIdx]}: <strong>${val}</strong></span>
+          <span class="delta" style="color:${deltaColor};">Δ ${deltaStr}</span>
+        </div>`;
+    });
+
+    const isLive = idx === displayItems.length - 1;
+    cardsHtml += `
+      <div class="comp-card" style="${isLive ? 'border-color:var(--accent-primary);' : ''}">
+        <div class="comp-card-header">
+          <span>${item.label}</span>
+          <span style="font-size:0.7rem; color:${isLive ? 'var(--accent-primary)' : 'var(--text-muted)'};">${isLive ? 'Live Pot' : 'Step ' + (idx + 1)}</span>
+        </div>
+        ${metricsHtml}
+      </div>`;
+  });
+  container.innerHTML = cardsHtml;
+
+  const colors = ['#06b6d4', '#38bdf8', '#f97316', '#10b981', '#f59e0b', '#a855f7'];
+  let chartHtml = '<div style="font-weight:700; font-size:0.825rem; margin-bottom:0.5rem; color:var(--text-main);">Comparison Bar Chart (Intensity Scores)</div>';
+
+  TASTE_KEYS.forEach((k, tIdx) => {
+    chartHtml += `<div class="comp-bar-row"><div class="comp-bar-label">${TASTES[tIdx]}</div><div class="comp-bar-track">`;
+    displayItems.forEach((item, sIdx) => {
+      const v = item.values[k];
+      const widthPct = (v / 10) * 100;
+      const color = colors[sIdx % colors.length];
+      chartHtml += `<div class="comp-bar-fill" style="width:${widthPct}%; background:${color}; margin-right:2px;" title="${item.label} ${TASTES[tIdx]}: ${v}/10"></div>`;
+    });
+    chartHtml += `</div></div>`;
+  });
+
+  chartHtml += '<div style="display:flex; gap:0.75rem; margin-top:0.5rem; font-size:0.75rem; flex-wrap:wrap;">';
+  displayItems.forEach((item, sIdx) => {
+    const color = colors[sIdx % colors.length];
+    chartHtml += `<div style="display:flex; align-items:center; gap:0.25rem;"><span style="width:8px; height:8px; background:${color}; border-radius:50%; display:inline-block;"></span><span style="color:var(--text-muted);">${item.label}</span></div>`;
+  });
+  chartHtml += '</div>';
+
+  chartBox.innerHTML = chartHtml;
+}
+
+function handleSaveSnapshot() {
+  const proMsg = document.getElementById('comparator-pro-message');
+  const proLink = document.getElementById('comparator-pro-link');
+  if (proLink) proLink.href = PRO_LINK;
+
+  if (!PRO) {
+    if (proMsg) {
+      proMsg.style.display = 'block';
+      proMsg.innerHTML = `Available in the full version <a href="${PRO_LINK}" style="color:var(--accent-target); font-weight:700; text-decoration:underline;">Upgrade to PRO</a>`;
+    }
+    showToast(`Available in the full version <a href="${PRO_LINK}" style="color:var(--accent-target);text-decoration:underline;">Upgrade</a>`);
+    return;
+  }
+
+  if (proMsg) proMsg.style.display = 'none';
+  const stepNum = comparatorSnapshots.length + 1;
+  comparatorSnapshots.push({
+    label: `Step ${stepNum}`,
+    values: { ...state.current }
+  });
+  renderComparator();
+  showToast(`Saved Snapshot State ${stepNum}`);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btnSnapshot = document.getElementById('btn-snapshot-state');
+  if (btnSnapshot) {
+    btnSnapshot.addEventListener('click', handleSaveSnapshot);
+  }
+  renderComparator();
+});
+
+function generateRecipeDossier() {
+  const target = getTargetVector();
+  const current = state.current;
+  const correctiveSteps = [];
+
+  TASTE_KEYS.forEach((key, idx) => {
+    const delta = current[key] - target[key];
+    if (delta !== 0) {
+      const type = delta > 0 ? 'excess' : 'deficit';
+      const remedies = delta > 0 
+        ? (EXCESS_COUNTERMEASURES[TASTES[idx]]?.fixes.map(f => f.name) || [])
+        : (PANTRY_DATABASE[TASTES[idx]]?.fixes.map(f => f.name) || []);
+      correctiveSteps.push({
+        axis: TASTES[idx],
+        currentScore: current[key],
+        targetScore: target[key],
+        delta: delta,
+        type: type,
+        recommendedRemedies: remedies
+      });
+    }
+  });
+
+  return {
+    dossierTitle: "Culinary Flavor Balance & Rescue Recipe Dossier",
+    timestamp: new Date().toISOString(),
+    dishName: state.dishName || "Untitled Dish",
+    volume: `${state.batchSize} ${state.unit === 'imp' ? 'cups' : 'mL'}`,
+    targetProfile: state.targetProfile,
+    targetCoordinates: { ...target },
+    initialRatings: state.initialRatings || { ...current },
+    finalRatings: { ...current },
+    appliedRemedies: (typeof comparatorSnapshots !== 'undefined' ? comparatorSnapshots.map(s => s.label) : []),
+    correctiveSteps: correctiveSteps
+  };
+}
+
+function handleExportDossier() {
+  const msgEl = document.getElementById('dossier-msg');
+  if (!PRO) {
+    if (msgEl) {
+      msgEl.style.display = 'block';
+      msgEl.innerHTML = `Available in the full version <a href="${PRO_LINK}">Upgrade to PRO</a>`;
+    }
+    return;
+  }
+
+  if (msgEl) msgEl.style.display = 'none';
+  const dossier = generateRecipeDossier();
+  const fileName = `${(state.dishName || 'recipe').toLowerCase().replace(/[^a-z0-9]/g, '_')}_dossier.json`;
+  downloadFile(JSON.stringify(dossier, null, 2), fileName, 'application/json');
+  showToast('Recipe Dossier downloaded!');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btnExportDossier = document.getElementById('btn-export-dossier');
+  if (btnExportDossier) {
+    btnExportDossier.addEventListener('click', handleExportDossier);
+  }
+});
+
+// FEATURE-JS
+</script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Culinary Flavor Profile &amp; Balance Architect is a practical tool designed to help home cooks transition from strictly following recipes to cooking by ear. It allows you to visually map and diagnose off-tasting dishes across six core taste axes directly in your browser. Whether your meal is too sour or lacking depth, the tool helps you make confident adjustments before adding ingredients to the pot.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your dish&#39;s current intensity across Salt, Acid, Fat, Sweet, Heat, and Umami.</li><li>Review the interactive SVG radar chart to spot missing or overpowering flavor axes.</li><li>Hover over candidate ingredients to preview ghost-line impacts on your flavor profile.</li><li>Track your adjustments side-by-side using the A/B Taste Evolution Comparator.</li><li>Export your complete recipe dossier or print a kitchen-ready fix sheet for reference.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">My homemade tomato soup tastes flat, heavy, and slightly dull. What single taste axis is missing, and exactly what pantry item should I add first to fix it without ruining the dish?</h4><p style="margin:0">You enter: Estimated current intensities (scale 0-10): Salt = 4, Acid = 2, Fat = 7, Sweet = 3, Heat = 1, Umami = 5 · Target profile desired: &#39;Bright &amp; Balanced&#39; (Salt 6, Acid 6, Fat 4, Sweet 4, Heat 2, Umami 6) · Approximate volume of soup in the pot: 4 cups (~1 quart / 1 liter).<br>You get: The primary taste deficit (Acid deficit of -4, Fat excess of +3), the specific culinary interaction (Acid cuts Fat and brightens dullness), the recommended kitchen ingredient (apple cider vinegar or lemon juice), and the cautious starting amount with tasting checkpoints (e.g., 1/2 tsp vinegar, stir, taste before adding up to 1 tbsp total).</p><h4 style="font-size:16px;margin:16px 0 4px">I accidentally put too much chili powder and oil into my curry (it is greasy and burning hot). Can I rescue it without diluting it with water, and what balances fat and heat simultaneously?</h4><p style="margin:0">You enter: Estimated current intensities (scale 0-10): Salt = 5, Acid = 2, Fat = 9, Sweet = 2, Heat = 9, Umami = 6 · Target profile desired: &#39;Rich &amp; Comforting&#39; (Salt 6, Acid 4, Fat 6, Sweet 4, Heat 3, Umami 7).<br>You get: A step-by-step counterbalancing sequence showing which taste counters Heat (Sweetness and Dairy/Acid) and which counters Fat (Acid), prioritised so the cook does not overcorrect, plus recommended fix items (e.g., lime juice + dollop of plain Greek yogurt or coconut cream + pinch of brown sugar) with minimum incremental doses.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">Do I need an active internet connection to use the tool?</h4><p style="margin:0">The online web app is free to access anytime with an internet connection. The paid $9 Gumroad pack includes a self-contained offline HTML file that runs entirely in your web browser without needing internet or software installation.</p><h4 style="font-size:16px;margin:16px 0 4px">How do live ingredient ghost lines work?</h4><p style="margin:0">When you hover over potential fixes like lemon juice or soy sauce, the tool overlays a translucent secondary line on your radar chart. This lets you visually preview how an ingredient shifts your 6-axis balance before committing it to the pot.</p><h4 style="font-size:16px;margin:16px 0 4px">Is this tool suitable for beginner cooks?</h4><p style="margin:0">Yes. It is designed specifically for home cooks who know basic steps but struggle when a dish tastes flat, overly salty, or too acidic. It translates abstract taste balancing into concrete visual feedback.</p><h4 style="font-size:16px;margin:16px 0 4px">What file formats can I export my recipe fixes to?</h4><p style="margin:0">You can export your flavor logs and recipe dossiers as CSV, JSON, formatted text dossiers, or print kitchen-ready fix sheets directly from your browser.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/yovus" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../beverage-carbonation-henry-law-simulator/" style="color:inherit;font-weight:600">Beverage Carbonation &amp; Dissolved CO2 Simulator</a>: Thermodynamic dissolved CO2 solver, burst risk analyzer, and draft line balancer in a single offline HTML file.</li><li><a href="../sourdough-fermentation-schedule-visualizer/" style="color:inherit;font-weight:600">Sourdough &amp; Fermentation Schedule Visualizer</a>: Master your sourdough timing with thermal kinetics, canvas rise simulation, and reverse bake scheduling.</li><li><a href="../isometric-shadow-light-color-designer/" style="color:inherit;font-weight:600">Isometric Shadow &amp; Light Color Designer</a>: Calculate realistic hue-shifted isometric surface palettes offline in your browser—full unlocked version.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
