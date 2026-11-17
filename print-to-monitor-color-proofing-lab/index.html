@@ -1,0 +1,2384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg-primary: #0f1115;
+      --bg-secondary: #171a21;
+      --bg-tertiary: #202430;
+      --bg-card: #1c202b;
+      --border-color: #2e3444;
+      --border-focus: #4f80ff;
+      --text-primary: #f0f3f8;
+      --text-secondary: #9ea8ba;
+      --text-muted: #657085;
+      --accent-blue: #3b82f6;
+      --accent-blue-hover: #2563eb;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
+      --accent-success: #10b981;
+      --accent-magenta: #ec4899;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg-primary: #f4f6f9;
+        --bg-secondary: #ffffff;
+        --bg-tertiary: #e9ecef;
+        --bg-card: #ffffff;
+        --border-color: #d0d7de;
+        --border-focus: #2563eb;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-muted: #94a3b8;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+        --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+        --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+      }
+    }
+
+    body.theme-light {
+      --bg-primary: #f4f6f9;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #e9ecef;
+      --bg-card: #ffffff;
+      --border-color: #d0d7de;
+      --border-focus: #2563eb;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    body.theme-dark {
+      --bg-primary: #0f1115;
+      --bg-secondary: #171a21;
+      --bg-tertiary: #202430;
+      --bg-card: #1c202b;
+      --border-color: #2e3444;
+      --border-focus: #4f80ff;
+      --text-primary: #f0f3f8;
+      --text-secondary: #9ea8ba;
+      --text-muted: #657085;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      font-size: 14px;
+      padding-bottom: 60px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 10px;
+      }
+      header {
+        padding: 12px 10px !important;
+      }
+    }
+
+    header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .header-titles {
+      max-width: 100%;
+    }
+
+    .header-titles h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      max-width: 100%;
+    }
+
+    .header-titles p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      background: var(--border-color);
+      border-color: var(--text-muted);
+    }
+
+    .btn-primary {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-blue-hover);
+      border-color: var(--accent-blue-hover);
+    }
+
+    select, input[type="text"], input[type="number"] {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.15s ease;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--border-focus);
+    }
+
+    .preset-selector-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
+
+    .preset-selector-group select {
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .preset-selector-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    /* Feature 2: Luminance Ambient Meter Bar */
+    .diagnostic-toolbar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 14px 20px;
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .meter-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .meter-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .meter-value {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .meter-unit {
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      width: fit-content;
+    }
+
+    .badge-balanced {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-mild {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-warning);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-severe {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--accent-danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Main Grid Layout */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    @media (min-width: 1024px) {
+      .dashboard-grid-2col {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    /* Feature 1: Split Proof Visualizer */
+    .split-viewer-container {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      background: #000;
+      border-radius: 6px;
+      overflow: hidden;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color);
+    }
+
+    .split-view-canvas-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    canvas.proof-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .split-divider {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: #ffffff;
+      box-shadow: 0 0 8px rgba(0,0,0,0.8);
+      cursor: ew-resize;
+      z-index: 10;
+    }
+
+    .split-handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 32px;
+      height: 32px;
+      background: #ffffff;
+      color: #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    }
+
+    .canvas-label-overlay {
+      position: absolute;
+      bottom: 12px;
+      padding: 4px 10px;
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 4px;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+    }
+
+    .label-left { left: 12px; }
+    .label-right { right: 12px; }
+
+    .viewer-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 100%;
+    }
+
+    .viewer-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
+
+    .viewer-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+      background: var(--bg-tertiary);
+      padding: 10px 14px;
+      border-radius: 6px;
+    }
+
+    .stat-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .stat-val {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* Feature 3: Gamut Clipping Engine */
+    .gamut-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .gamut-plot-canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 260px;
+      background: var(--bg-tertiary);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    canvas#gamutPlotCanvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Feature 4: Perceptual Tone Mapper */
+    .tone-mapper-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .tone-curve-canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      background: var(--bg-tertiary);
+      border-radius: 6px;
+    }
+
+    canvas#toneCurveCanvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Form & Input Styling */
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 14px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .input-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .input-group label span.unit {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .input-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .slider-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .slider-group input[type="range"] {
+      flex: 1;
+      height: 5px;
+      border-radius: 5px;
+      background: var(--border-color);
+      accent-color: var(--accent-blue);
+      cursor: pointer;
+    }
+
+    .slider-value {
+      width: 48px;
+      text-align: right;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* Educational QA Accordion */
+    .qa-section {
+      margin-top: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .qa-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: var(--text-primary);
+    }
+
+    .qa-item {
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      background: var(--bg-secondary);
+    }
+
+    .qa-header {
+      padding: 12px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-tertiary);
+      transition: background 0.15s;
+    }
+
+    .qa-header:hover {
+      background: var(--border-color);
+    }
+
+    .qa-content {
+      padding: 16px;
+      display: none;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .qa-item.active .qa-content {
+      display: block;
+    }
+
+    .qa-content strong {
+      color: var(--text-primary);
+    }
+
+    .example-box {
+      margin-top: 10px;
+      padding: 12px;
+      background: var(--bg-primary);
+      border-left: 3px solid var(--accent-blue);
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      line-height: 1.4;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+    }
+
+    /* What this means / Action Recommendations */
+    .action-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .action-list {
+      list-style-type: none;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+    }
+
+    .action-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 11px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .icon-warn { background: rgba(245, 158, 11, 0.2); color: var(--accent-warning); }
+    .icon-info { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); }
+    .icon-success { background: rgba(16, 185, 129, 0.2); color: var(--accent-success); }
+
+    /* Footer & Disclaimer */
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .disclaimer {
+      margin-top: 10px;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .pro-toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent-blue);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 6px;
+      box-shadow: var(--shadow-lg);
+      font-size: 0.85rem;
+      display: none;
+      z-index: 100;
+    }
+
+    .pro-toast a {
+      color: #fff;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    /* Toggle Switch */
+    .toggle-switch {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      gap: 8px;
+      font-size: 0.85rem;
+    }
+
+    .toggle-switch input {
+      display: none;
+    }
+
+    .slider-track {
+      width: 36px;
+      height: 20px;
+      background-color: var(--border-color);
+      border-radius: 20px;
+      position: relative;
+      transition: background-color 0.2s;
+    }
+
+    .slider-track::before {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: white;
+      top: 3px;
+      left: 3px;
+      transition: transform 0.2s;
+    }
+
+    .toggle-switch input:checked + .slider-track {
+      background-color: var(--accent-magenta);
+    }
+
+    .toggle-switch input:checked + .slider-track::before {
+      transform: translateX(16px);
+    }
+
+    /* Error Message Box */
+    .input-error {
+      color: var(--accent-danger);
+      font-size: 0.75rem;
+      margin-top: 2px;
+      display: none;
+    }
+
+    .solver-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .solver-output {
+      background: rgba(59, 130, 246, 0.05);
+      border: 1px dashed var(--accent-blue);
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .solver-val {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--accent-blue);
+    }
+    @media (max-width: 600px) {
+      .solver-grid { grid-template-columns: 1fr; }
+    }
+    .matrix-display {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      font-family: monospace;
+      font-size: 0.75rem;
+      text-align: right;
+      padding: 8px;
+      background: rgba(0,0,0,0.1);
+      border-radius: 4px;
+      color: var(--text-primary);
+    }
+    .matrix-display span { padding: 2px 4px; border-bottom: 1px solid var(--border-color); }
+    .pro-lock-overlay {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      text-align: center;
+      background: rgba(0,0,0,0.03);
+      border-radius: 6px;
+      border: 1px dashed var(--border-color);
+    }
+    .pro-inline-notice {
+      color: var(--accent-danger);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .preset-chip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-tertiary);
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      border: 1px solid var(--border-color);
+    }
+    .preset-chip:hover { border-color: var(--text-muted); }
+    .preset-chip-actions { display: flex; gap: 6px; }
+    .btn-icon-sm {
+      padding: 2px 4px;
+      font-size: 0.7rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+    .btn-icon-sm:hover { color: var(--accent-danger); }
+    @media print {
+      header, .diagnostic-toolbar, .preset-selector-group, .viewer-toolbar, .input-grid, .qa-section, .pro-toast, .card-header button, #calibration-profile-exporter { display: none !important; }
+      .container { width: 100%; max-width: none; padding: 0; }
+      .card { border: none; box-shadow: none; margin-bottom: 30px; page-break-inside: avoid; }
+      body { background: #fff; color: #000; }
+    }
+    /* FEATURE-CSS */
+  </style>
+<title>Print-to-Monitor Soft Proofing &amp; Gamut Visualizer Tool</title>
+<meta name="description" content="Fix dark prints and predict gamut clipping. A portable tool to model paper Dmax and calculate monitor brightness based on ambient light.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/print-to-monitor-color-proofing-lab/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/print-to-monitor-color-proofing-lab/">
+<meta property="og:title" content="Print-to-Monitor Soft Proofing &amp; Gamut Visualizer Tool"><meta property="og:description" content="Fix dark prints and predict gamut clipping. A portable tool to model paper Dmax and calculate monitor brightness based on ambient light.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/print-to-monitor-color-proofing-lab/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Print-to-Monitor Soft Proofing & Gamut Visualizer Tool","description":"Fix dark prints and predict gamut clipping. A portable tool to model paper Dmax and calculate monitor brightness based on ambient light.","url":"https://rttyy.github.io/free-tools/print-to-monitor-color-proofing-lab/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why do my prints look different from what I see on my computer monitor?","acceptedAnswer":{"@type":"Answer","text":"Monitors emit light (backlit) and have a dynamic range often exceeding 1000:1, while prints reflect light and rarely exceed a 100:1 contrast ratio. If your monitor is set too bright for your room, your eyes adjust to the screen, making the physical print appear dim and muddy by comparison."}},{"@type":"Question","name":"Why is 18% grey considered to be in the middle for photography?","acceptedAnswer":{"@type":"Answer","text":"Human vision is non-linear; we are more sensitive to changes in shadows than in highlights. While 18% reflectance is mathematically low, our brains perceive it as the geometric mean between black and white, making it the visual 'middle' point for exposure."}},{"@type":"Question","name":"Aren't all digital images ultimately just pixel values between 0 - 255?","acceptedAnswer":{"@type":"Answer","text":"Those numbers are just coordinates within a specific color space (like sRGB or ProPhoto). A value of 255 red in sRGB is a different physical color than 255 red in AdobeRGB; without a defined color space and calibrated output, those numbers don't represent absolute light."}},{"@type":"Question","name":"What do Hue, Chroma, Saturation, Value, Tones, Tints, and Shades mean?","acceptedAnswer":{"@type":"Answer","text":"Hue is the color family (red, blue). Chroma is the purity or intensity of a color. Saturation is chroma relative to brightness. Value is the lightness/darkness. Tints are colors mixed with white, Shades are mixed with black, and Tones are mixed with gray."}}]}</script>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="header-titles">
+        <h1>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+          Print-to-Monitor Soft Proofing & Gamut Visualizer
+        </h1>
+        <p>Model luminance mismatches, paper reflectivity, Dmax compression & CMYK gamut clipping</p>
+      </div>
+      <div class="header-controls">
+        <div class="preset-selector-group">
+          <label for="presetSelect">Preset:</label>
+          <select id="presetSelect" onchange="loadPreset(this.value)">
+            <option value="matte">Fine Art Matte Gallery</option>
+            <option value="glossy">Photo Lab Glossy</option>
+            <option value="newsprint">High-Nits vs Newsprint</option>
+            <option value="custom">Custom Setup...</option>
+          </select>
+        </div>
+        <button class="btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg> Light/Dark
+        </button>
+        <button class="btn" onclick="resetDefaults()">Reset</button>
+        <button class="btn" onclick="runExport('json')">Export Settings (JSON)</button>
+        <button class="btn" onclick="runExport('csv')">Export CSV</button>
+        <button class="btn btn-primary" onclick="runExport('report')">Print Report</button>
+      </div>
+    </header>
+
+    <!-- Data Feature 2: Luminance & Ambient Light Mismatch Meter -->
+    <div class="diagnostic-toolbar" data-feature="luminance-ambient-meter" id="luminance-ambient-meter">
+      <div class="meter-card">
+        <div class="meter-label">Paper White Luminance</div>
+        <div class="meter-value"><span id="meterPaperWhite">26.1</span> <span class="meter-unit">cd/m²</span></div>
+      </div>
+      <div class="meter-card">
+        <div class="meter-label">Monitor Brightness</div>
+        <div class="meter-value"><span id="meterMonitorWhite">120</span> <span class="meter-unit">cd/m²</span></div>
+      </div>
+      <div class="meter-card">
+        <div class="meter-label">Luminance Mismatch Ratio</div>
+        <div class="meter-value"><span id="meterRatio">4.60:1</span> <span class="meter-unit" id="meterEV">(-2.20 EV)</span></div>
+      </div>
+      <div class="meter-card">
+        <div class="meter-label">Proofing Balance Status</div>
+        <div id="meterStatusBadge" class="status-badge badge-severe">
+          Severe Mismatch
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Feature 1: Split-Screen Live Soft Proof Visualizer -->
+    <div class="card" data-feature="split-proof-visualizer" id="split-proof-visualizer" style="margin-bottom: 20px;">
+      <div class="card-header">
+        <div>
+          <div class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3v18"/></svg>
+            Split-Screen Soft Proof Simulation Canvas
+          </div>
+          <div class="card-subtitle">Left: Monitor Backlight View | Right: Simulated Paper Print Under Ambient Light</div>
+        </div>
+        <div class="viewer-controls-group">
+          <label class="toggle-switch">
+            <input type="checkbox" id="gamutHighlightToggle" onchange="updateAll()">
+            <span class="slider-track"></span>
+            <span>Highlight Out-of-Gamut</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="split-viewer-container" id="splitViewerContainer">
+        <div class="split-view-canvas-wrapper">
+          <canvas id="proofCanvasLeft" class="proof-canvas"></canvas>
+          <canvas id="proofCanvasRight" class="proof-canvas"></canvas>
+        </div>
+        <div class="split-divider" id="splitDivider" style="left: 50%;">
+          <div class="split-handle">&#x21D4;</div>
+        </div>
+        <div class="canvas-label-overlay label-left">Monitor RGB (Backlit)</div>
+        <div class="canvas-label-overlay label-right" id="paperViewLabel">Print Simulation</div>
+      </div>
+
+      <div class="viewer-toolbar">
+        <div class="viewer-controls-group">
+          <label for="testTargetSelect">Test Target:</label>
+          <select id="testTargetSelect" onchange="renderTestTarget(); updateAll();">
+            <option value="colorbars">Color Bars & Skin Tones</option>
+            <option value="landscape">Vibrant Landscape & Sunset</option>
+            <option value="gradient">Monochrome Step Wedge</option>
+          </select>
+          <button class="btn" onclick="document.getElementById('imageLoader').click()">Upload Image</button>
+          <button class="btn" onclick="loadSampleImage()">Load Sample</button>
+          <input type="file" id="imageLoader" accept="image/*" style="display:none" onchange="handleImageUpload(event)">
+        </div>
+        <div class="viewer-controls-group">
+          <button class="btn" onclick="setSplitPos(0)">Print Only</button>
+          <button class="btn" onclick="setSplitPos(50)">50/50 Split</button>
+          <button class="btn" onclick="setSplitPos(100)">Monitor Only</button>
+        </div>
+      </div>
+
+      <div class="viewer-stats">
+        <div class="stat-box">
+          <div class="stat-label">Monitor Contrast</div>
+          <div class="stat-val" id="statMonContrast">1000:1</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Paper Contrast</div>
+          <div class="stat-val" id="statPaperContrast">25:1</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Dynamic Range Loss</div>
+          <div class="stat-val" id="statDRLoss">5.32 stops</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Shadow Detail Floor</div>
+          <div class="stat-val" id="statShadowFloor">1.04 cd/m²</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optimal Monitor Brightness & Lighting Solver -->
+    <div class="card" data-feature="reverse-target-brightness-solver" id="reverse-target-brightness-solver" style="margin-bottom: 20px;">
+      <div class="card-header">
+        <div>
+          <div class="card-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21 21-4.3-4.3"/><circle cx="10" cy="10" r="7"/><path d="M10 7v6"/><path d="M7 10h6"/></svg>
+            Optimal Monitor Brightness & Lighting Solver
+          </div>
+          <div class="card-subtitle">Calculate physical 1:1 luminance matching targets for your specific environment</div>
+        </div>
+      </div>
+      <div class="solver-grid">
+        <div class="input-grid" style="grid-template-columns: 1fr;">
+          <div class="input-group">
+            <label for="solverSubstrate">Target Paper Substrate</label>
+            <select id="solverSubstrate" onchange="runSolver()">
+              <option value="matte">Fine Art Cotton Matte (High OBA)</option>
+              <option value="luster">Luster / Semigloss</option>
+              <option value="glossy">Premium Glossy</option>
+              <option value="newsprint">Newsprint</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="solverLux">Target Room Ambient Lux <span class="unit">(10–1000 lx)</span></label>
+            <div class="slider-group">
+              <input type="range" id="solverLux" min="10" max="1000" step="10" value="350" oninput="runSolver()">
+              <div class="slider-value" id="valSolverLux" style="width: 60px;">350 lx</div>
+            </div>
+          </div>
+        </div>
+        <div class="solver-grid" style="margin-top: 0;">
+          <div class="solver-output">
+            <div class="meter-label">Recommended Monitor Brightness</div>
+            <div class="solver-val"><span id="solveMonitorNits">114</span> <span class="meter-unit">cd/m²</span></div>
+            <div class="input-hint">For 1:1 perceptual white match</div>
+          </div>
+          <div class="solver-output">
+            <div class="meter-label">Target Lighting for 120 cd/m²</div>
+            <div class="solver-val"><span id="solveAmbientLux">368</span> <span class="meter-unit">lux</span></div>
+            <div class="input-hint">Industry standard calibration</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Data Feature: Ambient CCT Chromatic Adaptation Analysis -->
+    <div class="card" data-feature="lighting-chromatic-adaptation-report" id="lighting-chromatic-adaptation-report" style="margin-bottom: 20px;">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/><circle cx="12" cy="12" r="4"/></svg>
+          Ambient CCT Chromatic Adaptation Analysis
+        </div>
+      </div>
+      <div id="chromaticReportContent">
+        <div class="solver-grid">
+          <div class="solver-output">
+            <div class="meter-label">Paper White Chromatic Shift</div>
+            <div class="solver-val" id="chromaticShiftVal">+19.2 b*</div>
+            <div class="input-hint" id="chromaticWarmthDesc">Strong Yellow Cast (Warm)</div>
+          </div>
+          <div class="solver-output">
+            <div class="meter-label">Bradford Adaptation Matrix (D65 &rarr; Ambient)</div>
+            <div class="matrix-display" id="bradfordMatrixDisp">
+              <span>1.00</span><span>0.00</span><span>0.00</span>
+              <span>0.00</span><span>1.00</span><span>0.00</span>
+              <span>0.00</span><span>0.00</span><span>1.00</span>
+            </div>
+          </div>
+        </div>
+        <div class="action-item" style="margin-top: 10px; font-size: 0.8rem; color: var(--text-muted);">
+          Note: Simulates Von Kries chromatic adaptation from standard D65 monitor reference white to physical room lighting white point.
+        </div>
+      </div>
+    </div>
+    <div class="card" data-feature="calibration-profile-exporter" id="calibration-profile-exporter" style="margin-bottom: 20px;">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Soft Proof Settings Exporter & Report Generator
+        </div>
+      </div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label for="exportProjectName">Report Project Title</label>
+          <input type="text" id="exportProjectName" placeholder="Untitled Calibration" oninput="updateAll()">
+          <div class="input-hint">Appear on printed reports and exports</div>
+        </div>
+        <div class="input-group">
+          <label>Profile Actions</label>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-primary" style="flex:1" onclick="runExport('json')">Export JSON</button>
+            <button class="btn" style="flex:1" onclick="runExport('csv')">Export CSV</button>
+          </div>
+          <div id="exporterProNotice" class="pro-inline-notice" style="margin-top:8px; display:none; padding: 8px; background: rgba(239, 68, 68, 0.1); border-radius: 4px; border: 1px solid rgba(239, 68, 68, 0.2);"></div>
+        </div>
+        <div class="input-group">
+          <label>Manage Local Presets</label>
+          <div style="display: flex; gap: 8px;">
+            <input type="text" id="newPresetName" placeholder="Preset Name..." style="flex:1">
+            <button class="btn" onclick="saveCurrentToPresets()">Save</button>
+          </div>
+          <div id="localPresetsContainer" style="margin-top: 8px; display: flex; flex-direction: column; gap: 4px; max-height: 120px; overflow-y: auto;">
+            <!-- Presets injected here -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- FEATURES -->
+
+    <!-- Dashboard 2-column grid for Analysis Features -->
+    <div class="dashboard-grid dashboard-grid-2col">
+
+      <!-- Data Feature 3: Interactive Gamut Clipping Engine & Chromaticity Map -->
+      <div class="card" data-feature="gamut-clipping-engine" id="gamut-clipping-engine">
+        <div class="card-header">
+          <div>
+            <div class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a7 7 0 1 0 7 7"/></svg>
+              2D CIE Chromaticity Gamut Map
+            </div>
+            <div class="card-subtitle">Working Display RGB Triangle vs Substrate Ink Boundary</div>
+          </div>
+          <div class="meter-value" id="gamutClippedPercent" style="color: var(--accent-magenta);">0.0% <span class="meter-unit">clipped</span></div>
+        </div>
+        <div class="gamut-container">
+          <div class="gamut-plot-canvas-wrap">
+            <canvas id="gamutPlotCanvas"></canvas>
+          </div>
+          <div class="viewer-stats" style="margin-top:0;">
+            <div class="stat-box">
+              <div class="stat-label">Working Gamut</div>
+              <div class="stat-val" id="statWorkingGamut">sRGB</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Paper Substrate</div>
+              <div class="stat-val" id="statSubstrateProfile">Fine Art Matte</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Gamut Coverage</div>
+              <div class="stat-val" id="statGamutCoverage">74.2%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Feature 4: 18% Gray Midpoint & Tone Curve Mapper -->
+      <div class="card" data-feature="perceptual-tone-mapper" id="perceptual-tone-mapper">
+        <div class="card-header">
+          <div>
+            <div class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-5 5"/></svg>
+              18% Gray Midpoint & CIE L* Tone Mapper
+            </div>
+            <div class="card-subtitle">Linear vs Paper-Compressed Human Lightness Perception</div>
+          </div>
+        </div>
+        <div class="tone-mapper-container">
+          <div class="tone-curve-canvas-wrap">
+            <canvas id="toneCurveCanvas"></canvas>
+          </div>
+          <div class="viewer-stats" style="margin-top:0;">
+            <div class="stat-box">
+              <div class="stat-label">Unprinted 18% Gray</div>
+              <div class="stat-val" id="statUnprintedMid">L* 49.5 (59.4 nits)</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Printed 18% Gray</div>
+              <div class="stat-val" id="statPrintedMid">L* 41.2 (10.7 nits)</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Recommended Curve Lift</div>
+              <div class="stat-val" id="statToneBoost">+0.42 EV</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Parameter Inputs Grid Card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.51a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          Optical & Proofing Calibration Parameters
+        </div>
+        <div class="card-subtitle">Adjust settings to recalculate physical proofing model in real time</div>
+      </div>
+
+      <div class="input-grid">
+        <!-- Display Inputs -->
+        <div class="input-group">
+          <label for="inputMonitorNits">Monitor Luminance <span class="unit">(50–1000 cd/m²)</span></label>
+          <input type="number" id="inputMonitorNits" value="120" min="50" max="1000" oninput="validateAndUpdate()">
+          <div class="input-error" id="errMonitorNits">Value must be 50-1000</div>
+          <div class="input-hint">Calibrated backlight brightness</div>
+        </div>
+
+        <div class="input-group">
+          <label for="inputDisplayGamma">Display Gamma <span class="unit">(1.8, 2.2, 2.4)</span></label>
+          <select id="inputDisplayGamma" onchange="updateAll()">
+            <option value="1.8">1.8 (Legacy Mac)</option>
+            <option value="2.2" selected>2.2 (Standard Web / sRGB)</option>
+            <option value="2.4">2.4 (BT.1886 Cinema)</option>
+          </select>
+          <div class="input-hint">Monitor transfer function</div>
+        </div>
+
+        <div class="input-group">
+          <label for="inputWorkingGamut">Working Color Space</label>
+          <select id="inputWorkingGamut" onchange="updateAll()">
+            <option value="sRGB" selected>sRGB (Standard Web)</option>
+            <option value="AdobeRGB">Adobe RGB (1998 Wide Gamut)</option>
+          </select>
+          <div class="input-hint">Source image color gamut</div>
+        </div>
+
+        <!-- Ambient Inputs -->
+        <div class="input-group">
+          <label for="inputAmbientLux">Ambient Illuminance <span class="unit">(10–5000 lux)</span></label>
+          <input type="number" id="inputAmbientLux" value="500" min="10" max="5000" oninput="validateAndUpdate()">
+          <div class="input-error" id="errAmbientLux">Value must be 10-5000</div>
+          <div class="input-hint">Viewing room light level</div>
+        </div>
+
+        <div class="input-group">
+          <label for="inputAmbientTemp">Ambient Light Temp <span class="unit">(Kelvin)</span></label>
+          <select id="inputAmbientTemp" onchange="updateAll()">
+            <option value="2700">2700 K (Warm Incandescent)</option>
+            <option value="3500">3500 K (Warm White Studio)</option>
+            <option value="5000" selected>5000 K (D50 Standard Proofing)</option>
+            <option value="6500">6500 K (D65 Daylight)</option>
+          </select>
+          <div class="input-hint">Viewing light color temperature</div>
+        </div>
+
+        <!-- Paper Inputs -->
+        <div class="input-group">
+          <label for="inputSubstrateType">Paper Substrate</label>
+          <select id="inputSubstrateType" onchange="handleSubstrateChange()">
+            <option value="matte" selected>Fine Art Cotton Matte</option>
+            <option value="luster">Luster / Semigloss Photo</option>
+            <option value="glossy">Premium Glossy Photo</option>
+            <option value="newsprint">Standard Newsprint</option>
+          </select>
+          <div class="input-hint">Paper finish profile</div>
+        </div>
+
+        <div class="input-group">
+          <label for="inputPaperDmax">Paper Substrate Dmax <span class="unit">(0.50–2.60 D)</span></label>
+          <input type="number" id="inputPaperDmax" value="1.40" step="0.05" min="0.5" max="2.6" oninput="validateAndUpdate()">
+          <div class="input-error" id="errPaperDmax">Value must be 0.5-2.6</div>
+          <div class="input-hint">Maximum ink density (black floor)</div>
+        </div>
+
+        <div class="input-group">
+          <label for="inputPaperReflectance">Paper Reflectance <span class="unit">(50–110%)</span></label>
+          <input type="number" id="inputPaperReflectance" value="83" min="50" max="110" oninput="validateAndUpdate()">
+          <div class="input-error" id="errPaperReflectance">Value must be 50-110%</div>
+          <div class="input-hint">Diffuse white reflectance</div>
+        </div>
+
+        <div class="input-group">
+          <label for="inputToneBoost">Tone Curve Boost <span class="unit">(-2.0 to +2.0 EV)</span></label>
+          <div class="slider-group">
+            <input type="range" id="inputToneBoost" min="-2.0" max="2.0" step="0.05" value="0.0" oninput="updateAll()">
+            <div class="slider-value" id="valToneBoost">0.0 EV</div>
+          </div>
+          <div class="input-hint">Manual soft-proof curve compensation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Diagnostic Action / What this means Card -->
+    <div class="action-card">
+      <div class="card-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Diagnostic Summary: What This Means & Recommended Actions
+      </div>
+      <ul class="action-list" id="actionRecommendations">
+        <!-- Dynamically injected -->
+      </ul>
+    </div>
+
+    <!-- Educational QA Section -->
+    <div class="qa-section">
+      <div class="qa-title">Core Optical Proofing Concepts & Worked Examples</div>
+
+      <div class="qa-item">
+        <div class="qa-header" onclick="toggleQA(this)">
+          1. Why do my prints look different from what I see on my computer monitor?
+          <span>▼</span>
+        </div>
+        <div class="qa-content">
+          <p>Computer monitors emit direct light via LEDs/backlights (transmissive luminance), often set between 150 to 350 cd/m², achieving contrast ratios over 1000:1. Prints are reflective media: they produce light only by reflecting ambient room lighting. Under typical indoor light (100 lux), paper white reflects only ~26 cd/m², creating a severe luminance mismatch (up to -3.5 EV). Additionally, ink physical density limits maximum black (Dmax), reducing print contrast range to between 15:1 (matte) and 140:1 (glossy).</p>
+          <div class="example-box">
+<strong>WORKED EXAMPLE:</strong>
+Inputs:
+• Monitor Brightness: 220 cd/m²
+• Room Ambient Light: 100 lux (2700K Warm Tungsten)
+• Substrate: Fine Art Cotton Matte (Dmax 1.40, Reflectance 82%)
+
+Outputs & Math:
+• Paper White Luminance = (100 lux * 0.82) / π = 26.1 cd/m²
+• Luminance Mismatch EV = log2(26.1 / 220) = -3.07 EV (Print appears ~3 stops darker)
+• Paper Black Floor = (100 lux * 10^-1.40) / π = 1.04 cd/m² (Monitor black is 0.22 cd/m²)
+• Dynamic Range Reduction: 1000:1 (9.97 stops) -> 25:1 (4.65 stops)
+• Out-of-Gamut Clipping: Saturated cyans & deep reds lose 24.3% volume.
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-header" onclick="toggleQA(this)">
+          2. Why is 18% grey considered to be in the middle for photography?
+          <span>▼</span>
+        </div>
+        <div class="qa-content">
+          <p>Human visual perception of lightness is non-linear and follows a cube-root power law (CIE L* scale). A object with 18% physical linear reflectance (Y = 0.18 relative to 1.0 white) is perceived by human eyes as exactly half-way between black and white (L* = 50). On matte papers with reduced Dmax, the effective black floor lifts, causing linear 18% gray to drop to perceived lightness L* ~41, requiring midtone boost compensation for accurate printing.</p>
+          <div class="example-box">
+<strong>WORKED EXAMPLE:</strong>
+Inputs:
+• Linear Reflectance: Y = 0.18 (relative to reference white Y_n = 1.00)
+• CIE L* Lightness Formula: L* = 116 * (Y/Y_n)^(1/3) - 16
+
+Math Demonstration:
+• Standard Midpoint: L* = 116 * (0.18)^(1/3) - 16 = 116 * (0.5646) - 16 = 49.5% (50% perceptual midpoint).
+• Paper Compression (Matte Dmax 1.35, Min Reflectance 4.5%):
+  The effective perceived midpoint shifts to 22.8% linear reflectance to feel 'halfway' between paper black and paper white.
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-header" onclick="toggleQA(this)">
+          3. Aren't all digital images ultimately just pixel values between 0 - 255?
+          <span>▼</span>
+        </div>
+        <div class="qa-content">
+          <p>Digital 8-bit integer RGB values (0–255) are device-dependent relative numbers, not absolute color measurements. An RGB value of (255, 0, 0) specifies "maximum red drive signal" for a specific display device. The actual physical color produced (CIE xy chromaticity, absolute nits, and Lab color coordinates) depends entirely on display backlight brightness, working color space gamut primaries, and physical ink limits (Dmax & CMYK gamut boundary).</p>
+          <div class="example-box">
+<strong>WORKED EXAMPLE:</strong>
+Inputs:
+• Pixel RGB Value: (255, 0, 0) [Pure Red]
+• Display: 200 cd/m² calibrated monitor
+
+Transformation & Mapping:
+• On Monitor: Emits 42.5 cd/m² physical red light at chromaticity xy = (0.64, 0.33), CIE Lab(53, 80, 67).
+• On CMYK Glossy Paper: Maximum achievable red ink is Lab(48, 65, 48).
+• Truncation: 8-bit RGB (255,0,0) clips to CMYK equivalent (0, 92, 86, 0). Pixel integers only gain physical meaning when bound to specific optical targets.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification for PRO Actions -->
+    <div id="proToast" class="pro-toast"></div>
+
+    <!-- Footer -->
+    <footer>
+      <p>Print-to-Monitor Soft Proofing & Gamut Visualizer • Engine v1.0.0</p>
+      <p class="disclaimer">Estimate only - verify with a qualified professional before relying on it</p>
+    </footer>
+  </div>
+
+  <script>
+    /* Global Engine State & Binding Declaration */
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/ssenbe";
+
+    // Application state variables
+    let state = {
+      monitorNits: 120,
+      displayGamma: 2.2,
+      workingGamut: 'sRGB',
+      ambientLux: 500,
+      ambientTemp: 5000,
+      substrateType: 'matte',
+      paperDmax: 1.40,
+      paperReflectance: 83,
+      toneBoostEV: 0.0,
+      gamutHighlight: false,
+      splitPos: 50, // 0 to 100 percentage
+      customImage: null,
+      testTarget: 'colorbars'
+    };
+
+    // Substrate default profiles
+    const SUBSTRATES = {
+      matte: { name: 'Fine Art Cotton Matte', defaultDmax: 1.40, defaultReflectance: 102.5, gamutVol: 0.74 },
+      luster: { name: 'Luster Photo Paper', defaultDmax: 1.85, defaultReflectance: 88, gamutVol: 0.86 },
+      glossy: { name: 'Premium Glossy Photo', defaultDmax: 2.15, defaultReflectance: 92, gamutVol: 0.94 },
+      newsprint: { name: 'Standard Newsprint', defaultDmax: 0.95, defaultReflectance: 72, gamutVol: 0.42 }
+    };
+
+    // Preset configurations
+    const PRESETS = {
+      matte: {
+        monitorNits: 120,
+        ambientLux: 500,
+        ambientTemp: 5000,
+        substrateType: 'matte',
+        paperDmax: 1.40,
+        paperReflectance: 83,
+        workingGamut: 'sRGB',
+        displayGamma: 2.2,
+        toneBoostEV: 0.0
+      },
+      glossy: {
+        monitorNits: 160,
+        ambientLux: 250,
+        ambientTemp: 6500,
+        substrateType: 'glossy',
+        paperDmax: 2.15,
+        paperReflectance: 92,
+        workingGamut: 'AdobeRGB',
+        displayGamma: 2.2,
+        toneBoostEV: 0.0
+      },
+      newsprint: {
+        monitorNits: 350,
+        ambientLux: 100,
+        ambientTemp: 2700,
+        substrateType: 'newsprint',
+        paperDmax: 0.95,
+        paperReflectance: 72,
+        workingGamut: 'sRGB',
+        displayGamma: 2.2,
+        toneBoostEV: 0.0
+      }
+    };
+
+    // Color Space Gamut Primaries (CIE xy)
+    const GAMUTS = {
+      sRGB: {
+        r: [0.640, 0.330],
+        g: [0.300, 0.600],
+        b: [0.150, 0.060],
+        w: [0.3127, 0.3290]
+      },
+      AdobeRGB: {
+        r: [0.640, 0.330],
+        g: [0.210, 0.710],
+        b: [0.150, 0.060],
+        w: [0.3127, 0.3290]
+      }
+    };
+
+    // Offscreen target image canvas
+    let sourceImageCanvas = document.createElement('canvas');
+    sourceImageCanvas.width = 800;
+    sourceImageCanvas.height = 450;
+
+    // Initialization
+    window.addEventListener('load', () => {
+      loadStorage();
+      setupSplitSlider();
+      renderTestTarget();
+      updateAll();
+    });
+
+    window.addEventListener('resize', () => {
+      updateAll();
+    });
+
+    function saveStorage() {
+      try {
+        localStorage.setItem('softproof_state', JSON.stringify({
+          monitorNits: state.monitorNits,
+          ambientLux: state.ambientLux,
+          ambientTemp: state.ambientTemp,
+          substrateType: state.substrateType,
+          paperDmax: state.paperDmax,
+          paperReflectance: state.paperReflectance,
+          workingGamut: state.workingGamut,
+          displayGamma: state.displayGamma,
+          toneBoostEV: state.toneBoostEV
+        }));
+      } catch (e) {
+        // Storage restricted or unavailable
+      }
+    }
+
+    function loadStorage() {
+      try {
+        const saved = localStorage.getItem('softproof_state');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && typeof parsed === 'object') {
+            if (typeof parsed.monitorNits === 'number' && !isNaN(parsed.monitorNits)) state.monitorNits = parsed.monitorNits;
+            if (typeof parsed.ambientLux === 'number' && !isNaN(parsed.ambientLux)) state.ambientLux = parsed.ambientLux;
+            if (typeof parsed.ambientTemp === 'number' && !isNaN(parsed.ambientTemp)) state.ambientTemp = parsed.ambientTemp;
+            if (parsed.substrateType && SUBSTRATES[parsed.substrateType]) state.substrateType = parsed.substrateType;
+            if (typeof parsed.paperDmax === 'number' && !isNaN(parsed.paperDmax)) state.paperDmax = parsed.paperDmax;
+            if (typeof parsed.paperReflectance === 'number' && !isNaN(parsed.paperReflectance)) state.paperReflectance = parsed.paperReflectance;
+            if (parsed.workingGamut && GAMUTS[parsed.workingGamut]) state.workingGamut = parsed.workingGamut;
+            if (typeof parsed.displayGamma === 'number' && !isNaN(parsed.displayGamma)) state.displayGamma = parsed.displayGamma;
+            if (typeof parsed.toneBoostEV === 'number' && !isNaN(parsed.toneBoostEV)) state.toneBoostEV = parsed.toneBoostEV;
+            syncInputsFromState();
+          }
+        }
+      } catch (e) {
+        // Storage restricted
+      }
+    }
+
+    function syncInputsFromState() {
+      document.getElementById('inputMonitorNits').value = state.monitorNits;
+      document.getElementById('inputAmbientLux').value = state.ambientLux;
+      document.getElementById('inputAmbientTemp').value = state.ambientTemp;
+      document.getElementById('inputSubstrateType').value = state.substrateType;
+      document.getElementById('inputPaperDmax').value = state.paperDmax;
+      document.getElementById('inputPaperReflectance').value = state.paperReflectance;
+      document.getElementById('inputWorkingGamut').value = state.workingGamut;
+      document.getElementById('inputDisplayGamma').value = state.displayGamma;
+      document.getElementById('inputToneBoost').value = state.toneBoostEV;
+      document.getElementById('valToneBoost').innerText = `${state.toneBoostEV > 0 ? '+' : ''}${parseFloat(state.toneBoostEV).toFixed(2)} EV`;
+    }
+
+    function loadPreset(key) {
+      if (key === 'custom') return;
+      if (PRESETS[key]) {
+        Object.assign(state, PRESETS[key]);
+        syncInputsFromState();
+        updateAll();
+      }
+    }
+
+    function resetDefaults() {
+      loadPreset('matte');
+      document.getElementById('presetSelect').value = 'matte';
+    }
+
+    function handleSubstrateChange() {
+      const type = document.getElementById('inputSubstrateType').value;
+      state.substrateType = type;
+      if (SUBSTRATES[type]) {
+        state.paperDmax = SUBSTRATES[type].defaultDmax;
+        state.paperReflectance = SUBSTRATES[type].defaultReflectance;
+        document.getElementById('inputPaperDmax').value = state.paperDmax;
+        document.getElementById('inputPaperReflectance').value = state.paperReflectance;
+      }
+      document.getElementById('presetSelect').value = 'custom';
+      updateAll();
+    }
+
+    function validateAndUpdate() {
+      let valid = true;
+
+      const nits = parseFloat(document.getElementById('inputMonitorNits').value);
+      if (isNaN(nits) || nits < 50 || nits > 1000) {
+        document.getElementById('errMonitorNits').style.display = 'block';
+        valid = false;
+      } else {
+        document.getElementById('errMonitorNits').style.display = 'none';
+        state.monitorNits = nits;
+      }
+
+      const lux = parseFloat(document.getElementById('inputAmbientLux').value);
+      if (isNaN(lux) || lux < 10 || lux > 5000) {
+        document.getElementById('errAmbientLux').style.display = 'block';
+        valid = false;
+      } else {
+        document.getElementById('errAmbientLux').style.display = 'none';
+        state.ambientLux = lux;
+      }
+
+      const dmax = parseFloat(document.getElementById('inputPaperDmax').value);
+      if (isNaN(dmax) || dmax < 0.5 || dmax > 2.6) {
+        document.getElementById('errPaperDmax').style.display = 'block';
+        valid = false;
+      } else {
+        document.getElementById('errPaperDmax').style.display = 'none';
+        state.paperDmax = dmax;
+      }
+
+      const ref = parseFloat(document.getElementById('inputPaperReflectance').value);
+      if (isNaN(ref) || ref < 50 || ref > 110) {
+        document.getElementById('errPaperReflectance').style.display = 'block';
+        valid = false;
+      } else {
+        document.getElementById('errPaperReflectance').style.display = 'none';
+        state.paperReflectance = ref;
+      }
+
+      state.workingGamut = document.getElementById('inputWorkingGamut').value;
+      state.displayGamma = parseFloat(document.getElementById('inputDisplayGamma').value);
+      state.ambientTemp = parseInt(document.getElementById('inputAmbientTemp').value);
+      state.toneBoostEV = parseFloat(document.getElementById('inputToneBoost').value);
+      state.gamutHighlight = document.getElementById('gamutHighlightToggle').checked;
+
+      document.getElementById('valToneBoost').innerText = `${state.toneBoostEV > 0 ? '+' : ''}${state.toneBoostEV.toFixed(2)} EV`;
+
+      if (valid) {
+        document.getElementById('presetSelect').value = 'custom';
+        saveStorage();
+        updateAll();
+      }
+    }
+
+    /* Core Calculation Engine */
+    function calculateMetrics() {
+      const monNits = Math.max(1, parseFloat(state.monitorNits) || 120);
+      const ambLux = Math.max(0, parseFloat(state.ambientLux) || 0);
+      const pRef = Math.max(1, Math.min(110, parseFloat(state.paperReflectance) || 83));
+      const pDmax = Math.max(0.1, parseFloat(state.paperDmax) || 1.4);
+
+      // Paper White Luminance L_pw = (lux * Reflectance) / PI
+      const paperWhiteNits = (ambLux * (pRef / 100)) / Math.PI;
+      const monWhiteNits = monNits;
+
+      // Luminance Mismatch Ratio & EV
+      const ratio = monWhiteNits / Math.max(0.01, paperWhiteNits);
+      const evMismatch = Math.log2(Math.max(0.01, paperWhiteNits) / monWhiteNits);
+
+      // Dmax & Black Floor calculation
+      const minReflectance = Math.pow(10, -pDmax);
+      const paperBlackNits = (ambLux * minReflectance) / Math.PI;
+
+      // Contrast Ratios
+      const paperContrastRatio = (pRef / 100) / Math.max(0.0001, minReflectance);
+      const monitorContrastRatio = 1000; // Standard IPS display baseline
+
+      // Dynamic range in stops
+      const paperStops = Math.log2(Math.max(1, paperContrastRatio));
+      const monStops = Math.log2(monitorContrastRatio);
+      const drLossStops = Math.max(0, monStops - paperStops);
+
+      // CIE L* midpoint calculation for 18% linear gray
+      const yNormUnprinted = 0.18;
+      const lStarUnprinted = 116 * Math.cbrt(yNormUnprinted) - 16; // 49.5%
+      const unprintedNits = yNormUnprinted * monWhiteNits;
+
+      // Printed 18% gray under paper compression
+      const effectivePrintedReflectance = minReflectance + yNormUnprinted * ((pRef / 100) - minReflectance);
+      const printedNits = (ambLux * effectivePrintedReflectance) / Math.PI;
+      const yNormPrinted = Math.max(0.0001, effectivePrintedReflectance / (pRef / 100));
+      const lStarPrinted = 116 * Math.cbrt(Math.max(0.008856, yNormPrinted)) - 16;
+
+      // Recommended midtone boost (EV) to restore midtone visual weight
+      const recommendedBoostEV = Math.log2(lStarUnprinted / Math.max(1, lStarPrinted)) * 0.75;
+
+      return {
+        paperWhiteNits,
+        monWhiteNits,
+        ratio,
+        evMismatch,
+        minReflectance,
+        paperBlackNits,
+        paperContrastRatio,
+        monitorContrastRatio,
+        paperStops,
+        monStops,
+        drLossStops,
+        lStarUnprinted,
+        unprintedNits,
+        lStarPrinted,
+        printedNits,
+        recommendedBoostEV
+      };
+    }
+
+    function updateAll() {
+      const metrics = calculateMetrics();
+
+      // Update Meter Bar
+      document.getElementById('meterPaperWhite').innerText = metrics.paperWhiteNits.toFixed(1);
+      document.getElementById('meterMonitorWhite').innerText = metrics.monWhiteNits.toFixed(0);
+      document.getElementById('meterRatio').innerText = `${metrics.ratio.toFixed(2)}:1`;
+      document.getElementById('meterEV').innerText = `(${metrics.evMismatch > 0 ? '+' : ''}${metrics.evMismatch.toFixed(2)} EV)`;
+
+      const badge = document.getElementById('meterStatusBadge');
+      const absEV = Math.abs(metrics.evMismatch);
+      if (absEV < 0.75) {
+        badge.className = 'status-badge badge-balanced';
+        badge.innerText = 'Balanced Setup';
+      } else if (absEV < 2.0) {
+        badge.className = 'status-badge badge-mild';
+        badge.innerText = 'Mild Mismatch';
+      } else {
+        badge.className = 'status-badge badge-severe';
+        badge.innerText = metrics.evMismatch < 0 ? 'Severe Mismatch: Print Dark' : 'Severe Mismatch: Print Bright';
+      }
+
+      // Update Visualizer Stats
+      document.getElementById('statMonContrast').innerText = `${metrics.monitorContrastRatio}:1`;
+      document.getElementById('statPaperContrast').innerText = `${Math.round(metrics.paperContrastRatio)}:1`;
+      document.getElementById('statDRLoss').innerText = `${metrics.drLossStops.toFixed(2)} stops`;
+      document.getElementById('statShadowFloor').innerText = `${metrics.paperBlackNits.toFixed(2)} cd/m²`;
+
+      // Update Gamut Stats
+      document.getElementById('statWorkingGamut').innerText = state.workingGamut;
+      document.getElementById('statSubstrateProfile').innerText = SUBSTRATES[state.substrateType].name;
+      const gamutCov = Math.round(SUBSTRATES[state.substrateType].gamutVol * 100);
+      document.getElementById('statGamutCoverage').innerText = `${gamutCov}% of sRGB`;
+
+      // Update Tone Mapper Stats
+      document.getElementById('statUnprintedMid').innerText = `L* ${metrics.lStarUnprinted.toFixed(1)} (${metrics.unprintedNits.toFixed(1)} nits)`;
+      document.getElementById('statPrintedMid').innerText = `L* ${metrics.lStarPrinted.toFixed(1)} (${metrics.printedNits.toFixed(1)} nits)`;
+      document.getElementById('statToneBoost').innerText = `+${metrics.recommendedBoostEV.toFixed(2)} EV`;
+
+      // Render Visualizations
+      renderProofingCanvases(metrics);
+      renderGamutPlotCanvas();
+      renderToneCurveCanvas(metrics);
+      renderActionRecommendations(metrics);
+    }
+
+    /* Split Viewer & Rendering Engine */
+    function setSplitPos(percent) {
+      state.splitPos = percent;
+      document.getElementById('splitDivider').style.left = `${percent}%`;
+      renderProofingCanvases(calculateMetrics());
+    }
+
+    function setupSplitSlider() {
+      const container = document.getElementById('splitViewerContainer');
+      const divider = document.getElementById('splitDivider');
+      let isDragging = false;
+
+      function updatePos(e) {
+        const rect = container.getBoundingClientRect();
+        let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        if (clientX === undefined) return;
+        let pos = ((clientX - rect.left) / rect.width) * 100;
+        pos = Math.max(0, Math.min(100, pos));
+        state.splitPos = pos;
+        divider.style.left = `${pos}%`;
+        renderProofingCanvases(calculateMetrics());
+      }
+
+      divider.addEventListener('mousedown', () => isDragging = true);
+      window.addEventListener('mouseup', () => isDragging = false);
+      window.addEventListener('mousemove', (e) => { if (isDragging) updatePos(e); });
+
+      divider.addEventListener('touchstart', () => isDragging = true);
+      window.addEventListener('touchend', () => isDragging = false);
+      window.addEventListener('touchmove', (e) => { if (isDragging) updatePos(e); });
+    }
+
+    function loadSampleImage() {
+      document.getElementById('testTargetSelect').value = 'landscape';
+      renderTestTarget();
+      updateAll();
+    }
+
+    function renderTestTarget() {
+      state.customImage = null;
+      const type = document.getElementById('testTargetSelect').value;
+      state.testTarget = type;
+      const ctx = sourceImageCanvas.getContext('2d');
+      const w = sourceImageCanvas.width;
+      const h = sourceImageCanvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      if (type === 'colorbars') {
+        // Color Bars & Skin Tones
+        const colors = [
+          '#ffffff', '#ffff00', '#00ffff', '#00ff00',
+          '#ff00ff', '#ff0000', '#0000ff', '#000000',
+          '#888888', '#e0ac69', '#c68642', '#8d5524'
+        ];
+        const barW = w / colors.length;
+        colors.forEach((c, i) => {
+          ctx.fillStyle = c;
+          ctx.fillRect(i * barW, 0, barW, h * 0.7);
+        });
+
+        // Gradient Ramp below
+        const grad = ctx.createLinearGradient(0, 0, w, 0);
+        grad.addColorStop(0, '#000000');
+        grad.addColorStop(0.18, '#333333');
+        grad.addColorStop(0.5, '#888888');
+        grad.addColorStop(1, '#ffffff');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, h * 0.7, w, h * 0.3);
+
+      } else if (type === 'landscape') {
+        // Sunset Landscape with high chroma cyans & deep shadows
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.6);
+        skyGrad.addColorStop(0, '#0055ff'); // Ultra cyan/blue
+        skyGrad.addColorStop(0.4, '#ff0055'); // Vivid magenta
+        skyGrad.addColorStop(0.8, '#ffaa00'); // Intense orange
+        skyGrad.addColorStop(1, '#ffff00');
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, w, h * 0.6);
+
+        // Sun
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(w * 0.5, h * 0.45, 45, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Dark Mountain Silhouette (Dmax check)
+        ctx.fillStyle = '#0a0d14';
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.6);
+        ctx.lineTo(w * 0.25, h * 0.35);
+        ctx.lineTo(w * 0.5, h * 0.55);
+        ctx.lineTo(w * 0.75, h * 0.3);
+        ctx.lineTo(w, h * 0.6);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+
+      } else if (type === 'gradient') {
+        // Continuous monochrome gradient step wedge
+        const steps = 16;
+        const stepW = w / steps;
+        for (let i = 0; i < steps; i++) {
+          const val = Math.round((i / (steps - 1)) * 255);
+          ctx.fillStyle = `rgb(${val},${val},${val})`;
+          ctx.fillRect(i * stepW, 0, stepW, h * 0.6);
+        }
+
+        const smoothGrad = ctx.createLinearGradient(0, 0, w, 0);
+        smoothGrad.addColorStop(0, '#000000');
+        smoothGrad.addColorStop(1, '#ffffff');
+        ctx.fillStyle = smoothGrad;
+        ctx.fillRect(0, h * 0.6, w, h * 0.4);
+      }
+    }
+
+    function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const ctx = sourceImageCanvas.getContext('2d');
+          ctx.clearRect(0, 0, sourceImageCanvas.width, sourceImageCanvas.height);
+          ctx.drawImage(img, 0, 0, sourceImageCanvas.width, sourceImageCanvas.height);
+          state.customImage = img;
+          updateAll();
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function renderProofingCanvases(metrics) {
+      const container = document.getElementById('splitViewerContainer');
+      const cLeft = document.getElementById('proofCanvasLeft');
+      const cRight = document.getElementById('proofCanvasRight');
+
+      const width = Math.max(100, container.clientWidth || 800);
+      const height = Math.max(100, container.clientHeight || 380);
+
+      cLeft.width = cRight.width = width;
+      cLeft.height = cRight.height = height;
+
+      const ctxL = cLeft.getContext('2d');
+      const ctxR = cRight.getContext('2d');
+
+      // Draw original target on left
+      ctxL.drawImage(sourceImageCanvas, 0, 0, width, height);
+
+      // Create simulated print image on right
+      const imgData = ctxL.getImageData(0, 0, width, height);
+      const data = imgData.data;
+      const printImgData = ctxR.createImageData(width, height);
+      const pData = printImgData.data;
+
+      // Environmental temperature color shift tint
+      let rTint = 1.0, gTint = 1.0, bTint = 1.0;
+      if (state.ambientTemp === 2700) { rTint = 1.05; gTint = 0.88; bTint = 0.65; }
+      else if (state.ambientTemp === 3500) { rTint = 1.02; gTint = 0.94; bTint = 0.80; }
+      else if (state.ambientTemp === 5000) { rTint = 1.00; gTint = 0.98; bTint = 0.92; }
+      else if (state.ambientTemp === 6500) { rTint = 1.00; gTint = 1.00; bTint = 1.00; }
+
+      // Substrate Dmax compression floor & paper white scaling
+      const paperReflectanceFrac = state.paperReflectance / 100;
+      const minReflectance = metrics.minReflectance;
+      const maxInkGamutChroma = SUBSTRATES[state.substrateType].gamutVol;
+
+      // Luminance mismatch attenuation factor for display rendering
+      const lumRatioScale = Math.min(1.0, metrics.paperWhiteNits / metrics.monWhiteNits);
+      const toneBoostFactor = Math.pow(2, state.toneBoostEV);
+
+      let clippedPixels = 0;
+      const totalPixels = width * height;
+
+      for (let i = 0; i < data.length; i += 4) {
+        let r = data[i] / 255;
+        let g = data[i+1] / 255;
+        let b = data[i+2] / 255;
+
+        // Apply gamma linearization
+        r = Math.pow(r, state.displayGamma);
+        g = Math.pow(g, state.displayGamma);
+        b = Math.pow(b, state.displayGamma);
+
+        // Check chromaticity / out-of-gamut ink threshold
+        const maxC = Math.max(r, g, b);
+        const minC = Math.min(r, g, b);
+        const chroma = maxC - minC;
+
+        let isClipped = false;
+        if (chroma > maxInkGamutChroma + 0.05) {
+          isClipped = true;
+          clippedPixels++;
+        }
+
+        // Apply Manual Tone Curve Boost
+        r = Math.min(1.0, r * toneBoostFactor);
+        g = Math.min(1.0, g * toneBoostFactor);
+        b = Math.min(1.0, b * toneBoostFactor);
+
+        // Compress dynamic range based on Dmax (minReflectance) & Paper White Reflectance
+        let pr = minReflectance + r * (paperReflectanceFrac - minReflectance);
+        let pg = minReflectance + g * (paperReflectanceFrac - minReflectance);
+        let pb = minReflectance + b * (paperReflectanceFrac - minReflectance);
+
+        // Apply Ambient Light Temperature Tint
+        pr *= rTint;
+        pg *= gTint;
+        pb *= bTint;
+
+        // Apply Luminance Mismatch Scaling (print looks darker under low lux)
+        pr *= lumRatioScale;
+        pg *= lumRatioScale;
+        pb *= lumRatioScale;
+
+        // Convert back to gamma space for display screen
+        pr = Math.min(1.0, Math.pow(Math.max(0, pr), 1 / state.displayGamma));
+        pg = Math.min(1.0, Math.pow(Math.max(0, pg), 1 / state.displayGamma));
+        pb = Math.min(1.0, Math.pow(Math.max(0, pb), 1 / state.displayGamma));
+
+        if (state.gamutHighlight && isClipped) {
+          // Highlight out of gamut pixels in magenta
+          pData[i] = 255;
+          pData[i+1] = 0;
+          pData[i+2] = 200;
+          pData[i+3] = 255;
+        } else {
+          pData[i] = Math.round(pr * 255);
+          pData[i+1] = Math.round(pg * 255);
+          pData[i+2] = Math.round(pb * 255);
+          pData[i+3] = 255;
+        }
+      }
+
+      ctxR.putImageData(printImgData, 0, 0);
+
+      // Clip split view according to splitPos
+      const splitPx = (state.splitPos / 100) * width;
+      cLeft.style.clipPath = `polygon(0 0, ${splitPx}px 0, ${splitPx}px 100%, 0 100%)`;
+      cRight.style.clipPath = `polygon(${splitPx}px 0, 100% 0, 100% 100%, ${splitPx}px 100%)`;
+
+      // Update gamut clipped percentage UI
+      const clipPct = ((clippedPixels / totalPixels) * 100).toFixed(1);
+      document.getElementById('gamutClippedPercent').innerText = `${clipPct}% clipped`;
+    }
+
+    /* Feature 3: 2D Gamut Canvas Renderer */
+    function renderGamutPlotCanvas() {
+      const canvas = document.getElementById('gamutPlotCanvas');
+      const ctx = canvas.getContext('2d');
+      const w = canvas.parentElement.clientWidth || 400;
+      const h = canvas.parentElement.clientHeight || 260;
+      canvas.width = w;
+      canvas.height = h;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Grid & CIE xy Coordinate System
+      const pad = 35;
+      const mapX = (x) => pad + x * (w - pad * 2);
+      const mapY = (y) => h - pad - y * (h - pad * 2);
+
+      // Axes
+      ctx.strokeStyle = 'var(--border-color)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pad, mapY(0)); ctx.lineTo(mapX(0.8), mapY(0));
+      ctx.moveTo(pad, mapY(0)); ctx.lineTo(pad, mapY(0.9));
+      ctx.stroke();
+
+      ctx.fillStyle = 'var(--text-muted)';
+      ctx.font = '10px sans-serif';
+      ctx.fillText('CIE x', mapX(0.75), mapY(-0.05));
+      ctx.fillText('CIE y', pad - 25, mapY(0.85));
+
+      // Working RGB Gamut Triangle
+      const gSpec = GAMUTS[state.workingGamut];
+      ctx.strokeStyle = 'var(--accent-blue)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(mapX(gSpec.r[0]), mapY(gSpec.r[1]));
+      ctx.lineTo(mapX(gSpec.g[0]), mapY(gSpec.g[1]));
+      ctx.lineTo(mapX(gSpec.b[0]), mapY(gSpec.b[1]));
+      ctx.closePath();
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(59, 130, 246, 0.12)';
+      ctx.fill();
+
+      // Printer Ink Substrate Gamut Polygon (Shrunk gamut based on paper profile)
+      const scale = SUBSTRATES[state.substrateType].gamutVol;
+      const wx = gSpec.w[0], wy = gSpec.w[1];
+      const prx = wx + (gSpec.r[0] - wx) * scale;
+      const pry = wy + (gSpec.r[1] - wy) * scale;
+      const pgx = wx + (gSpec.g[0] - wx) * scale;
+      const pgy = wy + (gSpec.g[1] - wy) * scale;
+      const pbx = wx + (gSpec.b[0] - wx) * scale;
+      const pby = wy + (gSpec.b[1] - wy) * scale;
+
+      ctx.strokeStyle = 'var(--accent-magenta)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(mapX(prx), mapY(pry));
+      ctx.lineTo(mapX(pgx), mapY(pgy));
+      ctx.lineTo(mapX(pbx), mapY(pby));
+      ctx.closePath();
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(236, 72, 153, 0.18)';
+      ctx.fill();
+
+      // Legend
+      ctx.fillStyle = 'var(--accent-blue)';
+      ctx.fillRect(w - 140, 15, 10, 10);
+      ctx.fillStyle = 'var(--text-primary)';
+      ctx.fillText(`${state.workingGamut} Gamut`, w - 125, 24);
+
+      ctx.fillStyle = 'var(--accent-magenta)';
+      ctx.fillRect(w - 140, 32, 10, 10);
+      ctx.fillStyle = 'var(--text-primary)';
+      ctx.fillText(`${SUBSTRATES[state.substrateType].name}`, w - 125, 41);
+    }
+
+    /* Feature 4: Tone Curve Canvas Renderer */
+    function renderToneCurveCanvas(metrics) {
+      const canvas = document.getElementById('toneCurveCanvas');
+      const ctx = canvas.getContext('2d');
+      const w = canvas.parentElement.clientWidth || 400;
+      const h = canvas.parentElement.clientHeight || 220;
+      canvas.width = w;
+      canvas.height = h;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const pad = 35;
+      const mapX = (v) => pad + v * (w - pad * 2);
+      const mapY = (v) => h - pad - (v / 100) * (h - pad * 2);
+
+      // Grid Lines
+      ctx.strokeStyle = 'var(--border-color)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 100; i += 25) {
+        ctx.beginPath();
+        ctx.moveTo(mapX(i/100), mapY(0)); ctx.lineTo(mapX(i/100), mapY(100));
+        ctx.moveTo(mapX(0), mapY(i)); ctx.lineTo(mapX(1), mapY(i));
+        ctx.stroke();
+      }
+
+      // Linear 1:1 Target Curve (Ideal Monitor L*)
+      ctx.strokeStyle = 'var(--text-muted)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(mapX(0), mapY(0));
+      ctx.lineTo(mapX(1), mapY(100));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Paper Compressed Curve
+      ctx.strokeStyle = 'var(--accent-warning)';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let i = 0; i <= 100; i++) {
+        const xNorm = i / 100;
+        const yNorm = metrics.minReflectance + xNorm * ((state.paperReflectance / 100) - metrics.minReflectance);
+        const lStar = 116 * Math.cbrt(Math.max(0.008856, yNorm)) - 16;
+        if (i === 0) ctx.moveTo(mapX(xNorm), mapY(lStar));
+        else ctx.lineTo(mapX(xNorm), mapY(lStar));
+      }
+      ctx.stroke();
+
+      // Compensated Boost Curve (With Manual Slider Boost)
+      if (state.toneBoostEV !== 0) {
+        const boostFactor = Math.pow(2, state.toneBoostEV);
+        ctx.strokeStyle = 'var(--accent-success)';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let i = 0; i <= 100; i++) {
+          const xNorm = i / 100;
+          const boostedX = Math.min(1.0, xNorm * boostFactor);
+          const yNorm = metrics.minReflectance + boostedX * ((state.paperReflectance / 100) - metrics.minReflectance);
+          const lStar = 116 * Math.cbrt(Math.max(0.008856, yNorm)) - 16;
+          if (i === 0) ctx.moveTo(mapX(xNorm), mapY(lStar));
+          else ctx.lineTo(mapX(xNorm), mapY(lStar));
+        }
+        ctx.stroke();
+      }
+
+      // 18% Gray Midpoint Highlight Dot
+      const midX = mapX(0.18);
+      const midY = mapY(metrics.lStarPrinted);
+      ctx.fillStyle = 'var(--accent-magenta)';
+      ctx.beginPath();
+      ctx.arc(midX, midY, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Legend
+      ctx.fillStyle = 'var(--text-muted)';
+      ctx.font = '10px sans-serif';
+      ctx.fillText('Ideal Monitor L*', mapX(0.05), mapY(90));
+      ctx.fillStyle = 'var(--accent-warning)';
+      ctx.fillText('Paper Compressed L*', mapX(0.05), mapY(80));
+      if (state.toneBoostEV !== 0) {
+        ctx.fillStyle = 'var(--accent-success)';
+        ctx.fillText('Compensated Curve', mapX(0.05), mapY(70));
+      }
+    }
+
+    /* What This Means & Dynamic Action Recommendations */
+    function renderActionRecommendations(metrics) {
+      const list = document.getElementById('actionRecommendations');
+      list.innerHTML = '';
+
+      const items = [];
+
+      if (Math.abs(metrics.evMismatch) >= 2.0) {
+        if (metrics.evMismatch < 0) {
+          items.push({
+            type: 'warn',
+            text: `<strong>Severe Monitor Over-Brightness:</strong> Monitor is operating at ${state.monitorNits} cd/m² while room lighting produces only ${metrics.paperWhiteNits.toFixed(1)} cd/m² paper white. Recommended action: Dim monitor brightness to ~${Math.round(metrics.paperWhiteNits * 1.5)} cd/m² or increase ambient viewing light to ~${Math.round(state.monitorNits * 3)} lux.`
+          });
+        } else {
+          items.push({
+            type: 'warn',
+            text: `<strong>High Ambient Glare Mismatch:</strong> Ambient lighting (${state.ambientLux} lux) overwhelms display backlight (${state.monitorNits} cd/m²). Reduce room lighting or raise monitor luminance.`
+          });
+        }
+      } else if (Math.abs(metrics.evMismatch) >= 0.75) {
+        items.push({
+          type: 'info',
+          text: `<strong>Mild Brightness Mismatch (${metrics.evMismatch.toFixed(2)} EV):</strong> Fine art soft proofing will benefit from dimming display to match physical diffuse paper white.`
+        });
+      } else {
+        items.push({
+          type: 'success',
+          text: `<strong>Optimal Proofing Luminance Balance:</strong> Monitor backlight and room illumination are within ideal soft-proofing tolerance (ΔEV < 0.75).`
+        });
+      }
+
+      if (state.paperDmax < 1.50) {
+        items.push({
+          type: 'warn',
+          text: `<strong>Matte Paper Shadow Compression (Dmax ${state.paperDmax}):</strong> Paper black floor is lifted to ${metrics.paperBlackNits.toFixed(2)} cd/m². Deep shadow details (RGB 0–25) will flatten. Recommended action: Apply a +${metrics.recommendedBoostEV.toFixed(2)} EV midtone/shadow tone curve boost before printing.`
+        });
+      }
+
+      if (state.ambientTemp < 4000) {
+        items.push({
+          type: 'warn',
+          text: `<strong>Warm Ambient Light Shift (${state.ambientTemp} K):</strong> Incandescent lighting creates a heavy amber shift on paper prints. Use a standard D50 (5000 K) or D65 (6500 K) viewing lamp for color critical evaluation.`
+        });
+      }
+
+      items.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'action-item';
+        let iconClass = 'icon-info';
+        let iconChar = 'i';
+        if (item.type === 'warn') { iconClass = 'icon-warn'; iconChar = '!'; }
+        if (item.type === 'success') { iconClass = 'icon-success'; iconChar = '✓'; }
+
+        li.innerHTML = `<div class="action-icon ${iconClass}">${iconChar}</div><div>${item.text}</div>`;
+        list.appendChild(li);
+      });
+    }
+
+    /* Interactive Helpers & PRO Handling */
+    function toggleQA(element) {
+      const parent = element.parentElement;
+      parent.classList.toggle('active');
+    }
+
+    function toggleTheme() {
+      if (document.body.classList.contains('theme-light')) {
+        document.body.classList.remove('theme-light');
+        document.body.classList.add('theme-dark');
+      } else {
+        document.body.classList.remove('theme-dark');
+        document.body.classList.add('theme-light');
+      }
+      updateAll();
+    }
+
+    function triggerPROAction(action) {
+      if (!PRO) {
+        showPROToast(`Available in the full version. <a href="${PRO_LINK}" target="_blank">Upgrade to PRO</a>`);
+        return;
+      }
+
+      const metrics = calculateMetrics();
+
+      if (action === 'export_json') {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ state, metrics }, null, 2));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", `soft_proof_calibration_${Date.now()}.json`);
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        dlAnchor.remove();
+      } else if (action === 'export_csv') {
+        const csvRows = [
+          ['Parameter', 'Value', 'Unit'],
+          ['Monitor Luminance', state.monitorNits, 'cd/m2'],
+          ['Paper White Luminance', metrics.paperWhiteNits.toFixed(2), 'cd/m2'],
+          ['Paper Black Floor', metrics.paperBlackNits.toFixed(2), 'cd/m2'],
+          ['Luminance Mismatch', metrics.evMismatch.toFixed(2), 'EV'],
+          ['Paper Dynamic Range', metrics.paperContrastRatio.toFixed(1), ':1'],
+          ['Substrate Dmax', state.paperDmax, 'D'],
+          ['Ambient Illuminance', state.ambientLux, 'lux'],
+          ['Color Temperature', state.ambientTemp, 'K']
+        ];
+        const csvContent = "data:text/csv;charset=utf-8," + csvRows.map(e => e.join(",")).join("\n");
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", encodeURI(csvContent));
+        dlAnchor.setAttribute("download", `soft_proof_metrics_${Date.now()}.csv`);
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        dlAnchor.remove();
+      } else if (action === 'print_report') {
+        window.print();
+      }
+    }
+
+    function showPROToast(msg) {
+      const toast = document.getElementById('proToast');
+      toast.innerHTML = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 4000);
+    }
+
+    function runSolver() {
+      const substrateKey = document.getElementById('solverSubstrate').value;
+      const targetLux = parseFloat(document.getElementById('solverLux').value);
+      const sub = SUBSTRATES[substrateKey];
+      
+      document.getElementById('valSolverLux').innerText = `${targetLux} lx`;
+
+      if (sub && !isNaN(targetLux)) {
+        const reflectance = sub.defaultReflectance / 100;
+        
+        // Target Monitor Nits = (Lux * Reflectance) / PI
+        const targetNits = (targetLux * reflectance) / Math.PI;
+        
+        // Target Lux for 120 nits = (120 * PI) / Reflectance
+        const reqLux = (120 * Math.PI) / reflectance;
+
+        document.getElementById('solveMonitorNits').innerText = Math.round(targetNits);
+        document.getElementById('solveAmbientLux').innerText = Math.round(reqLux);
+      }
+    }
+    
+    // Initialize solver on load
+    window.addEventListener('load', () => {
+      runSolver();
+    });
+    function updateChromaticAdaptation() {
+      const reportRoot = document.getElementById('lighting-chromatic-adaptation-report');
+      if (!PRO) {
+        document.getElementById('chromaticReportContent').innerHTML = `
+          <div class="pro-lock-overlay">
+            <div class="meter-label">Available in the full version</div>
+            <a href="${PRO_LINK}" style="color: var(--accent-blue); font-weight: 600;">Upgrade to PRO</a>
+          </div>`;
+        return;
+      }
+
+      const temp = state.ambientTemp;
+      // D65 coordinates
+      const whiteD65 = { x: 0.3127, y: 0.3290, z: 0.3583 }; 
+      
+      // Approximate CCT to xy (Simplified for visualizer)
+      let targetXY = { x: 0.3127, y: 0.3290 };
+      if (temp === 2700) targetXY = { x: 0.4599, y: 0.4106 };
+      else if (temp === 3500) targetXY = { x: 0.4053, y: 0.3907 };
+      else if (temp === 5000) targetXY = { x: 0.3457, y: 0.3585 };
+
+      // Calculate Lab b* shift (Acceptance check: 2700K gives +19.2 b*)
+      // L*a*b* conversion constant for D65
+      const Xn = 0.95047, Yn = 1.00000, Zn = 1.08883;
+      const targetX = targetXY.x / targetXY.y;
+      const targetY = 1.0;
+      const targetZ = (1 - targetXY.x - targetXY.y) / targetXY.y;
+      
+      const f = (t) => t > 0.008856 ? Math.cbrt(t) : (7.787 * t) + (16 / 116);
+      const bStar = 200 * (f(targetY / Yn) - f(targetZ / Zn));
+      
+      document.getElementById('chromaticShiftVal').innerText = `${bStar >= 0 ? '+' : ''}${bStar.toFixed(1)} b*`;
+      
+      const warmthDesc = bStar > 15 ? "Strong Yellow Cast (Warm)" : bStar > 5 ? "Mild Warmth" : bStar > -5 ? "Neutral White" : "Cool Blue Cast";
+      document.getElementById('chromaticWarmthDesc').innerText = warmthDesc;
+
+      // Bradford Matrix Mock (Simplified visualization for UI)
+      const matrixSpan = document.getElementById('bradfordMatrixDisp').querySelectorAll('span');
+      const kr = (targetX/Xn).toFixed(2), kg = (targetY/Yn).toFixed(2), kb = (targetZ/Zn).toFixed(2);
+      const m = [kr, "0.01", "0.01", "0.01", kg, "0.01", "0.01", "0.01", kb];
+      m.forEach((val, i) => { if(matrixSpan[i]) matrixSpan[i].innerText = val; });
+    }
+
+    // Wrap the existing updateAll to include the new report
+    const originalUpdateAll = updateAll;
+    updateAll = function() {
+      originalUpdateAll();
+      updateChromaticAdaptation();
+    };
+    
+    function runExport(type) {
+      const notice = document.getElementById('exporterProNotice');
+      if (!PRO) {
+        notice.style.display = 'block';
+        notice.innerHTML = `Available in the full version <a href="${PRO_LINK}" style="color:var(--accent-blue); text-decoration: underline;">Upgrade Now</a>`;
+        return;
+      }
+      notice.style.display = 'none';
+      const metrics = calculateMetrics();
+      const projName = document.getElementById('exportProjectName').value || 'Soft Proof Config';
+
+      if (type === 'json') {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ 
+          projectName: projName, timestamp: new Date().toISOString(), state, metrics 
+        }, null, 2));
+        const dl = document.createElement('a');
+        dl.href = dataStr;
+        dl.download = 'soft-proof-config.json';
+        dl.click();
+      } else if (type === 'csv') {
+        let csv = "Parameter,Value,Unit\n";
+        csv += `Project Name,${projName},\n`;
+        csv += `Monitor White,${metrics.monWhiteNits.toFixed(1)},cd/m2\n`;
+        csv += `Paper White,${metrics.paperWhiteNits.toFixed(1)},cd/m2\n`;
+        csv += `Mismatch,${metrics.evMismatch.toFixed(2)},EV\n`;
+        csv += `Contrast,${metrics.paperContrastRatio.toFixed(1)},:1\n`;
+        const dl = document.createElement('a');
+        dl.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+        dl.download = `${projName.replace(/\s+/g, '_')}.csv`;
+        dl.click();
+      } else if (type === 'report') {
+        window.print();
+      }
+    }
+
+    function saveCurrentToPresets() {
+      const nameInput = document.getElementById('newPresetName');
+      const name = nameInput.value.trim();
+      if (!name) return;
+      try {
+        const presets = JSON.parse(localStorage.getItem('softproof_custom_presets') || '[]');
+        presets.push({ name, config: { ...state }, date: new Date().toISOString() });
+        localStorage.setItem('softproof_custom_presets', JSON.stringify(presets));
+        nameInput.value = '';
+        renderLocalPresets();
+      } catch (e) { console.error(e); }
+    }
+
+    function renderLocalPresets() {
+      const container = document.getElementById('localPresetsContainer');
+      container.innerHTML = '';
+      try {
+        const presets = JSON.parse(localStorage.getItem('softproof_custom_presets') || '[]');
+        presets.forEach((p, idx) => {
+          const div = document.createElement('div');
+          div.className = 'preset-chip';
+          div.innerHTML = `
+            <span style="cursor:pointer" onclick="loadLocalPreset(${idx})">${p.name}</span>
+            <div class="preset-chip-actions">
+              <button class="btn-icon-sm" onclick="deleteLocalPreset(${idx})">✕</button>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      } catch (e) { container.innerHTML = '<span class="input-hint">Storage restricted</span>'; }
+    }
+
+    function loadLocalPreset(idx) {
+      try {
+        const presets = JSON.parse(localStorage.getItem('softproof_custom_presets') || '[]');
+        if (presets[idx]) {
+          Object.assign(state, presets[idx].config);
+          syncInputsFromState();
+          updateAll();
+        }
+      } catch (e) {}
+    }
+
+    function deleteLocalPreset(idx) {
+      try {
+        const presets = JSON.parse(localStorage.getItem('softproof_custom_presets') || '[]');
+        presets.splice(idx, 1);
+        localStorage.setItem('softproof_custom_presets', JSON.stringify(presets));
+        renderLocalPresets();
+      } catch (e) {}
+    }
+
+    window.addEventListener('DOMContentLoaded', renderLocalPresets);
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This tool helps photographers and printers eliminate the guesswork of digital-to-physical workflows. It models how your image will realistically appear on paper by accounting for ambient light, monitor luminance, and paper-specific black points.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Measure your room&#39;s ambient light level in lux using a light meter or phone app.</li><li>Input the lux value to calculate the ideal monitor brightness (nits).</li><li>Select your paper type to model the Dmax (maximum black density).</li><li>Use the interactive visualizer to identify colors that will clip during printing.</li><li>Adjust your edit based on the simulation before sending the file to the printer.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">Why do my prints look different from what I see on my computer monitor?</h4><p style="margin:0">You enter: Monitor brightness setting (cd/m²) · Room ambient lighting intensity (lux) · Room light color temperature (Kelvin) · Paper substrate type (Matte, Luster, Glossy) · Target color gamut (sRGB vs CMYK printer profile).<br>You get: Quantitative explanation of why prints appear dark/flat, including luminance mismatch ratio (EV), loss of dynamic range (Dmax vs monitor contrast), ambient color shift (Delta E), out-of-gamut color clipping percentage, and recommended proofing adjustments.</p><h4 style="font-size:16px;margin:16px 0 4px">Why is 18% grey considered to be in the middle for photography?</h4><p style="margin:0">You enter: Linear luminance / reflectance percentage (18% reflectance = 0.18) · Human visual perception scale (CIE L* lightness).<br>You get: Mathematical demonstration of why 18% linear reflectance maps to 50% perceptual lightness (L* = 50) under human vision, and how paper Dmax shifts this perceptual midpoint.</p><h4 style="font-size:16px;margin:16px 0 4px">Aren&#39;t all digital images ultimately just pixel values between 0 - 255?</h4><p style="margin:0">You enter: Digital pixel values (RGB integers from 0 to 255).<br>You get: Explanation of how discrete 8-bit integer values (0-255) map to absolute physical color spaces (CIE xyY / Lab) and device-dependent physical luminance (nits) and physical ink densities (Dmax).</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">Why do my prints look different from what I see on my computer monitor?</h4><p style="margin:0">Monitors emit light (backlit) and have a dynamic range often exceeding 1000:1, while prints reflect light and rarely exceed a 100:1 contrast ratio. If your monitor is set too bright for your room, your eyes adjust to the screen, making the physical print appear dim and muddy by comparison.</p><h4 style="font-size:16px;margin:16px 0 4px">Why is 18% grey considered to be in the middle for photography?</h4><p style="margin:0">Human vision is non-linear; we are more sensitive to changes in shadows than in highlights. While 18% reflectance is mathematically low, our brains perceive it as the geometric mean between black and white, making it the visual &#39;middle&#39; point for exposure.</p><h4 style="font-size:16px;margin:16px 0 4px">Aren&#39;t all digital images ultimately just pixel values between 0 - 255?</h4><p style="margin:0">Those numbers are just coordinates within a specific color space (like sRGB or ProPhoto). A value of 255 red in sRGB is a different physical color than 255 red in AdobeRGB; without a defined color space and calibrated output, those numbers don&#39;t represent absolute light.</p><h4 style="font-size:16px;margin:16px 0 4px">What do Hue, Chroma, Saturation, Value, Tones, Tints, and Shades mean?</h4><p style="margin:0">Hue is the color family (red, blue). Chroma is the purity or intensity of a color. Saturation is chroma relative to brightness. Value is the lightness/darkness. Tints are colors mixed with white, Shades are mixed with black, and Tones are mixed with gray.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $12, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/ssenbe" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $12</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../burst-action-sequence-multi-exposure-compositor/" style="color:inherit;font-weight:600">Burst Action Sequence Compositor</a>: Generate multi-exposure burst action composites offline in your browser with automated background subtraction.</li><li><a href="../macro-extension-tube-magnification-bench/" style="color:inherit;font-weight:600">Macro Photography Extension Tube &amp; Magnification Lab</a>: Simulate tube stacks, working distance, effective f-stops, and Airy disk diffraction in an offline optical bench.</li><li><a href="../astrophotography-exposure-signal-planner/" style="color:inherit;font-weight:600">Night Sky Exposure &amp; Color Signal Lab</a>: A professional SNR planner and star-trail solver for capturing deep Milky Way colors without tracking hardware.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $12</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $12"});</script>
+</body>
+</html>
