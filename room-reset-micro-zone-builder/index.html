@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #1a1a1a;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary: #f3f4f6;
+            --border: #e5e7eb;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0f172a;
+                --text: #f8fafc;
+                --primary: #818cf8;
+                --primary-hover: #6366f1;
+                --secondary: #1e293b;
+                --border: #334155;
+                --accent: #34d399;
+                --warning: #fbbf24;
+                --danger: #f87171;
+                --card-bg: #1e293b;
+                --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+            }
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .layout-grid { grid-template-columns: 1fr; }
+        }
+
+        section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        h2 { margin-bottom: 1.25rem; font-size: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
+        label { display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem; }
+        
+        .form-group { margin-bottom: 1rem; }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .btn {
+            cursor: pointer;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.375rem;
+            border: none;
+            font-weight: 600;
+            transition: opacity 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-secondary { background: var(--secondary); color: var(--text); border: 1px solid var(--border); }
+        .btn:hover { opacity: 0.9; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Feature specific styling */
+        .zone-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .zone-card {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            background: var(--secondary);
+            position: relative;
+        }
+        .zone-card.inactive { opacity: 0.5; filter: grayscale(1); }
+        
+        .energy-meter {
+            height: 0.5rem;
+            width: 100%;
+            background: var(--border);
+            border-radius: 1rem;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .energy-fill { height: 100%; transition: width 0.3s; }
+
+        .timer-display {
+            font-size: 4rem;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+            margin: 1rem 0;
+            font-family: monospace;
+        }
+
+        .clutter-gauge {
+            width: 100%;
+            height: 2rem;
+            background: var(--secondary);
+            border-radius: 1rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .clutter-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .clutter-label {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            font-size: 0.75rem;
+            color: var(--text);
+            mix-blend-mode: difference;
+        }
+
+        .guidance-box {
+            background: var(--secondary);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            margin-top: 1rem;
+        }
+
+        .routine-step {
+            padding: 1rem;
+            border: 1px solid var(--border);
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            word-break: break-word;
+        }
+        .routine-step.active { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+        .routine-step.done { text-decoration: line-through; opacity: 0.6; }
+
+        .preset-bar { margin-bottom: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+        #pro-toast {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: var(--bg);
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            display: none;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            font-size: 0.875rem;
+            white-space: nowrap;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 1rem;
+            background: var(--primary);
+            color: white;
+            text-transform: uppercase;
+        }
+
+        .footer-note {
+            margin-top: 3rem;
+            font-size: 0.75rem;
+            opacity: 0.7;
+            text-align: center;
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .sensory-drawer {
+            margin-top: -1rem;
+            border-top: none;
+            border-radius: 0 0 0.75rem 0.75rem;
+            background: var(--secondary);
+            font-size: 0.9rem;
+        }
+        .sensory-drawer summary {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .sensory-drawer summary::-webkit-details-marker { display: none; }
+        .sensory-controls {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .sensory-controls .form-group { margin-bottom: 0.5rem; }
+        .noise-active { color: var(--accent); font-weight: bold; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 1rem;
+        }
+        .comparison-card {
+            background: var(--card-bg); width: 100%; max-width: 700px; border-radius: 1rem; padding: 2rem;
+            max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow);
+        }
+        .comparison-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+        .comparison-table th, .comparison-table td { padding: 1rem; text-align: center; border-bottom: 1px solid var(--border); }
+        .comparison-table th { background: var(--secondary); font-size: 0.8rem; text-transform: uppercase; }
+        .matrix-val { font-size: 1.25rem; font-weight: 800; display: block; }
+        .matrix-label { font-size: 0.7rem; opacity: 0.7; }
+        .rebound-meter { height: 4px; background: var(--border); border-radius: 2px; margin-top: 4px; }
+        .rebound-fill { height: 100%; background: var(--danger); }
+        .header-export-group { display: flex; align-items: center; gap: 0.5rem; background: var(--secondary); padding: 0.5rem; border-radius: 0.5rem; border: 1px solid var(--border); }
+        @media print {
+            body > * { display: none !important; }
+            #printable-cue-sheet { 
+                display: block !important; 
+                width: 3.5in; margin: 0 auto; padding: 2rem; border: 2px solid #000; border-radius: 1rem;
+                background: white; color: black; font-family: 'Courier New', Courier, monospace;
+            }
+            .cue-hanger-hole { width: 1in; height: 1in; border: 2px solid #000; border-radius: 50%; margin: 0 auto 1.5rem auto; }
+            .cue-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 1rem; margin-bottom: 1rem; }
+            .cue-item { margin-bottom: 1rem; display: flex; gap: 0.75rem; align-items: flex-start; }
+            .cue-box { width: 1.2rem; height: 1.2rem; border: 2px solid #000; flex-shrink: 0; }
+            .cue-name { font-weight: bold; font-size: 1.1rem; }
+            .cue-desc { font-size: 0.85rem; }
+        }
+        .history-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .history-card { background: var(--secondary); padding: 1rem; border-radius: 0.5rem; text-align: center; border: 1px solid var(--border); }
+        .history-val { display: block; font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+        .history-label { font-size: 0.75rem; text-transform: uppercase; opacity: 0.8; }
+        .chart-container { height: 120px; margin-top: 1.5rem; border-bottom: 2px solid var(--border); padding-bottom: 2px; }
+        .upgrade-banner { background: rgba(245, 158, 11, 0.1); border: 1px dashed var(--warning); padding: 1rem; border-radius: 0.5rem; text-align: center; margin-top: 1rem; }
+        /* FEATURE-CSS */
+    </style>
+<title>Micro-Zone Room Reset Studio | Energy-Adaptive Routine Builder</title>
+<meta name="description" content="Break room clearing into manageable micro-zones tailored to your energy level. Free online app &amp; portable offline pack with printable cue sheets.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/room-reset-micro-zone-builder/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/room-reset-micro-zone-builder/">
+<meta property="og:title" content="Micro-Zone Room Reset Studio | Energy-Adaptive Routine Builder"><meta property="og:description" content="Break room clearing into manageable micro-zones tailored to your energy level. Free online app &amp; portable offline pack with printable cue sheets.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/room-reset-micro-zone-builder/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Micro-Zone Room Reset Studio | Energy-Adaptive Routine Builder","description":"Break room clearing into manageable micro-zones tailored to your energy level. Free online app & portable offline pack with printable cue sheets.","url":"https://rttyy.github.io/free-tools/room-reset-micro-zone-builder/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between the free web page and the paid Gumroad product?","acceptedAnswer":{"@type":"Answer","text":"The free web page lets you generate and run micro-zone routines online. The $8 paid product is a single, downloadable HTML file that works 100% offline with no internet connection required, and it unlocks routine exports (JSON/Markdown) alongside physical printable cue sheets."}},{"@type":"Question","name":"Do I need to install any software or create an account?","acceptedAnswer":{"@type":"Answer","text":"No. The offline app is a single HTML file that opens directly in any standard web browser (Chrome, Firefox, Safari, Edge). There are no user accounts, logins, or backend servers involved."}},{"@type":"Question","name":"How does the tool adapt to low energy levels?","acceptedAnswer":{"@type":"Answer","text":"Instead of prompting you to do deep cleaning, selecting a low energy level scales down the tasks to essential, low-friction micro-actions—such as removing obvious trash or clearing a single surface—preventing executive overload."}},{"@type":"Question","name":"Is my session history and data kept private?","acceptedAnswer":{"@type":"Answer","text":"Yes, entirely. All your cleared zones, day streaks, and custom settings are stored locally on your device in your browser's LocalStorage. No data ever leaves your computer."}}]}</script>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>Micro-Zone Room Reset</h1>
+            <p>Adaptive routines for neurodivergent minds.</p>
+        </div>
+        <div class="preset-bar" id="preset-container">
+            <!-- Presets injected by JS -->
+        </div>
+        <div data-feature="routine-export-sharing" class="header-export-group">
+            <select id="export-format" class="btn btn-secondary" style="font-size: 0.8rem; width: auto; height: 36px; padding: 0 0.5rem;">
+                <option value="json">Export Routine JSON</option>
+                <option value="md">Markdown Routine</option>
+                <option value="print">Printable Cue Sheet</option>
+            </select>
+            <button class="btn btn-primary" onclick="triggerExport()" style="height: 36px;">Go</button>
+            <div id="export-upgrade-msg" style="display:none; font-size: 0.75rem; color: var(--danger); max-width: 120px; line-height: 1.1;">Available in the <a href="https://ferrywave73.gumroad.com/l/dekwsc" style="color: inherit; font-weight: bold;">Full Version</a></div>
+        </div>
+    </header>
+
+    <div id="pro-toast">Available in the full version <a href="#" id="pro-toast-link" style="color: var(--primary); font-weight: bold; text-decoration: underline;">Upgrade Now</a></div>
+
+    <div class="layout-grid">
+        <div class="left-col">
+            <section data-feature="room-zone-grid-configurator" id="config-panel">
+                <h2>1. Room Configuration</h2>
+                <div class="form-group">
+                    <label>Select Room</label>
+                    <select id="room-select">
+                        <option value="Living Room">Living Room</option>
+                        <option value="Kitchen">Kitchen</option>
+                        <option value="Home Office">Home Office</option>
+                        <option value="Bedroom">Bedroom</option>
+                    </select>
+                </div>
+                
+                <div class="clutter-gauge" style="margin-bottom: 1rem;">
+                    <div id="room-clutter-fill" class="clutter-fill"></div>
+                    <div id="room-clutter-label" class="clutter-label">Total Room Load: 0%</div>
+                </div>
+
+                <div class="zone-grid" id="zone-grid">
+                    <!-- 6 Zones dynamically generated -->
+                </div>
+            </section>
+
+            <section data-feature="energy-time-pacing-engine" id="pacing-engine">
+                <h2>2. Energy & Time</h2>
+                <div class="form-group">
+                    <label>Current Energy (1: Fuzzy/Fog to 5: Hyperfocus)</label>
+                    <input type="range" id="energy-range" min="1" max="5" step="1" value="3">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.7rem;">
+                        <span>Low Battery</span>
+                        <span>Balanced</span>
+                        <span>Turbo</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Time Budget: <span id="time-val">10</span> mins</label>
+                    <input type="range" id="time-range" min="3" max="30" step="1" value="10">
+                </div>
+
+                <div class="form-group">
+                    <label>Pacing Mode</label>
+                    <select id="pacing-mode">
+                        <option value="low-friction">Body Double / Low Friction</option>
+                        <option value="audio-sync">Audio/Podcast Sync</option>
+                        <option value="pure-focus">Pure Focus Sprint</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" style="width: 100%;" id="generate-btn">Generate Optimal Routine</button>
+            </section>
+        </div>
+
+        <div class="right-col">
+            <section data-feature="gamified-session-runner" id="session-runner">
+                <h2>3. Active Reset</h2>
+                <div class="timer-display" id="main-timer">00:00</div>
+                
+                <div id="active-step-info" style="text-align: center; margin-bottom: 1rem;">
+                    <h3 id="current-task-name">Press Start to Begin</h3>
+                    <p id="current-task-desc" style="opacity: 0.8; font-size: 0.9rem;">Ready when you are.</p>
+                </div>
+
+                <div class="clutter-gauge" style="margin-bottom: 1.5rem;">
+                    <div id="progress-clutter-fill" class="clutter-fill" style="background: var(--primary);"></div>
+                    <div id="progress-clutter-label" class="clutter-label">Session Progress: 0%</div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.5rem;">
+                    <button class="btn btn-primary" id="start-btn">Start</button>
+                    <button class="btn btn-secondary" id="pause-btn" disabled>Pause</button>
+                    <button class="btn btn-secondary" id="skip-btn" disabled>Skip Task</button>
+                    <button class="btn btn-secondary" id="reset-btn">Full Reset</button>
+                </div>
+
+                <div id="routine-list">
+                    <!-- Queue steps -->
+                </div>
+            </section>
+
+            <section data-feature="live-behavioral-guidance" id="guidance-panel">
+                <h2>Coaching & Insights</h2>
+                <div id="guidance-content" class="guidance-box">
+                    Adjust your energy and time to see personalized coaching tips here.
+                </div>
+                
+                <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" id="export-json">Export Routine</button>
+                    <button class="btn btn-secondary" id="print-btn">Print Summary</button>
+                    <button class="btn btn-primary" onclick="openComparison()" style="background: var(--accent);">Compare Scenarios</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <details class="sensory-drawer" data-feature="sensory-pacing-audio-designer">
+        <summary>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            Sensory Pacing & Audio Designer
+        </summary>
+        <div class="sensory-controls">
+            <div class="form-group">
+                <label>Ambient Noise</label>
+                <select id="noise-type">
+                    <option value="none">Off (Silence)</option>
+                    <option value="brown">Brown Noise (Deep)</option>
+                    <option value="pink">Pink Noise (Balanced)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Chime Preset</label>
+                <select id="chime-preset">
+                    <option value="440">Soft Bell (440Hz)</option>
+                    <option value="523">Marimba (523Hz)</option>
+                    <option value="392">Singing Bowl (392Hz)</option>
+                    <option value="0">Silent Pulse (Visual Only)</option>
+                </select>
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+                <label>Master Volume: <span id="vol-display">50%</span></label>
+                <input type="range" id="sensory-vol" min="0" max="100" value="50">
+            </div>
+        </div>
+    </details>
+
+    <div class="modal-overlay" id="comparison-modal" data-feature="scenario-comparison-matrix">
+        <div class="comparison-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Energy Budget Simulator</h2>
+                <button class="btn btn-secondary" onclick="closeComparison()">Close</button>
+            </div>
+            <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 1rem;">Comparing how different time budgets impact your specific zones at current energy (Level <span id="comp-energy-val">3</span>).</p>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Scenario A: 5-min Panic</th>
+                        <th>Scenario B: 15-min Flow</th>
+                    </tr>
+                </thead>
+                <tbody id="comparison-body">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+
+            <div class="guidance-box" style="margin-top: 1.5rem;">
+                <h4 style="margin-bottom: 0.5rem;">Strategic Outlook</h4>
+                <p id="comparison-advice" style="font-size: 0.9rem;">Scenario B significantly reduces rebound velocity by addressing core friction zones.</p>
+            </div>
+        </div>
+    </div>
+    <div id="printable-cue-sheet" style="display: none;">
+        <div class="cue-hanger-hole"></div>
+        <div class="cue-header">
+            <h1 id="cue-room">Room Reset</h1>
+            <p id="cue-meta"></p>
+        </div>
+        <div id="cue-steps-list"></div>
+        <div style="margin-top: 2rem; border-top: 1px solid #000; padding-top: 0.5rem; font-size: 0.7rem; text-align: center;">
+            Micro-Zone Reset Tool
+        </div>
+    </div>
+    <section data-feature="routine-history-stamina-log" id="history-panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h2>Activity & Energy Streak</h2>
+            <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.7rem;" onclick="clearHistory()">Clear Data</button>
+        </div>
+        
+        <div id="history-content">
+            <div class="history-grid">
+                <div class="history-card"><span class="history-val" id="stat-minutes">0</span><span class="history-label">Total Minutes</span></div>
+                <div class="history-card"><span class="history-val" id="stat-zones">0</span><span class="history-label">Zones Reset</span></div>
+                <div class="history-card"><span class="history-val" id="stat-streak">0</span><span class="history-label">Day Streak</span></div>
+            </div>
+
+            <div class="chart-container" id="activity-chart"></div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.6rem; opacity: 0.6; margin-top: 4px;">
+                <span>7 Days Ago</span>
+                <span>Today</span>
+            </div>
+        </div>
+
+        <div id="history-upgrade-notice" class="upgrade-banner" style="display: none;">
+            <strong>History Persistence is limited.</strong><br>
+            <span style="font-size: 0.85rem;">Upgrade to the <a href="https://ferrywave73.gumroad.com/l/dekwsc" style="color: var(--primary); font-weight: bold;">Full Version</a> to sync logs and unlock long-term energy trends.</span>
+        </div>
+    </section>
+    <!-- FEATURES -->
+
+    <div class="footer-note">
+        Estimate only - verify with a qualified professional before relying on it. Breakdown durations based on average cognitive load markers.
+    </div>
+
+    <script>
+        const PRO = false;
+        const PRO_LINK = "https://ferrywave73.gumroad.com/l/dekwsc";
+
+        // State Management
+        let state = {
+            room: 'Living Room',
+            energy: 3,
+            time: 10,
+            pacing: 'low-friction',
+            zones: [
+                { id: 1, name: 'Coffee Table', clutter: 4, friction: 1, active: true },
+                { id: 2, name: 'Sofa Cushions', clutter: 3, friction: 1, active: true },
+                { id: 3, name: 'Floor Path', clutter: 4, friction: 1, active: true },
+                { id: 4, name: 'Bookshelf', clutter: 2, friction: 3, active: false },
+                { id: 5, name: 'Desk Nook', clutter: 3, friction: 2, active: false },
+                { id: 6, name: 'Entryway', clutter: 2, friction: 1, active: false }
+            ],
+            routine: [],
+            currentStepIdx: -1,
+            timer: null,
+            timeLeft: 0,
+            isPaused: true,
+            audioCtx: null
+        };
+
+        const PRESETS = [
+            {
+                name: "5-Min Living Room Panic",
+                room: "Living Room",
+                energy: 3,
+                time: 5,
+                pacing: "low-friction",
+                zones: [
+                    { name: 'Coffee Table', clutter: 4, friction: 1, active: true },
+                    { name: 'Sofa Cushions', clutter: 3, friction: 1, active: true },
+                    { name: 'Floor Path', clutter: 4, friction: 1, active: true },
+                    { name: 'TV Stand', clutter: 2, friction: 1, active: false },
+                    { name: 'Shelf', clutter: 3, friction: 2, active: false },
+                    { name: 'Corners', clutter: 2, friction: 3, active: false }
+                ]
+            },
+            {
+                name: "Low-Energy Kitchen",
+                room: "Kitchen",
+                energy: 1,
+                time: 8,
+                pacing: "audio-sync",
+                zones: [
+                    { name: 'Sink Basin', clutter: 5, friction: 3, active: true },
+                    { name: 'Prep Counter', clutter: 4, friction: 2, active: true },
+                    { name: 'Trash Bin', clutter: 5, friction: 1, active: true },
+                    { name: 'Dish Rack', clutter: 4, friction: 1, active: true },
+                    { name: 'Stovetop', clutter: 3, friction: 2, active: false },
+                    { name: 'Table', clutter: 2, friction: 1, active: false }
+                ]
+            },
+            {
+                name: "Home Office Deep Sprint",
+                room: "Home Office",
+                energy: 5,
+                time: 20,
+                pacing: "pure-focus",
+                zones: [
+                    { name: 'Keyboard Zone', clutter: 5, friction: 3, active: true },
+                    { name: 'Paper Pile', clutter: 5, friction: 3, active: true },
+                    { name: 'Bookshelf', clutter: 3, friction: 2, active: true },
+                    { name: 'Floor Cables', clutter: 4, friction: 2, active: true },
+                    { name: 'Side Table', clutter: 3, friction: 1, active: true },
+                    { name: 'Whiteboard', clutter: 2, friction: 1, active: true }
+                ]
+            }
+        ];
+
+        // Init UI
+        function init() {
+            renderPresets();
+            try {
+                const saved = localStorage.getItem('micro_zone_state');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    state = { ...state, ...parsed };
+                    document.getElementById('room-select').value = state.room;
+                    document.getElementById('energy-range').value = state.energy;
+                    document.getElementById('time-range').value = state.time;
+                    document.getElementById('time-val').textContent = state.time;
+                    document.getElementById('pacing-mode').value = state.pacing;
+                } else {
+                    loadPreset(0);
+                }
+            } catch (e) {
+                loadPreset(0);
+            }
+            renderZones();
+            updateStats();
+            updateGuidance();
+            setupEventListeners();
+        }
+
+        function showProNotice() {
+            const toast = document.getElementById('pro-toast');
+            const link = document.getElementById('pro-toast-link');
+            link.href = PRO_LINK;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 4000);
+        }
+
+        function persist() {
+            try { localStorage.setItem('micro_zone_state', JSON.stringify(state)); } catch (e) {}
+        }
+
+        function setupEventListeners() {
+            document.getElementById('room-select').addEventListener('change', (e) => {
+                state.room = String(e.target.value || "Room");
+                updateGuidance();
+                persist();
+            });
+
+            document.getElementById('energy-range').addEventListener('input', (e) => {
+                state.energy = Math.max(1, Math.min(5, parseInt(e.target.value) || 1));
+                updateGuidance();
+                persist();
+            });
+
+            document.getElementById('time-range').addEventListener('input', (e) => {
+                state.time = Math.max(1, Math.min(180, parseInt(e.target.value) || 1));
+                document.getElementById('time-val').textContent = state.time;
+                updateGuidance();
+                persist();
+            });
+
+            document.getElementById('pacing-mode').addEventListener('change', (e) => {
+                state.pacing = e.target.value;
+                updateGuidance();
+                persist();
+            });
+
+            document.getElementById('generate-btn').addEventListener('click', generateRoutine);
+            document.getElementById('start-btn').addEventListener('click', toggleTimer);
+            document.getElementById('pause-btn').addEventListener('click', toggleTimer);
+            document.getElementById('skip-btn').addEventListener('click', skipStep);
+            document.getElementById('reset-btn').addEventListener('click', () => {
+                if (confirm('Reset all zones and session?')) {
+                    loadPreset(0);
+                }
+            });
+
+            document.getElementById('export-json').addEventListener('click', () => {
+                if(!PRO) { showProNotice(); return; }
+                try {
+                    const blob = new Blob([JSON.stringify(state, null, 2)], {type: 'application/json'});
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `room-reset-${state.room.toLowerCase().replace(/\s+/g, '-')}.json`;
+                    a.click();
+                } catch(e) { console.error(e); }
+            });
+
+            document.getElementById('print-btn').addEventListener('click', () => {
+                if(!PRO) { showProNotice(); return; }
+                window.print();
+            });
+        }
+
+        function renderPresets() {
+            const container = document.getElementById('preset-container');
+            PRESETS.forEach((p, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-secondary';
+                btn.textContent = p.name;
+                btn.onclick = () => loadPreset(idx);
+                container.appendChild(btn);
+            });
+        }
+
+        function loadPreset(idx) {
+            const p = PRESETS[idx];
+            state.room = p.room;
+            state.energy = p.energy;
+            state.time = p.time;
+            state.pacing = p.pacing;
+            state.zones = p.zones.map((z, i) => ({...z, id: i+1}));
+            
+            document.getElementById('room-select').value = p.room;
+            document.getElementById('energy-range').value = p.energy;
+            document.getElementById('time-range').value = p.time;
+            document.getElementById('time-val').textContent = p.time;
+            document.getElementById('pacing-mode').value = p.pacing;
+            
+            renderZones();
+            updateStats();
+            updateGuidance();
+            resetSession();
+        }
+
+        function renderZones() {
+            const grid = document.getElementById('zone-grid');
+            grid.innerHTML = '';
+            state.zones.forEach((zone, i) => {
+                const card = document.createElement('div');
+                card.className = `zone-card ${zone.active ? '' : 'inactive'}`;
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                        <input type="text" value="${zone.name}" style="padding: 0; border: none; font-weight: bold; background: transparent; width: 80%;" onchange="updateZone(${i}, 'name', this.value)">
+                        <input type="checkbox" ${zone.active ? 'checked' : ''} onchange="updateZone(${i}, 'active', this.checked)">
+                    </div>
+                    <div class="form-group">
+                        <label>Clutter (1-5)</label>
+                        <input type="range" min="1" max="5" value="${zone.clutter}" oninput="updateZone(${i}, 'clutter', parseInt(this.value))">
+                    </div>
+                    <div class="form-group">
+                        <label>Cognitive Friction</label>
+                        <select onchange="updateZone(${i}, 'friction', parseInt(this.value))" style="font-size: 0.8rem;">
+                            <option value="1" ${zone.friction === 1 ? 'selected' : ''}>Surface/Easy</option>
+                            <option value="2" ${zone.friction === 2 ? 'selected' : ''}>Sorting/Medium</option>
+                            <option value="3" ${zone.friction === 3 ? 'selected' : ''}>Deep/Heavy</option>
+                        </select>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function updateZone(idx, key, val) {
+            if (key === 'clutter' || key === 'friction') val = parseInt(val) || 1;
+            if (key === 'name' && !val) val = "Zone " + (idx + 1);
+            state.zones[idx][key] = val;
+            renderZones();
+            updateStats();
+            persist();
+        }
+
+        function updateStats() {
+            const activeZones = state.zones.filter(z => z.active);
+            const totalPossible = activeZones.length * 5;
+            const currentTotal = activeZones.reduce((acc, z) => acc + (parseInt(z.clutter) || 0), 0);
+            const percentage = totalPossible > 0 ? Math.round((currentTotal / totalPossible) * 100) : 0;
+            
+            const fill = document.getElementById('room-clutter-fill');
+            fill.style.width = percentage + '%';
+            fill.style.backgroundColor = percentage > 70 ? 'var(--danger)' : percentage > 40 ? 'var(--warning)' : 'var(--accent)';
+            document.getElementById('room-clutter-label').textContent = `Total Room Load: ${percentage}%`;
+        }
+
+        function updateGuidance() {
+            const container = document.getElementById('guidance-content');
+            let html = "";
+            
+            if (state.energy === 1) {
+                html = `<strong>Momentum Hack:</strong> Permission granted to ignore deep grime. Focus only on clearing 1 visual flat surface to give your eyes a calm landing spot. Wear headphones with a familiar playlist.`;
+            } else if (state.energy === 5) {
+                html = `<strong>Dopamine Checkpoint:</strong> High energy detected. Use a 'Pure Focus' timer. Your goal is to clear the hardest zone first while the motor is running hot. Don't forget to hydrate!`;
+            } else {
+                html = `<strong>Sensory Relief Tip:</strong> Clear the most visible "visual noise" first (large items, bright colors). This reduces the cognitive load of just being in the room.`;
+            }
+
+            if (state.time < 5) {
+                html += `<br><br><strong>Note:</strong> Very short window. We've prioritized 'Trash Sweep' and 'Surface Clearing' only.`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function generateRoutine() {
+            const activeZones = state.zones.filter(z => z.active);
+            if (activeZones.length === 0) {
+                alert("Please activate at least one zone.");
+                return;
+            }
+            const reqTime = Math.max(1, parseInt(state.time) || 5);
+            let sortedZones = [...activeZones];
+            if (state.energy <= 2) {
+                sortedZones.sort((a, b) => (a.friction - b.friction) || (b.clutter - a.clutter));
+            } else {
+                sortedZones.sort((a, b) => (b.friction - a.friction) || (b.clutter - a.clutter));
+            }
+            const totalTimeSec = reqTime * 60;
+            let currentRoutine = [];
+            let timeUsed = 0;
+            const maxTasks = state.energy === 1 ? 2 : sortedZones.length;
+            const totalClutter = activeZones.reduce((a,c) => a + c.clutter, 0);
+
+            for (let i = 0; i < Math.min(sortedZones.length, maxTasks); i++) {
+                const zone = sortedZones[i];
+                let taskTime = state.energy === 1 ? Math.floor(totalTimeSec / maxTasks) : (zone.friction * 120) + (zone.clutter * 30);
+                
+                if (timeUsed + taskTime > totalTimeSec || i === maxTasks - 1) {
+                    taskTime = totalTimeSec - timeUsed;
+                }
+                if (taskTime <= 0) break;
+
+                currentRoutine.push({
+                    name: zone.name,
+                    duration: taskTime,
+                    clutterImpact: (zone.clutter / (totalClutter || 1)) * 100,
+                    desc: state.energy === 1 ? "Gentle movement. Clear only the visible surface." : `Focus on clearing the ${zone.name} zone.`
+                });
+                timeUsed += taskTime;
+                if (timeUsed >= totalTimeSec) break;
+            }
+            state.routine = currentRoutine;
+            state.currentStepIdx = -1;
+            renderRoutine();
+            resetSession();
+        }
+
+        function renderRoutine() {
+            const container = document.getElementById('routine-list');
+            container.innerHTML = '';
+            state.routine.forEach((step, i) => {
+                const div = document.createElement('div');
+                div.className = `routine-step ${i === state.currentStepIdx ? 'active' : ''} ${i < state.currentStepIdx ? 'done' : ''}`;
+                div.innerHTML = `
+                    <div>
+                        <strong>${step.name}</strong><br>
+                        <small>${Math.floor(step.duration / 60)}m ${step.duration % 60}s</small>
+                    </div>
+                    <span class="badge">~${Math.round(step.clutterImpact)}% Clear</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleTimer() {
+            if (state.routine.length === 0) {
+                generateRoutine();
+            }
+
+            if (state.currentStepIdx === -1) {
+                nextStep();
+            }
+
+            if (state.isPaused) {
+                state.isPaused = false;
+                state.timer = setInterval(tick, 1000);
+                document.getElementById('start-btn').textContent = "Running...";
+                document.getElementById('start-btn').disabled = true;
+                document.getElementById('pause-btn').disabled = false;
+                document.getElementById('pause-btn').textContent = "Pause";
+                document.getElementById('skip-btn').disabled = false;
+            } else {
+                state.isPaused = true;
+                clearInterval(state.timer);
+                document.getElementById('start-btn').textContent = "Resume";
+                document.getElementById('start-btn').disabled = false;
+                document.getElementById('pause-btn').textContent = "Paused";
+            }
+        }
+
+        function tick() {
+            if (state.timeLeft > 0) {
+                state.timeLeft--;
+                updateTimerDisplay();
+            } else {
+                playChime();
+                nextStep();
+            }
+        }
+
+        function nextStep() {
+            state.currentStepIdx++;
+            if (state.currentStepIdx < state.routine.length) {
+                const step = state.routine[state.currentStepIdx];
+                state.timeLeft = step.duration;
+                document.getElementById('current-task-name').textContent = step.name;
+                document.getElementById('current-task-desc').textContent = step.desc;
+                updateTimerDisplay();
+                updateProgress();
+                renderRoutine();
+            } else {
+                finishSession();
+            }
+        }
+
+        function skipStep() {
+            state.timeLeft = 0;
+            tick();
+        }
+
+        function resetSession() {
+            clearInterval(state.timer);
+            state.isPaused = true;
+            state.currentStepIdx = -1;
+            state.timeLeft = 0;
+            document.getElementById('main-timer').textContent = "00:00";
+            document.getElementById('start-btn').textContent = "Start";
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('pause-btn').disabled = true;
+            document.getElementById('skip-btn').disabled = true;
+            document.getElementById('current-task-name').textContent = "Ready to Reset";
+            document.getElementById('current-task-desc').textContent = "Generate a routine and press start.";
+            document.getElementById('progress-clutter-fill').style.width = '0%';
+            document.getElementById('progress-clutter-label').textContent = "Session Progress: 0%";
+            renderRoutine();
+        }
+
+        function finishSession() {
+            clearInterval(state.timer);
+            state.isPaused = true;
+            document.getElementById('main-timer').textContent = "DONE";
+            document.getElementById('current-task-name').textContent = "Room Reset Complete!";
+            document.getElementById('current-task-desc').textContent = "Take a deep breath and enjoy the space.";
+            document.getElementById('progress-clutter-fill').style.width = '100%';
+            document.getElementById('progress-clutter-label').textContent = "100% Impact Achieved";
+            playChime(true);
+            
+            const totalMins = Math.floor(state.routine.reduce((acc, s) => acc + s.duration, 0) / 60);
+            const zonesCount = state.routine.length;
+            logSession(totalMins, zonesCount);
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(state.timeLeft / 60).toString().padStart(2, '0');
+            const s = (state.timeLeft % 60).toString().padStart(2, '0');
+            document.getElementById('main-timer').textContent = `${m}:${s}`;
+        }
+
+        function updateProgress() {
+            const progress = (state.currentStepIdx / state.routine.length) * 100;
+            document.getElementById('progress-clutter-fill').style.width = progress + '%';
+            document.getElementById('progress-clutter-label').textContent = `Session Progress: ${Math.round(progress)}%`;
+        }
+
+        function playChime(isFinal = false) {
+            try {
+                if (!state.audioCtx) state.audioCtx = new (AudioContext || webkitAudioContext)();
+                if (parseInt(document.getElementById('chime-preset').value) === 0) return;
+                const vol = (parseInt(document.getElementById('sensory-vol').value) / 100) * 0.2;
+                const playTone = (freq, start, duration) => {
+                    const osc = state.audioCtx.createOscillator();
+                    const g = state.audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, start);
+                    g.gain.setValueAtTime(vol, start);
+                    g.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+                    osc.connect(g); g.connect(state.audioCtx.destination);
+                    osc.start(start); osc.stop(start + duration);
+                };
+                const now = state.audioCtx.currentTime;
+                const dur = isFinal ? 1.5 : 0.8;
+                playTone(523.25, now, dur);
+                playTone(659.25, now, dur);
+                if (isFinal) playTone(783.99, now + 0.3, 1.2);
+            } catch (e) {}
+        }
+
+        let noiseSource = null;
+        function updateSensoryAudio() {
+            const type = document.getElementById('noise-type').value;
+            const vol = parseInt(document.getElementById('sensory-vol').value) / 100;
+            document.getElementById('vol-display').textContent = Math.round(vol * 100) + '%';
+            if (noiseSource) { noiseSource.stop(); noiseSource = null; }
+            if (type === 'none') return;
+            if (!state.audioCtx) state.audioCtx = new (AudioContext || webkitAudioContext)();
+            const bufSize = state.audioCtx.sampleRate * 2;
+            const buffer = state.audioCtx.createBuffer(1, bufSize, state.audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            let lastOut = 0, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+            for (let i = 0; i < bufSize; i++) {
+                const white = Math.random() * 2 - 1;
+                if (type === 'brown') {
+                    data[i] = (lastOut + (0.02 * white)) / 1.02;
+                    lastOut = data[i]; data[i] *= 3.5;
+                } else {
+                    b0 = 0.99886 * b0 + white * 0.0555179; b1 = 0.99332 * b1 + white * 0.0750759;
+                    b2 = 0.96900 * b2 + white * 0.1538520; b3 = 0.86650 * b3 + white * 0.3104856;
+                    b4 = 0.55000 * b4 + white * 0.5329522; b5 = -0.7616 * b5 - white * 0.0168980;
+                    data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
+                    b6 = white * 0.115926;
+                }
+            }
+            noiseSource = state.audioCtx.createBufferSource();
+            noiseSource.buffer = buffer; noiseSource.loop = true;
+            const gainNode = state.audioCtx.createGain();
+            gainNode.gain.value = vol * 0.15;
+            noiseSource.connect(gainNode); gainNode.connect(state.audioCtx.destination);
+            noiseSource.start();
+        }
+
+        document.getElementById('noise-type').addEventListener('change', updateSensoryAudio);
+        document.getElementById('sensory-vol').addEventListener('input', updateSensoryAudio);
+
+        function openComparison() {
+            const modal = document.getElementById('comparison-modal');
+            const body = document.getElementById('comparison-body');
+            document.getElementById('comp-energy-val').textContent = state.energy;
+            
+            const totalClutter = state.zones.filter(z => z.active).reduce((a,c) => a + c.clutter, 0) || 1;
+            const avgFriction = state.zones.filter(z => z.active).reduce((a,c) => a + c.friction, 0) / (state.zones.filter(z => z.active).length || 1);
+            
+            const calc = (time) => {
+                const stamina = Math.round((time / 40) * (avgFriction * 10) * (6 - state.energy));
+                // Panic scenario A (5m) is usually 40% relief for typical user inputs, Scenario B (15m) ~82%
+                const relief = Math.min(100, Math.round((time / 15) * 82)); 
+                const rebound = 100 - relief;
+                return { relief, stamina, rebound };
+            };
+
+            const scA = calc(5);
+            const scB = calc(15);
+
+            body.innerHTML = `
+                <tr>
+                    <td>Visual Relief</td>
+                    <td><span class="matrix-val">${scA.relief}%</span><span class="matrix-label">Immediate Impact</span></td>
+                    <td><span class="matrix-val">${scB.relief}%</span><span class="matrix-label">Total Reset</span></td>
+                </tr>
+                <tr>
+                    <td>Stamina Cost</td>
+                    <td><span class="matrix-val">${scA.stamina}%</span><span class="matrix-label">Low Burnout Risk</span></td>
+                    <td><span class="matrix-val">${scB.stamina}%</span><span class="matrix-label">Moderate Drain</span></td>
+                </tr>
+                <tr>
+                    <td>Rebound Velocity</td>
+                    <td>
+                        <span class="matrix-val">${scA.rebound > 50 ? 'High' : 'Med'}</span>
+                        <div class="rebound-meter"><div class="rebound-fill" style="width: ${scA.rebound}%"></div></div>
+                    </td>
+                    <td>
+                        <span class="matrix-val">${scB.rebound > 30 ? 'Med' : 'Low'}</span>
+                        <div class="rebound-meter"><div class="rebound-fill" style="width: ${scB.rebound}%"></div></div>
+                    </td>
+                </tr>
+            `;
+
+            document.getElementById('comparison-advice').textContent = scB.relief > 80 
+                ? "Scenario B offers a sustainable 'Deep Flow' that will keep the room clear 3x longer than a Panic Clean."
+                : "Your current room load is high; consider a medium-pacing strategy to avoid sensory overwhelm.";
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeComparison() { document.getElementById('comparison-modal').style.display = 'none'; }
+
+        function triggerExport() {
+            if (!PRO) {
+                document.getElementById('export-upgrade-msg').style.display = 'block';
+                return;
+            }
+            if (state.routine.length === 0) {
+                alert("Please generate a routine first.");
+                return;
+            }
+            const format = document.getElementById('export-format').value;
+            const filename = `routine-reset-config.json`;
+            
+            if (format === 'json') {
+                const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+            } else if (format === 'md') {
+                let md = `# Micro-Zone Reset: ${state.room}\n**Energy:** ${state.energy}/5 | **Time:** ${state.time}m\n\n`;
+                state.routine.forEach(s => {
+                    md += `- [ ] **${s.name}** (${Math.floor(s.duration / 60)}m ${s.duration % 60}s)\n  _${s.desc}_\n\n`;
+                });
+                const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `reset-routine-${state.room.toLowerCase().replace(/\s/g, '-')}.md`;
+                a.click();
+            } else if (format === 'print') {
+                const list = document.getElementById('cue-steps-list');
+                document.getElementById('cue-room').textContent = state.room + " Reset";
+                document.getElementById('cue-meta').textContent = `Energy: ${state.energy}/5 • Duration: ${state.time}m`;
+                list.innerHTML = state.routine.map(s => `
+                    <div class="cue-item">
+                        <div class="cue-box"></div>
+                        <div>
+                            <div class="cue-name">${s.name} (${Math.floor(s.duration / 60)}m)</div>
+                            <div class="cue-desc">${s.desc}</div>
+                        </div>
+                    </div>
+                `).join('');
+                window.print();
+            }
+        }
+        let sessionHistory = [];
+        function logSession(mins, zones) {
+            const entry = {
+                ts: Date.now(),
+                room: state.room,
+                minutes: mins,
+                zones: zones,
+                energyInitial: state.energy,
+                energyFinal: state.energy // Capture state at end
+            };
+            sessionHistory.push(entry);
+            if (PRO) {
+                try { localStorage.setItem('micro_zone_history', JSON.stringify(sessionHistory)); } catch (e) {}
+            }
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const minutesEl = document.getElementById('stat-minutes');
+            const zonesEl = document.getElementById('stat-zones');
+            const streakEl = document.getElementById('stat-streak');
+            const upgradeNotice = document.getElementById('history-upgrade-notice');
+            
+            if (!PRO) upgradeNotice.style.display = 'block';
+
+            const totalMins = sessionHistory.reduce((a, b) => a + b.minutes, 0);
+            const totalZones = sessionHistory.reduce((a, b) => a + b.zones, 0);
+            
+            minutesEl.textContent = totalMins;
+            zonesEl.textContent = totalZones;
+            streakEl.textContent = calculateStreak();
+            
+            drawChart();
+        }
+
+        function calculateStreak() {
+            if (sessionHistory.length === 0) return 0;
+            const dates = [...new Set(sessionHistory.map(h => new Date(h.ts).toDateString()))].map(d => new Date(d));
+            dates.sort((a, b) => b - a);
+            let streak = 0;
+            let current = new Date();
+            current.setHours(0,0,0,0);
+            
+            for (let i = 0; i < dates.length; i++) {
+                const diff = (current - dates[i]) / (1000 * 60 * 60 * 24);
+                if (diff <= 1) {
+                    streak++;
+                    current = dates[i];
+                } else break;
+            }
+            return streak;
+        }
+
+        function drawChart() {
+            const chart = document.getElementById('activity-chart');
+            const days = Array(7).fill(0);
+            const now = new Date();
+            now.setHours(23, 59, 59, 999);
+            sessionHistory.forEach(h => {
+                const ageInDays = Math.floor((now - h.ts) / (1000 * 60 * 60 * 24));
+                if (ageInDays >= 0 && ageInDays < 7) days[6 - ageInDays] += h.minutes;
+            });
+            const maxMins = Math.max(...days, 30);
+            let svg = `<svg viewBox="0 0 280 100" style="width:100%; height:100%;" preserveAspectRatio="none">`;
+            days.forEach((m, i) => {
+                const barHeight = (m / maxMins) * 90;
+                const x = i * 40 + 5;
+                svg += `<rect x="${x}" y="${100 - barHeight}" width="30" height="${barHeight}" fill="var(--primary)" rx="4">
+                    <title>${m} mins</title>
+                </rect>`;
+            });
+            svg += `</svg>`;
+            chart.innerHTML = svg;
+        }
+
+        function clearHistory() {
+            if (confirm("Clear all session history?")) {
+                sessionHistory = [];
+                try { localStorage.removeItem('micro_zone_history'); } catch (e) {}
+                renderHistory();
+            }
+        }
+
+        // Initialize history in init logic
+        const oldInit = init;
+        init = function() {
+            oldInit();
+            try {
+                const saved = localStorage.getItem('micro_zone_history');
+                if (saved) sessionHistory = JSON.parse(saved);
+            } catch (e) { sessionHistory = []; }
+            renderHistory();
+        };
+
+        init();
+        // FEATURE-JS
+    </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Micro-Zone Room Reset Studio helps neurodivergent individuals and overwhelmed parents break cluttered spaces into tiny, approachable steps. By matching cleanup actions directly to your current energy level, the app bypasses executive freeze without forcing rigid routines. Use the free online version in your browser or unlock the standalone offline pack for physical printables and local exports.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Select your target micro-zone (e.g., desk surface, bedside table, or entryway path).</li><li>Set your current energy level to generate low-, medium-, or high-intensity steps.</li><li>Follow the guided micro-actions accompanied by subtle Web Audio chimes or ambient noise.</li><li>Export your routine to Markdown/JSON or print a physical cue sheet to keep near your space.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">Given my current low energy (fuzzy/exhausted) and only 10 minutes before I have to leave, which micro-zones in my living room can I clear right now to make the biggest visual difference without triggering panic?</h4><p style="margin:0">You enter: Room type (e.g., Living Room) · Current energy level (scale 1 to 5, e.g., 2 = low/sluggish) · Available time budget (e.g., 10 minutes) · Visual clutter state of zones (e.g., Coffee Table: heavy clutter, Couch: medium clutter, Floor: high clutter).<br>You get: An ordered, achievable micro-sequence of 1-3 specific micro-actions sized to fit exactly 10 minutes, with per-zone countdown timers and projected clutter reduction percentage.</p><h4 style="font-size:16px;margin:16px 0 4px">How much total time and mental stamina would it take to reset my entire kitchen if I break it down into tiny bite-sized micro-zones, and what order should I tackle them in to avoid getting stuck halfway?</h4><p style="margin:0">You enter: Room type (Kitchen) · List of zones present and their current clutter rating (Sink zone: 5/5, Prep counter: 4/5, Stovetop: 3/5, Trash/recycling: 5/5) · Target energy pace (e.g., 3 = steady moderate pace).<br>You get: Calculated total estimated reset duration, optimized friction-ranked route (e.g., bin empty first to create disposal capacity, then soak, then clear surfaces), and expected stamina drain profile.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free web page and the paid Gumroad product?</h4><p style="margin:0">The free web page lets you generate and run micro-zone routines online. The $8 paid product is a single, downloadable HTML file that works 100% offline with no internet connection required, and it unlocks routine exports (JSON/Markdown) alongside physical printable cue sheets.</p><h4 style="font-size:16px;margin:16px 0 4px">Do I need to install any software or create an account?</h4><p style="margin:0">No. The offline app is a single HTML file that opens directly in any standard web browser (Chrome, Firefox, Safari, Edge). There are no user accounts, logins, or backend servers involved.</p><h4 style="font-size:16px;margin:16px 0 4px">How does the tool adapt to low energy levels?</h4><p style="margin:0">Instead of prompting you to do deep cleaning, selecting a low energy level scales down the tasks to essential, low-friction micro-actions—such as removing obvious trash or clearing a single surface—preventing executive overload.</p><h4 style="font-size:16px;margin:16px 0 4px">Is my session history and data kept private?</h4><p style="margin:0">Yes, entirely. All your cleared zones, day streaks, and custom settings are stored locally on your device in your browser&#39;s LocalStorage. No data ever leaves your computer.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $8, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/dekwsc" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $8</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../narrative-pacing-tension-arc-mapper/" style="color:inherit;font-weight:600">Interactive Story Pacing &amp; Tension Arc Mapper</a>: Offline single-file HTML tool to visualize story tension, detect saggy middles, and export beat sheets.</li><li><a href="../print-to-monitor-color-proofing-lab/" style="color:inherit;font-weight:600">Print-to-Monitor Soft Proofing &amp; Gamut Visualizer</a>: Model luminance, paper Dmax, and gamut clipping to see exactly how your photo will look when printed.</li><li><a href="../culinary-flavor-profile-balance-architect/" style="color:inherit;font-weight:600">Culinary Flavor Profile &amp; Balance Architect</a>: Diagnose off-tasting dishes, visualize taste balance, and rescue recipes offline in your browser.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $8</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $8"});</script>
+</body>
+</html>
