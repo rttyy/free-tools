@@ -1,0 +1,2199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #1e293b;
+      --bg-subtle: #334155;
+      --bg-input: #0b1120;
+      --border-color: #334155;
+      --border-focus: #38bdf8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --accent-alpha: rgba(56, 189, 248, 0.15);
+      --cam-a: #10b981;
+      --cam-a-bg: rgba(16, 185, 129, 0.12);
+      --cam-b: #f59e0b;
+      --cam-b-bg: rgba(245, 158, 11, 0.12);
+      --cam-b-corr: #38bdf8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --code-bg: #090d16;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg-primary: #f8fafc;
+        --bg-secondary: #ffffff;
+        --bg-card: #ffffff;
+        --bg-subtle: #f1f5f9;
+        --bg-input: #ffffff;
+        --border-color: #cbd5e1;
+        --border-focus: #0284c7;
+        --text-main: #0f172a;
+        --text-muted: #475569;
+        --text-dim: #94a3b8;
+        --accent: #0284c7;
+        --accent-hover: #0369a1;
+        --accent-alpha: rgba(2, 132, 199, 0.1);
+        --cam-a: #059669;
+        --cam-a-bg: rgba(5, 150, 105, 0.1);
+        --cam-b: #d97706;
+        --cam-b-bg: rgba(217, 119, 6, 0.1);
+        --cam-b-corr: #0284c7;
+        --code-bg: #f8fafc;
+        --shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      padding: 1.5rem 1rem 3rem;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Header */
+    header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 1.75rem;
+      box-shadow: var(--shadow);
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.925rem;
+      max-width: 780px;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Buttons & Inputs */
+    button, .btn {
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.85rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--bg-subtle);
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    button:hover, .btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 1px;
+    }
+
+    button.btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    button.btn-primary:hover {
+      background: var(--accent-hover);
+      color: #ffffff;
+    }
+
+    .preset-bar {
+      margin-top: 1rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .preset-label {
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .preset-btn {
+      font-size: 0.78rem;
+      padding: 0.35rem 0.65rem;
+    }
+
+    .preset-btn.active {
+      border-color: var(--accent);
+      background: var(--accent-alpha);
+      color: var(--accent);
+    }
+
+    /* Card Layout */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-subtitle {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Feature 1: Anchor Offset Calculator Grid */
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .cam-box {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      background: var(--bg-secondary);
+      position: relative;
+    }
+
+    .cam-box.cam-a-box {
+      border-left: 4px solid var(--cam-a);
+    }
+
+    .cam-box.cam-b-box {
+      border-left: 4px solid var(--cam-b);
+    }
+
+    .cam-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .cam-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cam-tag-a {
+      background: var(--cam-a-bg);
+      color: var(--cam-a);
+    }
+
+    .cam-tag-b {
+      background: var(--cam-b-bg);
+      color: var(--cam-b);
+    }
+
+    .form-group {
+      margin-bottom: 0.85rem;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    input[type="text"],
+    input[type="datetime-local"],
+    select {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.55rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+
+    input[type="datetime-local"] {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+
+    .drift-result-banner {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .drift-result-banner {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+      }
+      .calc-grid {
+        grid-template-columns: 1fr;
+      }
+      h1 {
+        font-size: 1.25rem;
+      }
+    }
+
+    .drift-highlight {
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      margin-top: 0.25rem;
+    }
+
+    .drift-badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-ahead {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .badge-behind {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-sync {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* Live "What this means" block */
+    .interpretation-card {
+      margin-top: 1rem;
+      background: var(--bg-secondary);
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 0.9rem 1.1rem;
+      font-size: 0.875rem;
+      color: var(--text-main);
+    }
+
+    .interpretation-card strong {
+      color: var(--accent);
+    }
+
+    /* Dual Timeline Sequence Visualizer */
+    .timeline-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      background: var(--bg-secondary);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .timeline-legend {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.8rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .timeline-viewport {
+      background: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1rem 1rem;
+      margin-bottom: 1.25rem;
+      overflow-x: auto;
+    }
+
+    .timeline-track-wrap {
+      min-width: 620px;
+      position: relative;
+    }
+
+    .timeline-axis {
+      position: relative;
+      height: 24px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    .timeline-track {
+      position: relative;
+      height: 38px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .timeline-track-label {
+      position: absolute;
+      left: 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    .timeline-marker {
+      position: absolute;
+      width: 12px;
+      height: 24px;
+      border-radius: 3px;
+      transform: translateX(-50%);
+      cursor: pointer;
+      transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+      z-index: 3;
+    }
+
+    .timeline-marker:hover {
+      transform: translateX(-50%) scale(1.25);
+      z-index: 10;
+    }
+
+    .timeline-marker.cam-a-marker {
+      background: var(--cam-a);
+    }
+
+    .timeline-marker.cam-b-marker {
+      background: var(--cam-b);
+    }
+
+    .timeline-marker.cam-b-corrected {
+      background: var(--cam-b-corr);
+    }
+
+    .interleaved-table-wrap {
+      max-height: 220px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+    }
+
+    table.interleaved-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.825rem;
+      text-align: left;
+    }
+
+    table.interleaved-table th {
+      background: var(--bg-subtle);
+      padding: 0.5rem 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    table.interleaved-table td {
+      padding: 0.4rem 0.75rem;
+      border-top: 1px solid var(--border-color);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+    }
+
+    table.interleaved-table tr:hover td {
+      background: var(--bg-subtle);
+    }
+
+    /* Generator Grid (Features 2 & 3 side by side) */
+    .generators-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .code-box {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: #38bdf8;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.45;
+      margin-top: 0.75rem;
+      min-height: 70px;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.75rem;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .guide-step {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+      font-size: 0.875rem;
+    }
+
+    .step-num {
+      width: 22px;
+      height: 22px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .preview-pill {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      background: var(--bg-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+    }
+
+    .option-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    @media (max-width: 500px) {
+      .option-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .checkbox-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 0.85rem;
+      font-size: 0.825rem;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      text-transform: none;
+      font-weight: 400;
+      color: var(--text-main);
+    }
+
+    .checkbox-label input {
+      cursor: pointer;
+    }
+
+    /* Pro Alert Banner */
+    .pro-inline-notice {
+      display: none;
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid var(--warning);
+      color: var(--warning);
+      padding: 0.6rem 0.85rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .pro-inline-notice a {
+      color: inherit;
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    /* Safety & Guidance Notice */
+    .safety-notice {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--accent);
+      color: var(--text-main);
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+      font-size: 0.85rem;
+      display: none;
+      z-index: 1000;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Progressive Drift Styles */
+    .drift-panel {
+      margin-top: 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .drift-panel summary {
+      padding: 0.75rem 1rem;
+      background: var(--bg-secondary);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.9rem;
+      user-select: none;
+    }
+    .drift-panel-content {
+      padding: 1.25rem;
+      border-top: 1px solid var(--border-color);
+    }
+    .drift-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .drift-stat-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem;
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+    .drift-stat-val {
+      display: block;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      font-family: var(--font-mono);
+    }
+    .drift-table {
+      width: 100%;
+      margin-top: 1rem;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    .drift-table th {
+      text-align: left;
+      color: var(--text-muted);
+      padding: 0.4rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .drift-table td {
+      padding: 0.4rem;
+      border-bottom: 1px solid var(--bg-subtle);
+      font-family: var(--font-mono);
+    }
+    [data-feature="reverse-anchor-solver"] summary::-webkit-details-marker { display: none; }
+    [data-feature="reverse-anchor-solver"] summary:hover { color: var(--accent); }
+    [data-feature="reverse-anchor-solver"] .cue-scenario { font-size: 0.7rem; border-style: dashed; }
+    [data-feature="multi-camera-export-preset-builder"] .interleaved-table td {
+      vertical-align: middle;
+    }
+    .export-path-input {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      width: 100%;
+      padding: 2px 4px;
+    }
+    .export-path-input:hover, .export-path-input:focus {
+      background: var(--bg-input);
+      border-color: var(--border-color);
+    }
+    /* FEATURE-CSS */
+  </style>
+<title>Sync EXIF Time: Two Cameras Offset Calculator</title>
+<meta name="description" content="Calculate timestamp offsets between camera bodies, correct clock drift, and generate batch ExifTool commands for perfectly ordered photo timelines.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/multi-camera-timestamp-drift-sync/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/multi-camera-timestamp-drift-sync/">
+<meta property="og:title" content="Sync EXIF Time: Two Cameras Offset Calculator"><meta property="og:description" content="Calculate timestamp offsets between camera bodies, correct clock drift, and generate batch ExifTool commands for perfectly ordered photo timelines.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/multi-camera-timestamp-drift-sync/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Sync EXIF Time: Two Cameras Offset Calculator","description":"Calculate timestamp offsets between camera bodies, correct clock drift, and generate batch ExifTool commands for perfectly ordered photo timelines.","url":"https://rttyy.github.io/free-tools/multi-camera-timestamp-drift-sync/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How to shift EXIF date/time created by time in days, hours, minutes?","acceptedAnswer":{"@type":"Answer","text":"You can shift EXIF dates using ExifTool with the `-AllDates` parameter. For example, to move timestamps forward by 1 day, 2 hours, and 15 minutes, run: `exiftool -AllDates+=\"1:0:0 2:15:0\" /path/to/photos`. Replace `+=` with `-=` to shift backward. This updates `DateTimeOriginal`, `CreateDate`, and `ModifyDate` simultaneously."}},{"@type":"Question","name":"How can I better organise and file my photos?","acceptedAnswer":{"@type":"Answer","text":"A consistent filing structure relies on clean metadata before ingestion. First, synchronize capture timestamps across all camera bodies so sorting by capture time works across your entire set. Then, rename files on import using a standardized pattern like `YYYYMMDD_Event_CameraID_Sequence.ext`. Store raw files in folders organized by date and project name, keeping culling and editing catalogs separated."}},{"@type":"Question","name":"Does this tool upload my photos to a server?","acceptedAnswer":{"@type":"Answer","text":"No. The free web tool runs entirely client-side inside your browser; no images or metadata leave your computer. For complete air-gapped security on location, the paid version runs 100% offline as a standalone local utility."}},{"@type":"Question","name":"Why not just use Lightroom's 'Edit Capture Time' feature?","acceptedAnswer":{"@type":"Answer","text":"Lightroom can shift timestamps, but by default, it only updates its internal catalog database unless you manually write metadata back to files. Furthermore, Lightroom cannot easily calculate or compensate for gradual hardware oscillator drift across a 12-hour shoot, whereas ExifTool updates the source files permanently across all software."}}]}</script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="header-top">
+        <div>
+          <h1>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent);">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Multi-Camera Timestamp Drift & Timezone Synchronizer
+          </h1>
+          <p class="subtitle">Realign unsynchronized camera clocks, fix second shooter timezone offsets, and generate ready-to-run Metadata CLI and Catalog Software batch adjustments.</p>
+        </div>
+        <div class="header-actions">
+          <button id="btn-save-scenario" title="Save current parameters to local storage">Save Scenario</button>
+          <button id="btn-export-csv" title="Export timestamp mapping to CSV">Export CSV</button>
+          <button id="btn-export-sh" class="btn-primary" title="Generate and download sync_cameras.sh">Export Shell Script</button>
+          <button id="btn-export-json" title="Export session sync data to JSON">Export JSON</button>
+          <button id="btn-print" title="Print synchronizer calibration sheet">Print Sheet</button>
+          <button id="btn-reset" class="btn" title="Reset all fields to defaults">Reset</button>
+        </div>
+      </div>
+
+      <!-- Pro Upgrade Inline Alert -->
+      <div id="pro-notice" class="pro-inline-notice">
+        <span>Available in the full version. </span>
+        <a id="pro-link-elem" href="https://example.com/pro" target="_blank" rel="noopener">Upgrade to Pro</a>
+      </div>
+
+      <!-- Presets bar -->
+      <div class="preset-bar">
+        <span class="preset-label">Presets:</span>
+        <button class="preset-btn active" data-preset="0">Wedding Dual-Body Sync (Manual Drift)</button>
+        <button class="preset-btn" data-preset="1">Second Shooter Timezone Misconfig (+1h)</button>
+        <button class="preset-btn" data-preset="2">All-Day Conference Crystal Drift</button>
+      </div>
+    </header>
+
+    <!-- FEATURE 1: Anchor Offset Calculator -->
+    <section class="card" data-feature="anchor-offset-calculator">
+      <div class="card-title">
+        <span>1. Shared Anchor Event Offset</span>
+        <span id="offset-badge" class="drift-badge badge-ahead">Calculating...</span>
+      </div>
+      <p class="card-subtitle">Input the exact timestamp recorded by each camera for a single simultaneous event (such as a flash pop, atomic phone clock photo, or cake cutting).</p>
+
+      <div class="calc-grid">
+        <!-- Master Camera A -->
+        <div class="cam-box cam-a-box">
+          <div class="cam-box-header">
+            <div>
+              <input type="text" id="cam-a-name" value="Master Body (Camera A)" style="font-weight:700; background:transparent; border:none; padding:0; color:var(--text-main); font-size:0.95rem; width:180px;" title="Camera A Name">
+            </div>
+            <span class="cam-tag cam-tag-a">Reference</span>
+          </div>
+          <div class="form-group">
+            <label for="cam-a-time">Anchor Recorded Timestamp</label>
+            <input type="datetime-local" id="cam-a-time" step="1">
+          </div>
+          <div class="form-group">
+            <label for="cam-a-model">Camera Model / ID</label>
+            <input type="text" id="cam-a-model" value="Canon EOS R5 (Body 1)">
+          </div>
+        </div>
+
+        <!-- Target Camera B -->
+        <div class="cam-box cam-b-box">
+          <div class="cam-box-header">
+            <div>
+              <input type="text" id="cam-b-name" value="Target Body (Camera B)" style="font-weight:700; background:transparent; border:none; padding:0; color:var(--text-main); font-size:0.95rem; width:180px;" title="Camera B Name">
+            </div>
+            <span class="cam-tag cam-tag-b">Needs Shift</span>
+          </div>
+          <div class="form-group">
+            <label for="cam-b-time">Anchor Recorded Timestamp</label>
+            <input type="datetime-local" id="cam-b-time" step="1">
+          </div>
+          <div class="form-group">
+            <label for="cam-b-model">Camera Model / ID</label>
+            <input type="text" id="cam-b-model" value="Sony Alpha 7 IV (Body 2)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Offset Calculation Banner -->
+      <div class="drift-result-banner">
+        <div>
+          <div style="font-size:0.8rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); font-weight:600;">Calculated Time Shift Delta <span style="font-size:0.65rem; opacity:0.8;">(Margin: &plusmn;0.5s)</span></div>
+          <div id="drift-summary-text" class="drift-highlight">Target is 0d 00h 14m 22s ahead (+862 seconds)</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:0.75rem; color:var(--text-muted);">Required Target Shift:</div>
+          <div id="correction-shift-text" style="font-family:var(--font-mono); font-weight:700; font-size:1.05rem; color:var(--text-main);">-0d 00h 14m 22s</div>
+        </div>
+      </div>
+
+      <!-- Live Dynamic Interpretation Block -->
+      <div id="interpretation-block" class="interpretation-card">
+        <strong>What this means:</strong> Camera B's internal clock is running faster than Camera A. Images from Camera B are currently sorting ahead of Camera A's photos in chronological view. To fix sequence interleaving, Camera B's EXIF capture dates must be shifted backward by 14 minutes and 22 seconds.
+      </div>
+    </section>
+
+    <!-- FEATURE 4: Dual Timeline Sequence Visualizer -->
+    <section class="card" data-feature="dual-timeline-preview">
+      <div class="card-title">
+        <span>2. Dual Timeline Sequence Re-alignment</span>
+        <button id="toggle-corrected-btn" class="btn btn-primary" style="font-size:0.8rem; padding:0.35rem 0.75rem;">
+          Toggle: Show Corrected (Realigned)
+        </button>
+      </div>
+      <p class="card-subtitle">Visual preview showing shot distribution across the event session before and after applying the timestamp offset.</p>
+
+      <div class="timeline-controls">
+        <div class="timeline-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--cam-a);"></span> Camera A (Ref)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--cam-b);"></span> Camera B (Uncorrected)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--cam-b-corr);"></span> Camera B (Realigned)</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem;">
+          <span style="color:var(--text-muted);">View Mode:</span>
+          <span id="current-view-badge" style="font-weight:700; font-family:var(--font-mono); color:var(--accent);">Original (Uncorrected)</span>
+        </div>
+      </div>
+
+      <div class="timeline-viewport">
+        <div class="timeline-track-wrap">
+          <!-- Time Axis -->
+          <div class="timeline-axis" id="timeline-axis-ticks">
+            <!-- Populated via script -->
+          </div>
+
+          <!-- Camera A Track -->
+          <div class="timeline-track" id="cam-a-track">
+            <span class="timeline-track-label" style="color:var(--cam-a);">Cam A (Master)</span>
+          </div>
+
+          <!-- Camera B Track -->
+          <div class="timeline-track" id="cam-b-track">
+            <span class="timeline-track-label" id="cam-b-track-label" style="color:var(--cam-b);">Cam B</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interleaved Chronology List -->
+      <div style="margin-top:1rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <span style="font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted);">Interleaved Chronological Shot Order Preview</span>
+          <span id="table-status-label" style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);"></span>
+        </div>
+        <div class="interleaved-table-wrap">
+          <table class="interleaved-table">
+            <thead>
+              <tr>
+                <th style="width:70px;">Sequence</th>
+                <th style="width:130px;">Camera</th>
+                <th style="width:170px;">Photo ID</th>
+                <th>Effective Timestamp</th>
+                <th style="width:120px;">Offset Status</th>
+              </tr>
+            </thead>
+            <tbody id="interleaved-table-body">
+              <!-- Populated via script -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- GENERATORS GRID -->
+    <div class="generators-grid">
+      <!-- FEATURE 2: ExifTool Batch Command Generator -->
+      <section class="card" data-feature="exiftool-command-generator">
+        <div class="card-title">
+          <span>3. ExifTool Batch Command Generator</span>
+        </div>
+        <p class="card-subtitle">Generate exact terminal commands for non-destructive relative metadata date shifting.</p>
+
+        <div class="form-group">
+          <label for="metadata-target-path">Target Folder Path (Camera B Images)</label>
+          <input type="text" id="metadata-target-path" value="/Volumes/SD_Card_B/DCIM/100CANON">
+        </div>
+
+        <div class="option-row">
+          <div class="form-group">
+            <label for="metadata-scope">Metadata Tag Scope</label>
+            <select id="metadata-scope">
+              <option value="AllDates">AllDates (DateTimeOriginal, CreateDate, ModifyDate)</option>
+              <option value="DateTimeOriginal">DateTimeOriginal only</option>
+              <option value="CreateDate">CreateDate only</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="metadata-ext">File Extension Filter</label>
+            <select id="metadata-ext">
+              <option value="all">All Supported Formats</option>
+              <option value="raw">Camera RAW (*.CR3, *.ARW, *.NEF, *.DNG)</option>
+              <option value="jpg">JPEG only (*.JPG, *.JPEG)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="checkbox-row">
+          <label class="checkbox-label">
+            <input type="checkbox" id="metadata-overwrite" checked>
+            <span>Overwrite original in-place (no _original backups)</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" id="metadata-recursive">
+            <span>Recursive subfolders (-r)</span>
+          </label>
+        </div>
+
+        <label>Generated Shell / Terminal Command</label>
+        <div class="code-box">
+          <button class="copy-btn" id="copy-metadata-btn" title="Copy CLI command">Copy</button>
+          <code id="metadata-output">exiftool "-AllDates-=0:0:0 0:14:22" -overwrite_original "/Volumes/SD_Card_B/DCIM/100CANON"</code>
+        </div>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.5rem;">
+          Tip: Run in macOS Terminal or Windows PowerShell. To verify without modifying, omit <code>-overwrite_original</code> or test on a copy.
+        </div>
+      </section>
+
+      <!-- FEATURE 3: Lightroom Capture Time Guide -->
+      <section class="card" data-feature="lightroom-adjustment-guide">
+        <div class="card-title">
+          <span>4. Lightroom Capture Time Guide</span>
+        </div>
+        <p class="card-subtitle">Standard capture time adjustment steps for pro catalog software (e.g. Lightroom Classic).</p>
+
+        <div class="form-group">
+          <label for="lr-dialog-mode">Dialog Adjustment Mode</label>
+          <select id="lr-dialog-mode">
+            <option value="shift-hours">Shift by set number of hours (and minutes/seconds)</option>
+            <option value="specific-date">Change to a specific date and time (Active Anchor Photo)</option>
+          </select>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            In your Catalog Grid View, select all Camera B photos.
+            <strong>Crucial:</strong> Ensure the active photo (bright highlight border) is your shared anchor photo.
+          </div>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            Open the capture time adjustment tool (e.g. <strong>Metadata &rarr; Edit Capture Time</strong>).
+          </div>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-num">3</div>
+          <div class="step-content" id="lr-instructions-step3">
+            Set Type: <span class="preview-pill">Shift by set number of hours</span><br>
+            Adjustment Values: <strong>0h</strong>, <strong>-14m</strong>, <strong>-22s</strong>.
+          </div>
+        </div>
+
+        <div class="guide-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            Sample Anchor Transformation Preview:<br>
+            <span style="color:var(--text-muted);">Original: </span><span class="preview-pill" id="lr-preview-before">2024-09-28 14:29:22</span>
+            &rarr;
+            <span style="color:var(--accent);">Corrected: </span><span class="preview-pill" id="lr-preview-after" style="color:var(--accent);">2024-09-28 14:15:00</span>
+          </div>
+        </div>
+
+        <div style="margin-top:1rem; display:flex; justify-content:flex-end;">
+          <button id="copy-lr-summary-btn" class="btn" title="Copy Lightroom instructions to clipboard">
+            Copy Lightroom Instructions
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- FEATURE 5: Progressive Duration Drift Compensator -->
+    <details class="drift-panel card" data-feature="linear-drift-compensator">
+      <summary>5. Progressive Duration Drift Compensator (Advanced)</summary>
+      <div class="drift-panel-content">
+        <p class="card-subtitle">Use this if the cameras don't just have a fixed offset, but their clocks run at different speeds (crystal oscillator drift). Requires two sync points: one at the start and one at the end of the shoot.</p>
+        
+        <div class="option-row">
+          <div class="form-group">
+            <label for="drift-start-offset">Start Anchor Delta (s)</label>
+            <input type="number" id="drift-start-offset" value="0" step="0.1">
+          </div>
+          <div class="form-group">
+            <label for="drift-end-offset">End Anchor Delta (s)</label>
+            <input type="number" id="drift-end-offset" value="12" step="0.1">
+          </div>
+          <div class="form-group">
+            <label for="drift-duration">Shoot Duration (hrs)</label>
+            <input type="number" id="drift-duration" value="6.0" step="0.1" min="0.1">
+          </div>
+        </div>
+
+        <div class="drift-stats-grid">
+          <div class="drift-stat-card">
+            <label>Drift Rate</label>
+            <span id="drift-rate-val" class="drift-stat-val">+2.00 s/hr</span>
+          </div>
+          <div class="drift-stat-card">
+            <label>Clock Deviation</label>
+            <span id="drift-ppm-val" class="drift-stat-val">555.6 ppm</span>
+          </div>
+          <div class="drift-stat-card">
+            <label>Total Gained/Lost</label>
+            <span id="drift-total-val" class="drift-stat-val">12.0s</span>
+          </div>
+          <div id="drift-warning-card" class="drift-stat-card" style="border-color: var(--warning); display: none;">
+            <label style="color: var(--warning);">Sync Warning</label>
+            <span id="drift-warning-text" class="drift-stat-val" style="color: var(--warning); font-size: 0.8rem; line-height: 1.2; margin-top: 4px;">High Deviation</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.25rem;">
+          <label>Hourly Graduated Shift Schedule</label>
+          <div class="interleaved-table-wrap" style="max-height: 180px;">
+            <table class="drift-table">
+              <thead>
+                <tr>
+                  <th>Hour Index</th>
+                  <th>Relative Offset (s)</th>
+                  <th>Graduated Command Snippet</th>
+                </tr>
+              </thead>
+              <tbody id="drift-schedule-body">
+                <!-- Populated via script -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- FEATURE: Visual Cue Interval Matcher -->
+    <details class="card" data-feature="reverse-anchor-solver">
+      <summary style="cursor:pointer; list-style:none; display:flex; align-items:center; gap:0.5rem; font-weight:700;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.3-4.3"/><circle cx="10" cy="10" r="7"/><path d="M10 7v6"/><path d="M7 10h6"/></svg>
+        <span>Advanced: Visual Cue Interval Matcher</span>
+      </summary>
+      <div style="padding-top:1.25rem;">
+        <p class="card-subtitle">Calculate high-precision offsets by matching specific frame-level events (flash triggers, audio peaks) and subtracting known hardware latency.</p>
+        
+        <div class="calc-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+          <div class="form-group">
+            <label for="cue-master-time">Master Photo Cue Time (Ref)</label>
+            <input type="text" id="cue-master-time" value="16:00:05" placeholder="HH:MM:SS.sss">
+          </div>
+          <div class="form-group">
+            <label for="cue-target-time">Target Photo Cue Time</label>
+            <input type="text" id="cue-target-time" value="16:03:10" placeholder="HH:MM:SS.sss">
+          </div>
+          <div class="form-group">
+            <label for="cue-latency">Physical Latency / Lag (ms)</label>
+            <input type="number" id="cue-latency" value="100" step="1" min="0">
+          </div>
+        </div>
+
+        <div class="drift-result-banner" style="margin-top:1rem; background:var(--bg-input);">
+          <div>
+            <div class="preset-label">Resolved Precision Offset</div>
+            <div id="cue-result-text" class="drift-highlight" style="color:var(--success);">Target ahead by +3m 04.9s</div>
+          </div>
+          <button id="cue-apply-btn" class="btn btn-primary" style="height:fit-content;">Use This Offset</button>
+        </div>
+
+        <div class="interpretation-card" style="margin-top:1rem; font-size:0.8rem;">
+          <div class="preset-label" style="margin-bottom:0.4rem;">Sub-second Calibration Scenarios</div>
+          <div class="header-actions">
+            <button class="preset-btn cue-scenario" data-m="12:00:00" data-t="12:00:05" data-l="20">Wireless Flash (20ms)</button>
+            <button class="preset-btn cue-scenario" data-m="09:30:15.500" data-t="09:30:15.550" data-l="50">Shutter Lag (50ms)</button>
+            <button class="preset-btn cue-scenario" data-m="18:00:00" data-t="18:00:10.500" data-l="500">Audio/Distance (500ms)</button>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Multi-Camera Sync Script & Session Exporter -->
+    <section class="card" data-feature="multi-camera-export-preset-builder">
+      <div class="card-title">
+        <span>6. Session Export & Multi-Camera Batch Builder</span>
+        <span class="cam-tag cam-tag-a">Pro Feature</span>
+      </div>
+      <p class="card-subtitle">Review all camera targets in the current session and export automated scripts for batch processing.</p>
+      
+      <div class="interleaved-table-wrap" style="max-height: none; margin-bottom: 1rem;">
+        <table class="interleaved-table">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Camera Label</th>
+              <th>Target Path</th>
+              <th>Calc. Shift</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="export-table-body">
+            <!-- Populated via script -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="timeline-controls" style="background: var(--bg-subtle);">
+        <div style="font-size: 0.85rem; color: var(--text-muted);">
+          <strong>Export Format:</strong> Ready-to-run scripts containing ExifTool commands for the entire session.
+        </div>
+        <div class="header-actions">
+          <button id="btn-download-bat" class="btn">Download Windows .bat</button>
+          <button id="btn-download-json-session" class="btn">Save Session JSON</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+
+    <!-- Safety margin & verify notice -->
+    <div class="safety-notice">
+      Estimate only - verify with a qualified professional before relying on it. Test on backup folders before batch metadata operations.
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast">Copied to clipboard!</div>
+
+  <script>
+    // PRO Version flag and Link
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/ystgu";
+
+    // Application state
+    const state = {
+      camAName: 'Master Body (Camera A)',
+      camBName: 'Target Body (Camera B)',
+      camAModel: 'Canon EOS R5 (Body 1)',
+      camBModel: 'Sony Alpha 7 IV (Body 2)',
+      camATime: '2024-09-28T14:15:00',
+      camBTime: '2024-09-28T14:29:22',
+      targetPath: '/Volumes/SD_Card_B/DCIM/100CANON',
+      tagScope: 'AllDates',
+      fileExt: 'all',
+      overwrite: true,
+      recursive: false,
+      lrMode: 'shift-hours',
+      showCorrectedTimeline: false,
+      // Sample shot offsets relative to master anchor (in seconds)
+      sampleShotsA: [-3600, -1800, -600, 0, 900, 2400, 3600, 5400, 7200],
+      sampleShotsB: [-3200, -1200, 0, 450, 1500, 2900, 4200, 6100, 8000]
+    };
+
+    // Named Presets
+    const PRESETS = [
+      {
+        name: "Wedding Dual-Body Sync (Manual Clock Drift)",
+        values: {
+          camATime: '2024-09-28T14:15:00',
+          camBTime: '2024-09-28T14:29:22',
+          camAModel: 'Canon EOS R5 (Body 1)',
+          camBModel: 'Sony Alpha 7 IV (Body 2)',
+          targetPath: '/Volumes/SD_Card_B/DCIM/100CANON',
+          tagScope: 'AllDates',
+          overwrite: true,
+          recursive: false,
+          sampleShotsA: [-3600, -1800, -600, 0, 900, 2400, 3600, 5400, 7200],
+          sampleShotsB: [-3200, -1200, 0, 450, 1500, 2900, 4200, 6100, 8000]
+        }
+      },
+      {
+        name: "Second Shooter Timezone Misconfiguration (+1 Hour)",
+        values: {
+          camATime: '2024-07-06T11:00:00',
+          camBTime: '2024-07-06T12:03:15',
+          camAModel: 'Nikon Z9 (Lead)',
+          camBModel: 'Fujifilm X-T5 (2nd Shooter)',
+          targetPath: '/Volumes/Shooter2_Backup/RAW',
+          tagScope: 'AllDates',
+          overwrite: false,
+          recursive: true,
+          sampleShotsA: [-1200, -300, 0, 600, 1800, 3000, 4200],
+          sampleShotsB: [-900, 0, 400, 1200, 2400, 3600, 5000]
+        }
+      },
+      {
+        name: "All-Day Conference Crystal Oscillator Drift",
+        values: {
+          camATime: '2024-11-15T08:30:00',
+          camBTime: '2024-11-15T08:30:02',
+          camAModel: 'Blackmagic Pocket 6K',
+          camBModel: 'Sony FX3 (Camera 2)',
+          targetPath: '/Volumes/VideoCrew/Cam2',
+          tagScope: 'DateTimeOriginal',
+          overwrite: true,
+          recursive: false,
+          sampleShotsA: [0, 1800, 3600, 5400, 7200, 9000, 10800],
+          sampleShotsB: [0, 1798, 3601, 5403, 7202, 8999, 10802]
+        }
+      }
+    ];
+
+    // Safe LocalStorage helpers
+    function safeStorageGet(key) {
+      try {
+        return localStorage.getItem(key);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function safeStorageSet(key, val) {
+      try {
+        localStorage.setItem(key, val);
+      } catch (e) {
+        // Storage restricted or unavailable
+      }
+    }
+
+    // UI Toast Notification
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 2600);
+    }
+
+    // Pro Feature Trigger
+    function handleProCheck(e, actionName) {
+      if (!PRO) {
+        if (e) e.preventDefault();
+        const notice = document.getElementById('pro-notice');
+        const link = document.getElementById('pro-link-elem');
+        link.href = PRO_LINK;
+        notice.style.display = 'block';
+        notice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        return false;
+      }
+      return true;
+    }
+
+    // Time Parsing & Calculation
+    function parseDate(isoString) {
+      if (!isoString) return null;
+      const d = new Date(isoString);
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    function formatDate(d) {
+      if (!d) return '--';
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const hours = String(d.getHours()).padStart(2, '0');
+      const mins = String(d.getMinutes()).padStart(2, '0');
+      const secs = String(d.getSeconds()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${mins}:${secs}`;
+    }
+
+    function calculateDelta() {
+      const dateA = parseDate(state.camATime);
+      const dateB = parseDate(state.camBTime);
+
+      if (!dateA || !dateB) {
+        return {
+          valid: false,
+          totalSeconds: 0,
+          absTotal: 0,
+          direction: 'synced',
+          absDays: 0,
+          absHours: 0,
+          absMins: 0,
+          absSecs: 0,
+          shiftNeededSeconds: 0
+        };
+      }
+
+      // Delta: B - A in seconds
+      // If B > A, Target clock is ahead by delta seconds.
+      // To correct B, we must subtract delta from B.
+      const totalSeconds = Math.round((dateB.getTime() - dateA.getTime()) / 1000);
+      const absTotal = Math.abs(totalSeconds);
+
+      const absDays = Math.floor(absTotal / 86400);
+      const rem1 = absTotal % 86400;
+      const absHours = Math.floor(rem1 / 3600);
+      const rem2 = rem1 % 3600;
+      const absMins = Math.floor(rem2 / 60);
+      const absSecs = rem2 % 60;
+
+      let direction = 'synced';
+      if (totalSeconds > 0) direction = 'ahead';
+      else if (totalSeconds < 0) direction = 'behind';
+
+      return {
+        valid: true,
+        dateA,
+        dateB,
+        totalSeconds,
+        absTotal,
+        direction,
+        absDays,
+        absHours,
+        absMins,
+        absSecs,
+        // The correction needed to bring B to A
+        shiftNeededSeconds: -totalSeconds
+      };
+    }
+
+    // Update Anchor Offset Calculator (Feature 1)
+    function renderAnchorCalculator(delta) {
+      const summaryElem = document.getElementById('drift-summary-text');
+      const correctionElem = document.getElementById('correction-shift-text');
+      const badgeElem = document.getElementById('offset-badge');
+      const interpElem = document.getElementById('interpretation-block');
+
+      if (!delta.valid) {
+        summaryElem.textContent = 'Please enter valid timestamps for both cameras';
+        correctionElem.textContent = '--';
+        badgeElem.className = 'drift-badge badge-behind';
+        badgeElem.textContent = 'Invalid Input';
+        interpElem.innerHTML = '<strong>What this means:</strong> Timestamps could not be parsed. Verify the date and time values above.';
+        return;
+      }
+
+      const dStr = `${delta.absDays}d`;
+      const hStr = `${String(delta.absHours).padStart(2, '0')}h`;
+      const mStr = `${String(delta.absMins).padStart(2, '0')}m`;
+      const sStr = `${String(delta.absSecs).padStart(2, '0')}s`;
+
+      if (delta.direction === 'ahead') {
+        badgeElem.className = 'drift-badge badge-ahead';
+        badgeElem.textContent = `Ahead (+${delta.absTotal}s)`;
+        summaryElem.textContent = `Target is ${dStr} ${hStr} ${mStr} ${sStr} ahead (+${delta.absTotal} seconds)`;
+        correctionElem.textContent = `-${dStr} ${hStr} ${mStr} ${sStr}`;
+
+        interpElem.innerHTML = `<strong>What this means:</strong> ${escapeHtml(state.camBName)}'s internal clock is running faster or was set to an advanced time. Its photos will sort chronologically *after* ${escapeHtml(state.camAName)}'s corresponding frames. To re-align them perfectly, shift ${escapeHtml(state.camBName)}'s metadata backward by ${delta.absDays > 0 ? delta.absDays + ' days, ' : ''}${delta.absHours > 0 ? delta.absHours + ' hours, ' : ''}${delta.absMins} minutes, and ${delta.absSecs} seconds.`;
+      } else if (delta.direction === 'behind') {
+        badgeElem.className = 'drift-badge badge-behind';
+        badgeElem.textContent = `Behind (-${delta.absTotal}s)`;
+        summaryElem.textContent = `Target is ${dStr} ${hStr} ${mStr} ${sStr} behind (-${delta.absTotal} seconds)`;
+        correctionElem.textContent = `+${dStr} ${hStr} ${mStr} ${sStr}`;
+
+        interpElem.innerHTML = `<strong>What this means:</strong> ${escapeHtml(state.camBName)}'s internal clock is trailing ${escapeHtml(state.camAName)}. Its photos are sorting *earlier* than they were actually taken. To fix, shift ${escapeHtml(state.camBName)}'s metadata forward by ${delta.absDays > 0 ? delta.absDays + ' days, ' : ''}${delta.absHours > 0 ? delta.absHours + ' hours, ' : ''}${delta.absMins} minutes, and ${delta.absSecs} seconds.`;
+      } else {
+        badgeElem.className = 'drift-badge badge-sync';
+        badgeElem.textContent = 'Synchronized (0s)';
+        summaryElem.textContent = 'Both cameras are perfectly synchronized (0 second drift)';
+        correctionElem.textContent = '0d 00h 00m 00s';
+        interpElem.innerHTML = `<strong>What this means:</strong> Both cameras recorded the exact same anchor timestamp to the second. No metadata adjustment or capture time shift is needed.`;
+      }
+    }
+
+    // Update Metadata Batch Generator (Feature 2)
+    function renderMetadataGenerator(delta) {
+      const codeOutput = document.getElementById('metadata-output');
+      const targetPath = state.targetPath.trim() || '/path/to/cameraB/photos';
+
+      let tag = state.tagScope;
+      if (tag === 'AllDates') tag = 'AllDates';
+      else if (tag === 'DateTimeOriginal') tag = 'DateTimeOriginal';
+      else if (tag === 'CreateDate') tag = 'CreateDate';
+
+      // Check if target is ahead or behind
+      // If Target is ahead (+seconds), we subtract time (-=)
+      // If Target is behind (-seconds), we add time (+=)
+      let operator = '-=';
+      if (delta.direction === 'behind') {
+        operator = '+=';
+      } else if (delta.direction === 'synced') {
+        operator = '+=';
+      }
+
+      const d = delta.absDays;
+      const h = delta.absHours;
+      const m = delta.absMins;
+      const s = delta.absSecs;
+
+      // ExifTool relative shift syntax: "0:0:D H:M:S" or "0:0:0 H:M:S"
+      const shiftStr = `0:0:${d} ${String(h).padStart(1, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      
+      let cmd = `exiftool "-${tag}${operator}${shiftStr}"`;
+
+      if (state.overwrite) {
+        cmd += ` -overwrite_original`;
+      }
+
+      if (state.recursive) {
+        cmd += ` -r`;
+      }
+
+      if (state.fileExt === 'raw') {
+        cmd += ` -ext CR3 -ext ARW -ext NEF -ext DNG`;
+      } else if (state.fileExt === 'jpg') {
+        cmd += ` -ext JPG -ext JPEG`;
+      }
+
+      // Escape quotes in path if present
+      const cleanPath = targetPath.replace(/"/g, '\\"');
+      cmd += ` "${cleanPath}"`;
+
+      codeOutput.textContent = cmd;
+    }
+
+    // Update Catalog Adjustment Guide (Feature 3)
+    function renderLightroomGuide(delta) {
+      const step3Content = document.getElementById('lr-instructions-step3');
+      const prevBefore = document.getElementById('lr-preview-before');
+      const prevAfter = document.getElementById('lr-preview-after');
+
+      const dateA = parseDate(state.camATime);
+      const dateB = parseDate(state.camBTime);
+
+      if (prevBefore) prevBefore.textContent = dateB ? formatDate(dateB) : '--';
+      if (prevAfter) prevAfter.textContent = dateA ? formatDate(dateA) : '--';
+
+      if (state.lrMode === 'specific-date') {
+        step3Content.innerHTML = `
+          Set Type: <span class="preview-pill">Change to a specific date and time</span><br>
+          Target Correct Time for Active Anchor: <strong style="color:var(--accent);">${dateA ? formatDate(dateA) : '--'}</strong><br>
+          <span style="font-size:0.78rem; color:var(--text-muted);">The software will calculate the offset and adjust all other selected photos by the identical difference.</span>
+        `;
+      } else {
+        const sign = delta.direction === 'ahead' ? '-' : (delta.direction === 'behind' ? '+' : '');
+        const signedH = `${sign}${delta.absHours}`;
+        const signedM = `${sign}${delta.absMins}`;
+        const signedS = `${sign}${delta.absSecs}`;
+
+        step3Content.innerHTML = `
+          Set Type: <span class="preview-pill">Shift by set number of hours</span><br>
+          Hours: <strong>${signedH}</strong>, 
+          Minutes: <strong>${signedM}</strong>, 
+          Seconds: <strong>${signedS}</strong>.
+          ${delta.absDays > 0 ? `<br><span style="color:var(--warning); font-size:0.78rem;">Note: Offset spans ${delta.absDays} day(s). If using shift hours, add ${delta.absDays * 24} hours to the Hours field.</span>` : ''}
+        `;
+      }
+    }
+
+    // Update Dual Timeline Preview (Feature 4)
+    function renderDualTimeline(delta) {
+      const axisElem = document.getElementById('timeline-axis-ticks');
+      const trackA = document.getElementById('cam-a-track');
+      const trackB = document.getElementById('cam-b-track');
+      const labelB = document.getElementById('cam-b-track-label');
+      const viewBadge = document.getElementById('current-view-badge');
+      const tableBody = document.getElementById('interleaved-table-body');
+      const tableStatus = document.getElementById('table-status-label');
+
+      // Clear existing markers (keep track label)
+      const markersA = trackA.querySelectorAll('.timeline-marker');
+      markersA.forEach(m => m.remove());
+
+      const markersB = trackB.querySelectorAll('.timeline-marker');
+      markersB.forEach(m => m.remove());
+
+      const dateA = parseDate(state.camATime) || new Date('2024-09-28T14:15:00');
+      const anchorEpochA = dateA.getTime() / 1000;
+
+      // Base sample shot offsets in seconds relative to Camera A anchor
+      const shotsA = state.sampleShotsA.map((offsetSec, idx) => ({
+        cam: 'A',
+        id: `IMG_A${String(1001 + idx * 7)}`,
+        epoch: anchorEpochA + offsetSec,
+        offsetFromAnchor: offsetSec
+      }));
+
+      // In real-world, Camera B recorded timestamp of the anchor was (anchorEpochA + delta.totalSeconds)
+      // Its shots are recorded with Camera B's unsynchronized clock
+      const shotsB = state.sampleShotsB.map((offsetSec, idx) => {
+        const uncorrectedEpoch = anchorEpochA + delta.totalSeconds + offsetSec;
+        const correctedEpoch = uncorrectedEpoch + delta.shiftNeededSeconds; // Should equal anchorEpochA + offsetSec
+        return {
+          cam: 'B',
+          id: `DSC_B${String(8042 + idx * 5)}`,
+          uncorrectedEpoch,
+          correctedEpoch,
+          effectiveEpoch: state.showCorrectedTimeline ? correctedEpoch : uncorrectedEpoch,
+          offsetFromAnchor: offsetSec
+        };
+      });
+
+      // Combine to find timeline boundary
+      const allEpochs = [
+        ...shotsA.map(s => s.epoch),
+        ...shotsB.map(s => s.effectiveEpoch)
+      ];
+
+      const minEpoch = Math.min(...allEpochs) - 300; // 5 min padding
+      const maxEpoch = Math.max(...allEpochs) + 300;
+      const span = Math.max(maxEpoch - minEpoch, 1);
+
+      // Render Axis Ticks
+      axisElem.innerHTML = '';
+      const tickCount = 6;
+      for (let i = 0; i <= tickCount; i++) {
+        const tEpoch = minEpoch + (span * (i / tickCount));
+        const tDate = new Date(tEpoch * 1000);
+        const hours = String(tDate.getHours()).padStart(2, '0');
+        const mins = String(tDate.getMinutes()).padStart(2, '0');
+        const posPercent = (i / tickCount) * 100;
+
+        const tick = document.createElement('div');
+        tick.style.position = 'absolute';
+        tick.style.left = `${posPercent}%`;
+        tick.style.transform = i === tickCount ? 'translateX(-100%)' : (i === 0 ? 'translateX(0)' : 'translateX(-50%)');
+        tick.style.top = '2px';
+        tick.textContent = `${hours}:${mins}`;
+        axisElem.appendChild(tick);
+      }
+
+      // Render Track A markers
+      shotsA.forEach(shot => {
+        const pct = ((shot.epoch - minEpoch) / span) * 100;
+        const marker = document.createElement('div');
+        marker.className = 'timeline-marker cam-a-marker';
+        marker.style.left = `${Math.max(1, Math.min(99, pct))}%`;
+        const dateStr = formatDate(new Date(shot.epoch * 1000));
+        marker.title = `${shot.id} (Cam A)\nTime: ${dateStr}`;
+        trackA.appendChild(marker);
+      });
+
+      // Render Track B markers
+      if (state.showCorrectedTimeline) {
+        labelB.textContent = 'Cam B (Realigned)';
+        labelB.style.color = 'var(--cam-b-corr)';
+        viewBadge.textContent = 'Corrected (Realigned)';
+        viewBadge.style.color = 'var(--cam-b-corr)';
+      } else {
+        labelB.textContent = 'Cam B (Original Drift)';
+        labelB.style.color = 'var(--cam-b)';
+        viewBadge.textContent = 'Original (Uncorrected)';
+        viewBadge.style.color = 'var(--cam-b)';
+      }
+
+      shotsB.forEach(shot => {
+        const pct = ((shot.effectiveEpoch - minEpoch) / span) * 100;
+        const marker = document.createElement('div');
+        marker.className = `timeline-marker ${state.showCorrectedTimeline ? 'cam-b-corrected' : 'cam-b-marker'}`;
+        marker.style.left = `${Math.max(1, Math.min(99, pct))}%`;
+        const dateStr = formatDate(new Date(shot.effectiveEpoch * 1000));
+        marker.title = `${shot.id} (Cam B)\nEffective Time: ${dateStr}\n${state.showCorrectedTimeline ? 'Shift applied: ' + delta.shiftNeededSeconds + 's' : 'Uncorrected'}`;
+        trackB.appendChild(marker);
+      });
+
+      // Render Interleaved Table
+      const interleavedList = [
+        ...shotsA.map(s => ({
+          camera: state.camAName,
+          tag: 'Cam A',
+          isCamA: true,
+          id: s.id,
+          epoch: s.epoch,
+          dateFormatted: formatDate(new Date(s.epoch * 1000)),
+          status: 'Master Reference'
+        })),
+        ...shotsB.map(s => ({
+          camera: state.camBName,
+          tag: 'Cam B',
+          isCamA: false,
+          id: s.id,
+          epoch: s.effectiveEpoch,
+          dateFormatted: formatDate(new Date(s.effectiveEpoch * 1000)),
+          status: state.showCorrectedTimeline ? 'Realigned (-' + delta.absTotal + 's)' : 'Drifted'
+        }))
+      ];
+
+      // Sort chronologically
+      interleavedList.sort((a, b) => a.epoch - b.epoch);
+
+      tableStatus.textContent = state.showCorrectedTimeline
+        ? 'Showing true synchronized sequence'
+        : 'Warning: Showing out-of-order shuffled capture sequence';
+
+      tableBody.innerHTML = '';
+      interleavedList.forEach((item, index) => {
+        const tr = document.createElement('tr');
+        const badgeColor = item.isCamA ? 'var(--cam-a)' : (state.showCorrectedTimeline ? 'var(--cam-b-corr)' : 'var(--cam-b)');
+        tr.innerHTML = `
+          <td>#${index + 1}</td>
+          <td><span style="font-weight:700; color:${badgeColor};">${escapeHtml(item.tag)}</span></td>
+          <td>${escapeHtml(item.id)}</td>
+          <td>${escapeHtml(item.dateFormatted)}</td>
+          <td style="color:${item.isCamA ? 'var(--cam-a)' : (state.showCorrectedTimeline ? 'var(--cam-b-corr)' : 'var(--danger)')}; font-size:0.75rem;">${escapeHtml(item.status)}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    // Escape HTML helper
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Full application refresh
+    function updateApp() {
+      const delta = calculateDelta();
+      renderAnchorCalculator(delta);
+      renderMetadataGenerator(delta);
+      renderLightroomGuide(delta);
+      renderDualTimeline(delta);
+      saveStateToStorage();
+    }
+
+    function saveStateToStorage() {
+      safeStorageSet('camera_sync_tool_state', JSON.stringify({
+        camATime: state.camATime,
+        camBTime: state.camBTime,
+        camAName: state.camAName,
+        camBName: state.camBName,
+        targetPath: state.targetPath,
+        tagScope: state.tagScope,
+        overwrite: state.overwrite,
+        recursive: state.recursive,
+        lrMode: state.lrMode
+      }));
+    }
+
+    function loadStateFromStorage() {
+      const raw = safeStorageGet('camera_sync_tool_state');
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') {
+            if (parsed.camATime) state.camATime = parsed.camATime;
+            if (parsed.camBTime) state.camBTime = parsed.camBTime;
+            if (parsed.camAName) state.camAName = parsed.camAName;
+            if (parsed.camBName) state.camBName = parsed.camBName;
+            if (parsed.targetPath) state.targetPath = parsed.targetPath;
+            if (parsed.tagScope) state.tagScope = parsed.tagScope;
+            if (typeof parsed.overwrite === 'boolean') state.overwrite = parsed.overwrite;
+            if (typeof parsed.recursive === 'boolean') state.recursive = parsed.recursive;
+            if (parsed.lrMode) state.lrMode = parsed.lrMode;
+          }
+        } catch (e) {
+          // ignore parsing error
+        }
+      }
+    }
+
+    function applyPreset(presetIndex) {
+      const preset = PRESETS[presetIndex];
+      if (!preset) return;
+      state.camATime = preset.values.camATime;
+      state.camBTime = preset.values.camBTime;
+      state.camAModel = preset.values.camAModel;
+      state.camBModel = preset.values.camBModel;
+      state.targetPath = preset.values.targetPath;
+      state.tagScope = preset.values.tagScope;
+      state.overwrite = preset.values.overwrite;
+      state.recursive = preset.values.recursive;
+      state.sampleShotsA = [...preset.values.sampleShotsA];
+      state.sampleShotsB = [...preset.values.sampleShotsB];
+      if (preset.values.driftStart !== undefined) {
+        document.getElementById('drift-start-offset').value = preset.values.driftStart;
+        document.getElementById('drift-end-offset').value = preset.values.driftEnd;
+        document.getElementById('drift-duration').value = preset.values.driftDur;
+      }
+      syncInputsFromState();
+      updateApp();
+      updateLinearDrift();
+      document.querySelectorAll('.preset-btn').forEach((btn, idx) => {
+        if (idx === presetIndex) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+    }
+
+    function syncInputsFromState() {
+      document.getElementById('cam-a-time').value = state.camATime;
+      document.getElementById('cam-b-time').value = state.camBTime;
+      document.getElementById('cam-a-name').value = state.camAName;
+      document.getElementById('cam-b-name').value = state.camBName;
+      document.getElementById('cam-a-model').value = state.camAModel;
+      document.getElementById('cam-b-model').value = state.camBModel;
+      document.getElementById('metadata-target-path').value = state.targetPath;
+      document.getElementById('metadata-scope').value = state.tagScope;
+      document.getElementById('metadata-ext').value = state.fileExt;
+      document.getElementById('metadata-overwrite').checked = state.overwrite;
+      document.getElementById('metadata-recursive').checked = state.recursive;
+      document.getElementById('lr-dialog-mode').value = state.lrMode;
+    }
+
+    // CSV & JSON Exports (Feature triggers)
+    function exportCSV() {
+      if (!handleProCheck(null, 'Export CSV')) return;
+
+      const delta = calculateDelta();
+      const rows = [
+        ['Parameter', 'Value'],
+        ['Master Reference Camera', state.camAName],
+        ['Master Anchor Timestamp', formatDate(parseDate(state.camATime))],
+        ['Target Camera', state.camBName],
+        ['Target Anchor Timestamp', formatDate(parseDate(state.camBTime))],
+        ['Total Integer Delta (Seconds)', delta.totalSeconds],
+        ['Target Clock Drift Direction', delta.direction],
+        ['Drift Offset Breakdown', `${delta.absDays}d ${delta.absHours}h ${delta.absMins}m ${delta.absSecs}s`],
+        ['Correction Shift Required', `${delta.shiftNeededSeconds}s`],
+        ['Target Directory Path', state.targetPath],
+        ['Command Output', document.getElementById('metadata-output').textContent]
+      ];
+
+      const csvContent = rows.map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `camera_sync_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast('CSV export downloaded!');
+    }
+
+    function exportJSON() {
+      if (!handleProCheck(null, 'Export JSON')) return;
+
+      const delta = calculateDelta();
+      const exportData = {
+        app: "Multi-Camera Timestamp Drift & Timezone Synchronizer",
+        version: "1.0",
+        exportedAt: new Date().toISOString(),
+        calibration: {
+          referenceCamera: { name: state.camAName, model: state.camAModel, anchorTimestamp: state.camATime },
+          targetCamera: { name: state.camBName, model: state.camBModel, anchorTimestamp: state.camBTime },
+          offset: {
+            totalSecondsDelta: delta.totalSeconds,
+            direction: delta.direction,
+            days: delta.absDays,
+            hours: delta.absHours,
+            minutes: delta.absMins,
+            seconds: delta.absSecs,
+            correctionShiftSeconds: delta.shiftNeededSeconds
+          }
+        },
+        batchCommands: {
+          metadataCLI: document.getElementById('metadata-output').textContent,
+          catalogSoftware: {
+            mode: state.lrMode,
+            hoursShift: (delta.direction === 'ahead' ? -1 : 1) * delta.absHours,
+            minutesShift: (delta.direction === 'ahead' ? -1 : 1) * delta.absMins,
+            secondsShift: (delta.direction === 'ahead' ? -1 : 1) * delta.absSecs
+          }
+        }
+      };
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `camera_sync_calibration_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast('JSON export downloaded!');
+    }
+
+    function printSheet() {
+      if (!handleProCheck(null, 'Print Sheet')) return;
+      window.print();
+    }
+
+    // Wire DOM events
+    function initListeners() {
+      // Inputs
+      document.getElementById('cam-a-time').addEventListener('input', (e) => {
+        state.camATime = e.target.value;
+        updateApp();
+      });
+
+      document.getElementById('cam-b-time').addEventListener('input', (e) => {
+        state.camBTime = e.target.value;
+        updateApp();
+      });
+
+      document.getElementById('cam-a-name').addEventListener('input', (e) => {
+        state.camAName = e.target.value;
+        updateApp();
+      });
+
+      document.getElementById('cam-b-name').addEventListener('input', (e) => {
+        state.camBName = e.target.value;
+        updateApp();
+      });
+
+      document.getElementById('cam-a-model').addEventListener('input', (e) => {
+        state.camAModel = e.target.value;
+        updateApp();
+      });
+
+      document.getElementById('cam-b-model').addEventListener('input', (e) => {
+        state.camBModel = e.target.value;
+        updateApp();
+      });
+
+      document.getElementById('metadata-target-path').addEventListener('input', (e) => {
+        state.targetPath = e.target.value;
+        renderMetadataGenerator(calculateDelta());
+        saveStateToStorage();
+      });
+
+      document.getElementById('metadata-scope').addEventListener('change', (e) => {
+        state.tagScope = e.target.value;
+        renderMetadataGenerator(calculateDelta());
+        saveStateToStorage();
+      });
+
+      document.getElementById('metadata-ext').addEventListener('change', (e) => {
+        state.fileExt = e.target.value;
+        renderMetadataGenerator(calculateDelta());
+      });
+
+      document.getElementById('metadata-overwrite').addEventListener('change', (e) => {
+        state.overwrite = e.target.checked;
+        renderMetadataGenerator(calculateDelta());
+        saveStateToStorage();
+      });
+
+      document.getElementById('metadata-recursive').addEventListener('change', (e) => {
+        state.recursive = e.target.checked;
+        renderMetadataGenerator(calculateDelta());
+        saveStateToStorage();
+      });
+
+      document.getElementById('lr-dialog-mode').addEventListener('change', (e) => {
+        state.lrMode = e.target.value;
+        renderLightroomGuide(calculateDelta());
+        saveStateToStorage();
+      });
+
+      // Toggle timeline corrected view
+      const toggleCorrectedBtn = document.getElementById('toggle-corrected-btn');
+      toggleCorrectedBtn.addEventListener('click', () => {
+        state.showCorrectedTimeline = !state.showCorrectedTimeline;
+        if (state.showCorrectedTimeline) {
+          toggleCorrectedBtn.textContent = 'Toggle: Show Original (Uncorrected)';
+        } else {
+          toggleCorrectedBtn.textContent = 'Toggle: Show Corrected (Realigned)';
+        }
+        renderDualTimeline(calculateDelta());
+      });
+
+      // Presets
+      document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.getAttribute('data-preset'), 10);
+          applyPreset(idx);
+        });
+      });
+
+      // Copy buttons
+      document.getElementById('copy-metadata-btn').addEventListener('click', () => {
+        const text = document.getElementById('metadata-output').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Command copied!');
+        }).catch(() => {
+          showToast('Failed to copy. Please select manually.');
+        });
+      });
+
+      document.getElementById('copy-lr-summary-btn').addEventListener('click', () => {
+        const delta = calculateDelta();
+        const dateA = parseDate(state.camATime);
+        const dateB = parseDate(state.camBTime);
+        const sign = delta.direction === 'ahead' ? '-' : (delta.direction === 'behind' ? '+' : '');
+        const summary = `Capture Time Correction Guide:
+- Target Body: ${state.camBName}
+- Selected Anchor Photo: ${formatDate(dateB)}
+- Adjusted Anchor Photo: ${formatDate(dateA)}
+- Shift Mode: ${state.lrMode === 'shift-hours' ? 'Shift by set number of hours' : 'Change to a specific date and time'}
+- Shift Values: ${sign}${delta.absHours}h, ${sign}${delta.absMins}m, ${sign}${delta.absSecs}s
+- Rule: Ensure active highlighted photo is the reference anchor before updating.`;
+
+        navigator.clipboard.writeText(summary).then(() => {
+          showToast('Instructions copied!');
+        }).catch(() => {
+          showToast('Failed to copy. Please select manually.');
+        });
+      });
+
+      // Export actions
+      document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
+      document.getElementById('btn-export-json').addEventListener('click', exportJSON);
+      document.getElementById('btn-print').addEventListener('click', printSheet);
+      document.getElementById('btn-save-scenario').addEventListener('click', (e) => {
+        if (handleProCheck(e, 'Save Scenario')) {
+          saveStateToStorage();
+          showToast('Scenario saved successfully!');
+        }
+      });
+
+      // Reset button
+      document.getElementById('btn-reset').addEventListener('click', () => {
+        applyPreset(0);
+        showToast('Reset to default values');
+      });
+
+      // Linear Drift Inputs
+      ['drift-start-offset', 'drift-end-offset', 'drift-duration'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateLinearDrift);
+      });
+    }
+
+    function updateLinearDrift() {
+      const startInput = document.getElementById('drift-start-offset').value;
+      const endInput = document.getElementById('drift-end-offset').value;
+      const durInput = document.getElementById('drift-duration').value;
+
+      const start = parseFloat(startInput) || 0;
+      const end = parseFloat(endInput) || 0;
+      const rawDur = parseFloat(durInput) || 0;
+      const dur = rawDur <= 0 ? 0.001 : rawDur;
+      
+      const totalDrift = end - start;
+      const rate = totalDrift / dur;
+      const ppm = (rate / 3600) * 1000000;
+
+      document.getElementById('drift-rate-val').textContent = (rate >= 0 ? '+' : '') + rate.toFixed(2) + ' s/hr';
+      document.getElementById('drift-ppm-val').textContent = (ppm >= 0 ? '+' : '') + ppm.toFixed(1) + ' ppm';
+      document.getElementById('drift-total-val').textContent = Math.abs(totalDrift).toFixed(1) + 's total';
+
+      const warnCard = document.getElementById('drift-warning-card');
+      const warnText = document.getElementById('drift-warning-text');
+      if (Math.abs(ppm) > 150) {
+        warnCard.style.display = 'block';
+        warnText.textContent = "High clock deviation (>150ppm). Verify hardware oscillator health.";
+      } else {
+        warnCard.style.display = 'none';
+      }
+
+      const tbody = document.getElementById('drift-schedule-body');
+      tbody.innerHTML = '';
+      
+      const hours = Math.min(100, Math.ceil(dur));
+      for (let h = 0; h <= hours; h++) {
+        const currentOffset = start + (rate * h);
+        const op = currentOffset >= 0 ? '-=' : '+=';
+        const absVal = Math.abs(Math.round(currentOffset));
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>Hour ${h}</td>
+          <td>${currentOffset.toFixed(2)}s</td>
+          <td><code>-AllDates${op}"0:0:0 0:0:${absVal}"</code></td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
+    // Startup initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      loadStateFromStorage();
+      syncInputsFromState();
+      initListeners();
+      updateApp();
+      updateLinearDrift();
+    });
+
+    function solveReverseAnchor() {
+      const mStr = document.getElementById('cue-master-time').value;
+      const tStr = document.getElementById('cue-target-time').value;
+      const latency = parseFloat(document.getElementById('cue-latency').value) || 0;
+      const resultElem = document.getElementById('cue-result-text');
+
+      const parseTimeToSeconds = (str) => {
+        const parts = str.split(':');
+        if (parts.length < 2) return null;
+        let s = 0;
+        if (parts.length === 3) {
+          s = (parseFloat(parts[0]) * 3600) + (parseFloat(parts[1]) * 60) + parseFloat(parts[2]);
+        } else {
+          s = (parseFloat(parts[0]) * 60) + parseFloat(parts[1]);
+        }
+        return isNaN(s) ? null : s;
+      };
+
+      const mSec = parseTimeToSeconds(mStr);
+      const tSec = parseTimeToSeconds(tStr);
+
+      if (mSec === null || tSec === null) {
+        resultElem.textContent = "Invalid Time Format";
+        resultElem.style.color = "var(--danger)";
+        return 0;
+      }
+
+      // Logic: Target Offset = (Target - Master) - Latency
+      const rawDiff = tSec - mSec;
+      const correctedDiff = rawDiff - (latency / 1000);
+      const absDiff = Math.abs(correctedDiff);
+      
+      const mm = Math.floor(absDiff / 60);
+      const ss = (absDiff % 60).toFixed(1);
+      const dir = correctedDiff >= 0 ? "ahead" : "behind";
+      const sign = correctedDiff >= 0 ? "+" : "-";
+
+      resultElem.textContent = `Target ${dir} by ${sign}${mm}m ${ss}s`;
+      resultElem.style.color = "var(--success)";
+      return correctedDiff;
+    }
+
+    document.querySelectorAll('.cue-scenario').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('cue-master-time').value = btn.dataset.m;
+        document.getElementById('cue-target-time').value = btn.dataset.t;
+        document.getElementById('cue-latency').value = btn.dataset.l;
+        solveReverseAnchor();
+      });
+    });
+
+    ['cue-master-time', 'cue-target-time', 'cue-latency'].forEach(id => {
+      document.getElementById(id).addEventListener('input', solveReverseAnchor);
+    });
+
+    document.getElementById('cue-apply-btn').addEventListener('click', () => {
+      const diff = solveReverseAnchor();
+      const masterDate = parseDate(state.camATime) || new Date();
+      const newTargetDate = new Date(masterDate.getTime() + (diff * 1000));
+      
+      // Update main UI to match this derived offset
+      state.camBTime = newTargetDate.toISOString().slice(0, 19);
+      document.getElementById('cam-b-time').value = state.camBTime;
+      updateApp();
+      showToast("Offset applied to main synchronizer!");
+    });
+
+    solveReverseAnchor();
+    function updateExportBuilder() {
+      const delta = calculateDelta();
+      const tbody = document.getElementById('export-table-body');
+      if (!tbody) return;
+
+      const rows = [
+        { role: 'Reference', name: state.camAName, path: 'N/A (Source)', shift: '0s', isRef: true },
+        { role: 'Target', name: state.camBName, path: state.targetPath, shift: (delta.shiftNeededSeconds >= 0 ? '+' : '') + delta.shiftNeededSeconds + 's', isRef: false }
+      ];
+
+      tbody.innerHTML = rows.map(row => `
+        <tr>
+          <td><span class="cam-tag ${row.isRef ? 'cam-tag-a' : 'cam-tag-b'}">${row.role}</span></td>
+          <td style="font-weight:600;">${escapeHtml(row.name)}</td>
+          <td><input type="text" class="export-path-input" value="${escapeHtml(row.path)}" readonly></td>
+          <td style="font-family:var(--font-mono);">${row.shift}</td>
+          <td><span style="font-size:0.7rem; color:var(--text-dim);">${row.isRef ? 'Master' : 'Pending'}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    function generateScriptContent(isWindows) {
+      const delta = calculateDelta();
+      const op = delta.direction === 'ahead' ? '-=' : '+=';
+      const shiftStr = `0:0:${delta.absDays} ${delta.absHours}:${delta.absMins}:${delta.absSecs}`;
+      const path = state.targetPath.replace(/"/g, isWindows ? '""' : '\\"');
+      
+      let cmd = `exiftool "-AllDates${op}${shiftStr}"`;
+      if (state.overwrite) cmd += ` -overwrite_original`;
+      if (state.recursive) cmd += ` -r`;
+      
+      if (isWindows) {
+        return `@echo off\nREM Multi-Camera Sync Batch\nREM Generated by Multi-Camera Timestamp Synchronizer\n\necho Applying shift of ${shiftStr} to ${path}...\n${cmd} "${path}"\n\npause`;
+      } else {
+        return `#!/bin/bash\n# Multi-Camera Sync Script\n# Generated by Multi-Camera Timestamp Synchronizer\n\necho "Applying shift of ${shiftStr} to ${path}..."\n${cmd} "${path}"\n\necho "Done."`;
+      }
+    }
+
+    function triggerDownload(filename, content) {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('btn-export-sh').addEventListener('click', (e) => {
+      if (handleProCheck(e, 'Export Shell Script')) {
+        triggerDownload('sync_cameras.sh', generateScriptContent(false));
+        showToast('Shell script exported!');
+      }
+    });
+
+    document.getElementById('btn-download-bat').addEventListener('click', (e) => {
+      if (handleProCheck(e, 'Export Batch Script')) {
+        triggerDownload('sync_cameras.bat', generateScriptContent(true));
+        showToast('Windows batch script exported!');
+      }
+    });
+
+    document.getElementById('btn-download-json-session').addEventListener('click', (e) => {
+      exportJSON();
+    });
+
+    // Update the app to include the export table refresh
+    const originalUpdateApp = updateApp;
+    updateApp = function() {
+      originalUpdateApp();
+      updateExportBuilder();
+    };
+
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This utility aligns unsynchronized photo sequences taken on multiple camera bodies. Calculate the precise time delta between cameras, preview the merged timeline, and generate clean ExifTool commands to correct your raw files before culling.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Find a sync frame (such as both cameras shooting a phone clock or the exact same moment) and enter the timestamps from both bodies.</li><li>Review the calculated offset and preview the adjusted chronological sequence.</li><li>Optional: Enter end-of-day timestamps to calculate and correct linear hardware clock drift.</li><li>Copy the generated ExifTool command to patch your files in bulk, or apply the offset values directly in Lightroom.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">How to shift EXIF date/time created by time in days, hours, minutes?</h4><p style="margin:0">You enter: Camera recorded timestamp of a known photo or anchor event (YYYY-MM-DD HH:MM:SS) · True reference timestamp of the same event (from master camera, phone, or atomic clock) · Target directory path containing the images needing adjustment.<br>You get: The exact time delta in days, hours, minutes, and seconds, the precise ExifTool command syntax to batch-shift the EXIF dates without altering other metadata, and the exact relative adjustment parameters for Adobe Lightroom Classic.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">How to shift EXIF date/time created by time in days, hours, minutes?</h4><p style="margin:0">You can shift EXIF dates using ExifTool with the `-AllDates` parameter. For example, to move timestamps forward by 1 day, 2 hours, and 15 minutes, run: `exiftool -AllDates+=&quot;1:0:0 2:15:0&quot; /path/to/photos`. Replace `+=` with `-=` to shift backward. This updates `DateTimeOriginal`, `CreateDate`, and `ModifyDate` simultaneously.</p><h4 style="font-size:16px;margin:16px 0 4px">How can I better organise and file my photos?</h4><p style="margin:0">A consistent filing structure relies on clean metadata before ingestion. First, synchronize capture timestamps across all camera bodies so sorting by capture time works across your entire set. Then, rename files on import using a standardized pattern like `YYYYMMDD_Event_CameraID_Sequence.ext`. Store raw files in folders organized by date and project name, keeping culling and editing catalogs separated.</p><h4 style="font-size:16px;margin:16px 0 4px">Does this tool upload my photos to a server?</h4><p style="margin:0">No. The free web tool runs entirely client-side inside your browser; no images or metadata leave your computer. For complete air-gapped security on location, the paid version runs 100% offline as a standalone local utility.</p><h4 style="font-size:16px;margin:16px 0 4px">Why not just use Lightroom&#39;s &#39;Edit Capture Time&#39; feature?</h4><p style="margin:0">Lightroom can shift timestamps, but by default, it only updates its internal catalog database unless you manually write metadata back to files. Furthermore, Lightroom cannot easily calculate or compensate for gradual hardware oscillator drift across a 12-hour shoot, whereas ExifTool updates the source files permanently across all software.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $12, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/ystgu" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $12</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../print-to-monitor-color-proofing-lab/" style="color:inherit;font-weight:600">Print-to-Monitor Soft Proofing &amp; Gamut Visualizer</a>: Model luminance, paper Dmax, and gamut clipping to see exactly how your photo will look when printed.</li><li><a href="../burst-action-sequence-multi-exposure-compositor/" style="color:inherit;font-weight:600">Burst Action Sequence Compositor</a>: Generate multi-exposure burst action composites offline in your browser with automated background subtraction.</li><li><a href="../macro-extension-tube-magnification-bench/" style="color:inherit;font-weight:600">Macro Photography Extension Tube &amp; Magnification Lab</a>: Simulate tube stacks, working distance, effective f-stops, and Airy disk diffraction in an offline optical bench.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $12</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $12"});</script>
+</body>
+</html>
