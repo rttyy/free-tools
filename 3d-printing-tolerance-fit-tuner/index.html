@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+        :root {
+            --bg: #ffffff;
+            --surface: #f8f9fa;
+            --border: #dee2e6;
+            --text: #212529;
+            --text-muted: #6c757d;
+            --primary: #0d6efd;
+            --primary-hover: #0a58ca;
+            --accent: #6610f2;
+            --success: #198754;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --cad-color: #6c757d;
+            --print-color: #0d6efd;
+            --gap-color: #ffc107;
+            --radius: 8px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #121212;
+                --surface: #1e1e1e;
+                --border: #333;
+                --text: #e0e0e0;
+                --text-muted: #a0a0a0;
+                --primary: #375a7f;
+                --primary-hover: #4b7cf3;
+            }
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            color: var(--text);
+            background: var(--bg);
+            padding-bottom: 2rem;
+        }
+
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .container > div { min-width: 0; }
+
+        @media (max-width: 800px) {
+            .container { grid-template-columns: 1fr; gap: 1rem; }
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; }
+        p.subtitle { margin: 0.5rem 0 0; color: var(--text-muted); font-size: 0.9rem; }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .input-group { margin-bottom: 1rem; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; }
+        input, select {
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .radio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 0.5rem;
+        }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 480px) { 
+            .grid { grid-template-columns: 1fr; }
+            .card { padding: 1rem; }
+            .container { padding: 0 0.5rem; }
+            h1 { font-size: 1.25rem; overflow-wrap: anywhere; }
+            .radio-grid { grid-template-columns: 1fr; }
+            .results-table { font-size: 0.8rem; }
+        }
+        .pro-msg { color: var(--danger); font-size: 0.75rem; margin-top: 0.5rem; width: 100%; }
+        .pro-msg a { color: inherit; }
+        .radio-grid label {
+            border: 1px solid var(--border);
+            padding: 0.5rem;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        .radio-grid input { display: none; }
+        .radio-grid input:checked + span { color: var(--primary); font-weight: bold; }
+        .radio-grid label:has(input:checked) { border-color: var(--primary); background: rgba(13, 110, 253, 0.1); }
+
+        .visualizer-box {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .results-table td { padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+        .results-table td:last-child { text-align: right; font-weight: bold; font-family: monospace; }
+
+        .recommendation {
+            background: rgba(13, 110, 253, 0.05);
+            padding: 1rem;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+
+        .slicer-value {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg);
+            padding: 0.5rem;
+            border: 1px dashed var(--border);
+            margin-top: 0.5rem;
+        }
+
+        .btn {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: opacity 0.2s;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn:hover { opacity: 0.9; }
+
+        .presets {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+        .presets .btn { flex-shrink: 0; }
+
+        .badge {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: var(--border);
+            margin-left: 0.5rem;
+        }
+
+        .disclaimer {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2rem;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .tooltip-text { font-size: 0.8rem; color: var(--text-muted); font-weight: normal; }
+
+        [data-feature="tolerance-report-export"] table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+        [data-feature="tolerance-report-export"] th {
+            text-align: left;
+            background: rgba(0,0,0,0.05);
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+        }
+        [data-feature="tolerance-report-export"] td {
+            padding: 0.4rem 0.5rem;
+            border: 1px solid var(--border);
+            font-family: monospace;
+        }
+        .vault-controls { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .vault-list { width: 100%; margin-top: 1rem; border-top: 1px dashed var(--border); padding-top: 1rem; }
+        .vault-item { display: flex; justify-content: space-between; align-items: center; padding: 0.25rem 0; font-size: 0.9rem; }
+        .vault-item span { cursor: pointer; flex-grow: 1; text-decoration: underline; color: var(--primary); }
+        .vault-item .btn-del { color: var(--danger); font-size: 1.2rem; background: none; border: none; cursor: pointer; padding: 0 0.5rem; }
+        .wizard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .wizard-results { 
+        margin-top: 0.5rem; 
+        padding: 0.75rem; 
+        background: rgba(25, 135, 84, 0.1); 
+        border: 1px solid var(--success);
+        border-radius: 4px; 
+        font-size: 0.85rem; 
+    }
+    [data-feature="batch-clearance-chart"] canvas {
+        touch-action: none;
+    }
+    /* FEATURE-CSS */
+    </style>
+<title>3D Printing Tolerance Test &amp; Peg and Hole Fit Tuner</title>
+<meta name="description" content="Calculate exact CAD offsets for press, slip, and loose 3D printed fits. Free web tool &amp; $9 offline workshop pack. Stop wasting filament on test prints.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/3d-printing-tolerance-fit-tuner/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/3d-printing-tolerance-fit-tuner/">
+<meta property="og:title" content="3D Printing Tolerance Test &amp; Peg and Hole Fit Tuner"><meta property="og:description" content="Calculate exact CAD offsets for press, slip, and loose 3D printed fits. Free web tool &amp; $9 offline workshop pack. Stop wasting filament on test prints.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/3d-printing-tolerance-fit-tuner/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"3D Printing Tolerance Test & Peg and Hole Fit Tuner","description":"Calculate exact CAD offsets for press, slip, and loose 3D printed fits. Free web tool & $9 offline workshop pack. Stop wasting filament on test prints.","url":"https://rttyy.github.io/free-tools/3d-printing-tolerance-fit-tuner/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What tool can I use to measure dimensions in STL files?","acceptedAnswer":{"@type":"Answer","text":"STL files are triangular mesh models rather than parametric solids, making native measurement tricky. You can measure distances in STL files using free tools like PrusaSlicer (built-in measuring tool), MeshLab, or Blender. Once you know your intended STL dimensions, our tuner calculates the real-world clearance offsets needed for printing."}},{"@type":"Question","name":"What is the best method for producing closely fitting 3D printed parts?","acceptedAnswer":{"@type":"Answer","text":"Producing closely fitting parts requires separating printer axis calibration from material shrinkage and slicer wall expansion. Print a test block, measure the inner hole and outer peg variances with digital calipers, and apply clearance offsets (0.05mm for press fit, 0.15mm for slip fit) directly to your CAD sketch dimensions rather than scaling the entire model."}},{"@type":"Question","name":"Which resolution is needed for bricks compatible with Lego?","acceptedAnswer":{"@type":"Answer","text":"Lego-compatible bricks require high horizontal dimensional accuracy rather than micro layer heights; a standard 0.12mm to 0.16mm layer height with a 0.4mm nozzle works great. The key is controlling wall expansion: studs typically require an exact 0.05mm to 0.08mm side clearance so the friction snap ('clutch power') works without stress-cracking the ABS or PLA."}},{"@type":"Question","name":"What is the difference between the free web tool and the $9 Gumroad product?","acceptedAnswer":{"@type":"Answer","text":"The core offset calculator is completely free to use online in any browser. The $9 paid Gumroad product provides a self-contained offline bundle (single HTML file) that runs locally without internet access on garage laptops, plus exportable material profiles and printable PDF tolerance summary reports."}}]}</script>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <div>
+            <h1>3D Printing Precision Fit & Tolerance Tuner</h1>
+            <p class="subtitle">Simulate as-printed dimensions and calculate exact CAD offsets for mechanical parts.</p>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="col-inputs">
+        <div class="card" data-feature="fit-standard-selector">
+            <h2>Presets</h2>
+            <div class="presets" id="preset-list">
+                <!-- Presets injected here -->
+            </div>
+
+            <h2>Geometry & Material</h2>
+            <div class="input-group">
+                <label>Nominal Dimension (Target mm)</label>
+                <input type="number" id="nominalDim" value="10" step="0.1" min="0.1">
+            </div>
+
+            <div class="grid">
+                <div class="input-group">
+                    <label>Shrinkage (%) <span class="tooltip-text">(Material)</span></label>
+                    <input type="number" id="shrinkage" value="0.2" step="0.01" min="0" max="20">
+                </div>
+                <div class="input-group">
+                    <label>Nozzle Width (mm)</label>
+                    <input type="number" id="nozzleWidth" value="0.4" step="0.05" min="0.1" max="2">
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="input-group">
+                    <label>Flow Rate (%)</label>
+                    <input type="number" id="flowRate" value="100" step="1" min="50" max="150">
+                </div>
+                <div class="input-group">
+                    <label>Manual Offset (mm)</label>
+                    <input type="number" id="manualOffset" value="0.00" step="0.01">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Fit Type</label>
+                <div class="radio-grid">
+                    <label><input type="radio" name="fitType" value="press"><span>Press Fit</span></label>
+                    <label><input type="radio" name="fitType" value="slip" checked><span>Slip Fit</span></label>
+                    <label><input type="radio" name="fitType" value="loose"><span>Loose Fit</span></label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card" style="margin-top: 1rem;" data-feature="data-persistence">
+            <h2>Data Actions</h2>
+            <div id="action-area" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button class="btn btn-outline" onclick="exportData('json')">Export JSON</button>
+                <button class="btn btn-outline" onclick="exportData('csv')">Export CSV</button>
+                <button class="btn btn-outline" onclick="handlePrint()">Print Report</button>
+                <button class="btn btn-outline" onclick="resetForm()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-outputs">
+        <div class="card" data-feature="interactive-visualizer">
+            <h2>Cross-Section Simulation</h2>
+            <div class="visualizer-box">
+                <svg id="fitSvg" viewBox="0 0 200 200" width="100%" height="100%">
+                    <!-- SVG content dynamically updated -->
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="var(--border)" stroke-dasharray="4" id="svg-cad-hole" />
+                    <circle cx="100" cy="100" r="40" fill="none" stroke="var(--border)" stroke-dasharray="4" id="svg-cad-shaft" />
+                    <path id="svg-printed-hole" fill="rgba(108, 117, 125, 0.2)" stroke="var(--text-muted)" stroke-width="2" />
+                    <circle id="svg-printed-shaft" cx="100" cy="100" r="38" fill="var(--primary)" fill-opacity="0.6" stroke="var(--primary)" stroke-width="2" />
+                    <text x="100" y="25" text-anchor="middle" font-size="10" fill="var(--text-muted)">Hole Assembly</text>
+                </svg>
+            </div>
+            <div style="display: flex; justify-content: space-around; font-size: 0.75rem;">
+                <span style="color: var(--cad-color)">-- CAD Intent</span>
+                <span style="color: var(--primary)">● Physical Printed</span>
+            </div>
+        </div>
+
+        <div class="card" data-feature="dimension-simulator">
+            <h2>Resulting Physical Dimensions</h2>
+            <table class="results-table">
+                <tr>
+                    <td>Realized Outer Diameter (Shaft)</td>
+                    <td id="res-phys-shaft">--</td>
+                </tr>
+                <tr>
+                    <td>Realized Inner Diameter (Hole)</td>
+                    <td id="res-phys-hole">--</td>
+                </tr>
+                <tr>
+                    <td>Effective Gap/Clearance</td>
+                    <td id="res-clearance">--</td>
+                </tr>
+            </table>
+
+            <div class="recommendation" id="verdict-block">
+                <strong>What this means:</strong>
+                <p id="verdict-text" style="font-size: 0.9rem; margin: 0.5rem 0 0;"></p>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 1rem;" data-feature="slicer-compensation-solver">
+            <h2>Recommended CAD & Slicer Fixes</h2>
+            <div class="input-group">
+                <label>Draw Shaft Diameter as:</label>
+                <div class="slicer-value"><span id="rec-cad-shaft">--</span> <button class="btn btn-outline" style="padding: 2px 8px" onclick="copyValue('rec-cad-shaft', this)">Copy</button></div>
+            </div>
+            <div class="input-group">
+                <label>Draw Hole Diameter as:</label>
+                <div class="slicer-value"><span id="rec-cad-hole">--</span> <button class="btn btn-outline" style="padding: 2px 8px" onclick="copyValue('rec-cad-hole', this)">Copy</button></div>
+            </div>
+            <div class="input-group">
+                <label>Slicer XY Expansion / Size Comp:</label>
+                <div class="slicer-value"><span id="rec-slicer-xy">--</span> <button class="btn btn-outline" style="padding: 2px 8px" onclick="copyValue('rec-slicer-xy', this)">Copy</button></div>
+                <p class="subtitle" style="font-size: 0.7rem;">Use negative values to pull back over-extrusion.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="disclaimer container">
+    Estimate only - verify with a qualified professional or run a small "tolerance test cube" before relying on these values for high-precision mechanical engineering. Shrinkage varies by geometry and temperature.
+</div>
+
+<div class="card" style="margin-top: 1rem;" data-feature="tolerance-report-export">
+    <h2>Pro Tolerance Report</h2>
+    <p class="subtitle">Reference table for CAD modeling offsets based on your current printer and material profile.</p>
+    <div id="report-preview-table" style="margin: 1rem 0; overflow-x: auto;">
+        <!-- Injected Table -->
+    </div>
+    <div id="report-export-container">
+        <button class="btn btn-primary" style="width: 100%;" onclick="exportProReport()">Export Full Report (JSON)</button>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 1rem;" data-feature="material-profile-vault">
+    <h2>Material Profile Vault</h2>
+    <p class="subtitle">Save current settings as a reusable material profile.</p>
+    <div class="input-group">
+        <label>Profile Name</label>
+        <div class="vault-controls">
+            <input type="text" id="vault-name" placeholder="e.g. Ender3-ABS-Red">
+            <button class="btn btn-primary" onclick="saveVaultProfile()">Save</button>
+        </div>
+    </div>
+    <div class="vault-list" id="vault-list-container">
+        <label>Saved Profiles</label>
+        <select id="vault-select" onchange="loadVaultProfile(this.value)" style="margin-bottom: 0.5rem;">
+            <option value="">-- Select a Profile --</option>
+        </select>
+        <div id="vault-items-list">
+            <!-- Items for deletion -->
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 1rem;" data-feature="clearance-calibration-wizard">
+    <h2>Reverse Calibration Wizard</h2>
+    <p class="subtitle">Measure a test print (e.g. 20mm cube) and the tool will back-calculate your material profile.</p>
+    
+    <div class="wizard-grid">
+        <div class="input-group">
+            <label>Ext. Target (mm)</label>
+            <input type="number" id="wiz-t-out" value="20" step="0.1">
+        </div>
+        <div class="input-group">
+            <label>Ext. Measured (mm)</label>
+            <input type="number" id="wiz-m-out" value="20" step="0.1">
+        </div>
+        <div class="input-group">
+            <label>Int. Target (mm)</label>
+            <input type="number" id="wiz-t-in" value="" step="0.1" placeholder="Optional">
+        </div>
+        <div class="input-group">
+            <label>Int. Measured (mm)</label>
+            <input type="number" id="wiz-m-in" value="" step="0.1" placeholder="Optional">
+        </div>
+    </div>
+    
+    <div id="wiz-results" class="wizard-results" style="display:none;">
+        <div>Calculated Shrinkage: <strong id="wiz-res-shrink">--</strong></div>
+        <div>Flow Adjustment: <strong id="wiz-res-flow">--</strong></div>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%; margin-top: 0.5rem;" onclick="runCalibrationWizard()">Apply Calibration to Profile</button>
+</div>
+
+<div class="card" style="margin-top: 1rem;" data-feature="batch-clearance-chart">
+    <h2>Fit vs. Part Size Scaling</h2>
+    <p class="subtitle">Clearance change across sizes (5mm to max size) showing constant offset vs percentage shrinkage effects.</p>
+    <div class="input-group" style="margin-top: 0.75rem; margin-bottom: 0.5rem;">
+        <label style="display:flex; justify-content:space-between;">
+            <span>Max Part Size Scale:</span>
+            <span id="chart-max-label">50 mm</span>
+        </label>
+        <input type="range" id="chartMaxScale" min="20" max="100" value="50" step="5">
+    </div>
+    <div id="batch-chart-wrapper" style="position:relative; width:100%; height:180px;">
+        <canvas id="batchClearanceCanvas" width="400" height="180" style="width:100%; height:100%; display:block; border:1px solid var(--border); border-radius:4px; background:var(--bg);"></canvas>
+    </div>
+</div>
+
+<!-- FEATURES -->
+
+<script>
+const PRO = false;
+const PRO_LINK = "https://ferrywave73.gumroad.com/l/novgrp";
+
+const PRESETS = [
+ {
+  "name": "PLA Mechanical Slip Fit",
+  "values": {"nominalDim":10,"shrinkage":0.2,"nozzleWidth":0.4,"flowRate":100,"manualOffset":0,"fitType":"slip"}
+ },
+ {
+  "name": "ABS High-Shrinkage Press Fit",
+  "values": {"nominalDim":20,"shrinkage":0.8,"nozzleWidth":0.4,"flowRate":95,"manualOffset":0,"fitType":"press"}
+ },
+ {
+  "name": "Loose PETG Bolt Clearance",
+  "values": {"nominalDim":8,"shrinkage":0.3,"nozzleWidth":0.6,"flowRate":105,"manualOffset":0.1,"fitType":"loose"}
+ },
+ {
+  "name": "Lego-Compatible Stud (4.8mm)",
+  "values": {"nominalDim":4.8,"shrinkage":0.2,"nozzleWidth":0.4,"flowRate":100,"manualOffset":-0.02,"fitType":"press"}
+ }
+];
+
+const FIT_CLEARANCES = {
+    "press": 0.0,
+    "slip": 0.15,
+    "loose": 0.4
+};
+
+function init() {
+    const presetList = document.getElementById('preset-list');
+    PRESETS.forEach(p => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-outline';
+        btn.innerText = p.name;
+        btn.onclick = () => loadPreset(p.values);
+        presetList.appendChild(btn);
+    });
+
+    // Event listeners
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('input', calculate);
+    });
+    
+    try {
+        const saved = localStorage.getItem('3d_printing_tuner_prefs');
+        if (saved) loadPreset(JSON.parse(saved));
+        else loadPreset(PRESETS[0].values);
+    } catch(e) { loadPreset(PRESETS[0].values); }
+}
+
+function loadPreset(values) {
+    Object.keys(values).forEach(key => {
+        const el = document.getElementById(key) || document.querySelector(`input[name="${key}"][value="${values[key]}"]`);
+        if (el) {
+            if (el.type === 'radio') el.checked = true;
+            else el.value = values[key];
+        }
+    });
+    calculate();
+}
+
+function calculate() {
+    const nominal = Math.max(0.001, parseFloat(document.getElementById('nominalDim').value) || 0.001);
+    const shrinkage = Math.max(0, Math.min(50, parseFloat(document.getElementById('shrinkage').value) || 0));
+    const nozzle = Math.max(0.01, parseFloat(document.getElementById('nozzleWidth').value) || 0.4);
+    const flow = Math.max(1, parseFloat(document.getElementById('flowRate').value) || 100);
+    const extra = parseFloat(document.getElementById('manualOffset').value) || 0;
+    const fitType = document.querySelector('input[name="fitType"]:checked')?.value || 'slip';
+
+    const shrinkMult = Math.max(0.001, 1 - (shrinkage / 100));
+    const sideOffset = (nozzle * (flow / 100) - nozzle) / 2;
+
+    const physShaft = Math.max(0, (nominal * shrinkMult) + (2 * sideOffset));
+    const physHole = Math.max(0, (nominal * shrinkMult) - (2 * sideOffset));
+    const simulatedGap = physHole - physShaft;
+
+    document.getElementById('res-phys-shaft').innerText = physShaft.toFixed(3) + ' mm';
+    document.getElementById('res-phys-hole').innerText = physHole.toFixed(3) + ' mm';
+    document.getElementById('res-clearance').innerText = simulatedGap.toFixed(3) + ' mm';
+
+    const targetGap = FIT_CLEARANCES[fitType] + extra;
+    const targetHolePhys = nominal + (targetGap / 2);
+    const targetShaftPhys = nominal - (targetGap / 2);
+
+    const recCadShaft = Math.max(0, (targetShaftPhys - (2 * sideOffset)) / shrinkMult);
+    const recCadHole = Math.max(0, (targetHolePhys + (2 * sideOffset)) / shrinkMult);
+
+    document.getElementById('rec-cad-shaft').innerText = recCadShaft.toFixed(3) + ' mm';
+    document.getElementById('rec-cad-hole').innerText = recCadHole.toFixed(3) + ' mm';
+    const xyComp = -sideOffset;
+    document.getElementById('rec-slicer-xy').innerText = xyComp.toFixed(3) + ' mm';
+
+    updateVisualizer(nominal, physShaft, physHole, targetGap);
+    updateVerdict(simulatedGap, targetGap, fitType, xyComp);
+    updateReportTable(shrinkMult, sideOffset, targetGap);
+    
+    if (PRO) {
+        try {
+            const data = {nominalDim: nominal, shrinkage, nozzleWidth: nozzle, flowRate: flow, manualOffset: extra, fitType};
+            localStorage.setItem('3d_printing_tuner_prefs', JSON.stringify(data));
+        } catch(e) {}
+    }
+}
+
+function updateVisualizer(nominal, physShaft, physHole, targetGap) {
+    const svgShaft = document.getElementById('svg-printed-shaft');
+    const svgHole = document.getElementById('svg-printed-hole');
+    const svgCadShaft = document.getElementById('svg-cad-shaft');
+    const svgCadHole = document.getElementById('svg-cad-hole');
+    const scale = 80 / (Math.max(1, nominal) * 1.5); 
+    const rShaft = Math.max(1, (physShaft / 2) * scale);
+    const rHole = Math.max(2, (physHole / 2) * scale);
+    const rCad = (nominal / 2) * scale;
+    svgCadShaft.setAttribute('r', rCad);
+    svgCadHole.setAttribute('r', rCad);
+    svgShaft.setAttribute('r', rShaft);
+    const center = 100;
+    const outerR = 90;
+    const d = `M ${center - outerR},${center} a ${outerR},${outerR} 0 1,0 ${outerR*2},0 a ${outerR},${outerR} 0 1,0 -${outerR*2},0 M ${center - rHole},${center} a ${rHole},${rHole} 0 1,1 ${rHole*2},0 a ${rHole},${rHole} 0 1,1 -${rHole*2},0`;
+    svgHole.setAttribute('d', d);
+}
+
+function updateVerdict(simGap, targetGap, fitType, xyComp) {
+    const text = document.getElementById('verdict-text');
+    const nominal = parseFloat(document.getElementById('nominalDim').value) || 0;
+    let msg = "";
+
+    if (Math.abs(nominal - 4.8) < 0.1 || Math.abs(nominal - 8.0) < 0.1) {
+        msg = `<strong>Lego Compatibility Note:</strong> Standard studs are 4.8mm with an 8mm pitch. For "Clutch Power", aim for a -0.01 to -0.02mm interference (Manual Offset). `;
+    }
+
+    if (simGap < targetGap) {
+        msg += `Drawing at nominal size will be <strong>too tight</strong>. Your physical gap is ${simGap.toFixed(3)}mm but ${fitType} fit needs ${targetGap.toFixed(3)}mm. `;
+    } else {
+        msg += `Drawing at nominal size will be <strong>too loose</strong>. `;
+    }
+
+    if (Math.abs(xyComp) > 0.01) {
+        msg += `You are currently ${xyComp < 0 ? 'over' : 'under'}-extruding by ${Math.abs(xyComp * 2).toFixed(3)}mm total width. `;
+    }
+
+    msg += `Apply the CAD offsets below to ensure a perfect fit after material shrinkage.`;
+    text.innerHTML = msg;
+}
+
+function copyValue(id, btn) {
+    const val = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(val).then(() => {
+        const original = btn.innerText;
+        btn.innerText = "Saved!";
+        setTimeout(() => btn.innerText = original, 1000);
+    });
+}
+
+function resetForm() {
+    loadPreset(PRESETS[0].values);
+}
+
+function showProMsg(el) {
+    const existing = el.querySelector('.pro-msg');
+    if (existing) return;
+    const div = document.createElement('div');
+    div.className = 'pro-msg';
+    div.innerHTML = `Available in the full version <a href="${PRO_LINK}">${PRO_LINK}</a>`;
+    el.appendChild(div);
+    setTimeout(() => div.remove(), 4000);
+}
+
+function handlePrint() {
+    if (!PRO) return showProMsg(document.getElementById('action-area'));
+    window.print();
+}
+
+function exportData(type) {
+    if (!PRO) return showProMsg(document.getElementById('action-area'));
+    
+    const data = {
+        nominal: document.getElementById('nominalDim').value,
+        shrinkage: document.getElementById('shrinkage').value,
+        nozzle: document.getElementById('nozzleWidth').value,
+        flow: document.getElementById('flowRate').value,
+        fit: document.querySelector('input[name="fitType"]:checked').value,
+        results: {
+            physShaft: document.getElementById('res-phys-shaft').innerText,
+            physHole: document.getElementById('res-phys-hole').innerText,
+            cadShaftRec: document.getElementById('rec-cad-shaft').innerText,
+            cadHoleRec: document.getElementById('rec-cad-hole').innerText
+        }
+    };
+
+    let content = "";
+    let mime = "";
+    if (type === 'json') {
+        content = JSON.stringify(data, null, 2);
+        mime = "application/json";
+    } else {
+        content = "Parameter,Value\n";
+        Object.keys(data).forEach(k => {
+            if (typeof data[k] === 'object') {
+                Object.keys(data[k]).forEach(sk => content += `${k}_${sk},${data[k][sk]}\n`);
+            } else {
+                content += `${k},${data[k]}\n`;
+            }
+        });
+        mime = "text/csv";
+    }
+
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `3d-fit-calculation.${type}`;
+    a.click();
+}
+
+window.onload = init;
+
+function updateReportTable(shrinkMult, sideOffset, targetGap) {
+    const tableDiv = document.getElementById('report-preview-table');
+    if (!tableDiv) return;
+    const sizes = [1, 2, 5, 10, 20, 40, 60, 100];
+    let html = '<table><thead><tr><th>Target</th><th>Shaft CAD</th><th>Hole CAD</th></tr></thead><tbody>';
+    sizes.forEach(s => {
+        const cShaft = (s - (targetGap / 2) - (2 * sideOffset)) / shrinkMult;
+        const cHole = (s + (targetGap / 2) + (2 * sideOffset)) / shrinkMult;
+        html += `<tr><td>${s}mm</td><td>${Math.max(0, cShaft).toFixed(3)}</td><td>${Math.max(0, cHole).toFixed(3)}</td></tr>`;
+    });
+    tableDiv.innerHTML = html + '</tbody></table>';
+}
+
+function exportProReport() {
+    const container = document.getElementById('report-export-container');
+    if (!PRO) return showProMsg(container);
+    const fitType = document.querySelector('input[name="fitType"]:checked')?.value || 'slip';
+    const shrinkage = parseFloat(document.getElementById('shrinkage').value) || 0;
+    const nozzle = parseFloat(document.getElementById('nozzleWidth').value) || 0.4;
+    const flow = parseFloat(document.getElementById('flowRate').value) || 100;
+    const extra = parseFloat(document.getElementById('manualOffset').value) || 0;
+    const shrinkMult = 1 - (shrinkage / 100);
+    const sideOffset = (nozzle * (flow / 100) - nozzle) / 2;
+    const targetGap = (FIT_CLEARANCES[fitType] || 0) + extra;
+
+    const report = {
+        meta: { generator: "3D Printing Tolerance Tuner", date: new Date().toISOString() },
+        profile: { shrinkage_pct: shrinkage, nozzle_mm: nozzle, flow_pct: flow, fit_type: fitType, extra_gap: extra },
+        reference_table: [1, 2, 5, 10, 20, 40, 60, 100].map(s => ({
+            nominal_target: s,
+            shaft_cad_mm: Number(((s - (targetGap / 2) - (2 * sideOffset)) / shrinkMult).toFixed(4)),
+            hole_cad_mm: Number(((s + (targetGap / 2) + (2 * sideOffset)) / shrinkMult).toFixed(4))
+        }))
+    };
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `3d-tolerance-pro-report.json`;
+    a.click();
+}
+
+function refreshVault() {
+    const select = document.getElementById('vault-select');
+    const list = document.getElementById('vault-items-list');
+    if (!select || !list) return;
+    
+    select.innerHTML = '<option value="">-- Select a Profile --</option>';
+    list.innerHTML = '';
+    
+    let vault = [];
+    try {
+        vault = JSON.parse(localStorage.getItem('3d_material_vault') || '[]');
+    } catch(e) { vault = []; }
+
+    vault.forEach((profile, index) => {
+        const opt = document.createElement('option');
+        opt.value = index;
+        opt.innerText = profile.name;
+        select.appendChild(opt);
+
+        const item = document.createElement('div');
+        item.className = 'vault-item';
+        item.innerHTML = `<span>${profile.name}</span> <button class="btn-del" onclick="deleteVaultProfile(${index})">×</button>`;
+        item.querySelector('span').onclick = () => loadVaultProfile(index);
+        list.appendChild(item);
+    });
+}
+
+function saveVaultProfile() {
+    const root = document.querySelector('[data-feature="material-profile-vault"]');
+    if (!PRO) return showProMsg(root);
+
+    const nameInput = document.getElementById('vault-name');
+    const name = nameInput.value.trim();
+    if (!name) return alert("Please enter a name for the profile.");
+
+    const profile = {
+        name: name,
+        values: {
+            nominalDim: document.getElementById('nominalDim').value,
+            shrinkage: document.getElementById('shrinkage').value,
+            nozzleWidth: document.getElementById('nozzleWidth').value,
+            flowRate: document.getElementById('flowRate').value,
+            manualOffset: document.getElementById('manualOffset').value,
+            fitType: document.querySelector('input[name="fitType"]:checked')?.value || 'slip'
+        }
+    };
+
+    try {
+        const vault = JSON.parse(localStorage.getItem('3d_material_vault') || '[]');
+        vault.push(profile);
+        localStorage.setItem('3d_material_vault', JSON.stringify(vault));
+        nameInput.value = '';
+        refreshVault();
+    } catch(e) { alert("Could not save profile - storage may be blocked."); }
+}
+
+function loadVaultProfile(index) {
+    if (index === "") return;
+    try {
+        const vault = JSON.parse(localStorage.getItem('3d_material_vault') || '[]');
+        const profile = vault[index];
+        if (profile) loadPreset(profile.values);
+    } catch(e) {}
+}
+
+function deleteVaultProfile(index) {
+    const root = document.querySelector('[data-feature="material-profile-vault"]');
+    if (!PRO) return showProMsg(root);
+    try {
+        const vault = JSON.parse(localStorage.getItem('3d_material_vault') || '[]');
+        vault.splice(index, 1);
+        localStorage.setItem('3d_material_vault', JSON.stringify(vault));
+        refreshVault();
+    } catch(e) {}
+}
+
+// Wire into existing init
+const originalInit = init;
+init = function() {
+    originalInit();
+    refreshVault();
+};
+function runCalibrationWizard() {
+    const root = document.querySelector('[data-feature="clearance-calibration-wizard"]');
+    if (!PRO) return showProMsg(root);
+
+    const tOut = parseFloat(document.getElementById('wiz-t-out').value) || 0;
+    const mOut = parseFloat(document.getElementById('wiz-m-out').value) || 0;
+    const tInRaw = document.getElementById('wiz-t-in').value;
+    const mInRaw = document.getElementById('wiz-m-in').value;
+    const tIn = parseFloat(tInRaw) || 0;
+    const mIn = parseFloat(mInRaw) || 0;
+    const nozzle = parseFloat(document.getElementById('nozzleWidth').value) || 0.4;
+
+    if (tOut <= 0 || mOut <= 0) return;
+
+    let shrinkageVal = 0;
+    let flowAdj = 100;
+
+    if (tInRaw !== "" && mInRaw !== "" && tIn > 0 && mIn > 0) {
+        // Solving 2 equations for shrinkage (s) and wall offset (w)
+        // mOut = tOut(1-s) + 2w
+        // mIn  = tIn(1-s) - 2w
+        const ratio = (mOut + mIn) / (tOut + tIn);
+        shrinkageVal = (1 - ratio) * 100;
+        const w = (mOut - tOut * ratio) / 2;
+        flowAdj = 100 * (1 + (2 * w) / nozzle);
+    } else {
+        // Single point calibration (Assume flow is correct)
+        shrinkageVal = ((tOut - mOut) / tOut) * 100;
+        flowAdj = parseFloat(document.getElementById('flowRate').value);
+    }
+
+    // Update Main Inputs
+    document.getElementById('shrinkage').value = shrinkageVal.toFixed(2);
+    document.getElementById('flowRate').value = Math.round(flowAdj);
+    
+    // Update Wizard UI
+    document.getElementById('wiz-results').style.display = 'block';
+    document.getElementById('wiz-res-shrink').innerText = shrinkageVal.toFixed(2) + '%';
+    document.getElementById('wiz-res-flow').innerText = Math.round(flowAdj) + '%';
+
+    calculate();
+}
+
+// Attach wizard listeners for real-time preview
+document.querySelectorAll('[data-feature="clearance-calibration-wizard"] input').forEach(input => {
+    input.addEventListener('input', () => {
+        if (PRO) runCalibrationWizard();
+    });
+});
+function renderBatchClearanceChart() {
+    const root = document.querySelector('[data-feature="batch-clearance-chart"]');
+    if (!root) return;
+    const wrapper = document.getElementById('batch-chart-wrapper');
+    if (!PRO) {
+        if (wrapper && !wrapper.querySelector('.pro-msg')) {
+            wrapper.innerHTML = `<div class="pro-msg" style="padding:1rem; text-align:center; font-size:0.9rem;">Available in the full version <a href="${PRO_LINK}">${PRO_LINK}</a></div>`;
+        }
+        return;
+    }
+
+    const canvas = document.getElementById('batchClearanceCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const maxScaleEl = document.getElementById('chartMaxScale');
+    const maxScale = Math.max(10, parseFloat(maxScaleEl?.value || 50));
+    const labelEl = document.getElementById('chart-max-label');
+    if (labelEl) labelEl.innerText = maxScale + ' mm';
+
+    const shrinkage = Math.max(0, parseFloat(document.getElementById('shrinkage')?.value || 0));
+    const nozzle = Math.max(0.01, parseFloat(document.getElementById('nozzleWidth')?.value || 0.4));
+    const flow = Math.max(1, parseFloat(document.getElementById('flowRate')?.value || 100));
+    const extra = parseFloat(document.getElementById('manualOffset')?.value || 0);
+    const fitType = document.querySelector('input[name="fitType"]:checked')?.value || 'slip';
+
+    const targetGap = (FIT_CLEARANCES[fitType] || 0.15) + extra;
+    const shrinkMult = 1 - (shrinkage / 100);
+    const sideOffset = (nozzle * (flow / 100) - nozzle) / 2;
+
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const w = rect.width || 400;
+    const h = rect.height || 180;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    ctx.scale(dpr, dpr);
+
+    ctx.clearRect(0, 0, w, h);
+
+    const padL = 40, padR = 15, padT = 15, padB = 25;
+    const chartW = w - padL - padR;
+    const chartH = h - padT - padB;
+
+    const points = [];
+    const minS = 5;
+    const steps = 30;
+    let minGap = Infinity, maxGap = -Infinity;
+
+    for (let i = 0; i <= steps; i++) {
+        const s = minS + (i / steps) * (maxScale - minS);
+        const gap = (targetGap * shrinkMult) - (4 * sideOffset);
+        points.push({ s, gap });
+        if (gap < minGap) minGap = gap;
+        if (gap > maxGap) maxGap = gap;
+    }
+
+    if (minGap === maxGap) { minGap -= 0.1; maxGap += 0.1; }
+    const yMin = Math.min(0, minGap - 0.05);
+    const yMax = Math.max(targetGap * 1.2, maxGap + 0.05);
+
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--border').trim() || '#ccc';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(padL, padT);
+    ctx.lineTo(padL, h - padB);
+    ctx.lineTo(w - padR, h - padB);
+    ctx.stroke();
+
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#888';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'right';
+
+    const ySteps = 4;
+    for (let i = 0; i <= ySteps; i++) {
+        const yVal = yMin + (i / ySteps) * (yMax - yMin);
+        const yPos = h - padB - (i / ySteps) * chartH;
+        ctx.fillText(yVal.toFixed(2), padL - 5, yPos + 3);
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(128,128,128,0.15)';
+        ctx.moveTo(padL, yPos);
+        ctx.lineTo(w - padR, yPos);
+        ctx.stroke();
+    }
+
+    ctx.textAlign = 'center';
+    const xSteps = 4;
+    for (let i = 0; i <= xSteps; i++) {
+        const xVal = minS + (i / xSteps) * (maxScale - minS);
+        const xPos = padL + (i / xSteps) * chartW;
+        ctx.fillText(Math.round(xVal) + 'mm', xPos, h - padB + 15);
+    }
+
+    const targetY = h - padB - ((targetGap - yMin) / (yMax - yMin)) * chartH;
+    ctx.save();
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--success').trim() || '#198754';
+    ctx.beginPath();
+    ctx.moveTo(padL, targetY);
+    ctx.lineTo(w - padR, targetY);
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.beginPath();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim() || '#0d6efd';
+    points.forEach((p, idx) => {
+        const xPos = padL + ((p.s - minS) / (maxScale - minS)) * chartW;
+        const yPos = h - padB - ((p.gap - yMin) / (yMax - yMin)) * chartH;
+        if (idx === 0) ctx.moveTo(xPos, yPos);
+        else ctx.lineTo(xPos, yPos);
+    });
+    ctx.stroke();
+}
+
+const prevCalculate = calculate;
+calculate = function() {
+    prevCalculate();
+    renderBatchClearanceChart();
+};
+
+document.getElementById('chartMaxScale')?.addEventListener('input', () => {
+    if (PRO) renderBatchClearanceChart();
+});
+
+renderBatchClearanceChart();
+// FEATURE-JS
+</script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The 3D Printing Precision Fit &amp; Tolerance Tuner helps hobbyists and mechanical designers produce parts that fit together cleanly on the first print. By analyzing caliper measurements from a simple test object, the tool calculates exact CAD offsets for press, slip, and loose mechanical fits. The core calculator runs free in your browser, with an offline pack available for workshop use.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Print a basic tolerance test coupon using your target printer, filament, and slicer settings.</li><li>Measure the physical printed hole and pin dimensions using digital calipers.</li><li>Input your target nominal size and physical measurements into the tuner calculator.</li><li>Apply the generated target CAD dimensions directly to your 3D modeling software.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">Producing closely fitting parts</h4><p style="margin:0">You enter: Material (e.g., PETG) · Desired nominal dimension (e.g., 20mm) · Desired fit type (Slip fit for a moving axle).<br>You get: The exact dimension to draw in CAD and the slicer settings to ensure the parts move freely after printing.</p><h4 style="font-size:16px;margin:16px 0 4px">Which resolution is needed for bricks compatible with Lego?</h4><p style="margin:0">You enter: Standard Lego dimensions (stud diameter 4.8mm) · Material (ABS) · Printer Nozzle Diameter (0.4mm).<br>You get: The tolerance and resolution needed to achieve a &#39;clutch power&#39; press fit with existing bricks.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">What tool can I use to measure dimensions in STL files?</h4><p style="margin:0">STL files are triangular mesh models rather than parametric solids, making native measurement tricky. You can measure distances in STL files using free tools like PrusaSlicer (built-in measuring tool), MeshLab, or Blender. Once you know your intended STL dimensions, our tuner calculates the real-world clearance offsets needed for printing.</p><h4 style="font-size:16px;margin:16px 0 4px">What is the best method for producing closely fitting 3D printed parts?</h4><p style="margin:0">Producing closely fitting parts requires separating printer axis calibration from material shrinkage and slicer wall expansion. Print a test block, measure the inner hole and outer peg variances with digital calipers, and apply clearance offsets (0.05mm for press fit, 0.15mm for slip fit) directly to your CAD sketch dimensions rather than scaling the entire model.</p><h4 style="font-size:16px;margin:16px 0 4px">Which resolution is needed for bricks compatible with Lego?</h4><p style="margin:0">Lego-compatible bricks require high horizontal dimensional accuracy rather than micro layer heights; a standard 0.12mm to 0.16mm layer height with a 0.4mm nozzle works great. The key is controlling wall expansion: studs typically require an exact 0.05mm to 0.08mm side clearance so the friction snap (&#39;clutch power&#39;) works without stress-cracking the ABS or PLA.</p><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free web tool and the $9 Gumroad product?</h4><p style="margin:0">The core offset calculator is completely free to use online in any browser. The $9 paid Gumroad product provides a self-contained offline bundle (single HTML file) that runs locally without internet access on garage laptops, plus exportable material profiles and printable PDF tolerance summary reports.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/novgrp" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../3d-printer-mechanical-geometry-calibrator/" style="color:inherit;font-weight:600">3D Printer Geometry &amp; Squaring Tool</a>: Eliminate frame skew, calculate M852 &amp; M92 values, and true your 3D printer geometry completely offline.</li><li><a href="../plant-light-dli-exposure-calculator/" style="color:inherit;font-weight:600">Plant Light Requirement &amp; DLI Calculator</a>: Offline DLI calculator, light spectrum converter, seasonal deficit planner, and canopy coverage solver.</li><li><a href="../multi-camera-timestamp-drift-sync/" style="color:inherit;font-weight:600">Multi-Camera Photo Timestamp &amp; Drift Synchronizer</a>: Realign second shooter clocks and fix camera time drift with ExifTool commands and Lightroom guides.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
