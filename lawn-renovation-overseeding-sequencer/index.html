@@ -1,0 +1,2416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #0d130e;
+      --surface: #141f17;
+      --surface-2: #1c2b20;
+      --surface-3: #263a2c;
+      --border: #2e4736;
+      --border-focus: #4ade80;
+      --text: #ecfdf3;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      --primary: #22c55e;
+      --primary-hover: #16a34a;
+      --primary-dim: rgba(34, 197, 94, 0.15);
+      --accent: #38bdf8;
+      --warning: #f59e0b;
+      --warning-dim: rgba(245, 158, 11, 0.15);
+      --danger: #ef4444;
+      --danger-dim: rgba(239, 68, 68, 0.15);
+      --sand: #d97706;
+      --compost: #78350f;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      --radius: 8px;
+      --radius-sm: 4px;
+      --shadow: 0 4px 20px -2px rgba(0,0,0,0.4);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f4f7f4;
+        --surface: #ffffff;
+        --surface-2: #f0f4f1;
+        --surface-3: #e2ebe4;
+        --border: #cbd5e1;
+        --border-focus: #16a34a;
+        --text: #0f172a;
+        --text-muted: #475569;
+        --text-subtle: #94a3b8;
+        --primary: #15803d;
+        --primary-hover: #166534;
+        --primary-dim: rgba(21, 128, 61, 0.1);
+        --accent: #0284c7;
+        --warning: #b45309;
+        --warning-dim: rgba(180, 83, 9, 0.1);
+        --danger: #dc2626;
+        --danger-dim: rgba(220, 38, 38, 0.1);
+        --shadow: 0 4px 16px -2px rgba(0,0,0,0.08);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 14px;
+      padding-bottom: 60px;
+    }
+
+    /* Header */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand svg {
+      width: 28px;
+      height: 28px;
+      color: var(--primary);
+    }
+    .brand h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .brand p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons & Inputs */
+    button, .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 7px 12px;
+      font-size: 0.825rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    button:hover, .btn:hover {
+      background: var(--surface-3);
+      border-color: var(--border-focus);
+    }
+    button.primary, .btn.primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+    button.primary:hover {
+      background: var(--primary-hover);
+    }
+
+    select, input[type="text"], input[type="number"], input[type="date"] {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.825rem;
+      font-family: inherit;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    select:focus, input:focus {
+      border-color: var(--border-focus);
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    /* Layout */
+    .app-container {
+      max-width: 1560px;
+      margin: 20px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    aside, main {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    #preset-select {
+      max-width: 100%;
+    }
+
+    @media (max-width: 1024px) {
+      .app-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 10px 12px;
+      }
+      .header-actions {
+        width: 100%;
+      }
+      #preset-select {
+        width: 100%;
+      }
+      .app-container {
+        padding: 0 10px;
+        margin: 12px auto;
+      }
+      .panel {
+        padding: 14px;
+      }
+      .input-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pro-notice {
+      background: var(--warning-dim);
+      color: var(--warning);
+      border: 1px solid var(--warning);
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .pro-notice a {
+      color: inherit;
+      font-weight: 700;
+      text-decoration: underline;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-title span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+    label {
+      display: block;
+      font-size: 0.775rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .hint {
+      font-size: 0.72rem;
+      color: var(--text-subtle);
+      margin-top: 3px;
+    }
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    /* Badges & Status */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge-safe { background: var(--primary-dim); color: var(--primary); border: 1px solid var(--primary); }
+    .badge-warning { background: var(--warning-dim); color: var(--warning); border: 1px solid var(--warning); }
+    .badge-danger { background: var(--danger-dim); color: var(--danger); border: 1px solid var(--danger); }
+
+    /* Alert Banner */
+    .alert-banner {
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .alert-banner.safe {
+      background: var(--primary-dim);
+      border-color: var(--primary);
+    }
+    .alert-banner.warning {
+      background: var(--warning-dim);
+      border-color: var(--warning);
+    }
+    .alert-banner.danger {
+      background: var(--danger-dim);
+      border-color: var(--danger);
+    }
+    .alert-banner h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .alert-banner p {
+      font-size: 0.825rem;
+      color: var(--text);
+    }
+    .alert-icon {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    /* KPI Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .kpi-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+    }
+    .kpi-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .kpi-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 2px;
+    }
+    .kpi-sub {
+      font-size: 0.7rem;
+      color: var(--text-subtle);
+    }
+
+    /* Gantt Timeline */
+    .timeline-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+    }
+    .gantt-chart {
+      min-width: 680px;
+      position: relative;
+      margin-top: 15px;
+    }
+    .gantt-header {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .gantt-header-col {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+    .gantt-row {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+    .gantt-row:last-child {
+      border-bottom: none;
+    }
+    .gantt-task-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding-right: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .gantt-track {
+      position: relative;
+      height: 24px;
+      background: var(--surface-2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .gantt-bar {
+      position: absolute;
+      top: 2px;
+      bottom: 2px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #ffffff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    /* Milestone Agenda */
+    .milestone-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .milestone-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 12px;
+      background: var(--surface-2);
+      border-left: 4px solid var(--primary);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+    .milestone-date-badge {
+      background: var(--surface-3);
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.775rem;
+      white-space: nowrap;
+      text-align: center;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .milestone-date-badge .day-offset {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--primary);
+    }
+    .milestone-content h4 {
+      font-size: 0.85rem;
+      margin-bottom: 2px;
+    }
+    .milestone-content p {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+    }
+
+    /* Soil Cross Section SVG */
+    .svg-wrapper {
+      width: 100%;
+      background: var(--surface-2);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+    }
+    svg.cross-section {
+      width: 100%;
+      height: 240px;
+      overflow: visible;
+    }
+
+    /* What this means box */
+    .interpretation-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .interpretation-card h3 {
+      font-size: 0.85rem;
+      color: var(--accent);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .interpretation-card p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .interpretation-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Q&A Accordion Style Section */
+    .qa-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .qa-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+    .qa-detail {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+    .qa-highlight {
+      background: var(--surface-2);
+      border-left: 3px solid var(--accent);
+      padding: 8px 12px;
+      margin-top: 8px;
+      font-size: 0.78rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    .disclaimer {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--text-subtle);
+      margin-top: 30px;
+      padding: 12px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--surface-3);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      font-size: 0.825rem;
+      z-index: 100;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media print {
+      body { background: #fff; color: #000; }
+      header, .header-actions, button, select, input[type="range"] { display: none !important; }
+      .app-container { display: block; max-width: 100%; }
+      .panel, .timeline-container, .alert-banner { break-inside: avoid; border: 1px solid #ccc; box-shadow: none; }
+    }
+    .irrig-table { width: 100%; border-collapse: collapse; font-size: 0.775rem; margin-top: 8px; display: block; overflow-x: auto; }
+    .irrig-table th, .irrig-table td { border: 1px solid var(--border); padding: 6px 8px; text-align: left; }
+    .irrig-table th { background: var(--surface-3); font-weight: 600; color: var(--text-muted); }
+    .germ-legend { display: flex; gap: 12px; font-size: 0.72rem; justify-content: center; margin-top: 6px; }
+    .germ-legend-item { display: flex; align-items: center; gap: 4px; }
+    .germ-legend-color { width: 10px; height: 10px; border-radius: 2px; }
+    .mpl-container { background: var(--surface-2); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border); margin-top: 12px; }
+    .mpl-check-label { display: inline-flex; align-items: center; gap: 5px; font-size: 0.73rem; cursor: pointer; color: var(--text-muted); }
+    .mpl-check-label input { accent-color: var(--primary); }
+
+    .pro-notice-inline { background: var(--warning-dim); color: var(--warning); border: 1px solid var(--warning); padding: 4px 10px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+    .pro-notice-inline a { color: inherit; font-weight: 700; text-decoration: underline; }
+    /* FEATURE-CSS */
+  </style>
+<title>Lawn Overseeding Schedule &amp; Topdressing Depth Calculator</title>
+<meta name="description" content="Master your lawn renovation with an offline timeline sequencer. Calculate herbicide wait times, topdressing volumes, and irrigation schedules accurately.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/lawn-renovation-overseeding-sequencer/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/lawn-renovation-overseeding-sequencer/">
+<meta property="og:title" content="Lawn Overseeding Schedule &amp; Topdressing Depth Calculator"><meta property="og:description" content="Master your lawn renovation with an offline timeline sequencer. Calculate herbicide wait times, topdressing volumes, and irrigation schedules accurately.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/lawn-renovation-overseeding-sequencer/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Lawn Overseeding Schedule & Topdressing Depth Calculator","description":"Master your lawn renovation with an offline timeline sequencer. Calculate herbicide wait times, topdressing volumes, and irrigation schedules accurately.","url":"https://rttyy.github.io/free-tools/lawn-renovation-overseeding-sequencer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I fix the worst lawn on the street?","acceptedAnswer":{"@type":"Answer","text":"Start with a 'blank slate' approach: use a non-selective herbicide to kill weeds, core aerate to relieve compaction, and use this sequencer to time your new seed application. Focusing on soil health and proper seed-to-soil contact is more effective than patchy repairs."}},{"@type":"Question","name":"Will leveling uneven lawns with extra sand kill future lawns?","acceptedAnswer":{"@type":"Answer","text":"Sand itself won't kill grass, but applying too much at once smothers the crown and prevents photosynthesis. Use the tool to keep your applications under 0.5 inches per pass to ensure the existing turf can grow through the new layer."}},{"@type":"Question","name":"What can I plant in dandelion graves?","acceptedAnswer":{"@type":"Answer","text":"Once dandelions are removed, you have a void of bare soil. Scuff the soil surface, add a pinch of high-quality matching seed, and use the sequencer to track the specific irrigation needs for those 'spot-seeded' areas to ensure they fill in before new weeds take hold."}},{"@type":"Question","name":"Does this tool require an internet connection?","acceptedAnswer":{"@type":"Answer","text":"The Gumroad version is a standalone pack that runs offline in any web browser. You don't need a login or an active connection to manage your lawn renovation schedule while you're out in the yard."}}]}</script>
+</head>
+<body>
+
+  <!-- Top App Navigation & Controls -->
+  <header>
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        <path d="M7 10l-3 3 3 3"/>
+      </svg>
+      <div>
+        <h1>Lawn Renovation &amp; Overseeding Timeline Sequencer</h1>
+        <p>Physiological seed staging, chemical standoff validation, and topdress smothering safety</p>
+      </div>
+    </div>
+
+    <div class="header-actions" data-feature="lawn-renovation-runsheet-export">
+      <label for="preset-select" style="margin-bottom:0; font-size:0.75rem;">Preset Scenario:</label>
+      <select id="preset-select">
+        <option value="0">Fall Cool-Season Overseed (Healthy Baseline)</option>
+        <option value="1">Total Weed-Choked Renovation (Glyphosate Reset)</option>
+        <option value="2">Severe Rut Leveling &amp; Stolon Recovery (Bermuda Warm-Season)</option>
+      </select>
+
+      <button id="btn-export-csv" title="Export critical path field run-sheet CSV">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        Export CSV
+      </button>
+      <button id="btn-export-json" title="Export materials bill JSON">Materials JSON</button>
+      <button id="btn-print" title="Print physical field sheet">Print</button>
+      <button id="btn-reset" title="Reset to standard defaults">Reset</button>
+      <div id="runsheet-pro-notice" class="pro-notice-inline" style="display:none;">
+        Available in the full version: <a href="https://ferrywave73.gumroad.com/l/yjigto" target="_blank">Upgrade to PRO</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-container">
+
+    <!-- Left Column: Inputs & Calculations -->
+    <aside>
+      <!-- Area and Timing Parameters -->
+      <section class="panel">
+        <div class="panel-title">
+          <span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            1. Lawn Parameters &amp; Timing
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="lawn-area">Lawn Surface Area (sq ft)</label>
+          <input type="number" id="lawn-area" min="100" max="150000" step="100" value="5000">
+          <div class="hint">Governs topdress volume and seed application weight.</div>
+        </div>
+
+        <div class="input-row">
+          <div class="form-group">
+            <label for="first-frost-date">First Autumn Frost</label>
+            <input type="date" id="first-frost-date" value="2024-10-25">
+            <div class="hint">Hard freeze cutoff date.</div>
+          </div>
+          <div class="form-group">
+            <label for="seeding-date">Target Seeding (T-0)</label>
+            <input type="date" id="seeding-date" value="2024-09-10">
+            <div class="hint">Day seed contacts soil.</div>
+          </div>
+        </div>
+
+        <div class="input-row">
+          <div class="form-group">
+            <label for="soil-temp">Current 2" Soil Temp (°F)</label>
+            <input type="number" id="soil-temp" min="40" max="95" value="68">
+            <div class="hint">Optimal cool season: 55-70°F.</div>
+          </div>
+          <div class="form-group">
+            <label for="sun-exposure">Sun Exposure</label>
+            <select id="sun-exposure">
+              <option value="full">Full Sun (&gt;6h)</option>
+              <option value="partial">Partial Sun (4-6h)</option>
+              <option value="shade">Deep Shade (&lt;4h)</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Turf Species Physiology -->
+      <section class="panel">
+        <div class="panel-title">
+          <span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            2. Turf Species Physiology
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="turf-species">Selected Seed / Turf Variety</label>
+          <select id="turf-species">
+            <option value="tttf" selected>Turf-Type Tall Fescue (TTTF)</option>
+            <option value="kbg">Kentucky Bluegrass (KBG)</option>
+            <option value="prg">Perennial Ryegrass (PRG)</option>
+            <option value="fine_fescue">Fine Fescue Mix</option>
+            <option value="bermuda">Common / Hybrid Bermuda (Warm-Season)</option>
+            <option value="zoysia">Zoysiagrass (Warm-Season)</option>
+          </select>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Germination</div>
+            <div class="kpi-value" id="kpi-germ-time">7-12d</div>
+            <div class="kpi-sub" id="kpi-germ-temp">55-65°F Soil</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Frost Buffer Req.</div>
+            <div class="kpi-value" id="kpi-frost-buffer">45d</div>
+            <div class="kpi-sub">Pre-freeze root rootage</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feature: Topdressing Depth & Smothering Safety Calculator -->
+      <section class="panel" data-feature="topdress-leveling-safety-calc">
+        <div class="panel-title">
+          <span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            3. Topdressing &amp; Smothering Safety
+          </span>
+          <span id="crown-risk-badge" class="badge badge-safe">SAFE</span>
+        </div>
+
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between;">
+            <label for="topdress-depth">Target Depth / Depression: <strong id="topdress-depth-val">0.25</strong> in</label>
+          </div>
+          <input type="range" id="topdress-depth" min="0.1" max="2.5" step="0.05" value="0.25">
+          <div class="hint">Depth of leveling material spread over lawn.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="topdress-material">Material Blend</label>
+          <select id="topdress-material">
+            <option value="sand_compost" selected>70/30 Mason Sand / Screened Compost</option>
+            <option value="sand">100% Washed Mason Sand (Heavy Leveling)</option>
+            <option value="compost">100% Screened Organic Compost (Nutrient Cap)</option>
+          </select>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Volume Required</div>
+            <div class="kpi-value" id="kpi-topdress-vol">3.86</div>
+            <div class="kpi-sub">cu yd (~4.6 tons)</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Max Safe Lift</div>
+            <div class="kpi-value" id="kpi-max-lift">0.50 in</div>
+            <div class="kpi-sub" id="kpi-lift-passes">1 single pass</div>
+          </div>
+        </div>
+
+        <div id="smother-warning-box" style="display:none;" class="qa-highlight">
+          <!-- Dynamic smothering warning -->
+        </div>
+
+        <!-- Feature: Staged Multi-Pass Leveling Breakdown -->
+        <div class="mpl-container" data-feature="multi-pass-leveling-planner">
+          <div style="font-weight:700; font-size:0.825rem; color:var(--accent); margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Staged Multi-Pass Leveling Planner
+          </div>
+          <div class="input-row" style="margin-bottom:8px;">
+            <div class="form-group">
+              <label for="mpl-depth">Depression Depth (in)</label>
+              <input type="number" id="mpl-depth" min="0.5" max="3.0" step="0.1" value="1.2">
+            </div>
+            <div class="form-group">
+              <label for="mpl-recovery-days">Recovery Window (14-28d)</label>
+              <input type="number" id="mpl-recovery-days" min="14" max="28" step="1" value="21">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:8px;">
+            <label for="mpl-start-date">Calendar Start Date</label>
+            <input type="date" id="mpl-start-date" value="2024-09-10">
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="irrig-table">
+              <thead>
+                <tr>
+                  <th>Pass #</th>
+                  <th>Calendar Date</th>
+                  <th>Layer Depth</th>
+                  <th>Volume / Pass</th>
+                  <th>Turf Recovery Milestone Verification</th>
+                </tr>
+              </thead>
+              <tbody id="mpl-tbody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Turf Layer Dimensions for Cross Section -->
+      <section class="panel">
+        <div class="panel-title">
+          <span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            4. Micro-Stratum Thickness
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="scalp-height">Pre-Seed Scalp Height: <strong id="scalp-height-val">1.5</strong> in</label>
+          <input type="range" id="scalp-height" min="0.5" max="3.5" step="0.25" value="1.5">
+          <div class="hint">Mow low before seed drop to maximize light &amp; seed-to-soil contact.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="thatch-depth">Organic Thatch Layer: <strong id="thatch-depth-val">0.25</strong> in</label>
+          <input type="range" id="thatch-depth" min="0.0" max="1.5" step="0.125" value="0.25">
+          <div class="hint">Thatch &gt;0.5 in forms a spongy barrier starving seed of subsoil moisture.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="seed-placement">Seed Placement Stratum</label>
+          <select id="seed-placement">
+            <option value="incorporated" selected>Incorporated with Aeration / Light Raking (Under Topdress)</option>
+            <option value="surface">Broadcast On Surface (Uncovered)</option>
+          </select>
+        </div>
+      </section>
+    </aside>
+
+    <!-- Right Column: Timeline, Visualizer, Herbicide Standoff, Interpretations -->
+    <main>
+
+      <!-- Feature: Chemical Herbicide & Pre-Emergent Standoff Engine -->
+      <section class="panel" data-feature="herbicide-standoff-engine" style="padding-bottom: 14px;">
+        <div class="panel-title">
+          <span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31L4.5 19a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 9.31V2"/></svg>
+            Chemical Herbicide Standoff Engine
+          </span>
+          <span id="herbicide-risk-badge" class="badge badge-safe">SAFE TO SEED</span>
+        </div>
+
+        <div class="input-row" style="margin-bottom: 12px;">
+          <div class="form-group">
+            <label for="herbicide-select">Active Chemical Application Protocol</label>
+            <select id="herbicide-select">
+              <option value="none">None / Mechanical Prep Only</option>
+              <option value="mesotrione" selected>Mesotrione (Tenacity) - Safe At Seeding for Cool-Season</option>
+              <option value="glyphosate">Glyphosate (Non-Selective Total Lawn Reset)</option>
+              <option value="trimec">2,4-D + Dicamba + MCPP (Selective Broadleaf / Trimec)</option>
+              <option value="quinclorac">Quinclorac (Drive / Post-Emergent Crabgrass)</option>
+              <option value="prodiamine">Prodiamine (Barricade Pre-Emergent)</option>
+              <option value="dithiopyr">Dithiopyr (Dimension Pre-Emergent)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="herbicide-date">Chemical Application Date</label>
+            <input type="date" id="herbicide-date" value="2024-09-10">
+          </div>
+        </div>
+
+        <!-- Dynamic Standoff Banner -->
+        <div id="standoff-banner" class="alert-banner safe">
+          <div class="alert-icon" id="standoff-banner-icon">🛡️</div>
+          <div>
+            <h3 id="standoff-banner-title">Safe Chemical Standoff Window</h3>
+            <p id="standoff-banner-desc">Mesotrione can be safely applied on the same day as seeding for cool season grasses.</p>
+          </div>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Required Standoff</div>
+            <div class="kpi-value" id="kpi-standoff-req">0 Days</div>
+            <div class="kpi-sub">Label mandatory wait</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Planned Gap</div>
+            <div class="kpi-value" id="kpi-standoff-actual">0 Days</div>
+            <div class="kpi-sub">Spray date to T-0</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Earliest Safe Seed Date</div>
+            <div class="kpi-value" id="kpi-safe-seed-date">Sep 10</div>
+            <div class="kpi-sub" id="kpi-standoff-delta">Zero conflict</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feature: Interactive Turf & Soil Cross-Section Visualizer -->
+      <section class="panel" data-feature="cross-section-soil-visualizer">
+        <div class="panel-title">
+          <span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6"/><path d="M12 2v10"/></svg>
+            Interactive Turf &amp; Soil Stratum Cross-Section
+          </span>
+          <span id="visualizer-status-badge" class="badge badge-safe">OPTIMAL PROFILE</span>
+        </div>
+
+        <div class="svg-wrapper">
+          <svg class="cross-section" id="soil-svg" viewBox="0 0 700 230" preserveAspectRatio="xMidYMid meet">
+            <!-- Dynamic SVG generated in JS -->
+          </svg>
+        </div>
+        <div class="hint" style="text-align: right; margin-top: 6px;">
+          Cross-section scales live with scalp height, thatch thickness, leveling topdress depth, and seed placement.
+        </div>
+      </section>
+
+      <!-- Feature: Lawn Renovation Critical-Path Timeline Sequencer -->
+      <section class="panel" data-feature="renovation-timeline-sequencer">
+        <div class="panel-title">
+          <span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Critical-Path Renovation Timeline &amp; Gantt Sequencer
+          </span>
+          <span class="badge badge-safe" id="frost-margin-badge">45 DAYS BEFORE FROST</span>
+        </div>
+
+        <div class="timeline-container">
+          <div style="font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;">
+            BACKWARD-SEQUENCED MASTER SCHEDULE (ANCHORED TO T-0 SEED DROP &amp; FROST DATE)
+          </div>
+
+          <div class="gantt-chart" id="gantt-container">
+            <!-- Dynamic Gantt bars -->
+          </div>
+        </div>
+
+        <!-- Feature: Germination & Root Elongation Irrigation Regime -->
+        <div class="panel" data-feature="watering-phase-scheduler" style="margin-bottom: 20px;">
+          <div class="panel-title">
+            <span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+              Germination &amp; Root Elongation Irrigation Schedule
+            </span>
+            <span class="badge badge-safe" id="irrig-phase-badge">2-PHASE REGIME</span>
+          </div>
+
+          <div class="input-row" style="margin-bottom: 12px;">
+            <div class="form-group">
+              <label for="irrig-soil-texture">Soil Texture</label>
+              <select id="irrig-soil-texture">
+                <option value="sand">Sand (Fast Draining)</option>
+                <option value="loam" selected>Loam (Balanced)</option>
+                <option value="clay">Clay (High Retention)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="irrig-sun-exposure">Daily Sun Exposure</label>
+              <select id="irrig-sun-exposure">
+                <option value="full" selected>Full Sun (&gt;6 hrs)</option>
+                <option value="partial">Partial Shade (&lt;6 hrs)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-label">Phase 1 Duration</div>
+              <div class="kpi-value" id="irrig-p1-duration">12 Days</div>
+              <div class="kpi-sub" id="irrig-p1-cycles">3-4 cycles/day</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Phase 2 Duration</div>
+              <div class="kpi-value" id="irrig-p2-duration">14 Days</div>
+              <div class="kpi-sub">1 cycle / 2 days</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Runtime / Zone</div>
+              <div class="kpi-value" id="irrig-runtime">7 min</div>
+              <div class="kpi-sub" id="irrig-runtime-sub">per micro-cycle</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Est. Daily Water</div>
+              <div class="kpi-value" id="irrig-gallons">174 gal</div>
+              <div class="kpi-sub">per 1,000 sq ft</div>
+            </div>
+          </div>
+
+          <table class="irrig-table">
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>Duration &amp; Timing</th>
+                <th>Frequency</th>
+                <th>Runtime / Zone</th>
+                <th>Daily Gal / 1k sq ft</th>
+              </tr>
+            </thead>
+            <tbody id="irrig-table-body">
+              <!-- Dynamic Rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Milestones Agenda -->
+        <h3 style="font-size:0.875rem; font-weight:700; margin:16px 0 8px 0; display:flex; align-items:center; gap:6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Milestone Execution Checklist &amp; Irrigation Window
+        </h3>
+
+        <div class="milestone-list" id="milestones-container">
+          <!-- Dynamic milestones list -->
+        </div>
+
+        <!-- What this means interpretation block -->
+        <div class="interpretation-card" id="interpretation-box">
+          <!-- Dynamic Actionable Advice -->
+        </div>
+      </section>
+
+      <!-- Binding Problem Q&A Explainer Panels -->
+      <section class="qa-box">
+        <div class="qa-title">Question 1: How do I fix the worst lawn on the street?</div>
+        <div class="qa-detail">
+          A successful total renovation requires backward-sequenced critical path planning. If targeting seed drop before cold weather locks out root development, you must start 3 to 4 weeks early.
+        </div>
+        <div class="qa-highlight" id="qa1-output">
+          Loading scenario solution...
+        </div>
+      </section>
+
+      <section class="qa-box">
+        <div class="qa-title">Question 2: Will leveling uneven lawns with extra sand kill future lawns?</div>
+        <div class="qa-detail">
+          Dumping over 0.5 inches of sand or compost at once on cool-season turf (Tall Fescue, Kentucky Bluegrass) asphyxiates the crown nodes, starving green shoots of solar radiation and causing rot.
+        </div>
+        <div class="qa-highlight" id="qa2-output">
+          Loading leveling safety analysis...
+        </div>
+      </section>
+
+      <section class="qa-box">
+        <div class="qa-title">Question 3: What can I plant in dandelion graves?</div>
+        <div class="qa-detail">
+          Spot-spraying dandelions with synthetic auxin mixes (2,4-D + Dicamba) leaves toxic soil residuals. Attempting to seed bare spots immediately produces zero germination.
+        </div>
+        <div class="qa-highlight" id="qa3-output">
+          Loading chemical residual analysis...
+        </div>
+      </section>
+
+      <!-- Feature: Turf Species Soil Temperature & Germination Curve Comparator -->
+      <details class="panel" data-feature="species-mix-germination-comparator" style="margin-bottom: 20px;" open>
+        <summary class="panel-title" style="cursor: pointer; user-select: none;">
+          <span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+            Species Mix &amp; Soil Temp Germination Curve Comparator
+          </span>
+          <span class="badge badge-safe" id="germ-summary-badge">TTTF Sprout: Day 7</span>
+        </summary>
+
+        <div style="margin-top: 12px;">
+          <div class="input-row" style="margin-bottom: 12px;">
+            <div class="form-group">
+              <label for="germ-soil-temp">2" Soil Temp (°F): <strong id="germ-soil-temp-val">68</strong>°F</label>
+              <input type="range" id="germ-soil-temp" min="45" max="85" value="68">
+            </div>
+            <div class="form-group">
+              <label>Species Mix Percentages</label>
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+                <div><label for="mix-tttf" style="font-size:0.7rem;">TTTF: <span id="mix-tttf-val">60</span>%</label><input type="range" id="mix-tttf" min="0" max="100" value="60"></div>
+                <div><label for="mix-kbg" style="font-size:0.7rem;">KBG: <span id="mix-kbg-val">20</span>%</label><input type="range" id="mix-kbg" min="0" max="100" value="20"></div>
+                <div><label for="mix-prg" style="font-size:0.7rem;">PRG: <span id="mix-prg-val">20</span>%</label><input type="range" id="mix-prg" min="0" max="100" value="20"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="kpi-grid" style="margin-bottom: 10px;">
+            <div class="kpi-card">
+              <div class="kpi-label">TTTF First Sprout</div>
+              <div class="kpi-value" id="kpi-tttf-sprout">Day 7</div>
+              <div class="kpi-sub" id="kpi-tttf-closure">Full Closure: Day 18</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">KBG First Sprout</div>
+              <div class="kpi-value" id="kpi-kbg-sprout">Day 14</div>
+              <div class="kpi-sub" id="kpi-kbg-closure">Full Closure: Day 28</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">PRG First Sprout</div>
+              <div class="kpi-value" id="kpi-prg-sprout">Day 4</div>
+              <div class="kpi-sub" id="kpi-prg-closure">Full Closure: Day 12</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Mix 50% Emergence</div>
+              <div class="kpi-value" id="kpi-mix-50">Day 9</div>
+              <div class="kpi-sub" id="kpi-mix-closure">Full Canopy: Day 22</div>
+            </div>
+          </div>
+
+          <div class="svg-wrapper">
+            <svg id="germ-curve-svg" viewBox="0 0 600 200" preserveAspectRatio="xMidYMid meet" style="width:100%; height:180px;">
+            </svg>
+          </div>
+
+          <div class="germ-legend">
+            <div class="germ-legend-item"><div class="germ-legend-color" style="background:#f59e0b;"></div> Blend Mix</div>
+            <div class="germ-legend-item"><div class="germ-legend-color" style="background:#22c55e;"></div> TTTF</div>
+            <div class="germ-legend-item"><div class="germ-legend-color" style="background:#a855f7;"></div> KBG</div>
+            <div class="germ-legend-item"><div class="germ-legend-color" style="background:#38bdf8;"></div> PRG</div>
+          </div>
+        </div>
+      </details>
+
+      <!-- FEATURES -->
+
+      <div class="disclaimer">
+        Disclaimer: Estimate only - verify with a qualified turfgrass professional or your local county extension office before applying chemicals or executing earthworks. Label instructions are federal law.
+      </div>
+
+    </main>
+  </div>
+
+  <div id="toast" class="toast">Action executed successfully</div>
+
+  <script>
+    const PRO = false;
+
+    // Turf Physiological Database
+    const TURF_SPECIES_DB = {
+      tttf: {
+        name: "Turf-Type Tall Fescue",
+        coolSeason: true,
+        germMinDays: 7,
+        germMaxDays: 12,
+        germSoilTempMin: 55,
+        germSoilTempMax: 70,
+        maturationBufferDays: 45, // Days required before first frost
+        maxSingleLiftDepth: 0.5, // inches safe without crown smothering
+        maxWarmthLift: 0.6,
+        growthHabit: "Bunch-type (limited tillering/rhizomes)",
+        firstMowHeight: 3.5,
+        irrigationDays: 14,
+        frostHardiness: "Excellent once matured"
+      },
+      kbg: {
+        name: "Kentucky Bluegrass",
+        coolSeason: true,
+        germMinDays: 14,
+        germMaxDays: 28,
+        germSoilTempMin: 55,
+        germSoilTempMax: 68,
+        maturationBufferDays: 55,
+        maxSingleLiftDepth: 0.5,
+        maxWarmthLift: 0.5,
+        growthHabit: "Aggressive rhizomatous recovery",
+        firstMowHeight: 2.5,
+        irrigationDays: 21,
+        frostHardiness: "Superior cold tolerance"
+      },
+      prg: {
+        name: "Perennial Ryegrass",
+        coolSeason: true,
+        germMinDays: 4,
+        germMaxDays: 7,
+        germSoilTempMin: 50,
+        germSoilTempMax: 72,
+        maturationBufferDays: 30,
+        maxSingleLiftDepth: 0.5,
+        maxWarmthLift: 0.5,
+        growthHabit: "Bunch-type, rapid nurse crop establishment",
+        firstMowHeight: 2.5,
+        irrigationDays: 10,
+        frostHardiness: "Moderate"
+      },
+      fine_fescue: {
+        name: "Fine Fescue Mix (Creeping/Chewings)",
+        coolSeason: true,
+        germMinDays: 8,
+        germMaxDays: 14,
+        germSoilTempMin: 50,
+        germSoilTempMax: 65,
+        maturationBufferDays: 40,
+        maxSingleLiftDepth: 0.4,
+        maxWarmthLift: 0.4,
+        growthHabit: "Fine blade shade-tolerant tillering",
+        firstMowHeight: 3.0,
+        irrigationDays: 14,
+        frostHardiness: "High"
+      },
+      bermuda: {
+        name: "Common / Hybrid Bermuda",
+        coolSeason: false,
+        germMinDays: 7,
+        germMaxDays: 14,
+        germSoilTempMin: 70,
+        germSoilTempMax: 88,
+        maturationBufferDays: 60, // before autumn dormancy
+        maxSingleLiftDepth: 1.0, // Aggressive stolon growth can push through 1" sand
+        maxWarmthLift: 1.25,
+        growthHabit: "Stoloniferous & rhizomatous warm-season titan",
+        firstMowHeight: 1.5,
+        irrigationDays: 14,
+        frostHardiness: "Goes dormant upon first freeze"
+      },
+      zoysia: {
+        name: "Zoysiagrass",
+        coolSeason: false,
+        germMinDays: 14,
+        germMaxDays: 24,
+        germSoilTempMin: 70,
+        germSoilTempMax: 85,
+        maturationBufferDays: 65,
+        maxSingleLiftDepth: 0.6,
+        maxWarmthLift: 0.75,
+        growthHabit: "Dense stolon mat, slow vertical recovery",
+        firstMowHeight: 1.75,
+        irrigationDays: 18,
+        frostHardiness: "Dormant at 50°F soil"
+      }
+    };
+
+    // Chemical Herbicide Registry
+    const HERBICIDE_DB = {
+      none: {
+        name: "None (Mechanical)",
+        standoffDays: 0,
+        description: "Pure physical scalp, detaching, and aeration. Zero chemical residual.",
+        riskLevel: "safe",
+        selective: true,
+        tenacityCompatible: true
+      },
+      mesotrione: {
+        name: "Mesotrione (Tenacity)",
+        standoffDays: 0,
+        description: "Pre- and post-emergent that targets crabgrass/broadleaf without inhibiting Kentucky Bluegrass, Tall Fescue, or Perennial Ryegrass at germination.",
+        riskLevel: "safe",
+        selective: true,
+        tenacityCompatible: true
+      },
+      glyphosate: {
+        name: "Glyphosate (Total Reset)",
+        standoffDays: 7, // recommended 7-14 days to let weed translocation complete before scalping
+        description: "Non-selective systemic foliar killer. Must translocate into weed roots (7-10 days) prior to scalping or disturbing root zone. Does not bond to soil.",
+        riskLevel: "warning",
+        selective: false,
+        tenacityCompatible: false
+      },
+      trimec: {
+        name: "2,4-D + Dicamba + MCPP (Trimec / Broadleaf Mix)",
+        standoffDays: 21,
+        description: "Synthetic auxin broadleaf killer. Persistent soil residue disrupts emerging seedling cell division. Minimum 21 to 28 day standoff mandatory.",
+        riskLevel: "danger",
+        selective: true,
+        tenacityCompatible: false
+      },
+      quinclorac: {
+        name: "Quinclorac (Drive)",
+        standoffDays: 28,
+        description: "Crabgrass post-emergent herbicide. Soil residual severely stunts juvenile grass seedlings for up to 4 weeks.",
+        riskLevel: "danger",
+        selective: true,
+        tenacityCompatible: false
+      },
+      prodiamine: {
+        name: "Prodiamine (Barricade)",
+        standoffDays: 90,
+        description: "Long-residual pre-emergent root inhibitor. Any grass seed planted within 60-120 days will be aborted upon radicle emergence.",
+        riskLevel: "danger",
+        selective: true,
+        tenacityCompatible: false
+      },
+      dithiopyr: {
+        name: "Dithiopyr (Dimension)",
+        standoffDays: 84,
+        description: "Pre-emergent and early post-emergent barrier. Standoff interval is 12 weeks before desirable turf seeding.",
+        riskLevel: "danger",
+        selective: true,
+        tenacityCompatible: false
+      }
+    };
+
+    // Preset configurations
+    const PRESETS = [
+      {
+        name: "Fall Cool-Season Overseed (Healthy Baseline)",
+        lawnArea: 5000,
+        species: "tttf",
+        herbicide: "mesotrione",
+        herbicideDate: "2024-09-10",
+        seedingDate: "2024-09-10",
+        firstFrostDate: "2024-10-25",
+        topdressDepth: 0.25,
+        material: "sand_compost",
+        scalpHeight: 1.5,
+        thatchDepth: 0.25,
+        soilTemp: 68,
+        sunExposure: "full",
+        seedPlacement: "incorporated"
+      },
+      {
+        name: "Total Weed-Choked Renovation (Glyphosate Reset)",
+        lawnArea: 3500,
+        species: "prg",
+        herbicide: "glyphosate",
+        herbicideDate: "2024-08-20",
+        seedingDate: "2024-09-10",
+        firstFrostDate: "2024-10-20",
+        topdressDepth: 0.375,
+        material: "compost",
+        scalpHeight: 1.0,
+        thatchDepth: 0.75,
+        soilTemp: 72,
+        sunExposure: "partial",
+        seedPlacement: "incorporated"
+      },
+      {
+        name: "Severe Rut Leveling & Stolon Recovery (Bermuda Warm-Season)",
+        lawnArea: 4000,
+        species: "bermuda",
+        herbicide: "trimec",
+        herbicideDate: "2024-05-15",
+        seedingDate: "2024-06-15",
+        firstFrostDate: "2024-11-15",
+        topdressDepth: 1.5,
+        material: "sand",
+        scalpHeight: 0.5,
+        thatchDepth: 0.5,
+        soilTemp: 78,
+        sunExposure: "full",
+        seedPlacement: "surface"
+      }
+    ];
+
+    // State object
+    let state = { ...PRESETS[0] };
+
+    // Utility Functions
+    function parseDate(dateStr) {
+      if (!dateStr) return new Date();
+      const parts = dateStr.split('-');
+      const d = new Date(parts[0], parts[1] - 1, parts[2]);
+      return isNaN(d.getTime()) ? new Date() : d;
+    }
+
+    function formatDate(d) {
+      if (!(d instanceof Date) || isNaN(d.getTime())) return "N/A";
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return `${months[d.getMonth()]} ${d.getDate()}`;
+    }
+
+    function formatDateISO(d) {
+      if (!(d instanceof Date) || isNaN(d.getTime())) return "";
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function addDays(d, days) {
+      const copy = new Date(d);
+      if (isNaN(copy.getTime())) return copy;
+      copy.setDate(copy.getDate() + days);
+      return copy;
+    }
+
+    function daysDiff(d1, d2) {
+      if (isNaN(d1.getTime()) || isNaN(d2.getTime())) return 0;
+      const msPerDay = 86400000;
+      return Math.round((d2 - d1) / msPerDay);
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.innerHTML = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 3500);
+    }
+
+    function handleProFeature(actionName) {
+      if (!PRO) {
+        const notice = document.getElementById('runsheet-pro-notice');
+        if (notice) notice.style.display = 'inline-flex';
+        showToast(`Available in the full version: <a href="https://ferrywave73.gumroad.com/l/yjigto" style="color:var(--accent); font-weight:bold; text-decoration:underline;">Upgrade to PRO</a>`);
+        return false;
+      }
+      return true;
+    }
+
+    // Save and Load via LocalStorage
+    function saveState() {
+      try {
+        localStorage.setItem('lawn_sequencer_state', JSON.stringify(state));
+      } catch (e) {
+        console.warn("Storage restricted", e);
+      }
+    }
+
+    function loadSavedState() {
+      try {
+        const saved = localStorage.getItem('lawn_sequencer_state');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          state = { ...state, ...parsed };
+        }
+      } catch (e) {
+        console.warn("Could not load from storage", e);
+      }
+    }
+
+    // Bind UI to State
+    function syncInputsFromState() {
+      document.getElementById('lawn-area').value = state.lawnArea;
+      document.getElementById('first-frost-date').value = state.firstFrostDate;
+      document.getElementById('seeding-date').value = state.seedingDate;
+      document.getElementById('soil-temp').value = state.soilTemp;
+      if (document.getElementById('germ-soil-temp')) document.getElementById('germ-soil-temp').value = state.soilTemp;
+      document.getElementById('sun-exposure').value = state.sunExposure;
+      document.getElementById('turf-species').value = state.species;
+      document.getElementById('topdress-depth').value = state.topdressDepth;
+      document.getElementById('topdress-depth-val').textContent = state.topdressDepth.toFixed(2);
+      document.getElementById('topdress-material').value = state.material;
+      document.getElementById('scalp-height').value = state.scalpHeight;
+      document.getElementById('scalp-height-val').textContent = state.scalpHeight.toFixed(2);
+      document.getElementById('thatch-depth').value = state.thatchDepth;
+      document.getElementById('thatch-depth-val').textContent = state.thatchDepth.toFixed(2);
+      document.getElementById('seed-placement').value = state.seedPlacement;
+      document.getElementById('herbicide-select').value = state.herbicide;
+      document.getElementById('herbicide-date').value = state.herbicideDate;
+      if (document.getElementById('irrig-soil-texture')) document.getElementById('irrig-soil-texture').value = state.soilTexture || 'loam';
+      if (document.getElementById('irrig-sun-exposure')) document.getElementById('irrig-sun-exposure').value = state.irrigSun || 'full';
+    }
+
+    function readStateFromInputs() {
+      const areaInput = document.getElementById('lawn-area');
+      const areaVal = parseFloat(areaInput.value);
+      state.lawnArea = !isNaN(areaVal) && areaVal > 0 ? areaVal : 5000;
+      
+      state.firstFrostDate = document.getElementById('first-frost-date').value || "2024-10-25";
+      state.seedingDate = document.getElementById('seeding-date').value || "2024-09-10";
+      
+      const soilVal = parseFloat(document.getElementById('soil-temp').value);
+      state.soilTemp = !isNaN(soilVal) ? soilVal : 68;
+      
+      state.sunExposure = document.getElementById('sun-exposure').value;
+      state.species = document.getElementById('turf-species').value;
+      
+      const topdressVal = parseFloat(document.getElementById('topdress-depth').value);
+      state.topdressDepth = !isNaN(topdressVal) ? Math.max(0, topdressVal) : 0.25;
+      document.getElementById('topdress-depth-val').textContent = state.topdressDepth.toFixed(2);
+      
+      state.material = document.getElementById('topdress-material').value;
+      
+      const scalpVal = parseFloat(document.getElementById('scalp-height').value);
+      state.scalpHeight = !isNaN(scalpVal) ? Math.max(0.1, scalpVal) : 1.5;
+      document.getElementById('scalp-height-val').textContent = state.scalpHeight.toFixed(2);
+      
+      const thatchVal = parseFloat(document.getElementById('thatch-depth').value);
+      state.thatchDepth = !isNaN(thatchVal) ? Math.max(0, thatchVal) : 0.25;
+      document.getElementById('thatch-depth-val').textContent = state.thatchDepth.toFixed(2);
+      
+      state.seedPlacement = document.getElementById('seed-placement').value;
+      state.herbicide = document.getElementById('herbicide-select').value;
+      state.herbicideDate = document.getElementById('herbicide-date').value || "2024-09-10";
+      
+      if (document.getElementById('irrig-soil-texture')) state.soilTexture = document.getElementById('irrig-soil-texture').value;
+      if (document.getElementById('irrig-sun-exposure')) state.irrigSun = document.getElementById('irrig-sun-exposure').value;
+      
+      recalculateAndRender();
+      saveState();
+    }
+
+    // Main Compute and Rendering Logic
+    function recalculateAndRender() {
+      const species = TURF_SPECIES_DB[state.species] || TURF_SPECIES_DB.tttf;
+      const herb = HERBICIDE_DB[state.herbicide] || HERBICIDE_DB.none;
+      
+      const seedDateObj = parseDate(state.seedingDate);
+      const frostDateObj = parseDate(state.firstFrostDate);
+      const herbDateObj = parseDate(state.herbicideDate);
+
+      // 1. KPI Turf Specs
+      document.getElementById('kpi-germ-time').textContent = `${species.germMinDays}-${species.germMaxDays}d`;
+      document.getElementById('kpi-germ-temp').textContent = `${species.germSoilTempMin}-${species.germSoilTempMax}°F Soil`;
+      document.getElementById('kpi-frost-buffer').textContent = `${species.maturationBufferDays}d`;
+
+      // 2. Topdressing Calculations (Feature: topdress-leveling-safety-calc)
+      // Volume = Area (sq ft) * (depth in / 12) / 27 cu ft per cu yd
+      const volumeCuYd = (state.lawnArea * (state.topdressDepth / 12)) / 27;
+      let densityFactor = 1.2; // tons per cu yd (sand=1.35, compost=0.8, blend=1.15)
+      if (state.material === 'sand') densityFactor = 1.35;
+      else if (state.material === 'compost') densityFactor = 0.85;
+      const tonsWeight = volumeCuYd * densityFactor;
+
+      document.getElementById('kpi-topdress-vol').textContent = volumeCuYd.toFixed(2);
+      document.getElementById('kpi-topdress-vol').nextElementSibling.textContent = `cu yd (~${tonsWeight.toFixed(1)} tons)`;
+
+      const maxSafeLift = species.coolSeason ? species.maxSingleLiftDepth : species.maxWarmthLift;
+      document.getElementById('kpi-max-lift').textContent = `${maxSafeLift.toFixed(2)} in`;
+
+      const passesRequired = Math.ceil(state.topdressDepth / maxSafeLift);
+      const crownBadge = document.getElementById('crown-risk-badge');
+      const smotherBox = document.getElementById('smother-warning-box');
+
+      if (state.topdressDepth > maxSafeLift) {
+        crownBadge.className = 'badge badge-danger';
+        crownBadge.textContent = 'SMOTHERING HAZARD';
+        smotherBox.style.display = 'block';
+        smotherBox.style.borderLeftColor = 'var(--danger)';
+        const depthPerLift = (state.topdressDepth / passesRequired).toFixed(2);
+        const cuYdPerLift = (volumeCuYd / passesRequired).toFixed(2);
+        smotherBox.innerHTML = `
+          <strong style="color:var(--danger)">CRITICAL HAZARD: Single dump of ${state.topdressDepth.toFixed(2)}" exceeds ${species.name} crown tolerance (${maxSafeLift}").</strong><br>
+          Turf crowns will be deprived of sunlight and air, causing crown rot.<br>
+          <strong>Prescribed Protocol:</strong> Execute <strong>${passesRequired} distinct lifts</strong> of <strong>${depthPerLift}"</strong> (${cuYdPerLift} cu yd each), spaced 21 days apart during vigorous growth.
+        `;
+        document.getElementById('kpi-lift-passes').textContent = `Requires ${passesRequired} passes (${(state.topdressDepth/passesRequired).toFixed(2)}" ea)`;
+      } else if (state.topdressDepth > (maxSafeLift * 0.8)) {
+        crownBadge.className = 'badge badge-warning';
+        crownBadge.textContent = 'BORDERLINE LIFT';
+        smotherBox.style.display = 'block';
+        smotherBox.style.borderLeftColor = 'var(--warning)';
+        smotherBox.innerHTML = `
+          <strong>Caution:</strong> Depth (${state.topdressDepth.toFixed(2)}") approaches the maximum safe single-pass threshold. Ensure drag matting pulls grass blades up through topsoil.
+        `;
+        document.getElementById('kpi-lift-passes').textContent = '1 single pass (drag-mat thoroughly)';
+      } else {
+        crownBadge.className = 'badge badge-safe';
+        crownBadge.textContent = 'SAFE DEPTH';
+        smotherBox.style.display = 'none';
+        document.getElementById('kpi-lift-passes').textContent = '1 single pass';
+      }
+
+      // 3. Herbicide Standoff Engine (Feature: herbicide-standoff-engine)
+      const plannedStandoffDays = daysDiff(herbDateObj, seedDateObj);
+      const reqStandoffDays = herb.standoffDays;
+      const shortfallDays = reqStandoffDays - plannedStandoffDays;
+      const safeEarliestSeedDate = addDays(herbDateObj, reqStandoffDays);
+
+      document.getElementById('kpi-standoff-req').textContent = `${reqStandoffDays} Days`;
+      document.getElementById('kpi-standoff-actual').textContent = `${plannedStandoffDays} Days`;
+      document.getElementById('kpi-safe-seed-date').textContent = formatDate(safeEarliestSeedDate);
+
+      const standoffBanner = document.getElementById('standoff-banner');
+      const standoffIcon = document.getElementById('standoff-banner-icon');
+      const standoffTitle = document.getElementById('standoff-banner-title');
+      const standoffDesc = document.getElementById('standoff-banner-desc');
+      const herbBadge = document.getElementById('herbicide-risk-badge');
+
+      if (state.herbicide === 'mesotrione') {
+        if (!species.coolSeason) {
+          herbBadge.className = 'badge badge-danger';
+          herbBadge.textContent = 'LETHAL TO SPECIES';
+          standoffBanner.className = 'alert-banner danger';
+          standoffIcon.textContent = '⚠️';
+          standoffTitle.textContent = 'LETHAL SPECIES CONFLICT';
+          standoffDesc.textContent = `Mesotrione (Tenacity) is phytotoxic to ${species.name}. Do NOT apply to warm-season turf at seeding.`;
+        } else {
+          herbBadge.className = 'badge badge-safe';
+          herbBadge.textContent = 'SAFE AT SEEDING';
+          standoffBanner.className = 'alert-banner safe';
+          standoffIcon.textContent = '🛡️';
+          standoffTitle.textContent = 'Active Pre-Emergent Safe Window';
+          standoffDesc.textContent = `Mesotrione safely provides pre-emergent weed control while permitting ${species.name} germination simultaneously.`;
+        }
+      } else if (shortfallDays > 0) {
+        herbBadge.className = 'badge badge-danger';
+        herbBadge.textContent = 'LETHAL CHEMICAL CONFLICT';
+        standoffBanner.className = 'alert-banner danger';
+        standoffIcon.textContent = '☠️';
+        standoffTitle.textContent = `LETHAL CHEMICAL CONFLICT - SHORTFALL OF ${shortfallDays} DAYS`;
+        standoffDesc.textContent = `${herb.name} requires a mandatory ${reqStandoffDays}-day chemical breakdown window. Planting on ${formatDate(seedDateObj)} will kill new germinating seedlings. Safe seed date is ${formatDate(safeEarliestSeedDate)} or later.`;
+      } else if (shortfallDays === 0 && reqStandoffDays > 0) {
+        herbBadge.className = 'badge badge-warning';
+        herbBadge.textContent = 'MARGINAL BUFFER';
+        standoffBanner.className = 'alert-banner warning';
+        standoffIcon.textContent = '⏱️';
+        standoffTitle.textContent = 'Marginal Standoff Window Met';
+        standoffDesc.textContent = `Planned seed date exactly matches the minimum ${reqStandoffDays}-day safety standoff. Heavy rain or warm soil accelerates degradation.`;
+      } else {
+        herbBadge.className = 'badge badge-safe';
+        herbBadge.textContent = 'SAFE TO SEED';
+        standoffBanner.className = 'alert-banner safe';
+        standoffIcon.textContent = '✅';
+        standoffTitle.textContent = 'Chemical Standoff Clear';
+        standoffDesc.textContent = plannedStandoffDays >= reqStandoffDays 
+          ? `Sufficient standoff achieved (${plannedStandoffDays} days actual vs ${reqStandoffDays} days required). Chemical residue degraded.`
+          : `No residual chemical conflict detected.`;
+      }
+
+      // 4. Critical Timeline & Gantt Sequencer (Feature: renovation-timeline-sequencer)
+      const frostBufferDays = daysDiff(seedDateObj, frostDateObj);
+      const frostBadge = document.getElementById('frost-margin-badge');
+      if (frostBufferDays < species.maturationBufferDays) {
+        frostBadge.className = 'badge badge-danger';
+        frostBadge.textContent = `CRITICAL FROST HAZARD: ${frostBufferDays}d (Need ${species.maturationBufferDays}d)`;
+      } else if (frostBufferDays < species.maturationBufferDays + 10) {
+        frostBadge.className = 'badge badge-warning';
+        frostBadge.textContent = `TIGHT BUFFER: ${frostBufferDays}d`;
+      } else {
+        frostBadge.className = 'badge badge-safe';
+        frostBadge.textContent = `${frostBufferDays} DAYS BEFORE FROST (SAFE)`;
+      }
+
+      renderGanttChart(seedDateObj, frostDateObj, herbDateObj, species, herb);
+      renderWateringScheduler();
+      renderMilestones(seedDateObj, frostDateObj, herbDateObj, species, herb, volumeCuYd);
+      renderCrossSection();
+      renderInterpretation(frostBufferDays, species, herb, passesRequired, volumeCuYd);
+      renderQABoxes(seedDateObj, frostDateObj, herbDateObj, species, herb, volumeCuYd, passesRequired);
+      renderGerminationComparator();
+      renderMultiPassPlanner();
+    }
+
+    // Gantt Chart Renderer
+    function renderGanttChart(seedDate, frostDate, herbDate, species, herb) {
+      const container = document.getElementById('gantt-container');
+      
+      // Calculate earliest task date and latest task date for scaling
+      const tMinusHerb = state.herbicide === 'glyphosate' ? addDays(seedDate, -21) : addDays(seedDate, -14);
+      const effectiveStart = herbDate < tMinusHerb ? herbDate : tMinusHerb;
+      const windowStart = addDays(effectiveStart, -3);
+      const windowEnd = addDays(frostDate, 7);
+
+      const totalSpan = daysDiff(windowStart, windowEnd);
+      if (totalSpan <= 0) {
+        container.innerHTML = '<div style="padding:20px; color:var(--danger)">Invalid date sequence: Seeding or Frost dates are misconfigured.</div>';
+        return;
+      }
+
+      function getPct(d) {
+        const offset = daysDiff(windowStart, d);
+        return Math.max(0, Math.min(100, (offset / totalSpan) * 100));
+      }
+      function getWidthPct(dStart, dEnd) {
+        const start = getPct(dStart);
+        const end = getPct(dEnd);
+        return Math.max(1.5, end - start);
+      }
+
+      // Define standard critical path tasks
+      const tasks = [];
+
+      if (state.herbicide === 'glyphosate') {
+        const spray1 = addDays(seedDate, -21);
+        const spray2 = addDays(seedDate, -10);
+        tasks.push({
+          name: "Weed Eradication Spray 1",
+          start: spray1,
+          end: addDays(spray1, 1),
+          color: "#ef4444",
+          label: `Glyphosate (${formatDate(spray1)})`
+        });
+        tasks.push({
+          name: "Cleanup Spot Spray 2",
+          start: spray2,
+          end: addDays(spray2, 1),
+          color: "#f97316",
+          label: `Spot Kill (${formatDate(spray2)})`
+        });
+      } else if (state.herbicide === 'trimec' || state.herbicide === 'quinclorac') {
+        tasks.push({
+          name: "Herbicide Standoff Wait",
+          start: herbDate,
+          end: addDays(herbDate, herb.standoffDays),
+          color: "#eab308",
+          label: `${herb.standoffDays}d Standoff Breakdown`
+        });
+      }
+
+      const scalpDate = addDays(seedDate, -2);
+      tasks.push({
+        name: "Scalp Down & Bag (1.5\")",
+        start: scalpDate,
+        end: addDays(scalpDate, 1),
+        color: "#64748b",
+        label: `Mow ${state.scalpHeight}" (${formatDate(scalpDate)})`
+      });
+
+      tasks.push({
+        name: "Core Aerate & Topdress (T-0)",
+        start: seedDate,
+        end: addDays(seedDate, 1),
+        color: "#8b5cf6",
+        label: `Drop Seed + Topdress (${formatDate(seedDate)})`
+      });
+
+      const germEndDate = addDays(seedDate, species.irrigationDays);
+      tasks.push({
+        name: "Seed Moist Irrigation Cycle",
+        start: seedDate,
+        end: germEndDate,
+        color: "#0284c7",
+        label: `3x Daily Light Mist (${species.irrigationDays} days)`
+      });
+
+      const deepRootEnd = addDays(germEndDate, 14);
+      tasks.push({
+        name: "Transition to Deep Root Soak",
+        start: germEndDate,
+        end: deepRootEnd,
+        color: "#06b6d4",
+        label: "Infrequent 0.5\" Deep Soaks"
+      });
+
+      const firstMowDate = addDays(seedDate, species.germMaxDays + 14);
+      tasks.push({
+        name: `First Mow (${species.firstMowHeight}\")`,
+        start: firstMowDate,
+        end: addDays(firstMowDate, 1),
+        color: "#22c55e",
+        label: `Sharp Blade Mow (${formatDate(firstMowDate)})`
+      });
+
+      tasks.push({
+        name: "Frost Arrival & Cold Hardening",
+        start: frostDate,
+        end: addDays(frostDate, 5),
+        color: "#94a3b8",
+        label: `First Freeze (${formatDate(frostDate)})`
+      });
+
+      // Render Header
+      let html = `<div class="gantt-header">
+        <div style="width:190px; text-align:left;">Milestone Action</div>
+        <div class="gantt-header-col">${formatDate(windowStart)}</div>
+        <div class="gantt-header-col">${formatDate(seedDate)} (T-0)</div>
+        <div class="gantt-header-col">${formatDate(frostDate)} (Freeze)</div>
+      </div>`;
+
+      // Render Rows
+      tasks.forEach(t => {
+        const leftPct = getPct(t.start);
+        const widthPct = getWidthPct(t.start, t.end);
+        html += `
+          <div class="gantt-row">
+            <div class="gantt-task-name">
+              <span style="width:8px; height:8px; border-radius:50%; background:${t.color}; display:inline-block;"></span>
+              ${t.name}
+            </div>
+            <div class="gantt-track">
+              <div class="gantt-bar" style="left:${leftPct}%; width:${widthPct}%; background:${t.color};" title="${t.name}: ${formatDate(t.start)} - ${formatDate(t.end)}">
+                ${t.label}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Milestones Agenda Checklist
+    function renderMilestones(seedDate, frostDate, herbDate, species, herb, volumeCuYd) {
+      const list = document.getElementById('milestones-container');
+      const items = [];
+
+      if (state.herbicide === 'glyphosate') {
+        const gDate = addDays(seedDate, -21);
+        items.push({
+          date: formatDate(gDate),
+          offset: "T-21 Days",
+          title: "Initial Non-Selective Eradication (Glyphosate Reset)",
+          desc: `Spray entire weed canopy with 41% Glyphosate at 2.5 oz/gal. Do not mow for 4 days before or after to facilitate systemic root translocation.`
+        });
+        const g2Date = addDays(seedDate, -10);
+        items.push({
+          date: formatDate(g2Date),
+          offset: "T-10 Days",
+          title: "Follow-up Touchup Weed Spray",
+          desc: `Spot spray stubborn survivors (Bermuda escapes, dallisgrass, nutsedge). Verify total foliar collapse before ground disruption.`
+        });
+      } else if (herb.standoffDays > 0) {
+        items.push({
+          date: formatDate(herbDate),
+          offset: `${daysDiff(seedDate, herbDate)} Days`,
+          title: `Apply ${herb.name}`,
+          desc: `Mandatory chemical standoff window initiated. ${herb.standoffDays} days must elapse before seed drops.`
+        });
+      }
+
+      const scalpDate = addDays(seedDate, -2);
+      items.push({
+        date: formatDate(scalpDate),
+        offset: "T-2 Days",
+        title: `Scalp Lawn Down to ${state.scalpHeight} Inches`,
+        desc: `Bag and discard all cuttings. Drastically reducing turf canopy height allows light to reach soil and halts competition with young seedlings.`
+      });
+
+      items.push({
+        date: formatDate(seedDate),
+        offset: "T-0 (Drop Day)",
+        title: `Core Aerate, Seed Drop & Spread ${volumeCuYd.toFixed(1)} cu yd Topdress`,
+        desc: `Pull 2-3" hollow tines (6-8 passes per sq ft). Drop ${species.name} seed using calibrated broadcast spreader. Spread ${state.topdressDepth.toFixed(2)}" of ${state.material.replace('_', '/')} to cap seeds.`
+      });
+
+      const germEnd = addDays(seedDate, species.irrigationDays);
+      items.push({
+        date: `${formatDate(seedDate)} - ${formatDate(germEnd)}`,
+        offset: "Day 1 to " + species.irrigationDays,
+        title: "Germination Irrigation Window",
+        desc: `Run irrigation 3 to 4 times daily (e.g. 7 AM, 11 AM, 2 PM, 5 PM) for 4-6 minutes per zone. Goal: Keep top 0.5" constantly damp; never soggy, never dry.`
+      });
+
+      const firstMow = addDays(seedDate, species.germMaxDays + 14);
+      items.push({
+        date: formatDate(firstMow),
+        offset: `+${species.germMaxDays + 14} Days`,
+        title: `First Mow with Razor-Sharp Blade at ${species.firstMowHeight}"`,
+        desc: `Allow soil to dry out for 24 hours prior to mowing so wheels don't tear immature rootlets. Cut when grass hits ${species.firstMowHeight + 0.75}" down to ${species.firstMowHeight}". Bag clippings.`
+      });
+
+      items.push({
+        date: formatDate(frostDate),
+        offset: `+${daysDiff(seedDate, frostDate)} Days`,
+        title: `First Anticipated Frost Date (${frostDate.getFullYear()})`,
+        desc: `Seedling root system must have undergone at least 2 mows and 45 days of active growth to endure freezing cellular sap without winter kill.`
+      });
+
+      list.innerHTML = items.map(it => `
+        <div class="milestone-item">
+          <div class="milestone-date-badge">
+            ${it.date}
+            <span class="day-offset">${it.offset}</span>
+          </div>
+          <div class="milestone-content">
+            <h4>${it.title}</h4>
+            <p>${it.desc}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Dynamic SVG Soil & Turf Cross-Section Visualizer (Feature: cross-section-soil-visualizer)
+    function renderCrossSection() {
+      const svg = document.getElementById('soil-svg');
+      const badge = document.getElementById('visualizer-status-badge');
+
+      // Heights in inches converted to SVG coordinate pixels
+      // Canvas height 230:
+      // Subsoil base: y = 160 to 230
+      // Native topsoil line: y = 160
+      const baselineY = 160;
+      const pxPerInch = 36; // 1 inch = 36px
+
+      const scalpPx = Math.min(100, state.scalpHeight * pxPerInch);
+      const thatchPx = Math.min(50, state.thatchDepth * pxPerInch);
+      const topdressPx = Math.min(90, state.topdressDepth * pxPerInch);
+      const crownY = baselineY - (0.4 * pxPerInch); // crown sits approx 0.4" above soil line
+
+      const topdressTopY = baselineY - topdressPx;
+      const crownBuried = topdressTopY < crownY;
+      const thatchExcess = state.thatchDepth > 0.5;
+
+      let statusMsg = "OPTIMAL PROFILE";
+      let statusClass = "badge badge-safe";
+
+      if (crownBuried && state.topdressDepth > 0.5) {
+        statusMsg = "CROWNS SMOTHERED";
+        statusClass = "badge badge-danger";
+      } else if (thatchExcess) {
+        statusMsg = "HIGH THATCH BARRIER";
+        statusClass = "badge badge-warning";
+      }
+      badge.textContent = statusMsg;
+      badge.className = statusClass;
+
+      // Material color
+      let topdressColor = "#d97706"; // Sand
+      if (state.material === 'compost') topdressColor = "#451a03";
+      else if (state.material === 'sand_compost') topdressColor = "#92400e";
+
+      let elements = `
+        <!-- Subsoil & Root Stratum -->
+        <defs>
+          <pattern id="soilPattern" width="16" height="16" patternUnits="userSpaceOnUse">
+            <rect width="16" height="16" fill="#1e293b"/>
+            <circle cx="4" cy="4" r="1.5" fill="#334155"/>
+            <circle cx="12" cy="12" r="1.2" fill="#334155"/>
+          </pattern>
+          <pattern id="thatchPattern" width="10" height="10" patternUnits="userSpaceOnUse">
+            <rect width="10" height="10" fill="#713f12"/>
+            <line x1="0" y1="5" x2="10" y2="5" stroke="#a16207" stroke-width="1.5"/>
+          </pattern>
+        </defs>
+
+        <!-- Base Soil -->
+        <rect x="0" y="${baselineY}" width="700" height="70" fill="url(#soilPattern)"/>
+        <line x1="0" y1="${baselineY}" x2="700" y2="${baselineY}" stroke="#475569" stroke-width="2"/>
+        <text x="12" y="${baselineY + 45}" fill="#64748b" font-size="11" font-weight="bold">SUB-SURFACE ROOT ZONE (0 - 6" DEPTH)</text>
+
+        <!-- Organic Thatch Layer -->
+        ${state.thatchDepth > 0.05 ? `
+          <rect x="0" y="${baselineY - thatchPx}" width="700" height="${thatchPx}" fill="url(#thatchPattern)" opacity="0.85"/>
+          <text x="12" y="${baselineY - (thatchPx / 2) + 4}" fill="#fde047" font-size="10" font-weight="bold">THATCH: ${state.thatchDepth.toFixed(2)}"</text>
+        ` : ''}
+
+        <!-- Topdressing Layer -->
+        <rect x="0" y="${topdressTopY}" width="700" height="${topdressPx}" fill="${topdressColor}" opacity="0.6"/>
+        <line x1="0" y1="${topdressTopY}" x2="700" y2="${topdressTopY}" stroke="${topdressColor}" stroke-dasharray="4,4" stroke-width="1.5"/>
+        <text x="540" y="${topdressTopY + 14}" fill="${topdressColor}" font-size="11" font-weight="bold">
+          TOPDRESS LAYER: ${state.topdressDepth.toFixed(2)}"
+        </text>
+
+        <!-- Turf Crown & Blades -->
+      `;
+
+      // Render repeated grass blades across the SVG width
+      for (let x = 30; x < 680; x += 32) {
+        const bladeHeight = scalpPx + (Math.sin(x) * 6);
+        const bladeTop = baselineY - bladeHeight;
+        elements += `
+          <!-- Crown Node -->
+          <circle cx="${x}" cy="${crownY}" r="4" fill="${crownBuried ? '#ef4444' : '#22c55e'}"/>
+          <!-- Root Tendrils -->
+          <path d="M${x} ${crownY} Q${x - 4} ${baselineY + 25} ${x - 2} ${baselineY + 55}" stroke="#94a3b8" stroke-width="1.2" fill="none" opacity="0.5"/>
+          <path d="M${x} ${crownY} Q${x + 5} ${baselineY + 20} ${x + 6} ${baselineY + 45}" stroke="#94a3b8" stroke-width="1.2" fill="none" opacity="0.5"/>
+          <!-- Grass Blade -->
+          <path d="M${x-2} ${crownY} Q${x - 5} ${bladeTop + 10} ${x - 1} ${bladeTop}" stroke="#15803d" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M${x+2} ${crownY} Q${x + 7} ${bladeTop + 15} ${x + 4} ${bladeTop + 4}" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        `;
+      }
+
+      // Seed Grains placement
+      const seedY = state.seedPlacement === 'incorporated' ? (topdressTopY + (topdressPx * 0.75)) : (topdressTopY - 2);
+      for (let sx = 45; sx < 670; sx += 48) {
+        elements += `
+          <ellipse cx="${sx}" cy="${seedY}" rx="3.5" ry="1.8" fill="#facc15" stroke="#713f12" stroke-width="0.8"/>
+        `;
+      }
+
+      // Smothering Boundary Threshold Line (at crown + 0.5")
+      const dangerBoundaryY = crownY - (0.5 * pxPerInch);
+      elements += `
+        <line x1="0" y1="${dangerBoundaryY}" x2="700" y2="${dangerBoundaryY}" stroke="#ef4444" stroke-width="1.2" stroke-dasharray="3,3"/>
+        <text x="12" y="${dangerBoundaryY - 4}" fill="#ef4444" font-size="9" font-weight="bold">MAX COOL-SEASON CROWN SMOTHERING LIMIT (+0.5")</text>
+      `;
+
+      svg.innerHTML = elements;
+    }
+
+    // Dynamic Interpretation Card (What this means / what to do next)
+    function renderInterpretation(frostBuffer, species, herb, passes, volumeCuYd) {
+      const box = document.getElementById('interpretation-box');
+      let statusColor = "var(--primary)";
+      let headline = "Sequence is Physiologically Viable";
+
+      if (frostBuffer < species.maturationBufferDays) {
+        statusColor = "var(--danger)";
+        headline = "High Freeze Mortality Risk";
+      } else if (state.topdressDepth > (species.coolSeason ? species.maxSingleLiftDepth : species.maxWarmthLift)) {
+        statusColor = "var(--warning)";
+        headline = "Crown Smothering Protocol Triggered";
+      }
+
+      let content = `
+        <h3 style="color:${statusColor};">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          What this means / What to do next: ${headline}
+        </h3>
+        <p>
+          <strong>1. Root Establishment Buffer:</strong> You have scheduled seeding for <strong>${formatDate(parseDate(state.seedingDate))}</strong>, leaving <strong>${frostBuffer} days</strong> prior to the average first freeze (${formatDate(parseDate(state.firstFrostDate))}). ${species.name} requires ${species.maturationBufferDays} days. 
+          ${frostBuffer >= species.maturationBufferDays 
+            ? "Your young grass seedlings will have sufficient thermal time to form tiller crowns and survive winter frost."
+            : "⚠️ You are below the recommended establishment safety buffer! Consider shifting your seeding date earlier, or pivoting to rapid-germinating Perennial Ryegrass (requires only 30 days buffer)."}
+        </p>
+        <p>
+          <strong>2. Material Handling:</strong> Ordering <strong>${volumeCuYd.toFixed(1)} cubic yards</strong> of ${state.material.replace('_', '/')}. 
+          ${passes > 1 
+            ? `Because your leveling depth of ${state.topdressDepth.toFixed(2)}" will suffocate green crowns in a single application, divide this load into ${passes} staging cycles spaced 21 days apart.`
+            : `Your application rate of ${state.topdressDepth.toFixed(2)}" is safe for a single pass.`}
+        </p>
+        <p>
+          <strong>3. Chemical Safety:</strong> ${herb.description}
+        </p>
+      `;
+      box.innerHTML = content;
+    }
+
+    // Detailed Q&A Solvers for the 3 Binding Questions
+    function renderQABoxes(seedDate, frostDate, herbDate, species, herb, volumeCuYd, passes) {
+      // Q1: How do I fix the worst lawn on the street?
+      const finalSeedingLimit = addDays(frostDate, -species.maturationBufferDays);
+      const spray1Date = addDays(seedDate, -21);
+      const spray2Date = addDays(seedDate, -14);
+      const scalpDate = addDays(seedDate, -2);
+      const firstMow = addDays(seedDate, species.germMaxDays + 14);
+
+      document.getElementById('qa1-output').innerHTML = `
+        <strong>Backward-Calculated Critical Path:</strong><br>
+        • Seeding Cutoff: No later than <strong>${formatDate(finalSeedingLimit)}</strong> (${species.maturationBufferDays}-day maturation buffer before ${formatDate(frostDate)} freeze).<br>
+        • Glyphosate Reset Spray 1: <strong>${formatDate(spray1Date)}</strong> (T-21d) to initiate vascular breakdown.<br>
+        • Cleanup Spray 2: <strong>${formatDate(spray2Date)}</strong> (T-14d) targeting stubborn weeds.<br>
+        • Scalp &amp; Bag: <strong>${formatDate(scalpDate)}</strong> down to ${state.scalpHeight}" to expose soil.<br>
+        • Aeration &amp; Topdress Day (T-0): <strong>${formatDate(seedDate)}</strong> (Drop seed + ${volumeCuYd.toFixed(1)} cu yd topdress).<br>
+        • Irrigation Window: <strong>${formatDate(seedDate)} to ${formatDate(addDays(seedDate, species.irrigationDays))}</strong> (3x daily, 5-8 min per zone).<br>
+        • First Mow: <strong>${formatDate(firstMow)}</strong> at ${species.firstMowHeight}" with sharp blades.
+      `;
+
+      // Q2: Will leveling uneven lawns with extra sand kill future lawns?
+      const maxLimit = species.coolSeason ? species.maxSingleLiftDepth : species.maxWarmthLift;
+      const isLethal = state.topdressDepth > maxLimit;
+      document.getElementById('qa2-output').innerHTML = `
+        <strong>Leveling &amp; Suffocation Assessment:</strong><br>
+        • Turf Species Crown Tolerance: <strong>${species.name} (Max single lift: ${maxLimit.toFixed(2)}")</strong>.<br>
+        • Depression Depth Entered: <strong>${state.topdressDepth.toFixed(2)}"</strong> across ${state.lawnArea.toLocaleString()} sq ft.<br>
+        • Smothering Status: ${isLethal 
+          ? `<span style="color:var(--danger); font-weight:bold;">CRITICAL HAZARD: ${state.topdressDepth.toFixed(2)}" exceeds ${maxLimit}" suffocation threshold. Dumping all material at once will cause anaerobic crown decay and kill the lawn.</span><br>• Prescribed Multi-Pass: Apply <strong>${passes} separate passes of ${(state.topdressDepth/passes).toFixed(2)}"</strong> (${(volumeCuYd/passes).toFixed(1)} cu yd per lift) spaced 21 days apart during vigorous growth.`
+          : `<span style="color:var(--primary); font-weight:bold;">SAFE: Single lift of ${state.topdressDepth.toFixed(2)}" will not suffocate existing crowns.</span> Total material: ${volumeCuYd.toFixed(1)} cu yd.`}
+      `;
+
+      // Q3: What can I plant in dandelion graves?
+      const plannedStandoff = daysDiff(herbDate, seedDate);
+      const remainingStandoff = Math.max(0, herb.standoffDays - plannedStandoff);
+      const safeDate = addDays(herbDate, herb.standoffDays);
+      
+      let recommendedSeed = "Turf-Type Tall Fescue (8-12d emergence)";
+      if (species.speciesKey === 'prg' || remainingStandoff > 10) {
+        recommendedSeed = "Perennial Ryegrass (4-7d rapid emergence) to beat impending frost";
+      }
+
+      document.getElementById('qa3-output').innerHTML = `
+        <strong>Chemical Standoff &amp; Spot-Seeding Strategy:</strong><br>
+        • Active Chemical: <strong>${herb.name}</strong> applied on ${formatDate(herbDate)}.<br>
+        • Mandatory Herbicide Breakdown Standoff: <strong>${herb.standoffDays} days</strong>.<br>
+        • Safe Seed Drop: ${remainingStandoff > 0 
+          ? `<strong style="color:var(--danger)">NOT YET SAFE. ${remainingStandoff} days remaining</strong> before residual clears. Safe date: <strong>${formatDate(safeDate)}</strong>.`
+          : `<strong style="color:var(--primary)">SAFE TO SEED NOW.</strong> Standoff interval fulfilled.`}<br>
+        • Recommended Emergence Species: <strong>${recommendedSeed}</strong> with a 0.25" compost cap over bare dandelion spots to preserve moisture.
+      `;
+    }
+
+    // CSV & JSON Exporters
+    function triggerBlobDownload(content, filename, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function getChemicalDoseGuideline(chem) {
+      const doses = {
+        mesotrione: "5 fl oz/acre (0.115 oz/1,000 sq ft) Tenacity + NIS",
+        glyphosate: "2.5 fl oz/gal water per 1,000 sq ft (41% glyphosate)",
+        trimec: "1.2 fl oz/1,000 sq ft broadleaf mix",
+        quinclorac: "0.36 oz/1,000 sq ft Drive 75 DF",
+        prodiamine: "0.37 oz/1,000 sq ft Barricade 65WG",
+        dithiopyr: "0.5 fl oz/1,000 sq ft Dimension 2EW",
+        none: "None - Mechanical preparation only"
+      };
+      return doses[chem] || "None";
+    }
+
+    function exportCSV() {
+      if (!handleProFeature('export-csv')) return;
+      const seedDateObj = parseDate(state.seedingDate);
+      const frostDateObj = parseDate(state.firstFrostDate);
+      const herbDateObj = parseDate(state.herbicideDate);
+      const species = TURF_SPECIES_DB[state.species] || TURF_SPECIES_DB.tttf;
+      const volumeCuYd = (state.lawnArea * (state.topdressDepth / 12)) / 27;
+      const chemDose = getChemicalDoseGuideline(state.herbicide);
+      const disclaimer = "Estimate only - verify with a qualified professional before relying on it";
+
+      const rows = [
+        ["Date", "Step Name", "Exact Chemical Dose Guidelines", "Water Minutes", "Safety Disclaimer"],
+        [formatDateISO(herbDateObj), "Chemical Herbicide Application", chemDose, "0 min", disclaimer],
+        [formatDateISO(addDays(seedDateObj, -2)), `Scalp Down Lawn (${state.scalpHeight}\")`, "N/A", "0 min", disclaimer],
+        [formatDateISO(seedDateObj), `Seeding T-0 & Topdress (${volumeCuYd.toFixed(2)} cu yd)`, chemDose, "24 min/day (4x 6m micro-cycles)", disclaimer],
+        [formatDateISO(addDays(seedDateObj, species.irrigationDays)), "Establishment Root Soak Window", "N/A", "35 min deep soak / 2 days", disclaimer],
+        [formatDateISO(addDays(seedDateObj, species.germMaxDays + 14)), `First Lawn Mow (${species.firstMowHeight}\")`, "N/A", "0 min (monitor rainfall)", disclaimer],
+        [formatDateISO(frostDateObj), "First Freeze Cutoff Check", "N/A", "0 min", disclaimer]
+      ];
+
+      const csvContent = rows.map(e => e.map(i => `"${String(i).replace(/"/g, '""')}"`).join(",")).join("\n");
+      triggerBlobDownload(csvContent, "renovation-runsheet.csv", "text/csv;charset=utf-8;");
+      showToast("Field Run-Sheet CSV downloaded");
+    }
+
+    function exportJSON() {
+      if (!handleProFeature('export-json')) return;
+      const seedDateObj = parseDate(state.seedingDate);
+      const species = TURF_SPECIES_DB[state.species] || TURF_SPECIES_DB.tttf;
+      const volumeCuYd = (state.lawnArea * (state.topdressDepth / 12)) / 27;
+
+      const materialsBill = {
+        date: formatDateISO(seedDateObj),
+        stepName: "Lawn Renovation & Overseeding Materials Bill",
+        lawnAreaSqFt: state.lawnArea,
+        turfSpecies: species.name,
+        topdress: {
+          material: state.material,
+          depthInches: state.topdressDepth,
+          volumeCuYd: Number(volumeCuYd.toFixed(2))
+        },
+        exactChemicalDoseGuidelines: getChemicalDoseGuideline(state.herbicide),
+        waterMinutes: "24 min/day phase 1, 35 min/soak phase 2",
+        safetyDisclaimer: "Estimate only - verify with a qualified professional before relying on it"
+      };
+
+      triggerBlobDownload(JSON.stringify(materialsBill, null, 2), "materials-bill.json", "application/json");
+      showToast("Materials Bill JSON downloaded");
+    }
+
+    // Event Wire-up
+    function setupEventListeners() {
+      // Inputs
+      const inputs = [
+        'lawn-area', 'first-frost-date', 'seeding-date', 'soil-temp',
+        'sun-exposure', 'turf-species', 'topdress-depth', 'topdress-material',
+        'scalp-height', 'thatch-depth', 'seed-placement', 'herbicide-select', 'herbicide-date',
+        'irrig-soil-texture', 'irrig-sun-exposure', 'mpl-depth', 'mpl-recovery-days', 'mpl-start-date'
+      ];
+      inputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', readStateFromInputs);
+          el.addEventListener('change', readStateFromInputs);
+        }
+      });
+
+      // Presets
+      document.getElementById('preset-select').addEventListener('change', (e) => {
+        const idx = parseInt(e.target.value, 10);
+        if (PRESETS[idx]) {
+          state = { ...PRESETS[idx] };
+          syncInputsFromState();
+          recalculateAndRender();
+          saveState();
+          showToast(`Loaded preset: ${PRESETS[idx].name}`);
+        }
+      });
+
+      // Header Buttons
+      document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
+      document.getElementById('btn-export-json').addEventListener('click', exportJSON);
+      document.getElementById('btn-print').addEventListener('click', () => {
+        if (!handleProFeature('print')) return;
+        window.print();
+      });
+      document.getElementById('btn-reset').addEventListener('click', () => {
+        state = { ...PRESETS[0] };
+        document.getElementById('preset-select').value = "0";
+        syncInputsFromState();
+        recalculateAndRender();
+        saveState();
+        showToast("Reset to Fall Cool-Season Overseed Baseline");
+      });
+    }
+
+    function renderWateringScheduler() {
+      const species = TURF_SPECIES_DB[state.species] || TURF_SPECIES_DB.tttf;
+      const soil = state.soilTexture || 'loam';
+      const sun = state.irrigSun || 'full';
+
+      let p1Days = species.germMaxDays;
+      if (state.species === 'prg') p1Days = 7;
+      else if (state.species === 'kbg') p1Days = 21;
+
+      const p2Days = 14;
+
+      let p1Cycles = sun === 'full' ? 4 : 3;
+      let p1Runtime = 6;
+      let p2Runtime = 35;
+
+      if (soil === 'sand') {
+        p1Runtime = 4;
+        p2Runtime = 25;
+      } else if (soil === 'clay') {
+        p1Cycles = 3;
+        p1Runtime = 5;
+        p2Runtime = 45;
+      }
+
+      if (sun === 'full') {
+        p1Runtime = Math.round(p1Runtime * 1.2);
+        p2Runtime = Math.round(p2Runtime * 1.15);
+      }
+
+      const gpm = 6.2;
+      const p1DailyGal = Math.round(p1Cycles * p1Runtime * gpm);
+      const p2SoakGal = Math.round(p2Runtime * gpm);
+
+      const p1DurEl = document.getElementById('irrig-p1-duration');
+      if (p1DurEl) p1DurEl.textContent = `${p1Days} Days`;
+      const p1CycEl = document.getElementById('irrig-p1-cycles');
+      if (p1CycEl) p1CycEl.textContent = `${p1Cycles} micro-cycles/day`;
+      const p2DurEl = document.getElementById('irrig-p2-duration');
+      if (p2DurEl) p2DurEl.textContent = `${p2Days} Days`;
+      const runEl = document.getElementById('irrig-runtime');
+      if (runEl) runEl.textContent = `${p1Runtime} min`;
+      const galEl = document.getElementById('irrig-gallons');
+      if (galEl) galEl.textContent = `${p1DailyGal} gal`;
+
+      const tbody = document.getElementById('irrig-table-body');
+      if (tbody) {
+        tbody.innerHTML = `
+          <tr>
+            <td><strong>Phase 1: Germination</strong></td>
+            <td>Days 1 - ${p1Days} (${p1Days} days total)</td>
+            <td>${p1Cycles} micro-cycles/day (surface moist)</td>
+            <td>${p1Runtime} min / zone (${p1Cycles * p1Runtime} min/day)</td>
+            <td>~${p1DailyGal} gal / 1k sq ft</td>
+          </tr>
+          <tr>
+            <td><strong>Phase 2: Root Establishment</strong></td>
+            <td>Days ${p1Days + 1} - ${p1Days + p2Days} (${p2Days} days total)</td>
+            <td>1 deep soak every 2 days</td>
+            <td>${p2Runtime} min / zone</td>
+            <td>~${p2SoakGal} gal / soak day</td>
+          </tr>
+        `;
+      }
+    }
+
+    // Initialization
+    function init() {
+      loadSavedState();
+      syncInputsFromState();
+      recalculateAndRender();
+      setupEventListeners();
+    }
+
+    function renderGerminationComparator() {
+      const tempSlider = document.getElementById('germ-soil-temp');
+      if (!tempSlider) return;
+
+      const soilTemp = parseFloat(tempSlider.value) || 68;
+      document.getElementById('germ-soil-temp-val').textContent = Math.round(soilTemp);
+
+      let tttf = parseFloat(document.getElementById('mix-tttf').value) || 0;
+      let kbg = parseFloat(document.getElementById('mix-kbg').value) || 0;
+      let prg = parseFloat(document.getElementById('mix-prg').value) || 0;
+
+      const total = tttf + kbg + prg || 100;
+      const wTTTF = tttf / total;
+      const wKBG = kbg / total;
+      const wPRG = prg / total;
+
+      document.getElementById('mix-tttf-val').textContent = Math.round(wTTTF * 100);
+      document.getElementById('mix-kbg-val').textContent = Math.round(wKBG * 100);
+      document.getElementById('mix-prg-val').textContent = Math.round(wPRG * 100);
+
+      let tempFactor = 1.0;
+      if (soilTemp < 68) {
+        tempFactor = 1 + (68 - soilTemp) * 0.0804;
+      } else if (soilTemp > 68) {
+        tempFactor = Math.max(0.75, 1 - (soilTemp - 68) * 0.012);
+      }
+
+      const tttfStart = Math.round(7 * tempFactor);
+      const tttfFull = Math.round(18 * tempFactor);
+      const kbgStart = Math.round(14 * tempFactor);
+      const kbgFull = Math.round(28 * tempFactor);
+      const prgStart = Math.round(4 * tempFactor);
+      const prgFull = Math.round(12 * tempFactor);
+
+      document.getElementById('kpi-tttf-sprout').textContent = `Day ${tttfStart}`;
+      document.getElementById('kpi-tttf-closure').textContent = `Full Closure: Day ${tttfFull}`;
+      document.getElementById('kpi-kbg-sprout').textContent = `Day ${kbgStart}`;
+      document.getElementById('kpi-kbg-closure').textContent = `Full Closure: Day ${kbgFull}`;
+      document.getElementById('kpi-prg-sprout').textContent = `Day ${prgStart}`;
+      document.getElementById('kpi-prg-closure').textContent = `Full Closure: Day ${prgFull}`;
+
+      const days = 30;
+      const mixEmergence = [];
+      let day50 = 30;
+      let mixFull = 30;
+
+      for (let d = 1; d <= days; d++) {
+        const calcE = (start, full) => {
+          if (d < start) return 0;
+          if (d >= full) return 100;
+          const t = (d - start) / (full - start);
+          return (3 * t * t - 2 * t * t * t) * 100;
+        };
+
+        const eTTTF = calcE(tttfStart, tttfFull);
+        const eKBG = calcE(kbgStart, kbgFull);
+        const ePRG = calcE(prgStart, prgFull);
+        const eMix = (eTTTF * wTTTF) + (eKBG * wKBG) + (ePRG * wPRG);
+
+        mixEmergence.push({ d, eTTTF, eKBG, ePRG, eMix });
+        if (eMix >= 50 && day50 === 30) day50 = d;
+        if (eMix >= 95 && mixFull === 30) mixFull = d;
+      }
+
+      document.getElementById('kpi-mix-50').textContent = `Day ${day50}`;
+      document.getElementById('kpi-mix-closure').textContent = `Full Canopy: Day ${mixFull}`;
+
+      const badge = document.getElementById('germ-summary-badge');
+      if (badge) badge.textContent = `TTTF Sprout: Day ${tttfStart} @ ${Math.round(soilTemp)}°F`;
+
+      const svg = document.getElementById('germ-curve-svg');
+      if (!svg) return;
+
+      const w = 600, h = 200;
+      const padL = 40, padR = 20, padT = 25, padB = 30;
+      const graphW = w - padL - padR;
+      const graphH = h - padT - padB;
+
+      const getX = (d) => padL + ((d - 1) / (days - 1)) * graphW;
+      const getY = (e) => padT + graphH - (e / 100) * graphH;
+
+      let pathTTTF = "", pathKBG = "", pathPRG = "", pathMix = "";
+      mixEmergence.forEach((pt, i) => {
+        const x = getX(pt.d);
+        const prefix = i === 0 ? "M" : "L";
+        pathTTTF += `${prefix}${x.toFixed(1)},${getY(pt.eTTTF).toFixed(1)} `;
+        pathKBG += `${prefix}${x.toFixed(1)},${getY(pt.eKBG).toFixed(1)} `;
+        pathPRG += `${prefix}${x.toFixed(1)},${getY(pt.ePRG).toFixed(1)} `;
+        pathMix += `${prefix}${x.toFixed(1)},${getY(pt.eMix).toFixed(1)} `;
+      });
+
+      const tttfSproutX = getX(Math.min(30, tttfStart));
+
+      svg.innerHTML = `
+        <line x1="${padL}" y1="${getY(0)}" x2="${w - padR}" y2="${getY(0)}" stroke="var(--border)" stroke-width="1"/>
+        <line x1="${padL}" y1="${getY(50)}" x2="${w - padR}" y2="${getY(50)}" stroke="var(--border)" stroke-dasharray="3,3" stroke-width="1"/>
+        <line x1="${padL}" y1="${getY(100)}" x2="${w - padR}" y2="${getY(100)}" stroke="var(--border)" stroke-dasharray="3,3" stroke-width="1"/>
+        <text x="${padL - 6}" y="${getY(0) + 4}" fill="var(--text-muted)" font-size="9" text-anchor="end">0%</text>
+        <text x="${padL - 6}" y="${getY(50) + 4}" fill="var(--text-muted)" font-size="9" text-anchor="end">50%</text>
+        <text x="${padL - 6}" y="${getY(100) + 4}" fill="var(--text-muted)" font-size="9" text-anchor="end">100%</text>
+        <text x="${padL}" y="${h - 8}" fill="var(--text-muted)" font-size="9">Day 1</text>
+        <text x="${getX(10)}" y="${h - 8}" fill="var(--text-muted)" font-size="9">Day 10</text>
+        <text x="${getX(20)}" y="${h - 8}" fill="var(--text-muted)" font-size="9">Day 20</text>
+        <text x="${getX(30)}" y="${h - 8}" fill="var(--text-muted)" font-size="9">Day 30</text>
+        <path d="${pathPRG}" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.8"/>
+        <path d="${pathKBG}" fill="none" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.8"/>
+        <path d="${pathTTTF}" fill="none" stroke="#22c55e" stroke-width="2"/>
+        <path d="${pathMix}" fill="none" stroke="#f59e0b" stroke-width="2.5"/>
+        <line x1="${tttfSproutX}" y1="${padT}" x2="${tttfSproutX}" y2="${getY(0)}" stroke="#22c55e" stroke-dasharray="2,2" stroke-width="1.5"/>
+        <circle cx="${tttfSproutX}" cy="${getY(0)}" r="4" fill="#22c55e"/>
+        <text x="${Math.min(w - 110, tttfSproutX + 4)}" y="${padT + 8}" fill="#22c55e" font-size="10" font-weight="bold">TTTF Sprout: Day ${tttfStart}</text>
+      `;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      ['germ-soil-temp', 'mix-tttf', 'mix-kbg', 'mix-prg'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', () => {
+            if (id === 'germ-soil-temp') {
+              const val = parseFloat(el.value);
+              state.soilTemp = val;
+              const mainTemp = document.getElementById('soil-temp');
+              if (mainTemp) mainTemp.value = val;
+            }
+            recalculateAndRender();
+          });
+        }
+      });
+    });
+
+    function renderMultiPassPlanner() {
+      const depthEl = document.getElementById('mpl-depth');
+      const recEl = document.getElementById('mpl-recovery-days');
+      const startEl = document.getElementById('mpl-start-date');
+      const tbody = document.getElementById('mpl-tbody');
+      if (!depthEl || !tbody) return;
+
+      let depth = parseFloat(depthEl.value);
+      if (isNaN(depth) || depth <= 0) depth = 1.2;
+
+      let recoveryDays = parseInt(recEl ? recEl.value : 21, 10);
+      if (isNaN(recoveryDays) || recoveryDays < 14) recoveryDays = 14;
+      if (recoveryDays > 28) recoveryDays = 28;
+
+      const startDate = parseDate(startEl && startEl.value ? startEl.value : state.seedingDate);
+      const species = TURF_SPECIES_DB[state.species] || TURF_SPECIES_DB.tttf;
+      const maxSafeLift = species.coolSeason ? species.maxSingleLiftDepth : species.maxWarmthLift;
+
+      const N = Math.max(1, Math.ceil(depth / maxSafeLift));
+      const passDepth = depth / N;
+      const volPerPass = (state.lawnArea * (passDepth / 12)) / 27;
+
+      const checklists = [
+        "Verify 50%+ green tiller shoots pushed through layer",
+        "Check 75%+ canopy recovery & drag-mat crowns upright",
+        "Verify strong root anchorage & zero crown rot signs",
+        "Confirm full turf density recovery & blade elongation"
+      ];
+
+      let html = "";
+      for (let i = 1; i <= N; i++) {
+        const passDate = addDays(startDate, (i - 1) * recoveryDays);
+        const chkText = checklists[(i - 1) % checklists.length];
+        html += `
+          <tr>
+            <td><strong>Pass ${i}</strong></td>
+            <td>${formatDate(passDate)}</td>
+            <td>${passDepth.toFixed(2)} in</td>
+            <td>${volPerPass.toFixed(2)} cu yd</td>
+            <td>
+              <label class="mpl-check-label">
+                <input type="checkbox" ${i === 1 ? 'checked' : ''}>
+                <span>${chkText}</span>
+              </label>
+            </td>
+          </tr>
+        `;
+      }
+      tbody.innerHTML = html;
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This tool helps lawn hobbyists and homeowners plan complex renovations without the risk of timing errors or material waste. It sequences your chemical applications, calculates precise soil volumes, and generates a printable execution schedule.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Enter your target seeding date and the herbicides you&#39;ve recently applied.</li><li>Input your lawn&#39;s square footage and desired topdressing depth to calculate material volume.</li><li>Adjust the irrigation settings based on your specific soil type and sunlight exposure.</li><li>Export the generated timeline to CSV or print it as a step-by-step run-sheet.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">How do I fix the worst lawn on the street?</h4><p style="margin:0">You enter: Lawn surface area (e.g., 5,000 sq ft) · Predominant weed infestation / turf state (e.g., crabgrass and broadleaf weeds taking over 60% of turf) · Desired replacement turf species (e.g., Turf-Type Tall Fescue) · Expected first fall frost date (e.g., October 25).<br>You get: A backward-sequenced critical path calendar determining exact dates to spray non-selective herbicide, scalp down, core aerate, apply leveling topdressing, drop seed, and start irrigation before the first killing frost.</p><h4 style="font-size:16px;margin:16px 0 4px">Will leveling uneven lawns with extra sand kill future lawns?</h4><p style="margin:0">You enter: Lawn area (e.g., 3,000 sq ft) · Existing turf type (e.g., Kentucky Bluegrass) · Maximum low spot / rut depression depth (e.g., 1.5 inches) · Topdressing material (e.g., 80/20 mason sand / compost mix).<br>You get: Whether a 1.5-inch sand application will smother existing grass crowns, the maximum safe single-lift depth, total material volume required, and the recommended multi-pass schedule to avoid killing the turf.</p><h4 style="font-size:16px;margin:16px 0 4px">What can I plant in dandelion graves?</h4><p style="margin:0">You enter: Active herbicide applied to dandelions (e.g., Trimec / 2,4-D + Dicamba + MCPP mix) · Application date (e.g., 5 days ago) · Current average 2-inch soil temperature (e.g., 62°F).<br>You get: The mandatory post-spray chemical standoff wait time before seed can germinate safely without soil residual toxicity, and the best seed species capable of rapid emergence within that remaining seasonal window.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">How do I fix the worst lawn on the street?</h4><p style="margin:0">Start with a &#39;blank slate&#39; approach: use a non-selective herbicide to kill weeds, core aerate to relieve compaction, and use this sequencer to time your new seed application. Focusing on soil health and proper seed-to-soil contact is more effective than patchy repairs.</p><h4 style="font-size:16px;margin:16px 0 4px">Will leveling uneven lawns with extra sand kill future lawns?</h4><p style="margin:0">Sand itself won&#39;t kill grass, but applying too much at once smothers the crown and prevents photosynthesis. Use the tool to keep your applications under 0.5 inches per pass to ensure the existing turf can grow through the new layer.</p><h4 style="font-size:16px;margin:16px 0 4px">What can I plant in dandelion graves?</h4><p style="margin:0">Once dandelions are removed, you have a void of bare soil. Scuff the soil surface, add a pinch of high-quality matching seed, and use the sequencer to track the specific irrigation needs for those &#39;spot-seeded&#39; areas to ensure they fill in before new weeds take hold.</p><h4 style="font-size:16px;margin:16px 0 4px">Does this tool require an internet connection?</h4><p style="margin:0">The Gumroad version is a standalone pack that runs offline in any web browser. You don&#39;t need a login or an active connection to manage your lawn renovation schedule while you&#39;re out in the yard.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/yjigto" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../vegetable-garden-fertilizer-npk-calculator/" style="color:inherit;font-weight:600">Vegetable Garden Fertilizer &amp; NPK Application Calculator</a>: Calculate exact N-P-K fertilizer weights, balance organic amendments, prevent root burn, and export plan.</li><li><a href="../lawn-sprinkler-head-coverage-flow-budget-designer/" style="color:inherit;font-weight:600">Lawn Sprinkler Head-to-Head Coverage &amp; Flow Budget Designer</a>: Stop guessing your irrigation. Design head-to-head coverage and calculate flow budgets with a live heatmap engine.</li><li><a href="../yard-excavation-dirt-volume-calculator/" style="color:inherit;font-weight:600">Yard Excavation &amp; Dirt Removal Volume Calculator</a>: Calculate true loose soil swell, wet tonnage, slope cuts, equipment trips, and dumpster payload limits offline.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
