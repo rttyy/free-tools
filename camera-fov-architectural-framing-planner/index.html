@@ -1,0 +1,2227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-card: #1e293b;
+      --bg-input: #0f172a;
+      --border-color: #334155;
+      --border-focus: #38bdf8;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-blue: #0284c7;
+      --accent-blue-hover: #0369a1;
+      --accent-cyan: #38bdf8;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --frustum-fill: rgba(56, 189, 248, 0.18);
+      --frustum-stroke: #38bdf8;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+      --radius: 8px;
+      --font-stack: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg-primary: #f8fafc;
+        --bg-secondary: #ffffff;
+        --bg-card: #ffffff;
+        --bg-input: #f1f5f9;
+        --border-color: #cbd5e1;
+        --border-focus: #0284c7;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-muted: #94a3b8;
+        --accent-blue: #0284c7;
+        --accent-blue-hover: #0369a1;
+        --accent-cyan: #0284c7;
+        --accent-green: #059669;
+        --accent-amber: #d97706;
+        --accent-red: #dc2626;
+        --frustum-fill: rgba(2, 132, 199, 0.15);
+        --frustum-stroke: #0284c7;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      padding: 16px;
+      min-height: 100vh;
+    }
+
+    header {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto 20px auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      max-width: 100%;
+    }
+    .brand h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+    .brand p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      max-width: 100%;
+    }
+
+    button, select, input {
+      font-family: inherit;
+      font-size: 0.875rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow);
+    }
+    .btn:hover {
+      border-color: var(--border-focus);
+      color: var(--accent-cyan);
+    }
+    .btn-primary {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+    }
+    .btn-primary:hover {
+      background: var(--accent-blue-hover);
+      color: #ffffff;
+    }
+
+    .preset-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      padding: 4px 8px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      max-width: 100%;
+    }
+    .preset-selector label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .preset-selector select {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px;
+      outline: none;
+      max-width: 200px;
+      min-width: 0;
+      text-overflow: ellipsis;
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--text-primary);
+    }
+    .card-title span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .grid-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .form-group label {
+      font-size: 0.775rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .form-group .input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+    }
+    #focal-slider {
+      flex: 1;
+      min-width: 0;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      min-width: 0;
+      padding: 8px 10px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--border-focus);
+    }
+    .form-group .unit {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .slider-val {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .slider-val span {
+      font-size: 0.8rem;
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border-color);
+    }
+    .stat-box {
+      background: var(--bg-input);
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .stat-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .stat-sub {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .layout-2col {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+    }
+    @media (max-width: 1024px) {
+      .layout-2col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      height: clamp(300px, 50vh, 480px);
+      background: #090d16;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    @media (prefers-color-scheme: light) {
+      .canvas-container {
+        background: #f1f5f9;
+      }
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge-success { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid var(--accent-green); }
+    .badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+    .badge-danger { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); border: 1px solid var(--accent-red); }
+
+    .canvas-overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .canvas-controls-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .sidebar-pane {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .viewfinder-box {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      background: #000000;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    .viewfinder-box canvas {
+      cursor: default;
+    }
+
+    .dof-bar-wrap {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .dof-bar {
+      height: 14px;
+      background: var(--bg-input);
+      border-radius: 7px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    .dof-focus-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      background: rgba(16, 185, 129, 0.4);
+      border-left: 2px solid var(--accent-green);
+      border-right: 2px solid var(--accent-green);
+    }
+    .dof-subject-pin {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--accent-cyan);
+    }
+
+    .advice-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+    .advice-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      color: var(--accent-cyan);
+    }
+    .advice-body {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .disclaimer {
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .pro-toast {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--accent-amber);
+      color: var(--text-primary);
+      padding: 12px 18px;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 1000;
+      font-size: 0.875rem;
+    }
+    .pro-toast a {
+      color: var(--accent-cyan);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    .error-text {
+      color: var(--accent-red);
+      font-size: 0.75rem;
+      margin-top: 2px;
+    }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .toolbar, .btn, .preset-selector { display: none !important; }
+      .card { border: 1px solid #ccc; box-shadow: none; break-inside: avoid; }
+      .layout-2col { display: block; }
+      .sidebar-pane { margin-top: 20px; }
+    }
+        .reverse-solver-card summary { list-style: none; }
+    .reverse-solver-card summary::-webkit-details-marker { display: none; }
+    .dual-legend { display: flex; align-items: center; gap: 14px; font-size: 0.8rem; font-weight: 600; margin-top: 4px; }
+    .dual-legend-item { display: flex; align-items: center; gap: 6px; }
+    .dual-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+      .crop-mask-selector {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border-color);
+    }
+    @media print {
+      .no-print { display: none !important; }
+      .card { border: 1px solid #eee; margin-bottom: 20px; page-break-inside: avoid; }
+      .advice-card { border-left-color: #333; }
+      .print-header { display: block !important; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+    }
+    .print-header { display: none; }
+    #btn-export-svg { background: var(--accent-amber); border-color: var(--accent-amber); color: #fff; }
+    #btn-export-svg:hover { opacity: 0.9; }
+    /* FEATURE-CSS */
+  </style>
+<title>Visualize Lens Angle of View on Floor Plan | Framing Planner</title>
+<meta name="description" content="Easily visualize camera field of view, crop factors, and depth of field on 2D floor plans. Plan architectural shots precisely with our spatial simulator.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/camera-fov-architectural-framing-planner/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/camera-fov-architectural-framing-planner/">
+<meta property="og:title" content="Visualize Lens Angle of View on Floor Plan | Framing Planner"><meta property="og:description" content="Easily visualize camera field of view, crop factors, and depth of field on 2D floor plans. Plan architectural shots precisely with our spatial simulator.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/camera-fov-architectural-framing-planner/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Visualize Lens Angle of View on Floor Plan | Framing Planner","description":"Easily visualize camera field of view, crop factors, and depth of field on 2D floor plans. Plan architectural shots precisely with our spatial simulator.","url":"https://rttyy.github.io/free-tools/camera-fov-architectural-framing-planner/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why is 18% grey considered to be in the middle for photography?","acceptedAnswer":{"@type":"Answer","text":"Human visual perception of brightness is logarithmic rather than linear. An object reflecting 18% of available light is perceived by human eyes as visually halfway between pure black (0% reflection) and pure white (100% reflection). Because of this perceptual middle point, light meters and camera exposure systems use 18% neutral gray as their standard baseline."}},{"@type":"Question","name":"Is there a mapping tool that will let me visualize a lens's angle of view?","acceptedAnswer":{"@type":"Answer","text":"Yes. The Camera FOV & Architectural Framing Planner lets you plot exact lens angles of view directly onto 2D spatial layouts or floor plans. You can adjust camera placement, focal lengths, and sensor sizes to visually see field-of-view boundaries before setting up on location."}},{"@type":"Question","name":"With all other things equal, in a DSLR, will a larger sensor produce a sharper image?","acceptedAnswer":{"@type":"Answer","text":"Not automatically, because overall sharpness depends primarily on lens resolving power and optical quality. However, a larger sensor requires less magnification to display an image at a given target size, which reduces visible optical aberrations and provides superior signal-to-noise ratios, often resulting in higher perceived detail."}},{"@type":"Question","name":"What is the difference between the free web page and the paid Gumroad product?","acceptedAnswer":{"@type":"Answer","text":"The free web page provides full access to the spatial planning tool directly inside your internet browser. The $12 paid Gumroad pack contains the standalone offline edition for offline use on location scouts, along with local vector SVG exports and printable PDF report templates."}}]}</script>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <h1>Camera Field of View &amp; Architectural Framing Planner</h1>
+      <p>Real-time 2D spatial optics, visual viewfinder framing, boundary occlusion &amp; depth-of-field engine</p>
+    </div>
+    <div class="toolbar">
+      <div class="preset-selector">
+        <label for="preset-select">Preset</label>
+        <select id="preset-select" aria-label="Select Scenario Preset">
+          <option value="0">Architectural Interior: Tight Room Corner Shot</option>
+          <option value="1">Environmental Portrait: Studio Framing</option>
+          <option value="2">Facade Elevation: Telephoto Exterior</option>
+        </select>
+      </div>
+      <button class="btn" id="btn-reset" title="Reset to initial values">Reset</button>
+      <button class="btn" id="btn-copy" title="Copy optical summary to clipboard">Copy Summary</button>
+      <button class="btn" id="btn-export-json" title="Export setup to JSON">Export JSON</button>
+      <button class="btn" id="btn-export-csv" title="Export metrics to CSV">Export CSV</button>
+      <button class="btn" id="btn-sample" title="Load sample data">Load Sample</button>
+      <button class="btn btn-primary" id="btn-print" title="Print planner report">Print Report</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- TOP CONTROL PANEL: Sensor Format & Optical Angle of View Calculator -->
+    <section class="card" data-feature="sensor-lens-aov-calculator">
+      <div class="card-title">
+        <span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg>
+          Sensor Format &amp; Optical Angle of View Calculator
+        </span>
+      </div>
+
+      <div class="grid-controls">
+        <div class="form-group">
+          <label for="sensor-preset">Sensor Format Preset</label>
+          <select id="sensor-preset">
+            <option value="36x24">Full Frame (36x24mm)</option>
+            <option value="23.6x15.6">APS-C (Sony/Fuji 23.6x15.6mm)</option>
+            <option value="22.3x14.9">APS-C (Canon 22.3x14.9mm)</option>
+            <option value="17.3x13">Micro Four Thirds (17.3x13mm)</option>
+            <option value="44x33">Medium Format (44x33mm)</option>
+            <option value="custom">Custom Dimensions...</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="custom-w-group" style="display:none;">
+          <label for="sensor-w">Custom Sensor Width</label>
+          <div class="input-wrap">
+            <input type="number" id="sensor-w" min="5" max="100" step="0.1" value="36">
+            <span class="unit">mm</span>
+          </div>
+          <div class="error-text" id="err-sensor-w"></div>
+        </div>
+
+        <div class="form-group" id="custom-h-group" style="display:none;">
+          <label for="sensor-h">Custom Sensor Height</label>
+          <div class="input-wrap">
+            <input type="number" id="sensor-h" min="5" max="100" step="0.1" value="24">
+            <span class="unit">mm</span>
+          </div>
+          <div class="error-text" id="err-sensor-h"></div>
+        </div>
+
+        <div class="form-group">
+          <div class="slider-val">
+            <label for="focal-length">Focal Length</label>
+            <span id="focal-val">16 mm</span>
+          </div>
+          <div class="input-wrap">
+            <input type="range" id="focal-slider" min="10" max="600" step="1" value="16">
+            <input type="number" id="focal-length" min="10" max="600" step="1" value="16" style="width:70px;">
+            <span class="unit">mm</span>
+          </div>
+          <div class="error-text" id="err-focal"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="aperture">Lens Aperture</label>
+          <select id="aperture">
+            <option value="1.4">f/1.4</option>
+            <option value="1.8">f/1.8</option>
+            <option value="2.0">f/2.0</option>
+            <option value="2.8">f/2.8</option>
+            <option value="4.0">f/4.0</option>
+            <option value="5.6">f/5.6</option>
+            <option value="8.0" selected>f/8.0</option>
+            <option value="11.0">f/11.0</option>
+            <option value="16.0">f/16.0</option>
+            <option value="22.0">f/22.0</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="coc-input">Circle of Confusion (CoC)</label>
+          <div class="input-wrap">
+            <input type="number" id="coc-input" min="0.001" max="0.5" step="0.001" value="0.029">
+            <span class="unit">mm</span>
+          </div>
+          <div class="error-text" id="err-coc"></div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-label">Horizontal AOV</div>
+          <div class="stat-value" id="stat-haov">0.0°</div>
+          <div class="stat-sub">Coverage Cone</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Vertical AOV</div>
+          <div class="stat-value" id="stat-vaov">0.0°</div>
+          <div class="stat-sub">Elevation Cone</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Diagonal AOV</div>
+          <div class="stat-value" id="stat-daov">0.0°</div>
+          <div class="stat-sub">Total Angle</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Crop Factor</div>
+          <div class="stat-value" id="stat-crop">1.00x</div>
+          <div class="stat-sub">vs 35mm Standard</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">35mm Equiv. Focal</div>
+          <div class="stat-value" id="stat-equiv">16.0 mm</div>
+          <div class="stat-sub">Field Equivalent</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 COLUMN LAYOUT: Interactive Map + Viewfinder & DOF -->
+    <div class="layout-2col">
+      <!-- LEFT COLUMN: Interactive Top-Down 2D Spatial Canvas & Boundary Occlusion -->
+      <section class="card" data-feature="topdown-2d-canvas-visualizer">
+        <div class="card-title">
+          <span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18"/><path d="M9 21V3"/></svg>
+            Interactive 2D Spatial Room Map &amp; FOV Frustum
+          </span>
+          <span id="collision-badge" class="badge badge-success">Clear Line of Sight</span>
+        </div>
+
+        <div class="canvas-controls-bar">
+          <div class="form-group">
+            <label for="room-w">Room Width (X)</label>
+            <div class="input-wrap">
+              <input type="number" id="room-w" min="1" max="100" step="0.5" value="5.0">
+              <span class="unit">m</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="room-d">Room Depth (Y)</label>
+            <div class="input-wrap">
+              <input type="number" id="room-d" min="1" max="100" step="0.5" value="4.0">
+              <span class="unit">m</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cam-x">Camera X</label>
+            <div class="input-wrap">
+              <input type="number" id="cam-x" min="0" max="100" step="0.1" value="0.5">
+              <span class="unit">m</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cam-y">Camera Y</label>
+            <div class="input-wrap">
+              <input type="number" id="cam-y" min="0" max="100" step="0.1" value="0.5">
+              <span class="unit">m</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cam-angle">Camera Angle</label>
+            <div class="input-wrap">
+              <input type="number" id="cam-angle" min="0" max="360" step="1" value="45">
+              <span class="unit">°</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="sub-x">Target Subject X</label>
+            <div class="input-wrap">
+              <input type="number" id="sub-x" min="0" max="100" step="0.1" value="4.2">
+              <span class="unit">m</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="sub-y">Target Subject Y</label>
+            <div class="input-wrap">
+              <input type="number" id="sub-y" min="0" max="100" step="0.1" value="3.5">
+              <span class="unit">m</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="canvas-container" id="map-container">
+          <div class="canvas-overlay">
+            <span class="badge" style="background:rgba(0,0,0,0.6); color:#fff;" id="canvas-hint">Drag Camera (blue) or Subject (red)</span>
+          </div>
+          <canvas id="topdown-canvas"></canvas>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="stat-label">Camera-Subject Dist</div>
+            <div class="stat-value" id="stat-dist">0.00 m</div>
+            <div class="stat-sub">Direct Line of Sight</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Field Width at Target</div>
+            <div class="stat-value" id="stat-fwidth">0.00 m</div>
+            <div class="stat-sub">Physical Horizontal Span</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Field Height at Target</div>
+            <div class="stat-value" id="stat-fheight">0.00 m</div>
+            <div class="stat-sub">Physical Vertical Span</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN: Viewfinder & Depth of Field -->
+      <div class="sidebar-pane">
+        <!-- Virtual Viewfinder & Subject Framing Coverage -->
+        <section class="card" data-feature="framing-subject-preview">
+          <div class="card-title">
+            <span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              Virtual Viewfinder Framing
+            </span>
+            <span id="framing-badge" class="badge badge-success">Fits Frame</span>
+          </div>
+
+          <div class="grid-controls" style="grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); margin-bottom: 12px;">
+            <div class="form-group">
+              <label for="sub-w">Subject Width</label>
+              <div class="input-wrap">
+                <input type="number" id="sub-w" min="0.1" max="50" step="0.1" value="2.5">
+                <span class="unit">m</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="sub-h">Subject Height</label>
+              <div class="input-wrap">
+                <input type="number" id="sub-h" min="0.1" max="50" step="0.1" value="2.2">
+                <span class="unit">m</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="viewfinder-box">
+            <canvas id="viewfinder-canvas"></canvas>
+          </div>
+
+          <div class="stats-row" style="grid-template-columns: 1fr 1fr;">
+            <div class="stat-box">
+              <div class="stat-label">Horizontal Sensor Fill</div>
+              <div class="stat-value" id="stat-hfill">0%</div>
+              <div class="stat-sub">Of Sensor Width</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Vertical Sensor Fill</div>
+              <div class="stat-value" id="stat-vfill">0%</div>
+              <div class="stat-sub">Of Sensor Height</div>
+            </div>
+          </div>
+
+          <div class="crop-mask-selector" data-feature="multi-format-framing-chart">
+            <div class="form-group" style="margin-top:12px;">
+              <label for="crop-aspect-select">Crop Aspect Ratio Overlay</label>
+              <select id="crop-aspect-select">
+                <option value="native">Native Sensor Ratio</option>
+                <option value="3:2">3:2 Standard Digital</option>
+                <option value="4:3">4:3 TV / Micro Four Thirds</option>
+                <option value="16:9">16:9 HDTV / Widescreen</option>
+                <option value="1:1">1:1 Square</option>
+                <option value="2.39:1">2.39:1 Anamorphic Scope</option>
+              </select>
+            </div>
+            <div class="stats-row" style="grid-template-columns: 1fr 1fr; margin-top:8px; border-top:none; padding-top:0;">
+              <div class="stat-box">
+                <div class="stat-label">Active Sensor Area</div>
+                <div class="stat-value" id="stat-crop-area">100%</div>
+                <div class="stat-sub" id="stat-crop-dim">36.0 × 24.0 mm</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Effective Framing</div>
+                <div class="stat-value" id="stat-crop-fov">--</div>
+                <div class="stat-sub">Field at Target</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Depth of Field & Hyperfocal Distance Engine -->
+        <section class="card" data-feature="dof-hyperfocal-calc">
+          <div class="card-title">
+            <span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20"/><circle cx="12" cy="12" r="8"/><path d="M12 2v20"/></svg>
+              Depth of Field &amp; Hyperfocal Engine
+            </span>
+          </div>
+
+          <div class="stats-row" style="grid-template-columns: 1fr 1fr; border-top: none; padding-top: 0; margin-top: 0;">
+            <div class="stat-box">
+              <div class="stat-label">Hyperfocal Distance</div>
+              <div class="stat-value" id="stat-hyper">0.00 m</div>
+              <div class="stat-sub">Focus point for max depth</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Total Depth of Field</div>
+              <div class="stat-value" id="stat-total-dof">0.00 m</div>
+              <div class="stat-sub">Acceptable sharpness</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Near Limit</div>
+              <div class="stat-value" id="stat-near">0.00 m</div>
+              <div class="stat-sub">In-focus start point</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Far Limit</div>
+              <div class="stat-value" id="stat-far">0.00 m</div>
+              <div class="stat-sub">In-focus end point</div>
+            </div>
+          </div>
+
+          <div class="dof-bar-wrap">
+            <div style="display:flex; justify-shadow:space-between; font-size:0.75rem; color:var(--text-muted);">
+              <span>0 m</span>
+              <span id="dof-mid-mark">Target</span>
+              <span id="dof-max-mark">Max</span>
+            </div>
+            <div class="dof-bar">
+              <div class="dof-focus-zone" id="dof-bar-zone"></div>
+              <div class="dof-subject-pin" id="dof-bar-sub"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- REVERSE LENS & FRAMING SOLVER -->
+    <details class="card reverse-solver-card" data-feature="wall-occlusion-reverse-solver" open>
+      <summary class="card-title" style="cursor:pointer; user-select:none;">
+        <span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          Reverse Lens &amp; Framing Solver for Constrained Spaces
+        </span>
+        <span style="font-size:0.8rem; color:var(--text-muted);">&#x25BC; Expand / Collapse</span>
+      </summary>
+      <div class="grid-controls" style="margin-top:12px;">
+        <div class="form-group">
+          <label for="rev-sub-w">Desired Subject Width</label>
+          <div class="input-wrap">
+            <input type="number" id="rev-sub-w" min="0.1" max="100" step="0.1" value="4.0">
+            <span class="unit">m</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="rev-room-d">Available Room Depth</label>
+          <div class="input-wrap">
+            <input type="number" id="rev-room-d" min="0.5" max="100" step="0.1" value="3.5">
+            <span class="unit">m</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="rev-back-offset">Camera Back-wall Offset</label>
+          <div class="input-wrap">
+            <input type="number" id="rev-back-offset" min="0" max="10" step="0.05" value="0.5">
+            <span class="unit">m</span>
+          </div>
+        </div>
+      </div>
+      <div class="stats-row" style="margin-top:12px;">
+        <div class="stat-box">
+          <div class="stat-label">Max Focal Length (No Clip)</div>
+          <div class="stat-value" id="stat-rev-max-focal">27.0 mm</div>
+          <div class="stat-sub">Before horizontal clipping</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Min Required Cam Dist</div>
+          <div class="stat-value" id="stat-rev-min-dist">1.78 m</div>
+          <div class="stat-sub">For active focal length</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Recommended Focal Step</div>
+          <div class="stat-value" id="stat-rev-rec-lens">24mm</div>
+          <div class="stat-sub">Standard lens focal step</div>
+        </div>
+      </div>
+    </details>
+
+    <!-- DUAL CAMERA & LENS COMPARATOR -->
+    <section class="card" data-feature="dual-camera-lens-comparator">
+      <div class="card-title">
+        <span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M12 2v20"/><circle cx="12" cy="12" r="7"/></svg>
+          Dual Setup Overlay &amp; Focal Equivalent Comparator
+        </span>
+        <label style="display:flex; align-items:center; gap:6px; font-size:0.85rem; cursor:pointer;">
+          <input type="checkbox" id="dual-enable" checked> Enable Secondary Setup
+        </label>
+      </div>
+
+      <div class="dual-legend">
+        <div class="dual-legend-item"><span class="dual-dot" style="background:#38bdf8;"></span> Primary FOV (Cyan)</div>
+        <div class="dual-legend-item"><span class="dual-dot" style="background:#f59e0b;"></span> Secondary FOV (Amber)</div>
+      </div>
+
+      <div class="grid-controls" id="dual-controls-group" style="margin-top:12px;">
+        <div class="form-group">
+          <label for="dual-sensor-preset">Secondary Sensor Format (Setup B)</label>
+          <select id="dual-sensor-preset">
+            <option value="36x24">Full Frame (36x24mm)</option>
+            <option value="23.6x15.6" selected>APS-C (Sony/Fuji 23.6x15.6mm)</option>
+            <option value="22.3x14.9">APS-C (Canon 22.3x14.9mm)</option>
+            <option value="17.3x13">Micro Four Thirds (17.3x13mm)</option>
+            <option value="44x33">Medium Format (44x33mm)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <div class="slider-val">
+            <label for="dual-focal-length">Secondary Focal Length (Setup B)</label>
+            <span id="dual-focal-val">35 mm</span>
+          </div>
+          <div class="input-wrap">
+            <input type="number" id="dual-focal-length" min="10" max="600" step="1" value="35">
+            <span class="unit">mm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row" style="margin-top:12px;">
+        <div class="stat-box">
+          <div class="stat-label">Horizontal AOV Diff</div>
+          <div class="stat-value" id="dual-stat-aov-diff">0.00°</div>
+          <div class="stat-sub">Setup A - Setup B</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Field Width Diff @ Target</div>
+          <div class="stat-value" id="dual-stat-w-diff">0.00 m</div>
+          <div class="stat-sub">Setup A - Setup B</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Setup B Equiv. Distance</div>
+          <div class="stat-value" id="dual-stat-eq-dist">0.00 m</div>
+          <div class="stat-sub">Required to match Setup A width</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DYNAMIC INTERPRETATION BLOCK -->
+    <section class="card no-print" data-feature="shot-plan-export-report">
+      <div class="card-title">
+        <span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Shot Plan Report & Technical Specification
+        </span>
+      </div>
+      <div class="grid-controls">
+        <div class="form-group">
+          <label for="export-title">Project Title</label>
+          <input type="text" id="export-title" placeholder="Project name / Scene ID">
+        </div>
+        <div class="form-group">
+          <label for="export-notes">Location / Scene Notes</label>
+          <input type="text" id="export-notes" placeholder="Lighting details, gear list, or crew notes...">
+        </div>
+        <div class="form-group" style="justify-content: flex-end; flex-direction: row; align-items: flex-end; gap: 8px;">
+          <button class="btn btn-primary" id="btn-export-svg">Export SVG Diagram</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="advice-card" data-feature="dynamic-interpretation-advice">
+      <div class="advice-title" id="advice-header">What this means &amp; Recommended Actions</div>
+      <div class="advice-body" id="advice-text">
+        Analyzing optical coverage, room geometry boundaries, and focus settings...
+      </div>
+      <div class="disclaimer">Estimate only - verify with a qualified professional before relying on it.</div>
+    </section>
+  </main>
+
+  <div class="pro-toast" id="pro-toast">
+    Available in the full version: <a href="#" id="pro-link-btn">Upgrade to PRO</a>
+  </div>
+
+  <script>
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/nwswj";
+
+    // Scenario Presets
+    const PRESETS = [
+      {
+        name: "Architectural Interior: Tight Room Corner Shot",
+        values: {"sensorFormat":"36x24","focalLength":16,"aperture":8,"roomWidth":5,"roomDepth":4,"cameraX":0.5,"cameraY":0.5,"cameraAngle":45,"subjectX":4.2,"subjectY":3.5,"subjectWidth":2.5,"subjectHeight":2.2}
+      },
+      {
+        name: "Environmental Portrait: Studio Framing",
+        values: {"sensorFormat":"23.6x15.6","focalLength":50,"aperture":2.8,"roomWidth":8,"roomDepth":6,"cameraX":4,"cameraY":1,"cameraAngle":90,"subjectX":4,"subjectY":4.5,"subjectWidth":1.2,"subjectHeight":1.8}
+      },
+      {
+        name: "Facade Elevation: Telephoto Exterior",
+        values: {"sensorFormat":"44x33","focalLength":120,"aperture":11,"roomWidth":35,"roomDepth":25,"cameraX":17.5,"cameraY":2,"cameraAngle":90,"subjectX":17.5,"subjectY":22,"subjectWidth":12,"subjectHeight":8}
+      }
+    ];
+
+    // State object
+    let state = {
+      sensorPreset: "36x24",
+      sensorWidth: 36,
+      sensorHeight: 24,
+      focalLength: 16,
+      aperture: 8,
+      coc: 0.029,
+      roomWidth: 5,
+      roomDepth: 4,
+      cameraX: 0.5,
+      cameraY: 0.5,
+      cameraAngle: 45,
+      subjectX: 4.2,
+      subjectY: 3.5,
+      subjectWidth: 2.5,
+      subjectHeight: 2.2,
+      dualEnabled: true,
+      dualSensorPreset: "23.6x15.6",
+      dualSensorWidth: 23.6,
+      dualSensorHeight: 15.6,
+      dualFocalLength: 35
+    };
+
+    // DOM Elements Cache
+    const el = {
+      presetSelect: document.getElementById('preset-select'),
+      sensorPreset: document.getElementById('sensor-preset'),
+      customWGroup: document.getElementById('custom-w-group'),
+      customHGroup: document.getElementById('custom-h-group'),
+      sensorW: document.getElementById('sensor-w'),
+      sensorH: document.getElementById('sensor-h'),
+      focalSlider: document.getElementById('focal-slider'),
+      focalLength: document.getElementById('focal-length'),
+      focalVal: document.getElementById('focal-val'),
+      aperture: document.getElementById('aperture'),
+      cocInput: document.getElementById('coc-input'),
+      
+      roomW: document.getElementById('room-w'),
+      roomD: document.getElementById('room-d'),
+      camX: document.getElementById('cam-x'),
+      camY: document.getElementById('cam-y'),
+      camAngle: document.getElementById('cam-angle'),
+      subX: document.getElementById('sub-x'),
+      subY: document.getElementById('sub-y'),
+      subW: document.getElementById('sub-w'),
+      subH: document.getElementById('sub-h'),
+
+      // Stats
+      statHaov: document.getElementById('stat-haov'),
+      statVaov: document.getElementById('stat-vaov'),
+      statDaov: document.getElementById('stat-daov'),
+      statCrop: document.getElementById('stat-crop'),
+      statEquiv: document.getElementById('stat-equiv'),
+      statDist: document.getElementById('stat-dist'),
+      statFwidth: document.getElementById('stat-fwidth'),
+      statFheight: document.getElementById('stat-fheight'),
+      statHfill: document.getElementById('stat-hfill'),
+      statVfill: document.getElementById('stat-vfill'),
+      statHyper: document.getElementById('stat-hyper'),
+      statTotalDof: document.getElementById('stat-total-dof'),
+      statNear: document.getElementById('stat-near'),
+      statFar: document.getElementById('stat-far'),
+
+      // Badges & advice
+      collisionBadge: document.getElementById('collision-badge'),
+      framingBadge: document.getElementById('framing-badge'),
+      adviceHeader: document.getElementById('advice-header'),
+      adviceText: document.getElementById('advice-text'),
+      
+      // DOF Bar
+      dofMidMark: document.getElementById('dof-mid-mark'),
+      dofMaxMark: document.getElementById('dof-max-mark'),
+      dofBarZone: document.getElementById('dof-bar-zone'),
+      dofBarSub: document.getElementById('dof-bar-sub'),
+
+      // Canvases
+      topdownCanvas: document.getElementById('topdown-canvas'),
+      viewfinderCanvas: document.getElementById('viewfinder-canvas'),
+
+      revSubW: document.getElementById('rev-sub-w'),
+      revRoomD: document.getElementById('rev-room-d'),
+      revBackOffset: document.getElementById('rev-back-offset'),
+      statRevMaxFocal: document.getElementById('stat-rev-max-focal'),
+      statRevMinDist: document.getElementById('stat-rev-min-dist'),
+      statRevRecLens: document.getElementById('stat-rev-rec-lens'),
+
+      dualEnable: document.getElementById('dual-enable'),
+      dualSensorPreset: document.getElementById('dual-sensor-preset'),
+      dualFocalLength: document.getElementById('dual-focal-length'),
+      dualFocalVal: document.getElementById('dual-focal-val'),
+      dualStatAovDiff: document.getElementById('dual-stat-aov-diff'),
+      dualStatWDiff: document.getElementById('dual-stat-w-diff'),
+      dualStatEqDist: document.getElementById('dual-stat-eq-dist'),
+      cropAspectSelect: document.getElementById('crop-aspect-select'),
+      statCropArea: document.getElementById('stat-crop-area'),
+      statCropDim: document.getElementById('stat-crop-dim'),
+      statCropFov: document.getElementById('stat-crop-fov'),
+
+      // Buttons
+      btnReset: document.getElementById('btn-reset'),
+      btnCopy: document.getElementById('btn-copy'),
+      btnExportJson: document.getElementById('btn-export-json'),
+      btnExportCsv: document.getElementById('btn-export-csv'),
+      btnSample: document.getElementById('btn-sample'),
+      btnPrint: document.getElementById('btn-print'),
+      proToast: document.getElementById('pro-toast'),
+      proLinkBtn: document.getElementById('pro-link-btn')
+    };
+
+    // Canvas Drag State
+    let draggingNode = null; // 'camera' | 'subject' | null
+
+    // Initialize Tool
+    function init() {
+      bindEvents();
+      if (!loadStateFromStorage()) {
+        loadPreset(0);
+      } else {
+        updateUIFromState();
+        calculateAndRender();
+      }
+      setupCanvasInteraction();
+      window.addEventListener('resize', renderAll);
+    }
+
+    function updateUIFromState() {
+      el.sensorPreset.value = state.sensorPreset || '36x24';
+      if (state.sensorPreset === 'custom') {
+        el.customWGroup.style.display = 'flex';
+        el.customHGroup.style.display = 'flex';
+      } else {
+        el.customWGroup.style.display = 'none';
+        el.customHGroup.style.display = 'none';
+      }
+      el.sensorW.value = state.sensorWidth;
+      el.sensorH.value = state.sensorHeight;
+      el.focalSlider.value = state.focalLength;
+      el.focalLength.value = state.focalLength;
+      el.focalVal.textContent = `${state.focalLength} mm`;
+      el.aperture.value = state.aperture;
+      el.cocInput.value = state.coc;
+      el.roomW.value = state.roomWidth;
+      el.roomD.value = state.roomDepth;
+      el.camX.value = state.cameraX;
+      el.camY.value = state.cameraY;
+      el.camAngle.value = state.cameraAngle;
+      el.subX.value = state.subjectX;
+      el.subY.value = state.subjectY;
+      el.subW.value = state.subjectWidth;
+      el.subH.value = state.subjectHeight;
+      if (el.revSubW) el.revSubW.value = state.revSubWidth ?? 4.0;
+      if (el.revRoomD) el.revRoomD.value = state.revRoomDepth ?? 3.5;
+      if (el.revBackOffset) el.revBackOffset.value = state.revBackOffset ?? 0.5;
+      if (el.dualEnable) el.dualEnable.checked = state.dualEnabled ?? true;
+      if (el.dualSensorPreset) el.dualSensorPreset.value = state.dualSensorPreset || '23.6x15.6';
+      if (el.dualFocalLength) el.dualFocalLength.value = state.dualFocalLength || 35;
+      if (el.dualFocalVal) el.dualFocalVal.textContent = `${state.dualFocalLength || 35} mm`;
+      if (el.cropAspectSelect) el.cropAspectSelect.value = state.cropAspect || 'native';
+    }
+
+    function showProNotice() {
+      el.proToast.innerHTML = `Available in the full version <a href="${PRO_LINK}">Upgrade to PRO</a>`;
+      el.proToast.style.display = 'block';
+      clearTimeout(el.proToast._timer);
+      el.proToast._timer = setTimeout(() => {
+        el.proToast.style.display = 'none';
+      }, 4000);
+    }
+
+    function saveStateToStorage() {
+      try {
+        localStorage.setItem('cam_planner_state', JSON.stringify(state));
+      } catch (e) {}
+    }
+
+    function loadStateFromStorage() {
+      try {
+        const saved = localStorage.getItem('cam_planner_state');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          state = { ...state, ...parsed };
+          return true;
+        }
+      } catch (e) {}
+      return false;
+    }
+
+    function updateCoCFromSensor() {
+      const diag = Math.sqrt(state.sensorWidth * state.sensorWidth + state.sensorHeight * state.sensorHeight);
+      // Standard CoC formula d/1500
+      state.coc = parseFloat((diag / 1500).toFixed(3));
+      el.cocInput.value = state.coc;
+    }
+
+    function bindEvents() {
+      // Preset Selection
+      el.presetSelect.addEventListener('change', (e) => {
+        const idx = parseInt(e.target.value, 10);
+        if (!PRO && idx !== 0) {
+          showProNotice();
+          el.presetSelect.value = 0;
+          return;
+        }
+        loadPreset(idx);
+      });
+
+      // Sensor Preset
+      el.sensorPreset.addEventListener('change', (e) => {
+        const val = e.target.value;
+        state.sensorPreset = val;
+        if (val === 'custom') {
+          el.customWGroup.style.display = 'flex';
+          el.customHGroup.style.display = 'flex';
+        } else {
+          el.customWGroup.style.display = 'none';
+          el.customHGroup.style.display = 'none';
+          const [w, h] = val.split('x').map(Number);
+          state.sensorWidth = w;
+          state.sensorHeight = h;
+          el.sensorW.value = w;
+          el.sensorH.value = h;
+          updateCoCFromSensor();
+        }
+        calculateAndRender();
+      });
+
+      // Custom Sensor Inputs
+      el.sensorW.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        const err = document.getElementById('err-sensor-w');
+        if (isNaN(val) || val <= 0) {
+          if (err) err.textContent = "Must be > 0";
+          return;
+        }
+        if (err) err.textContent = "";
+        state.sensorWidth = val;
+        updateCoCFromSensor();
+        calculateAndRender();
+      });
+      el.sensorH.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        const err = document.getElementById('err-sensor-h');
+        if (isNaN(val) || val <= 0) {
+          if (err) err.textContent = "Must be > 0";
+          return;
+        }
+        if (err) err.textContent = "";
+        state.sensorHeight = val;
+        updateCoCFromSensor();
+        calculateAndRender();
+      });
+
+      // Focal Length
+      const updateFocal = (val) => {
+        const num = parseFloat(val);
+        const err = document.getElementById('err-focal');
+        if (isNaN(num) || num < 10 || num > 600) {
+          if (err) err.textContent = "10 to 600 mm";
+          return;
+        }
+        if (err) err.textContent = "";
+        state.focalLength = num;
+        el.focalSlider.value = num;
+        el.focalLength.value = num;
+        el.focalVal.textContent = `${num} mm`;
+        calculateAndRender();
+      };
+      el.focalSlider.addEventListener('input', (e) => updateFocal(e.target.value));
+      el.focalLength.addEventListener('input', (e) => updateFocal(e.target.value));
+
+      // Aperture & CoC
+      el.aperture.addEventListener('change', (e) => {
+        state.aperture = parseFloat(e.target.value);
+        calculateAndRender();
+      });
+      el.cocInput.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        const err = document.getElementById('err-coc');
+        if (isNaN(val) || val <= 0) {
+          if (err) err.textContent = "Must be > 0";
+          return;
+        }
+        if (err) err.textContent = "";
+        state.coc = val;
+        calculateAndRender();
+      });
+
+      // Room & Camera inputs
+      const bindNum = (elem, key, min = 0) => {
+        elem.addEventListener('input', (e) => {
+          const val = parseFloat(e.target.value);
+          if (!isNaN(val) && val >= min) {
+            state[key] = val;
+            calculateAndRender();
+          }
+        });
+      };
+      bindNum(el.roomW, 'roomWidth', 1);
+      bindNum(el.roomD, 'roomDepth', 1);
+      bindNum(el.camX, 'cameraX', 0);
+      bindNum(el.camY, 'cameraY', 0);
+      bindNum(el.camAngle, 'cameraAngle', 0);
+      bindNum(el.subX, 'subjectX', 0);
+      bindNum(el.subY, 'subjectY', 0);
+      bindNum(el.subW, 'subjectWidth', 0.1);
+      bindNum(el.subH, 'subjectHeight', 0.1);
+
+      const updateRev = () => {
+        const sw = parseFloat(el.revSubW.value);
+        const rd = parseFloat(el.revRoomD.value);
+        const bo = parseFloat(el.revBackOffset.value);
+        if (!isNaN(sw) && sw > 0) state.revSubWidth = sw;
+        if (!isNaN(rd) && rd > 0) state.revRoomDepth = rd;
+        if (!isNaN(bo) && bo >= 0) state.revBackOffset = bo;
+        calculateAndRender();
+      };
+      if (el.revSubW) el.revSubW.addEventListener('input', updateRev);
+      if (el.revRoomD) el.revRoomD.addEventListener('input', updateRev);
+      if (el.revBackOffset) el.revBackOffset.addEventListener('input', updateRev);
+
+      if (el.dualEnable) {
+        el.dualEnable.addEventListener('change', (e) => {
+          state.dualEnabled = e.target.checked;
+          calculateAndRender();
+        });
+      }
+      if (el.dualSensorPreset) {
+        el.dualSensorPreset.addEventListener('change', (e) => {
+          state.dualSensorPreset = e.target.value;
+          const [w, h] = e.target.value.split('x').map(Number);
+          state.dualSensorWidth = w;
+          state.dualSensorHeight = h;
+          calculateAndRender();
+        });
+      }
+      if (el.dualFocalLength) {
+        el.dualFocalLength.addEventListener('input', (e) => {
+          const val = parseFloat(e.target.value);
+          if (!isNaN(val) && val > 0) {
+            state.dualFocalLength = val;
+            if (el.dualFocalVal) el.dualFocalVal.textContent = `${val} mm`;
+            calculateAndRender();
+          }
+        });
+      }
+      if (el.cropAspectSelect) {
+        el.cropAspectSelect.addEventListener('change', (e) => {
+          state.cropAspect = e.target.value;
+          calculateAndRender();
+        });
+      }
+
+      // Buttons
+      el.btnReset.addEventListener('click', () => loadPreset(0));
+
+      el.btnCopy.addEventListener('click', () => {
+        const summary = generateSummaryText();
+        copyToClipboard(summary);
+      });
+
+      el.btnExportJson.addEventListener('click', () => {
+        if (!PRO) { showProNotice(); return; }
+        const exportData = { 
+          metadata: { title: document.getElementById('export-title').value, notes: document.getElementById('export-notes').value, timestamp: new Date().toISOString() },
+          state 
+        };
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
+        downloadFile(dataStr, "camera_framing_setup.json");
+      });
+
+      el.btnExportCsv.addEventListener('click', () => {
+        if (!PRO) { showProNotice(); return; }
+        const title = document.getElementById('export-title').value || 'Untitled';
+        const notes = document.getElementById('export-notes').value || 'None';
+        const csvContent = `Project Title,${title}\nNotes,${notes}\n\n` + generateCsvContent();
+        const dataStr = "data:text/csv;charset=utf-8," + encodeURIComponent(csvContent);
+        downloadFile(dataStr, "camera_framing_metrics.csv");
+      });
+
+      el.btnSample.addEventListener('click', () => {
+        if (!PRO) { showProNotice(); return; }
+        loadPreset(1);
+      });
+
+      el.btnPrint.addEventListener('click', () => {
+        if (!PRO) { showProNotice(); return; }
+        window.print();
+      });
+
+      el.proLinkBtn.setAttribute('href', PRO_LINK);
+      if (document.getElementById('btn-export-svg')) {
+        document.getElementById('btn-export-svg').addEventListener('click', exportSVG);
+      }
+    }
+
+    function generateSVG() {
+      const { roomWidth, roomDepth, cameraX, cameraY, cameraAngle, focalLength } = state;
+      const { haovDeg, dist } = computed;
+      const scale = 100 / Math.max(roomWidth, roomDepth);
+      const cx = cameraX * scale, cy = (roomDepth - cameraY) * scale;
+      const rRad = (cameraAngle * Math.PI) / 180;
+      const hDeg = haovDeg / 2;
+      const x1 = cx + (dist * scale) * Math.cos(rRad - (hDeg * Math.PI / 180));
+      const y1 = cy - (dist * scale) * Math.sin(rRad - (hDeg * Math.PI / 180));
+      const x2 = cx + (dist * scale) * Math.cos(rRad + (hDeg * Math.PI / 180));
+      const y2 = cy - (dist * scale) * Math.sin(rRad + (hDeg * Math.PI / 180));
+      
+      return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="${roomWidth * scale}" height="${roomDepth * scale}" fill="#f8fafc" stroke="#334155" stroke-width="0.5"/>
+        <path d="M ${cx} ${cy} L ${x1} ${y1} L ${x2} ${y2} Z" fill="rgba(56, 189, 248, 0.2)" stroke="#0284c7" stroke-width="0.3"/>
+        <circle cx="${cx}" cy="${cy}" r="1" fill="#0284c7"/>
+        <text x="2" y="98" font-size="3" fill="#64748b">${state.sensorPreset} | ${focalLength}mm | f/${state.aperture}</text>
+      </svg>`;
+    }
+
+    function exportSVG() {
+      if (!PRO) { showProNotice(); return; }
+      const svgData = generateSVG();
+      const dataStr = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svgData);
+      downloadFile(dataStr, "camera_schematic.svg");
+    }
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert("Optical setup summary copied to clipboard!");
+        }).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        alert("Optical setup summary copied to clipboard!");
+      } catch (e) {
+        alert("Copying failed or unsupported in browser context.");
+      }
+    }
+
+    function downloadFile(dataUri, filename) {
+      const link = document.createElement('a');
+      link.setAttribute('href', dataUri);
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    function loadPreset(idx) {
+      const preset = PRESETS[idx];
+      if (!preset) return;
+      const val = preset.values;
+      state = { ...val, coc: state.coc };
+
+      el.sensorPreset.value = val.sensorFormat;
+      if (val.sensorFormat === 'custom') {
+        el.customWGroup.style.display = 'flex';
+        el.customHGroup.style.display = 'flex';
+      } else {
+        el.customWGroup.style.display = 'none';
+        el.customHGroup.style.display = 'none';
+        const [w, h] = val.sensorFormat.split('x').map(Number);
+        state.sensorWidth = w;
+        state.sensorHeight = h;
+        el.sensorW.value = w;
+        el.sensorH.value = h;
+      }
+
+      el.focalSlider.value = val.focalLength;
+      el.focalLength.value = val.focalLength;
+      el.focalVal.textContent = `${val.focalLength} mm`;
+      el.aperture.value = val.aperture;
+
+      el.roomW.value = val.roomWidth;
+      el.roomD.value = val.roomDepth;
+      el.camX.value = val.cameraX;
+      el.camY.value = val.cameraY;
+      el.camAngle.value = val.cameraAngle;
+      el.subX.value = val.subjectX;
+      el.subY.value = val.subjectY;
+      el.subW.value = val.subjectWidth;
+      el.subH.value = val.subjectHeight;
+
+      updateCoCFromSensor();
+      calculateAndRender();
+    }
+
+    // MAIN CALCULATIONS ENGINE
+    let computed = {};
+
+    function calculateAndRender() {
+      // 1. AOV Calculations
+      const f = state.focalLength;
+      const w = state.sensorWidth;
+      const h = state.sensorHeight;
+      const diag = Math.sqrt(w * w + h * h);
+
+      const haovRad = 2 * Math.atan(w / (2 * f));
+      const vaovRad = 2 * Math.atan(h / (2 * f));
+      const daovRad = 2 * Math.atan(diag / (2 * f));
+
+      const haovDeg = haovRad * (180 / Math.PI);
+      const vaovDeg = vaovRad * (180 / Math.PI);
+      const daovDeg = daovRad * (180 / Math.PI);
+
+      const ffDiag = Math.sqrt(36 * 36 + 24 * 24); // 43.2666mm
+      const cropFactor = ffDiag / diag;
+      const equivFocal = f * cropFactor;
+
+      // 2. Spatial Calculations
+      const dx = state.subjectX - state.cameraX;
+      const dy = state.subjectY - state.cameraY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      // Coverage dimensions at subject distance
+      const fieldWidthAtDist = 2 * dist * Math.tan(haovRad / 2);
+      const fieldHeightAtDist = 2 * dist * Math.tan(vaovRad / 2);
+
+      const subW = Math.max(0.01, state.subjectWidth || 0.1);
+      const subH = Math.max(0.01, state.subjectHeight || 0.1);
+
+      // Framing percentages
+      const hFillPct = fieldWidthAtDist > 0 ? (subW / fieldWidthAtDist) * 100 : 0;
+      const vFillPct = fieldHeightAtDist > 0 ? (subH / fieldHeightAtDist) * 100 : 0;
+
+      // Framing state badge
+      let framingState = 'Fits Frame';
+      let framingClass = 'badge-success';
+
+      if (hFillPct > 100 && vFillPct > 100) {
+        framingState = 'Over-framed';
+        framingClass = 'badge-danger';
+      } else if (hFillPct > 100) {
+        framingState = 'Horizontal Clipping';
+        framingClass = 'badge-warning';
+      } else if (vFillPct > 100) {
+        framingState = 'Vertical Clipping';
+        framingClass = 'badge-warning';
+      }
+
+      // 3. Depth of Field Calculations
+      const N = Math.max(0.7, state.aperture || 8);
+      const c = Math.max(0.0001, state.coc || 0.029); // mm
+      const fMeter = f / 1000;
+      const denom = N * c;
+      const hyperfocalM = denom > 0 ? (((f * f) / denom) / 1000 + fMeter) : 0;
+
+      let nearLimitM = 0;
+      let farLimitM = Infinity;
+      let totalDofM = Infinity;
+
+      if (dist > 0 && hyperfocalM > 0) {
+        const nearDenom = hyperfocalM + (dist - fMeter);
+        nearLimitM = nearDenom > 0 ? (hyperfocalM * dist) / nearDenom : 0;
+        
+        const farDenom = hyperfocalM - (dist - fMeter);
+        if (farDenom > 0) {
+          farLimitM = (hyperfocalM * dist) / farDenom;
+          totalDofM = farLimitM - nearLimitM;
+        } else {
+          farLimitM = Infinity;
+          totalDofM = Infinity;
+        }
+      }
+
+      // Dual Setup Calculations
+      const dualW = state.dualSensorWidth || 23.6;
+      const dualF = state.dualFocalLength || 35;
+      const dualHaovRad = 2 * Math.atan(dualW / (2 * dualF));
+      const dualHaovDeg = dualHaovRad * (180 / Math.PI);
+      const dualFieldWidth = 2 * dist * Math.tan(dualHaovRad / 2);
+
+      const aovDiff = haovDeg - dualHaovDeg;
+      const widthDiff = fieldWidthAtDist - dualFieldWidth;
+      const eqDist = (dualFieldWidth > 0 && dualW > 0) ? (fieldWidthAtDist * dualF) / dualW : 0;
+
+      let activeAreaPct = 100, effW = w, effH = h, cropRatioVal = null;
+      if (state.cropAspect && state.cropAspect !== 'native') {
+        const parts = state.cropAspect.split(':').map(Number);
+        if (parts.length === 2 && parts[0] > 0 && parts[1] > 0) {
+          cropRatioVal = parts[0] / parts[1];
+          const nativeAspect = w / h;
+          if (cropRatioVal >= nativeAspect) {
+            effW = w;
+            effH = w / cropRatioVal;
+          } else {
+            effH = h;
+            effW = h * cropRatioVal;
+          }
+          activeAreaPct = ((effW * effH) / (w * h)) * 100;
+        }
+      }
+      const effFieldW = (effW / w) * fieldWidthAtDist;
+      const effFieldH = (effH / h) * fieldHeightAtDist;
+
+      computed = {
+        haovDeg, vaovDeg, daovDeg, cropFactor, equivFocal,
+        dist, fieldWidthAtDist, fieldHeightAtDist,
+        hFillPct, vFillPct, framingState, framingClass,
+        hyperfocalM, nearLimitM, farLimitM, totalDofM,
+        dualHaovDeg, dualFieldWidth, aovDiff, widthDiff, eqDist,
+        cropRatioVal, effW, effH, activeAreaPct, effFieldW, effFieldH,
+        wallCollision: false
+      };
+
+      saveStateToStorage();
+      updateDOMStats();
+      updateReverseSolver();
+      renderAll();
+      updateAdviceBlock();
+    }
+
+    function updateReverseSolver() {
+      const sw = state.revSubWidth ?? 4.0;
+      const rd = state.revRoomDepth ?? 3.5;
+      const bo = state.revBackOffset ?? 0.5;
+      const availDist = Math.max(0, rd - bo);
+      const sensorW = state.sensorWidth || 36;
+      const f = state.focalLength || 16;
+
+      const maxFocal = sw > 0 ? (availDist * sensorW) / sw : 0;
+      const minDist = sensorW > 0 ? (f * sw) / sensorW : 0;
+
+      const steps = [12, 14, 16, 18, 20, 24, 28, 35, 50, 85, 105, 135, 200];
+      let recStep = steps.filter(s => s <= maxFocal).pop();
+      const recStr = recStep ? `${recStep}mm` : (maxFocal > 0 ? `${maxFocal.toFixed(1)}mm` : 'N/A');
+
+      if (el.statRevMaxFocal) el.statRevMaxFocal.textContent = maxFocal > 0 ? `${maxFocal.toFixed(1)} mm` : 'N/A';
+      if (el.statRevMinDist) el.statRevMinDist.textContent = `${minDist.toFixed(2)} m`;
+      if (el.statRevRecLens) el.statRevRecLens.textContent = recStr;
+    }
+
+    function updateDOMStats() {
+      el.statHaov.textContent = `${computed.haovDeg.toFixed(2)}°`;
+      el.statVaov.textContent = `${computed.vaovDeg.toFixed(2)}°`;
+      el.statDaov.textContent = `${computed.daovDeg.toFixed(2)}°`;
+      el.statCrop.textContent = `${computed.cropFactor.toFixed(2)}x`;
+      el.statEquiv.textContent = `${computed.equivFocal.toFixed(1)} mm`;
+
+      el.statDist.textContent = `${computed.dist.toFixed(2)} m`;
+      el.statFwidth.textContent = `${computed.fieldWidthAtDist.toFixed(2)} m`;
+      el.statFheight.textContent = `${computed.fieldHeightAtDist.toFixed(2)} m`;
+
+      el.statHfill.textContent = `${computed.hFillPct.toFixed(1)}%`;
+      el.statVfill.textContent = `${computed.vFillPct.toFixed(1)}%`;
+      el.framingBadge.textContent = computed.framingState;
+      el.framingBadge.className = `badge ${computed.framingClass}`;
+
+      el.statHyper.textContent = `${computed.hyperfocalM.toFixed(2)} m`;
+      el.statNear.textContent = `${computed.nearLimitM.toFixed(2)} m`;
+      el.statFar.textContent = (isFinite(computed.farLimitM) && !isNaN(computed.farLimitM)) ? `${computed.farLimitM.toFixed(2)} m` : 'Infinite';
+      el.statTotalDof.textContent = (isFinite(computed.totalDofM) && !isNaN(computed.totalDofM)) ? `${computed.totalDofM.toFixed(2)} m` : 'Infinite';
+
+      // Update DOF Visual Bar
+      const maxRange = Math.max(computed.dist * 1.8, computed.hyperfocalM * 1.2, 10);
+      el.dofMidMark.textContent = `Target ${computed.dist.toFixed(1)}m`;
+      el.dofMaxMark.textContent = `${maxRange.toFixed(1)}m`;
+
+      const nearPct = Math.min(100, Math.max(0, (computed.nearLimitM / maxRange) * 100));
+      const farPct = isFinite(computed.farLimitM) ? Math.min(100, Math.max(0, (computed.farLimitM / maxRange) * 100)) : 100;
+      const subPct = Math.min(100, Math.max(0, (computed.dist / maxRange) * 100));
+
+      el.dofBarZone.style.left = `${nearPct}%`;
+      el.dofBarZone.style.width = `${farPct - nearPct}%`;
+      el.dofBarSub.style.left = `${subPct}%`;
+
+      if (el.dualStatAovDiff) el.dualStatAovDiff.textContent = `${computed.aovDiff >= 0 ? '+' : ''}${computed.aovDiff.toFixed(2)}°`;
+      if (el.dualStatWDiff) el.dualStatWDiff.textContent = `${computed.widthDiff >= 0 ? '+' : ''}${computed.widthDiff.toFixed(2)} m`;
+      if (el.dualStatEqDist) el.dualStatEqDist.textContent = `${computed.eqDist.toFixed(2)} m`;
+
+      if (el.statCropArea) el.statCropArea.textContent = `${computed.activeAreaPct.toFixed(1)}%`;
+      if (el.statCropDim) el.statCropDim.textContent = `${computed.effW.toFixed(1)} × ${computed.effH.toFixed(1)} mm`;
+      if (el.statCropFov) el.statCropFov.textContent = `${computed.effFieldW.toFixed(2)} × ${computed.effFieldH.toFixed(2)} m`;
+    }
+
+    // CANVAS RENDERING ENGINES
+    function renderAll() {
+      renderTopdownCanvas();
+      renderViewfinderCanvas();
+    }
+
+    // Line intersection helper for wall collisions
+    function getLineIntersection(p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y) {
+      const s1_x = p1_x - p0_x;
+      const s1_y = p1_y - p0_y;
+      const s2_x = p3_x - p2_x;
+      const s2_y = p3_y - p2_y;
+
+      const denom = (-s2_x * s1_y + s1_x * s2_y);
+      if (Math.abs(denom) < 1e-9) return null;
+
+      const s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / denom;
+      const t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / denom;
+
+      if (s >= 0 && s <= 1 && t >= 0 && t <= 1) {
+        return {
+          x: p0_x + (t * s1_x),
+          y: p0_y + (t * s1_y),
+          t: t
+        };
+      }
+      return null;
+    }
+
+    function renderTopdownCanvas() {
+      const cvs = el.topdownCanvas;
+      const parent = cvs.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+      
+      cvs.width = parent.clientWidth * dpr;
+      cvs.height = parent.clientHeight * dpr;
+
+      const ctx = cvs.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      const width = parent.clientWidth;
+      const height = parent.clientHeight;
+      ctx.clearRect(0, 0, width, height);
+
+      // Coordinate System Setup
+      const padding = 40;
+      const roomW = state.roomWidth;
+      const roomD = state.roomDepth;
+
+      const scaleX = (width - padding * 2) / roomW;
+      const scaleY = (height - padding * 2) / roomD;
+      const scale = Math.min(scaleX, scaleY);
+
+      const offsetX = padding + (width - padding * 2 - roomW * scale) / 2;
+      const offsetY = padding + (height - padding * 2 - roomD * scale) / 2;
+
+      // Helper functions for coord translation (Math origin bottom-left inside room)
+      const toCanvasX = (rx) => offsetX + rx * scale;
+      const toCanvasY = (ry) => offsetY + (roomD - ry) * scale;
+      const toRoomX = (cx) => (cx - offsetX) / scale;
+      const toRoomY = (cy) => roomD - ((cy - offsetY) / scale);
+
+      // Store canvas transform for mouse events
+      cvs.toRoomX = toRoomX;
+      cvs.toRoomY = toRoomY;
+
+      // Draw Grid
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--border-color') || '#334155';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let x = 0; x <= roomW; x += 1) {
+        ctx.moveTo(toCanvasX(x), toCanvasY(0));
+        ctx.lineTo(toCanvasX(x), toCanvasY(roomD));
+      }
+      for (let y = 0; y <= roomD; y += 1) {
+        ctx.moveTo(toCanvasX(0), toCanvasY(y));
+        ctx.lineTo(toCanvasX(roomW), toCanvasY(y));
+      }
+      ctx.stroke();
+
+      // Draw Room Walls
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-primary') || '#ffffff';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(toCanvasX(0), toCanvasY(roomD), roomW * scale, roomD * scale);
+
+      // Wall Segments in Room Coords
+      const walls = [
+        { p1: {x:0, y:0}, p2: {x:roomW, y:0} },             // Bottom
+        { p1: {x:roomW, y:0}, p2: {x:roomW, y:roomD} },     // Right
+        { p1: {x:roomW, y:roomD}, p2: {x:0, y:roomD} },     // Top
+        { p1: {x:0, y:roomD}, p2: {x:0, y:0} }              // Left
+      ];
+
+      // Camera Position & Direction
+      const camAngleRad = (state.cameraAngle * Math.PI) / 180;
+      const halfHaovRad = (computed.haovDeg * Math.PI) / 360;
+
+      const leftRayAngle = camAngleRad - halfHaovRad;
+      const rightRayAngle = camAngleRad + halfHaovRad;
+
+      const rayLength = Math.max(roomW, roomD) * 2; // extended for intersection
+
+      const getRayEnd = (angle) => ({
+        x: state.cameraX + rayLength * Math.cos(angle),
+        y: state.cameraY + rayLength * Math.sin(angle)
+      });
+
+      const leftRayEnd = getRayEnd(leftRayAngle);
+      const rightRayEnd = getRayEnd(rightRayAngle);
+
+      // Calculate Wall Intersections
+      let leftHit = null;
+      let rightHit = null;
+      let wallCollisionDetected = false;
+
+      walls.forEach(wall => {
+        const hitL = getLineIntersection(state.cameraX, state.cameraY, leftRayEnd.x, leftRayEnd.y, wall.p1.x, wall.p1.y, wall.p2.x, wall.p2.y);
+        if (hitL && (!leftHit || hitL.t < leftHit.t)) leftHit = hitL;
+
+        const hitR = getLineIntersection(state.cameraX, state.cameraY, rightRayEnd.x, rightRayEnd.y, wall.p1.x, wall.p1.y, wall.p2.x, wall.p2.y);
+        if (hitR && (!rightHit || hitR.t < rightHit.t)) rightHit = hitR;
+      });
+
+      const maxFrustumDist = computed.dist * 1.5;
+      const pLeft = leftHit && leftHit.t * rayLength < maxFrustumDist ? leftHit : {
+        x: state.cameraX + maxFrustumDist * Math.cos(leftRayAngle),
+        y: state.cameraY + maxFrustumDist * Math.sin(leftRayAngle)
+      };
+      const pRight = rightHit && rightHit.t * rayLength < maxFrustumDist ? rightHit : {
+        x: state.cameraX + maxFrustumDist * Math.cos(rightRayAngle),
+        y: state.cameraY + maxFrustumDist * Math.sin(rightRayAngle)
+      };
+
+      if ((leftHit && leftHit.t * rayLength <= computed.dist) || (rightHit && rightHit.t * rayLength <= computed.dist)) {
+        wallCollisionDetected = true;
+      }
+      computed.wallCollision = wallCollisionDetected;
+
+      // Secondary Frustum Cone Overlay (Amber)
+      if (state.dualEnabled) {
+        const halfHaovBRad = (computed.dualHaovDeg * Math.PI) / 360;
+        const leftRayAngleB = camAngleRad - halfHaovBRad;
+        const rightRayAngleB = camAngleRad + halfHaovBRad;
+
+        const getRayEndB = (angle) => ({
+          x: state.cameraX + rayLength * Math.cos(angle),
+          y: state.cameraY + rayLength * Math.sin(angle)
+        });
+
+        const leftRayEndB = getRayEndB(leftRayAngleB);
+        const rightRayEndB = getRayEndB(rightRayAngleB);
+        let leftHitB = null, rightHitB = null;
+
+        walls.forEach(wall => {
+          const hitL = getLineIntersection(state.cameraX, state.cameraY, leftRayEndB.x, leftRayEndB.y, wall.p1.x, wall.p1.y, wall.p2.x, wall.p2.y);
+          if (hitL && (!leftHitB || hitL.t < leftHitB.t)) leftHitB = hitL;
+          const hitR = getLineIntersection(state.cameraX, state.cameraY, rightRayEndB.x, rightRayEndB.y, wall.p1.x, wall.p1.y, wall.p2.x, wall.p2.y);
+          if (hitR && (!rightHitB || hitR.t < rightHitB.t)) rightHitB = hitR;
+        });
+
+        const pLeftB = leftHitB && leftHitB.t * rayLength < maxFrustumDist ? leftHitB : {
+          x: state.cameraX + maxFrustumDist * Math.cos(leftRayAngleB),
+          y: state.cameraY + maxFrustumDist * Math.sin(leftRayAngleB)
+        };
+        const pRightB = rightHitB && rightHitB.t * rayLength < maxFrustumDist ? rightHitB : {
+          x: state.cameraX + maxFrustumDist * Math.cos(rightRayAngleB),
+          y: state.cameraY + maxFrustumDist * Math.sin(rightRayAngleB)
+        };
+
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.15)';
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([6, 3]);
+
+        ctx.beginPath();
+        ctx.moveTo(toCanvasX(state.cameraX), toCanvasY(state.cameraY));
+        ctx.lineTo(toCanvasX(pLeftB.x), toCanvasY(pLeftB.y));
+        ctx.lineTo(toCanvasX(pRightB.x), toCanvasY(pRightB.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // Primary Frustum Cone (Cyan)
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--frustum-fill') || 'rgba(56, 189, 248, 0.18)';
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--frustum-stroke') || '#38bdf8';
+      ctx.lineWidth = 2;
+
+      ctx.beginPath();
+      ctx.moveTo(toCanvasX(state.cameraX), toCanvasY(state.cameraY));
+      ctx.lineTo(toCanvasX(pLeft.x), toCanvasY(pLeft.y));
+      ctx.lineTo(toCanvasX(pRight.x), toCanvasY(pRight.y));
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Render Wall Collision Highlights if intersected
+      if (leftHit && leftHit.t * rayLength < maxFrustumDist) {
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(toCanvasX(leftHit.x), toCanvasY(leftHit.y), 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      if (rightHit && rightHit.t * rayLength < maxFrustumDist) {
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(toCanvasX(rightHit.x), toCanvasY(rightHit.y), 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Update Wall Collision Badge
+      if (wallCollisionDetected) {
+        el.collisionBadge.textContent = 'Wall Collision Warning';
+        el.collisionBadge.className = 'badge badge-danger';
+      } else {
+        el.collisionBadge.textContent = 'Clear Line of Sight';
+        el.collisionBadge.className = 'badge badge-success';
+      }
+
+      // Target Line of Sight
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(toCanvasX(state.cameraX), toCanvasY(state.cameraY));
+      ctx.lineTo(toCanvasX(state.subjectX), toCanvasY(state.subjectY));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Draw Subject Target Node
+      const subCX = toCanvasX(state.subjectX);
+      const subCY = toCanvasY(state.subjectY);
+      const subWPx = state.subjectWidth * scale;
+
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(subCX, subCY, 10, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(subCX, subCY, 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw Subject Physical Width Indicator Box
+      ctx.save();
+      ctx.translate(subCX, subCY);
+      ctx.rotate(-camAngleRad + Math.PI / 2);
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.7)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(-subWPx / 2, 0);
+      ctx.lineTo(subWPx / 2, 0);
+      ctx.stroke();
+      ctx.restore();
+
+      // Draw Camera Node
+      const camCX = toCanvasX(state.cameraX);
+      const camCY = toCanvasY(state.cameraY);
+
+      ctx.fillStyle = '#0284c7';
+      ctx.beginPath();
+      ctx.arc(camCX, camCY, 12, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Camera Heading Vector
+      const dirLength = 22;
+      const dirX = camCX + dirLength * Math.cos(camAngleRad);
+      const dirY = camCY - dirLength * Math.sin(camAngleRad); // inverted Y for canvas
+
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(camCX, camCY);
+      ctx.lineTo(dirX, dirY);
+      ctx.stroke();
+    }
+
+    function renderViewfinderCanvas() {
+      const cvs = el.viewfinderCanvas;
+      const parent = cvs.parentElement;
+      const dpr = window.devicePixelRatio || 1;
+
+      cvs.width = parent.clientWidth * dpr;
+      cvs.height = parent.clientHeight * dpr;
+
+      const ctx = cvs.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      const width = parent.clientWidth;
+      const height = parent.clientHeight;
+      ctx.clearRect(0, 0, width, height);
+
+      // Viewfinder Frame (Sensor Aspect Ratio)
+      const aspect = state.sensorWidth / state.sensorHeight;
+      let frameW = width * 0.85;
+      let frameH = frameW / aspect;
+
+      if (frameH > height * 0.85) {
+        frameH = height * 0.85;
+        frameW = frameH * aspect;
+      }
+
+      const frameX = (width - frameW) / 2;
+      const frameY = (height - frameH) / 2;
+
+      // Draw Sensor Frame Outline
+      ctx.fillStyle = '#0a0f1d';
+      ctx.fillRect(frameX, frameY, frameW, frameH);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(frameX, frameY, frameW, frameH);
+
+      // Rule of Thirds Grid
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      // Verticals
+      ctx.moveTo(frameX + frameW / 3, frameY);
+      ctx.lineTo(frameX + frameW / 3, frameY + frameH);
+      ctx.moveTo(frameX + (2 * frameW) / 3, frameY);
+      ctx.lineTo(frameX + (2 * frameW) / 3, frameY + frameH);
+      // Horizontals
+      ctx.moveTo(frameX, frameY + frameH / 3);
+      ctx.lineTo(frameX + frameW, frameY + frameH / 3);
+      ctx.moveTo(frameX, frameY + (2 * frameH) / 3);
+      ctx.lineTo(frameX + frameW, frameY + (2 * frameH) / 3);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Center Crosshair
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+      ctx.beginPath();
+      ctx.moveTo(width / 2 - 8, height / 2);
+      ctx.lineTo(width / 2 + 8, height / 2);
+      ctx.moveTo(width / 2, height / 2 - 8);
+      ctx.lineTo(width / 2, height / 2 + 8);
+      ctx.stroke();
+
+      // Render Subject Bounding Box Overlay
+      const subScaledW = (computed.hFillPct / 100) * frameW;
+      const subScaledH = (computed.vFillPct / 100) * frameH;
+
+      const subX = (width - subScaledW) / 2;
+      const subY = (height - subScaledH) / 2;
+
+      const isClipped = computed.hFillPct > 100 || computed.vFillPct > 100;
+      ctx.fillStyle = isClipped ? 'rgba(239, 68, 68, 0.25)' : 'rgba(16, 185, 129, 0.25)';
+      ctx.strokeStyle = isClipped ? '#ef4444' : '#10b981';
+      ctx.lineWidth = 2;
+
+      ctx.fillRect(subX, subY, subScaledW, subScaledH);
+      ctx.strokeRect(subX, subY, subScaledW, subScaledH);
+
+      if (computed.cropRatioVal) {
+        const nativeAspect = state.sensorWidth / state.sensorHeight;
+        let cropW = frameW, cropH = frameH, cropX = frameX, cropY = frameY;
+        if (computed.cropRatioVal >= nativeAspect) {
+          cropH = frameW / computed.cropRatioVal;
+          cropY = frameY + (frameH - cropH) / 2;
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+          ctx.fillRect(frameX, frameY, frameW, (frameH - cropH) / 2);
+          ctx.fillRect(frameX, cropY + cropH, frameW, (frameH - cropH) / 2);
+        } else {
+          cropW = frameH * computed.cropRatioVal;
+          cropX = frameX + (frameW - cropW) / 2;
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+          ctx.fillRect(frameX, frameY, (frameW - cropW) / 2, frameH);
+          ctx.fillRect(cropX + cropW, frameY, (frameW - cropW) / 2, frameH);
+        }
+        ctx.strokeStyle = '#f59e0b';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(cropX, cropY, cropW, cropH);
+      }
+    }
+
+    // CANVAS MOUSE INTERACTION (DRAGGING NODES)
+    function setupCanvasInteraction() {
+      const cvs = el.topdownCanvas;
+
+      const getCoords = (e) => {
+        const rect = cvs.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const cx = clientX - rect.left;
+        const cy = clientY - rect.top;
+        return { rx: cvs.toRoomX(cx), ry: cvs.toRoomY(cy) };
+      };
+
+      const onStart = (e) => {
+        if (!cvs.toRoomX) return;
+        const { rx, ry } = getCoords(e);
+
+        const camDist = Math.sqrt((rx - state.cameraX)**2 + (ry - state.cameraY)**2);
+        const subDist = Math.sqrt((rx - state.subjectX)**2 + (ry - state.subjectY)**2);
+
+        if (camDist < 0.6) {
+          draggingNode = 'camera';
+        } else if (subDist < 0.6) {
+          draggingNode = 'subject';
+        }
+      };
+
+      const onMove = (e) => {
+        if (!draggingNode) return;
+        e.preventDefault();
+        const { rx, ry } = getCoords(e);
+
+        const clampedX = Math.max(0, Math.min(state.roomWidth, parseFloat(rx.toFixed(2))));
+        const clampedY = Math.max(0, Math.min(state.roomDepth, parseFloat(ry.toFixed(2))));
+
+        if (draggingNode === 'camera') {
+          state.cameraX = clampedX;
+          state.cameraY = clampedY;
+          el.camX.value = clampedX;
+          el.camY.value = clampedY;
+        } else if (draggingNode === 'subject') {
+          state.subjectX = clampedX;
+          state.subjectY = clampedY;
+          el.subX.value = clampedX;
+          el.subY.value = clampedY;
+        }
+
+        calculateAndRender();
+      };
+
+      const onEnd = () => { draggingNode = null; };
+
+      cvs.addEventListener('mousedown', onStart);
+      cvs.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onEnd);
+
+      cvs.addEventListener('touchstart', onStart, { passive: false });
+      cvs.addEventListener('touchmove', onMove, { passive: false });
+      window.addEventListener('touchend', onEnd);
+    }
+
+    // DYNAMIC INTERPRETATION BLOCK
+    function updateAdviceBlock() {
+      let advice = [];
+
+      // Focal Length & AOV Analysis
+      if (computed.haovDeg > 75) {
+        advice.push(`<strong>Ultra-Wide Coverage (${computed.haovDeg.toFixed(1)}°):</strong> Excellent for tight interior corners and spatial exaggeration. Watch out for edge keystoning and perspective distortion on vertical architectural elements.`);
+      } else if (computed.haovDeg >= 40 && computed.haovDeg <= 75) {
+        advice.push(`<strong>Standard Wide Field (${computed.haovDeg.toFixed(1)}°):</strong> Natural architectural perspective matching human central field of vision. Provides balanced room context without strong barrel distortion.`);
+      } else {
+        advice.push(`<strong>Telephoto Narrow Field (${computed.haovDeg.toFixed(1)}°):</strong> High compression. Requires substantial working distance (${computed.dist.toFixed(1)}m). Ideal for exterior detail isolation or facade elevations.`);
+      }
+
+      // Wall Occlusion Analysis
+      if (computed.wallCollision) {
+        advice.push(`⚠️ <strong>Boundary Collision:</strong> One or both horizontal FOV frustum rays intersect the room side walls before reaching the subject. Step back, widen the angle, or use a wider lens to capture full horizontal room span.`);
+      } else {
+        advice.push(`✓ <strong>Clear Spatial Clearance:</strong> Full frustum projection fits within the boundary limits of the room with no side-wall clipping.`);
+      }
+
+      // Framing Analysis
+      if (computed.framingState === 'Fits Frame') {
+        advice.push(`✓ <strong>Framing Fit:</strong> The subject (${state.subjectWidth}m × ${state.subjectHeight}m) fills ${computed.hFillPct.toFixed(1)}% horizontal and ${computed.vFillPct.toFixed(1)}% vertical sensor frame height.`);
+      } else {
+        advice.push(`⚠️ <strong>Framing Clipping (${computed.framingState}):</strong> Subject exceeds sensor boundaries at current ${state.focalLength}mm focal length and ${computed.dist.toFixed(1)}m distance. Increase camera distance or shorten focal length.`);
+      }
+
+      // Depth of Field & Hyperfocal Analysis
+      if (computed.nearLimitM <= computed.dist && (computed.farLimitM >= computed.dist || !isFinite(computed.farLimitM))) {
+        advice.push(`✓ <strong>Focus Sharpness:</strong> Target subject at ${computed.dist.toFixed(1)}m falls fully within the sharp depth-of-field zone (${computed.nearLimitM.toFixed(2)}m to ${isFinite(computed.farLimitM)?computed.farLimitM.toFixed(2)+'m':'Infinite'}).`);
+      } else {
+        advice.push(`⚠️ <strong>Soft Target Warning:</strong> Target distance is outside the calculated depth of field at f/${state.aperture}. Adjust aperture or focus distance.`);
+      }
+
+      if (computed.dist >= computed.hyperfocalM) {
+        advice.push(`🎯 <strong>Hyperfocal Achieved:</strong> Focusing at ${state.focalLength}mm f/${state.aperture} achieves background sharpness to infinity.`);
+      } else {
+        advice.push(`💡 <strong>Hyperfocal Tip:</strong> To extend depth of field to infinity, set focus distance to the Hyperfocal Distance of ${computed.hyperfocalM.toFixed(2)}m.`);
+      }
+
+      el.adviceText.innerHTML = advice.map(item => `<p style="margin-bottom:8px;">${item}</p>`).join('');
+    }
+
+    // EXPORT GENERATORS
+    function generateSummaryText() {
+      return `Camera FOV & Architectural Framing Report
+----------------------------------------
+Sensor Preset: ${state.sensorPreset} (${state.sensorWidth}x${state.sensorHeight} mm)
+Lens Focal Length: ${state.focalLength} mm (35mm Equiv: ${computed.equivFocal.toFixed(1)} mm)
+Aperture: f/${state.aperture} | CoC: ${state.coc} mm
+
+Optical Coverage:
+  - Horizontal AOV: ${computed.haovDeg.toFixed(2)}°
+  - Vertical AOV: ${computed.vaovDeg.toFixed(2)}°
+  - Field Width at Target (${computed.dist.toFixed(2)}m): ${computed.fieldWidthAtDist.toFixed(2)} m
+  - Field Height at Target (${computed.dist.toFixed(2)}m): ${computed.fieldHeightAtDist.toFixed(2)} m
+
+Framing Analysis:
+  - Subject Fill: H ${computed.hFillPct.toFixed(1)}% | V ${computed.vFillPct.toFixed(1)}%
+  - Framing State: ${computed.framingState}
+  - Boundary Collision: ${computed.wallCollision ? 'YES' : 'NO'}
+
+Depth of Field Engine:
+  - Hyperfocal Distance: ${computed.hyperfocalM.toFixed(2)} m
+  - Near Limit: ${computed.nearLimitM.toFixed(2)} m
+  - Far Limit: ${(isFinite(computed.farLimitM) && !isNaN(computed.farLimitM)) ? computed.farLimitM.toFixed(2) + ' m' : 'Infinite'}
+  - Total DOF: ${(isFinite(computed.totalDofM) && !isNaN(computed.totalDofM)) ? computed.totalDofM.toFixed(2) + ' m' : 'Infinite'}
+`;
+    }
+
+    function generateCsvContent() {
+      return `Metric,Value,Unit
+Sensor Format,${state.sensorPreset},mm
+Focal Length,${state.focalLength},mm
+Aperture,f/${state.aperture},f-stop
+Horizontal AOV,${computed.haovDeg.toFixed(2)},deg
+Vertical AOV,${computed.vaovDeg.toFixed(2)},deg
+Distance to Subject,${computed.dist.toFixed(2)},m
+Field Width at Distance,${computed.fieldWidthAtDist.toFixed(2)},m
+Field Height at Distance,${computed.fieldHeightAtDist.toFixed(2)},m
+Framing State,${computed.framingState},status
+Hyperfocal Distance,${computed.hyperfocalM.toFixed(2)},m
+Near DOF Limit,${computed.nearLimitM.toFixed(2)},m
+Far DOF Limit,${(isFinite(computed.farLimitM) && !isNaN(computed.farLimitM))?computed.farLimitM.toFixed(2):'Infinite'},m
+`;
+    }
+
+    // Run Initialization
+    document.addEventListener('DOMContentLoaded', init);
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Camera FOV &amp; Architectural Framing Planner is a spatial 2D simulator built for architectural photographers, videographers, and location scouts. It lets you visualize lens field of view, sensor crop overlays, and depth of field directly on room dimensions or floor plans before your shoot begins. Try the free web version in your browser or grab the offline desktop pack for set use.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Input your room dimensions or upload a 2D floor plan image into the canvas.</li><li>Select your camera sensor size (Full Frame, APS-C, MFT) and target focal length.</li><li>Position and rotate the camera icon to display real-time field-of-view cones, crop overlays, and hyperfocal points.</li><li>Export your completed spatial diagrams as SVG files or PDF shot planning reports.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">Is there a mapping tool that will let me visualize a lens&#39;s angle of view?</h4><p style="margin:0">You enter: Camera sensor format (e.g., Full Frame 35mm, APS-C, Micro Four Thirds) · Lens focal length (e.g., 24mm, 50mm) · Physical camera distance to subject or wall (e.g., 4.0 meters).<br>You get: Visual top-down map of the lens angle-of-view cone, horizontal and vertical angle-of-view in degrees, and physical field coverage dimensions at the target distance.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">Why is 18% grey considered to be in the middle for photography?</h4><p style="margin:0">Human visual perception of brightness is logarithmic rather than linear. An object reflecting 18% of available light is perceived by human eyes as visually halfway between pure black (0% reflection) and pure white (100% reflection). Because of this perceptual middle point, light meters and camera exposure systems use 18% neutral gray as their standard baseline.</p><h4 style="font-size:16px;margin:16px 0 4px">Is there a mapping tool that will let me visualize a lens&#39;s angle of view?</h4><p style="margin:0">Yes. The Camera FOV &amp; Architectural Framing Planner lets you plot exact lens angles of view directly onto 2D spatial layouts or floor plans. You can adjust camera placement, focal lengths, and sensor sizes to visually see field-of-view boundaries before setting up on location.</p><h4 style="font-size:16px;margin:16px 0 4px">With all other things equal, in a DSLR, will a larger sensor produce a sharper image?</h4><p style="margin:0">Not automatically, because overall sharpness depends primarily on lens resolving power and optical quality. However, a larger sensor requires less magnification to display an image at a given target size, which reduces visible optical aberrations and provides superior signal-to-noise ratios, often resulting in higher perceived detail.</p><h4 style="font-size:16px;margin:16px 0 4px">What is the difference between the free web page and the paid Gumroad product?</h4><p style="margin:0">The free web page provides full access to the spatial planning tool directly inside your internet browser. The $12 paid Gumroad pack contains the standalone offline edition for offline use on location scouts, along with local vector SVG exports and printable PDF report templates.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $12, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/nwswj" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $12</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../multi-camera-timestamp-drift-sync/" style="color:inherit;font-weight:600">Multi-Camera Photo Timestamp &amp; Drift Synchronizer</a>: Realign second shooter clocks and fix camera time drift with ExifTool commands and Lightroom guides.</li><li><a href="../print-to-monitor-color-proofing-lab/" style="color:inherit;font-weight:600">Print-to-Monitor Soft Proofing &amp; Gamut Visualizer</a>: Model luminance, paper Dmax, and gamut clipping to see exactly how your photo will look when printed.</li><li><a href="../burst-action-sequence-multi-exposure-compositor/" style="color:inherit;font-weight:600">Burst Action Sequence Compositor</a>: Generate multi-exposure burst action composites offline in your browser with automated background subtraction.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $12</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $12"});</script>
+</body>
+</html>
