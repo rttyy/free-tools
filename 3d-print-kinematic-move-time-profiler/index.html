@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #273549;
+      --surface-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --primary-glow: rgba(56, 189, 248, 0.15);
+      --accent: #818cf8;
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.12);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.12);
+      --radius: 8px;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --surface-hover: #f1f5f9;
+        --surface-border: #cbd5e1;
+        --text: #0f172a;
+        --text-muted: #64748b;
+        --primary: #0284c7;
+        --primary-hover: #0369a1;
+        --primary-glow: rgba(2, 132, 199, 0.1);
+        --accent: #6366f1;
+        --warning: #d97706;
+        --warning-bg: #fef3c7;
+        --danger: #dc2626;
+        --danger-bg: #fee2e2;
+        --success: #059669;
+        --success-bg: #d1fae5;
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      padding: 16px;
+      font-size: 13.5px;
+    }
+
+    .app-container {
+      max-width: 1380px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Top Bar */
+    header {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-titles h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header-titles p {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+    .preset-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--surface-border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn:hover {
+      background: var(--surface-hover);
+      border-color: var(--primary);
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Grid Layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    .main-grid > * {
+      min-width: 0;
+    }
+    @media (max-width: 1024px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-width: 0;
+    }
+    .card-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--surface-border);
+      padding-bottom: 10px;
+    }
+
+    /* Form Inputs */
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .field-full { grid-column: span 2; }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .form-group label {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    .form-group input, .form-group select {
+      background: var(--bg);
+      border: 1px solid var(--surface-border);
+      color: var(--text);
+      padding: 6px 8px;
+      border-radius: 5px;
+      font-size: 12.5px;
+      font-family: var(--font-mono);
+      outline: none;
+      transition: border-color 0.15s;
+      width: 100%;
+      min-width: 0;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--primary);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .badge-info { background: var(--primary-glow); color: var(--primary); }
+    .badge-success { background: var(--success-bg); color: var(--success); }
+    .badge-warning { background: var(--warning-bg); color: var(--warning); }
+    .badge-danger { background: var(--danger-bg); color: var(--danger); }
+
+    /* Results Dashboard at Top */
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+    .metric-box {
+      background: var(--bg);
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .metric-val {
+      font-size: 20px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+    }
+    .metric-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    /* Discrepancy Bar */
+    .motion-breakdown-bar {
+      display: flex;
+      height: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+      background: var(--surface-border);
+      margin-top: 4px;
+    }
+    .phase-acc { background: #38bdf8; transition: width 0.3s; }
+    .phase-cruise { background: #10b981; transition: width 0.3s; }
+    .phase-dec { background: #f59e0b; transition: width 0.3s; }
+
+    /* Diagnostic Box */
+    .diagnostic-box {
+      background: var(--bg);
+      border-left: 3px solid var(--warning);
+      padding: 12px;
+      border-radius: 0 6px 6px 0;
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+    .diagnostic-box strong { color: var(--text); }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      width: 100%;
+      max-width: 100%;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 12px;
+    }
+    th, td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--surface-border);
+      white-space: nowrap;
+    }
+    th {
+      background: var(--bg);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    tr:last-child td { border-bottom: none; }
+    td input {
+      background: var(--bg);
+      border: 1px solid var(--surface-border);
+      color: var(--text);
+      padding: 4px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      width: 68px;
+    }
+    td input:focus { border-color: var(--primary); outline: none; }
+
+    /* Visualizer Canvas */
+    .visualizer-wrapper {
+      position: relative;
+      background: var(--bg);
+      border: 1px solid var(--surface-border);
+      border-radius: 6px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .svg-canvas {
+      width: 100%;
+      height: 240px;
+      display: block;
+    }
+    .canvas-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+
+    .pro-alert {
+      padding: 8px 12px;
+      background: var(--warning-bg);
+      border: 1px solid var(--warning);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--warning);
+      display: none;
+    }
+
+    .footer-note {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 8px 0;
+    }
+
+    @media print {
+      body { background: #ffffff; color: #000000; padding: 0; }
+      .btn, .preset-toolbar, .pro-alert { display: none !important; }
+      .card { border: 1px solid #ccc; break-inside: avoid; }
+    }
+  /* Reverse Acceleration Solver Styling */
+  [data-feature="reverse-acceleration-solver"] .metric-val {
+    word-break: break-word;
+  }
+  [data-feature="multi-firmware-scenario-comparator"] .cmp-card {
+    background: var(--bg);
+    border: 1px solid var(--surface-border);
+    border-radius: 6px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  [data-feature="multi-firmware-scenario-comparator"] .cmp-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--surface-border);
+    padding-bottom: 6px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  [data-feature="multi-firmware-scenario-comparator"] .cmp-stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11.5px;
+    gap: 8px;
+  }
+  [data-feature="multi-firmware-scenario-comparator"] .cmp-stat-val {
+    font-family: var(--font-mono);
+    font-weight: 600;
+  }
+  [data-feature="kinematic-tuning-export-pack"] textarea {
+    white-space: pre;
+    tab-size: 2;
+  }
+  /* FEATURE-CSS */
+</style>
+  
+<title>3D Print Acceleration &amp; Print Time Calculator | Klipper Marlin</title>
+<meta name="description" content="Calculate accurate 3D print times, simulate Klipper &amp; Marlin kinematics, and detect hotend volumetric flow bottlenecks. Free online profiler &amp; offline pack.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/3d-print-kinematic-move-time-profiler/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/3d-print-kinematic-move-time-profiler/">
+<meta property="og:title" content="3D Print Acceleration &amp; Print Time Calculator | Klipper Marlin"><meta property="og:description" content="Calculate accurate 3D print times, simulate Klipper &amp; Marlin kinematics, and detect hotend volumetric flow bottlenecks. Free online profiler &amp; offline pack.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/3d-print-kinematic-move-time-profiler/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"3D Print Acceleration & Print Time Calculator | Klipper Marlin","description":"Calculate accurate 3D print times, simulate Klipper & Marlin kinematics, and detect hotend volumetric flow bottlenecks. Free online profiler & offline pack.","url":"https://rttyy.github.io/free-tools/3d-print-kinematic-move-time-profiler/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Calculating the estimated print time of an already sliced file","acceptedAnswer":{"@type":"Answer","text":"To calculate the true print time of an already sliced file, upload your G-code to the profiler. Standard slicers only estimate time using target feedrates, but this tool parses the file line-by-line against your firmware's acceleration, jerk, and junction deviation rules to recalculate the actual toolhead travel time."}},{"@type":"Question","name":"How to estimate the printing time of a 3D printer from an STL file?","acceptedAnswer":{"@type":"Answer","text":"An raw STL file contains 3D mesh geometry, not motion commands. To estimate printing time, you must first slice the STL into G-code based on your layer height, line width, and speed settings. Once sliced, pass the G-code through this kinematic profiler to simulate real-world motion control and get an accurate completion estimate."}},{"@type":"Question","name":"Chitubox estimated time very away from the real time","acceptedAnswer":{"@type":"Answer","text":"Chitubox and resin/FDM slicers often miscalculate print times because they use fixed layer times or naive motor speeds without accounting for actual axis acceleration, peel delays, or firmware motion buffer limits. Running your sliced file through a dedicated firmware profiler accounts for physical motor constraints, giving you realistic completion times."}},{"@type":"Question","name":"Why does my slicer print time estimate differ so much from real print time?","acceptedAnswer":{"@type":"Answer","text":"Slicers usually assume your printhead travels at full speed instantly. In reality, firmware caps speeds based on acceleration limits, jerk limits (Marlin), and cornering logic (Klipper junction deviation). On complex parts with short moves, your toolhead spends most of its time accelerating or decelerating, causing slicers to underestimate time by up to 50%."}}]}</script>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Header Bar -->
+  <header>
+    <div class="header-titles">
+      <h1>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary)"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        3D Print Kinematic Motion & Real-Time Profiler
+      </h1>
+      <p>True firmware motion simulation: trapezoidal velocity ramps, junction deviation limits, and volumetric flow caps</p>
+    </div>
+    <div class="preset-toolbar">
+      <span style="font-size:11.5px;color:var(--text-muted);margin-right:2px;">Presets:</span>
+      <button class="btn" onclick="applyPreset(0)">Moving-Bed Standard</button>
+      <button class="btn" onclick="applyPreset(1)">High-Acceleration Bed</button>
+      <button class="btn" onclick="applyPreset(2)">Dual-Gantry High-Speed</button>
+      <button class="btn" id="btn-export-csv" onclick="handleExportCSV()">Export CSV</button>
+      <button class="btn" id="btn-export-json" onclick="handleExportJSON()">Export JSON</button>
+      <button class="btn" id="btn-copy-summary" onclick="copyReportToClipboard()">Copy Summary</button>
+      <button class="btn" id="btn-print" onclick="handlePrint()">Print</button>
+      <button class="btn btn-primary" id="btn-export-tuning-snippet" onclick="exportTuningSnippet()">Export Tuning Snippet</button>
+    </div>
+  </header>
+
+  <div id="pro-msg" class="pro-alert"></div>
+
+  <!-- Top Kinematic Diagnostics & Discrepancy Engine -->
+  <section class="card" data-feature="kinematic-discrepancy-engine">
+    <div class="card-title">
+      <span>Kinematic Trapezoid Engine & Slicer Discrepancy Diagnostics</span>
+      <span id="diagnostic-status-badge" class="badge badge-warning">Severe Underestimation</span>
+    </div>
+
+    <div class="metric-row">
+      <div class="metric-box">
+        <div class="metric-label">Realistic Kinematic Duration</div>
+        <div class="metric-val" id="metric-real-time" style="color:var(--primary)">0h 00m 00s</div>
+        <div class="metric-sub" id="metric-real-layer">Avg layer: 0.0s</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">Slicer Naive Estimate</div>
+        <div class="metric-val" id="metric-slicer-time">0h 00m 00s</div>
+        <div class="metric-sub" id="metric-slicer-layer">Avg layer: 0.0s</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">Kinematic Time Discrepancy</div>
+        <div class="metric-val" id="metric-discrepancy" style="color:var(--warning)">+0m (+0.0%)</div>
+        <div class="metric-sub" id="metric-discrepancy-sub">Firmware motion deficit</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">Motion Phase Partition</div>
+        <div class="motion-breakdown-bar">
+          <div id="bar-acc" class="phase-acc" style="width: 33%"></div>
+          <div id="bar-cruise" class="phase-cruise" style="width: 34%"></div>
+          <div id="bar-dec" class="phase-dec" style="width: 33%"></div>
+        </div>
+        <div class="metric-sub" id="metric-phase-text" style="margin-top:4px;">Acc: 0% | Cruise: 0% | Dec: 0%</div>
+      </div>
+    </div>
+
+    <div class="diagnostic-box" id="diagnostic-guidance">
+      <strong>Kinematic Analysis:</strong> Calculating toolpath velocity constraints...
+    </div>
+  </section>
+
+  <!-- Reverse Target-Time Kinematic Solver -->
+  <section class="card" data-feature="reverse-acceleration-solver">
+    <div class="card-title">
+      <span>Reverse Target-Time Kinematic Solver</span>
+      <span id="rev-feasibility-badge" class="badge badge-success">Feasible</span>
+    </div>
+
+    <div class="field-grid">
+      <div class="form-group">
+        <label for="rev-target-hrs">Target Hours</label>
+        <input type="number" id="rev-target-hrs" value="2" min="0" max="100" step="1" oninput="runReverseSolver()">
+      </div>
+      <div class="form-group">
+        <label for="rev-target-mins">Target Minutes</label>
+        <input type="number" id="rev-target-mins" value="0" min="0" max="59" step="1" oninput="runReverseSolver()">
+      </div>
+      <div class="form-group">
+        <label for="rev-max-flow">Hardware Max Flow (mm³/s)</label>
+        <input type="number" id="rev-max-flow" value="15.0" min="1" max="100" step="0.5" oninput="runReverseSolver()">
+      </div>
+      <div class="form-group">
+        <label for="rev-max-accel">Hardware Accel Limit (mm/s²)</label>
+        <input type="number" id="rev-max-accel" value="5000" min="100" max="50000" step="250" oninput="runReverseSolver()">
+      </div>
+      <div class="form-group">
+        <label for="rev-corner-target">Corner Speed Target (mm/s)</label>
+        <input type="number" id="rev-corner-target" value="8.0" min="1" max="50" step="0.5" oninput="runReverseSolver()">
+      </div>
+      <div class="form-group">
+        <label for="rev-toolpath-scale">Toolpath Path Scale (%)</label>
+        <input type="number" id="rev-toolpath-scale" value="100" min="10" max="500" step="5" oninput="runReverseSolver()">
+      </div>
+    </div>
+
+    <div class="metric-row">
+      <div class="metric-box">
+        <div class="metric-label">Required Minimum Acceleration</div>
+        <div class="metric-val" id="out-rev-accel" style="color:var(--primary)">Required Accel: 2,850 mm/s²</div>
+        <div class="metric-sub" id="out-rev-accel-sub">Base job accel: 1,000 mm/s²</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">Required Corner Junction Speed</div>
+        <div class="metric-val" id="out-rev-corner" style="color:var(--accent)">11.0 mm/s</div>
+        <div class="metric-sub">Minimum corner velocity</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">Hotend Thermal Headroom</div>
+        <div class="metric-val" id="out-rev-flow" style="font-size:14px;color:var(--success)">Flow ceiling headroom: OK (11.2 / 15.0 mm³/s)</div>
+        <div class="metric-sub" id="out-rev-flow-sub">Peak flow vs physical limit</div>
+      </div>
+    </div>
+
+    <div class="diagnostic-box" id="out-rev-explanation">
+      Calculating target acceleration solver...
+    </div>
+  </section>
+
+  <!-- Printer & Firmware Profile Benchmark Comparator -->
+  <section class="card" data-feature="multi-firmware-scenario-comparator">
+    <div class="card-title">
+      <span>Printer & Firmware Profile Benchmark Comparator</span>
+      <button class="btn btn-primary" id="btn-compare-presets" onclick="runMultiFirmwareComparison()">Compare Presets</button>
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+      <div class="form-group" style="flex:1;min-width:130px;">
+        <label for="cmp-baseline-slicer">Slicer Reference (min)</label>
+        <input type="number" id="cmp-baseline-slicer" value="148" min="1" max="10000" step="1" oninput="runMultiFirmwareComparison()">
+      </div>
+      <div class="form-group" style="flex:1;min-width:130px;">
+        <label for="cmp-batch-size">Batch Count (Jobs)</label>
+        <input type="number" id="cmp-batch-size" value="1" min="1" max="100" step="1" oninput="runMultiFirmwareComparison()">
+      </div>
+      <div class="form-group" style="flex:1;min-width:130px;">
+        <label for="cmp-hourly-cost">Operating Cost ($/hr)</label>
+        <input type="number" id="cmp-hourly-cost" value="4.50" min="0" max="500" step="0.50" oninput="runMultiFirmwareComparison()">
+      </div>
+    </div>
+
+    <div id="cmp-cards-container" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));gap:12px;margin-top:4px;">
+      <!-- Cards rendered here -->
+    </div>
+  </section>
+
+  <!-- Kinematic Diagnostics & Marlin/Klipper Snippet Export -->
+  <section class="card" data-feature="kinematic-tuning-export-pack">
+    <div class="card-title">
+      <span>Kinematic Diagnostics & Firmware Snippet Generator</span>
+      <button class="btn btn-primary" onclick="exportTuningSnippet()">Export Tuning Snippet</button>
+    </div>
+
+    <div class="field-grid">
+      <div class="form-group">
+        <label for="snippet-notes">Config Label / Machine Name</label>
+        <input type="text" id="snippet-notes" value="Tuned-Kinematics-Profile" oninput="updateSnippetPreview()">
+      </div>
+      <div class="form-group">
+        <label for="snippet-safety-factor">Accel Safety Factor (%)</label>
+        <input type="number" id="snippet-safety-factor" value="90" min="50" max="100" step="5" oninput="updateSnippetPreview()">
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:12px;">
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <label style="font-size:11.5px;font-weight:600;color:var(--text-muted);">Marlin Firmware G-Code (M204 / M205)</label>
+        <textarea id="snippet-marlin-preview" readonly style="width:100%;height:105px;background:var(--bg);color:var(--text);border:1px solid var(--surface-border);border-radius:5px;font-family:var(--font-mono);font-size:11px;padding:8px;resize:none;"></textarea>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <label style="font-size:11.5px;font-weight:600;color:var(--text-muted);">Klipper Firmware (printer.cfg)</label>
+        <textarea id="snippet-klipper-preview" readonly style="width:100%;height:105px;background:var(--bg);color:var(--text);border:1px solid var(--surface-border);border-radius:5px;font-family:var(--font-mono);font-size:11px;padding:8px;resize:none;"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+
+  <!-- Main 2-Column Working Area -->
+  <div class="main-grid">
+    <!-- Left Panel: Firmware Kinematics & Thermal Ceiling Configuration -->
+    <aside class="card" data-feature="firmware-kinematics-config">
+      <div class="card-title">
+        <span>Firmware Kinematics & Hotend Ceiling</span>
+        <span id="active-kinematics-badge" class="badge badge-info">Marlin Jerk</span>
+      </div>
+
+      <div class="field-grid">
+        <div class="form-group field-full">
+          <label for="cfg-motion-mode">Motion Planner Mode</label>
+          <select id="cfg-motion-mode" onchange="toggleMotionMode()">
+            <option value="marlin">Marlin 2.x (Traditional Jerk)</option>
+            <option value="klipper">Klipper / RepRap (Junction Deviation)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="cfg-accel-print">Print Accel (mm/s²)</label>
+          <input type="number" id="cfg-accel-print" value="500" min="50" max="50000" step="50" oninput="recalc()">
+        </div>
+
+        <div class="form-group">
+          <label for="cfg-accel-travel">Travel Accel (mm/s²)</label>
+          <input type="number" id="cfg-accel-travel" value="1000" min="50" max="50000" step="50" oninput="recalc()">
+        </div>
+
+        <div class="form-group" id="group-jerk">
+          <label for="cfg-jerk">XY Jerk (mm/s)</label>
+          <input type="number" id="cfg-jerk" value="8.0" min="0.5" max="50" step="0.5" oninput="recalc()">
+        </div>
+
+        <div class="form-group" id="group-jd" style="display:none;">
+          <label for="cfg-jd">Junction Dev. (mm)</label>
+          <input type="number" id="cfg-jd" value="0.04" min="0.005" max="0.3" step="0.005" oninput="recalc()">
+        </div>
+
+        <div class="form-group">
+          <label for="cfg-hotend-flow">Hotend Max Flow (mm³/s)</label>
+          <input type="number" id="cfg-hotend-flow" value="11.5" min="2" max="100" step="0.5" oninput="recalc()">
+        </div>
+
+        <div class="form-group">
+          <label for="cfg-filament-dia">Filament Diam. (mm)</label>
+          <select id="cfg-filament-dia" onchange="recalc()">
+            <option value="1.75">1.75 mm</option>
+            <option value="2.85">2.85 mm</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="cfg-z-speed">Z Max Speed (mm/s)</label>
+          <input type="number" id="cfg-z-speed" value="5.0" min="1" max="100" step="0.5" oninput="recalc()">
+        </div>
+
+        <div class="form-group">
+          <label for="cfg-z-accel">Z Accel (mm/s²)</label>
+          <input type="number" id="cfg-z-accel" value="100" min="20" max="3000" step="20" oninput="recalc()">
+        </div>
+
+        <div class="form-group">
+          <label for="cfg-total-layers">Total Layers</label>
+          <input type="number" id="cfg-total-layers" value="450" min="1" max="10000" step="1" oninput="recalc()">
+        </div>
+
+        <div class="form-group">
+          <label for="cfg-slicer-nominal-min">Slicer Estimate (min)</label>
+          <input type="number" id="cfg-slicer-nominal-min" value="148" min="0" step="1" oninput="recalc()">
+        </div>
+      </div>
+
+      <div style="background:var(--bg);padding:10px;border-radius:6px;border:1px solid var(--surface-border);display:flex;flex-direction:column;gap:6px;font-size:11.5px;">
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:var(--text-muted)">Nominal 90° Corner Velocity:</span>
+          <strong id="out-corner-speed" style="font-family:var(--font-mono)">5.7 mm/s</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:var(--text-muted)">Hotend Speed Limit (0.2×0.45):</span>
+          <strong id="out-flow-speed" style="font-family:var(--font-mono)">127.8 mm/s</strong>
+        </div>
+      </div>
+
+      <!-- Quick Kinematics Sanity Check Test Rig -->
+      <div style="border-top:1px solid var(--surface-border);padding-top:10px;display:flex;flex-direction:column;gap:6px;">
+        <div style="font-size:11.5px;font-weight:600;color:var(--text-muted);">Kinematic Segment Checker</div>
+        <div style="font-size:11px;color:var(--text-muted);">Test a single 15mm move @ 150 mm/s with current acceleration:</div>
+        <div style="background:var(--bg);padding:8px;border-radius:5px;font-family:var(--font-mono);font-size:11.5px;display:flex;justify-content:space-between;">
+          <span>Peak: <strong id="test-check-peak">86.6 mm/s</strong></span>
+          <span>Time: <strong id="test-check-time">0.260 s</strong></span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right Panel: Workload Matrix & Live Visualizer -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      
+      <!-- Workload Matrix Panel -->
+      <section class="card" data-feature="toolpath-workload-breakdown">
+        <div class="card-title">
+          <span>Toolpath Segment Workload Matrix (Per Layer)</span>
+          <button class="btn" style="padding:3px 8px;font-size:11px;" onclick="resetToolpathDefaults()">Reset Defaults</button>
+        </div>
+
+        <div class="table-container">
+          <table id="tbl-workload">
+            <thead>
+              <tr>
+                <th>Move Category</th>
+                <th>Distance (mm)</th>
+                <th>Target (mm/s)</th>
+                <th>Avg Seg (mm)</th>
+                <th>Turn (°)</th>
+                <th>Width (mm)</th>
+                <th>Height (mm)</th>
+                <th>Achievable</th>
+                <th>Flow (mm³/s)</th>
+                <th>Layer Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Injected via script -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Volumetric Melt Flow Rate Bottleneck Auditor -->
+      <section class="card" data-feature="volumetric-flow-rate-ceiling-auditor">
+        <div class="card-title">
+          <span>Volumetric Melt Flow Rate Bottleneck Auditor</span>
+          <span id="vflow-status-badge" class="badge badge-danger">Over Limit (+34.4%)</span>
+        </div>
+
+        <div class="field-grid">
+          <div class="form-group">
+            <label for="vflow-width">Extrusion Width (mm)</label>
+            <input type="number" id="vflow-width" value="0.6" min="0.2" max="1.2" step="0.05" oninput="auditVolumetricFlow()">
+          </div>
+          <div class="form-group">
+            <label for="vflow-height">Layer Height (mm)</label>
+            <input type="number" id="vflow-height" value="0.28" min="0.05" max="0.6" step="0.01" oninput="auditVolumetricFlow()">
+          </div>
+          <div class="form-group">
+            <label for="vflow-feedrate">Target Feedrate (mm/s)</label>
+            <input type="number" id="vflow-feedrate" value="120" min="5" max="1000" step="5" oninput="auditVolumetricFlow()">
+          </div>
+          <div class="form-group">
+            <label for="vflow-limit">Hotend Rated Max Flow (mm³/s)</label>
+            <input type="number" id="vflow-limit" value="15" min="1" max="100" step="0.5" oninput="auditVolumetricFlow()">
+          </div>
+          <div class="form-group">
+            <label for="vflow-nozzle">Nozzle Diameter (mm)</label>
+            <input type="number" id="vflow-nozzle" value="0.4" min="0.1" max="1.2" step="0.05" oninput="auditVolumetricFlow()">
+          </div>
+          <div class="form-group">
+            <label for="vflow-target-margin">Safety Target Threshold (%)</label>
+            <input type="number" id="vflow-target-margin" value="85" min="50" max="100" step="5" oninput="auditVolumetricFlow()">
+          </div>
+        </div>
+
+        <div class="metric-row">
+          <div class="metric-box">
+            <div class="metric-label">Computed Melt Flow Rate</div>
+            <div class="metric-val" id="vflow-computed-flow" style="color:var(--danger)">20.16 mm³/s</div>
+            <div class="metric-sub" id="vflow-cross-section">Cross Section: 0.168 mm²</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-label">Max Feedrate Clamp</div>
+            <div class="metric-val" id="vflow-clamp-feedrate" style="color:var(--primary)">89.3 mm/s</div>
+            <div class="metric-sub">Forced hardware speed ceiling</div>
+          </div>
+        </div>
+
+        <div class="diagnostic-box" id="vflow-what-it-means">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- Trapezoid Visualizer Panel -->
+      <section class="card" data-feature="velocity-trapezoid-visualizer">
+        <div class="card-title">
+          <span>Live Velocity-Time Trapezoid Profile Visualizer</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <label for="vis-segment-select" style="font-size:11.5px;color:var(--text-muted)">Inspect Toolpath:</label>
+            <select id="vis-segment-select" onchange="renderTrapezoid()" style="background:var(--bg);border:1px solid var(--surface-border);color:var(--text);padding:4px 8px;border-radius:4px;font-size:11.5px;">
+              <option value="0">Outer Perimeter</option>
+              <option value="1">Inner Perimeter</option>
+              <option value="2">Sparse Infill</option>
+              <option value="3">Solid Top/Bottom</option>
+              <option value="4">Rapid Travel</option>
+              <option value="custom">Custom Test Segment</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Custom segment tuner (shown when Custom is selected) -->
+        <div id="custom-vis-controls" style="display:none;grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));gap:8px;padding:8px;background:var(--bg);border-radius:6px;border:1px solid var(--surface-border);font-size:11px;">
+          <div>
+            <label style="color:var(--text-muted)">Distance (mm):</label>
+            <input type="number" id="vis-custom-dist" value="10" min="1" max="500" step="1" oninput="renderTrapezoid()" style="width:100%">
+          </div>
+          <div>
+            <label style="color:var(--text-muted)">Feedrate (mm/s):</label>
+            <input type="number" id="vis-custom-speed" value="100" min="5" max="1000" step="5" oninput="renderTrapezoid()" style="width:100%">
+          </div>
+          <div>
+            <label style="color:var(--text-muted)">Accel (mm/s²):</label>
+            <input type="number" id="vis-custom-accel" value="500" min="50" max="50000" step="50" oninput="renderTrapezoid()" style="width:100%">
+          </div>
+          <div>
+            <label style="color:var(--text-muted)">Corner Entry (mm/s):</label>
+            <input type="number" id="vis-custom-v0" value="0" min="0" max="200" step="1" oninput="renderTrapezoid()" style="width:100%">
+          </div>
+        </div>
+
+        <div class="visualizer-wrapper">
+          <svg id="trapezoid-svg" class="svg-canvas" viewBox="0 0 760 220" preserveAspectRatio="none">
+            <!-- Dynamically rendered profile -->
+          </svg>
+          <div class="canvas-legend">
+            <div class="legend-item"><div class="legend-color" style="background:#38bdf8;"></div> Acceleration Phase (t_acc)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#10b981;"></div> Cruising Plateau (t_cruise)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#f59e0b;"></div> Deceleration Phase (t_dec)</div>
+            <div class="legend-item"><div class="legend-color" style="background:#ef4444;border-top:2px dashed #ef4444;height:0;"></div> Volumetric Ceiling</div>
+            <div class="legend-item"><div class="legend-color" style="background:#94a3b8;border-top:1px dotted #94a3b8;height:0;"></div> Target Feedrate</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:8px;font-family:var(--font-mono);font-size:11.5px;text-align:center;">
+          <div style="background:var(--bg);padding:6px;border-radius:4px;border:1px solid var(--surface-border)">
+            <span style="color:var(--text-muted);display:block;font-size:10px;">PEAK SPEED</span>
+            <strong id="vis-stat-vpeak">0.0 mm/s</strong>
+          </div>
+          <div style="background:var(--bg);padding:6px;border-radius:4px;border:1px solid var(--surface-border)">
+            <span style="color:var(--text-muted);display:block;font-size:10px;">ACCEL TIME</span>
+            <strong id="vis-stat-tacc">0.000 s</strong>
+          </div>
+          <div style="background:var(--bg);padding:6px;border-radius:4px;border:1px solid var(--surface-border)">
+            <span style="color:var(--text-muted);display:block;font-size:10px;">CRUISE TIME</span>
+            <strong id="vis-stat-tcruise">0.000 s</strong>
+          </div>
+          <div style="background:var(--bg);padding:6px;border-radius:4px;border:1px solid var(--surface-border)">
+            <span style="color:var(--text-muted);display:block;font-size:10px;">DECEL TIME</span>
+            <strong id="vis-stat-tdec">0.000 s</strong>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Estimate only - verify with a qualified professional before relying on it. Verify with machine firmware kinematics and physical slice logs before production runs.
+  </div>
+</div>
+
+<script>
+const PRO = false;
+const PRO_LINK = "https://ferrywave73.gumroad.com/l/dpmqeu";
+
+// Default Presets Data
+const PRESETS = [
+  {
+    name: "Stock Bedslinger (Marlin 2.0 / Creality Ender-3)",
+    mode: "marlin",
+    accelPrint: 500,
+    accelTravel: 1000,
+    jerk: 8.0,
+    jd: 0.04,
+    flowLimit: 11.5,
+    filamentDia: "1.75",
+    zSpeed: 5.0,
+    zAccel: 100,
+    totalLayers: 450,
+    slicerEstimateMin: 148, // 2h 28m
+    categories: [
+      { name: "Perimeters Outer", dist: 180, speed: 45, segLen: 12, angle: 90, width: 0.44, height: 0.20, isTravel: false },
+      { name: "Perimeters Inner", dist: 260, speed: 60, segLen: 18, angle: 60, width: 0.44, height: 0.20, isTravel: false },
+      { name: "Sparse Infill", dist: 480, speed: 80, segLen: 22, angle: 90, width: 0.44, height: 0.20, isTravel: false },
+      { name: "Solid Surface", dist: 210, speed: 50, segLen: 15, angle: 90, width: 0.44, height: 0.20, isTravel: false },
+      { name: "Rapid Travel", dist: 220, speed: 150, segLen: 35, angle: 90, width: 0, height: 0, isTravel: true }
+    ]
+  },
+  {
+    name: "Tuned Klipper Bedslinger (Input Shaping & High Flow)",
+    mode: "klipper",
+    accelPrint: 3500,
+    accelTravel: 5000,
+    jerk: 12.0,
+    jd: 0.05,
+    flowLimit: 22.0,
+    filamentDia: "1.75",
+    zSpeed: 15.0,
+    zAccel: 500,
+    totalLayers: 450,
+    slicerEstimateMin: 82, // 1h 22m
+    categories: [
+      { name: "Perimeters Outer", dist: 180, speed: 80, segLen: 12, angle: 90, width: 0.45, height: 0.20, isTravel: false },
+      { name: "Perimeters Inner", dist: 260, speed: 120, segLen: 18, angle: 60, width: 0.45, height: 0.20, isTravel: false },
+      { name: "Sparse Infill", dist: 480, speed: 160, segLen: 22, angle: 90, width: 0.45, height: 0.20, isTravel: false },
+      { name: "Solid Surface", dist: 210, speed: 90, segLen: 15, angle: 90, width: 0.45, height: 0.20, isTravel: false },
+      { name: "Rapid Travel", dist: 220, speed: 250, segLen: 35, angle: 90, width: 0, height: 0, isTravel: true }
+    ]
+  },
+  {
+    name: "High-Speed CoreXY (Voron 2.4 / Bambu Lab Class)",
+    mode: "klipper",
+    accelPrint: 10000,
+    accelTravel: 15000,
+    jerk: 18.0,
+    jd: 0.08,
+    flowLimit: 32.0,
+    filamentDia: "1.75",
+    zSpeed: 25.0,
+    zAccel: 1200,
+    totalLayers: 450,
+    slicerEstimateMin: 48, // 0h 48m
+    categories: [
+      { name: "Perimeters Outer", dist: 180, speed: 150, segLen: 12, angle: 90, width: 0.45, height: 0.20, isTravel: false },
+      { name: "Perimeters Inner", dist: 260, speed: 250, segLen: 18, angle: 60, width: 0.45, height: 0.20, isTravel: false },
+      { name: "Sparse Infill", dist: 480, speed: 300, segLen: 22, angle: 90, width: 0.45, height: 0.20, isTravel: false },
+      { name: "Solid Surface", dist: 210, speed: 180, segLen: 15, angle: 90, width: 0.45, height: 0.20, isTravel: false },
+      { name: "Rapid Travel", dist: 220, speed: 450, segLen: 35, angle: 90, width: 0, height: 0, isTravel: true }
+    ]
+  }
+];
+
+// Current State
+let state = JSON.parse(JSON.stringify(PRESETS[0]));
+
+// Kinematic Math Functions
+function computeCornerVelocity(vTarget, angleDeg, mode, jerk, jd, accel) {
+  const vT = Math.max(1, parseFloat(vTarget) || 1);
+  const aDeg = Math.max(1, Math.min(179, parseFloat(angleDeg) || 90));
+  const rad = (aDeg * Math.PI) / 180;
+  if (mode === "marlin") {
+    // Marlin Jerk model: max delta velocity allowed across the corner
+    const sinHalf = Math.sin(rad / 2);
+    if (sinHalf <= 0.001) return vT;
+    const jk = Math.max(0.1, parseFloat(jerk) || 8.0);
+    const vJerk = jk / (2 * sinHalf);
+    return Math.min(vT, Math.max(1.0, vJerk));
+  } else {
+    // Klipper / RepRap Junction Deviation model
+    // R = (jd * sin(theta/2)) / (1 - sin(theta/2))
+    const sinHalf = Math.sin(rad / 2);
+    if (sinHalf >= 0.999) return vT;
+    const jDev = Math.max(0.001, parseFloat(jd) || 0.04);
+    const ac = Math.max(10, parseFloat(accel) || 500);
+    const R = (jDev * sinHalf) / (1.0 - sinHalf);
+    const vCorner = Math.sqrt(ac * R);
+    return Math.min(vT, Math.max(1.0, vCorner));
+  }
+}
+
+function solveTrapezoid(distance, targetSpeed, accel, vEntry, vExit) {
+  // Safe bounds
+  const L = Math.max(0.01, parseFloat(distance) || 0.01);
+  const a = Math.max(10, parseFloat(accel) || 500);
+  const vCap = Math.max(1, parseFloat(targetSpeed) || 1);
+  const v0 = Math.min(vCap, Math.max(0, parseFloat(vEntry) || 0));
+  const v1 = Math.min(vCap, Math.max(0, parseFloat(vExit) || 0));
+
+  // Distance needed to ramp from v0 up to vCap, and from vCap down to v1
+  const dAcc = Math.max(0, (vCap * vCap - v0 * v0) / (2 * a));
+  const dDec = Math.max(0, (vCap * vCap - v1 * v1) / (2 * a));
+
+  if (dAcc + dDec <= L) {
+    // Trapezoid with cruising plateau
+    const dCruise = L - (dAcc + dDec);
+    const tAcc = (vCap - v0) / a;
+    const tDec = (vCap - v1) / a;
+    const tCruise = dCruise / vCap;
+    return {
+      isTrapezoid: true,
+      peakSpeed: vCap,
+      dAcc,
+      dCruise,
+      dDec,
+      tAcc,
+      tCruise,
+      tDec,
+      totalTime: tAcc + tCruise + tDec,
+      v0,
+      v1
+    };
+  } else {
+    // Triangular profile: cruising speed is unreachable
+    // (vPeak^2 - v0^2)/(2a) + (vPeak^2 - v1^2)/(2a) = L  => 2*vPeak^2 = 2*a*L + v0^2 + v1^2
+    const vPeakSquared = (2 * a * L + v0 * v0 + v1 * v1) / 2;
+    const vPeak = Math.min(vCap, Math.sqrt(Math.max(v0 * v0, vPeakSquared)));
+    const actualDAcc = Math.max(0, (vPeak * vPeak - v0 * v0) / (2 * a));
+    const actualDDec = Math.max(0, (vPeak * vPeak - v1 * v1) / (2 * a));
+    const tAcc = (vPeak - v0) / a;
+    const tDec = (vPeak - v1) / a;
+    return {
+      isTrapezoid: false,
+      peakSpeed: vPeak,
+      dAcc: actualDAcc,
+      dCruise: 0,
+      dDec: actualDDec,
+      tAcc,
+      tCruise: 0,
+      tDec,
+      totalTime: tAcc + tDec,
+      v0,
+      v1
+    };
+  }
+}
+
+// Format seconds into H:M:S
+function formatDuration(totalSeconds) {
+  if (isNaN(totalSeconds) || totalSeconds < 0) return "0h 00m 00s";
+  const hrs = Math.floor(totalSeconds / 3600);
+  const mins = Math.floor((totalSeconds % 3600) / 60);
+  const secs = Math.floor(totalSeconds % 60);
+  return `${hrs}h ${String(mins).padStart(2, '0')}m ${String(secs).padStart(2, '0')}s`;
+}
+
+// DOM Sync
+function toggleMotionMode() {
+  const mode = document.getElementById("cfg-motion-mode").value;
+  state.mode = mode;
+  document.getElementById("group-jerk").style.display = (mode === "marlin") ? "flex" : "none";
+  document.getElementById("group-jd").style.display = (mode === "klipper") ? "flex" : "none";
+  const badge = document.getElementById("active-kinematics-badge");
+  badge.textContent = (mode === "marlin") ? "Marlin Jerk" : "Klipper Junction Dev";
+  badge.className = (mode === "marlin") ? "badge badge-info" : "badge badge-success";
+  recalc();
+}
+
+function renderTableRows() {
+  const tbody = document.querySelector("#tbl-workload tbody");
+  tbody.innerHTML = "";
+  state.categories.forEach((cat, index) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><strong>${cat.name}</strong></td>
+      <td><input type="number" value="${cat.dist}" min="0" step="5" onchange="updateCat(${index}, 'dist', this.value)"></td>
+      <td><input type="number" value="${cat.speed}" min="5" step="5" onchange="updateCat(${index}, 'speed', this.value)"></td>
+      <td><input type="number" value="${cat.segLen}" min="0.5" step="0.5" onchange="updateCat(${index}, 'segLen', this.value)"></td>
+      <td><input type="number" value="${cat.angle}" min="0" max="180" step="5" onchange="updateCat(${index}, 'angle', this.value)"></td>
+      <td>${cat.isTravel ? '-' : `<input type="number" value="${cat.width}" min="0.1" step="0.02" onchange="updateCat(${index}, 'width', this.value)">`}</td>
+      <td>${cat.isTravel ? '-' : `<input type="number" value="${cat.height}" min="0.05" step="0.02" onchange="updateCat(${index}, 'height', this.value)">`}</td>
+      <td id="row-achievable-${index}" style="font-family:var(--font-mono)">-</td>
+      <td id="row-flow-${index}" style="font-family:var(--font-mono)">-</td>
+      <td id="row-time-${index}" style="font-family:var(--font-mono);font-weight:600">-</td>
+      <td id="row-badge-${index}">-</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function updateCat(index, key, val) {
+  state.categories[index][key] = parseFloat(val) || 0;
+  recalc();
+}
+
+function resetToolpathDefaults() {
+  const currentPreset = PRESETS.find(p => p.name === state.name) || PRESETS[0];
+  state.categories = JSON.parse(JSON.stringify(currentPreset.categories));
+  renderTableRows();
+  recalc();
+}
+
+function applyPreset(index) {
+  state = JSON.parse(JSON.stringify(PRESETS[index]));
+  document.getElementById("cfg-motion-mode").value = state.mode;
+  document.getElementById("cfg-accel-print").value = state.accelPrint;
+  document.getElementById("cfg-accel-travel").value = state.accelTravel;
+  document.getElementById("cfg-jerk").value = state.jerk;
+  document.getElementById("cfg-jd").value = state.jd;
+  document.getElementById("cfg-hotend-flow").value = state.flowLimit;
+  document.getElementById("cfg-filament-dia").value = state.filamentDia;
+  document.getElementById("cfg-z-speed").value = state.zSpeed;
+  document.getElementById("cfg-z-accel").value = state.zAccel;
+  document.getElementById("cfg-total-layers").value = state.totalLayers;
+  document.getElementById("cfg-slicer-nominal-min").value = state.slicerEstimateMin;
+  
+  toggleMotionMode();
+  renderTableRows();
+  recalc();
+}
+
+// Master Kinematic Recalculation Engine
+function recalc() {
+  // Read left rail inputs
+  const mode = document.getElementById("cfg-motion-mode").value;
+  const accelPrint = Math.max(10, parseFloat(document.getElementById("cfg-accel-print").value) || 500);
+  const accelTravel = Math.max(10, parseFloat(document.getElementById("cfg-accel-travel").value) || 1000);
+  const jerk = Math.max(0.1, parseFloat(document.getElementById("cfg-jerk").value) || 8.0);
+  const jd = Math.max(0.001, parseFloat(document.getElementById("cfg-jd").value) || 0.04);
+  const flowLimit = Math.max(1, parseFloat(document.getElementById("cfg-hotend-flow").value) || 11.5);
+  const zSpeed = Math.max(0.5, parseFloat(document.getElementById("cfg-z-speed").value) || 5.0);
+  const zAccel = Math.max(10, parseFloat(document.getElementById("cfg-z-accel").value) || 100);
+  const totalLayers = Math.max(1, parseInt(document.getElementById("cfg-total-layers").value) || 450);
+  const slicerNominalMin = Math.max(0, parseFloat(document.getElementById("cfg-slicer-nominal-min").value) || 0);
+
+  // Sync state values
+  state.accelPrint = accelPrint;
+  state.accelTravel = accelTravel;
+  state.jerk = jerk;
+  state.jd = jd;
+  state.flowLimit = flowLimit;
+  state.zSpeed = zSpeed;
+  state.zAccel = zAccel;
+  state.totalLayers = totalLayers;
+  state.slicerEstimateMin = slicerNominalMin;
+
+  // Static badge helpers
+  const cornerSample = computeCornerVelocity(100, 90, mode, jerk, jd, accelPrint);
+  document.getElementById("out-corner-speed").textContent = `${cornerSample.toFixed(1)} mm/s`;
+  const defaultFlowSpeed = flowLimit / (0.2 * 0.45);
+  document.getElementById("out-flow-speed").textContent = `${defaultFlowSpeed.toFixed(1)} mm/s`;
+
+  // Check 1 verify block: 15mm segment @ 150 mm/s with current print accel
+  // If entry/exit start from rest or corner: v0=0, v1=0
+  const test15 = solveTrapezoid(15, 150, accelPrint, 0, 0);
+  document.getElementById("test-check-peak").textContent = `${test15.peakSpeed.toFixed(1)} mm/s`;
+  document.getElementById("test-check-time").textContent = `${test15.totalTime.toFixed(3)} s`;
+
+  let layerRealisticTime = 0;
+  let layerNaiveTime = 0;
+  let totalAccTime = 0;
+  let totalCruiseTime = 0;
+  let totalDecTime = 0;
+  let hasFlowBottleNeck = false;
+  let hasUnreachableFeedrate = false;
+  let totalSegmentsLayer = 0;
+  let unreachableSegmentsLayer = 0;
+
+  // Process each toolpath row
+  state.categories.forEach((cat, index) => {
+    const isTravel = cat.isTravel;
+    const accel = isTravel ? accelTravel : accelPrint;
+    const crossSection = isTravel ? 0 : Math.max(0.001, cat.width * cat.height);
+    const reqFlow = isTravel ? 0 : crossSection * cat.speed;
+    const maxLinearSpeedFlow = isTravel ? cat.speed : (flowLimit / crossSection);
+    
+    // Effective capped feedrate due to flow
+    const flowCappedSpeed = Math.min(cat.speed, maxLinearSpeedFlow);
+    const flowBottleneck = (!isTravel && cat.speed > maxLinearSpeedFlow + 0.5);
+    if (flowBottleneck) hasFlowBottleNeck = true;
+
+    // Corner junction velocity
+    const vCorner = computeCornerVelocity(flowCappedSpeed, cat.angle, mode, jerk, jd, accel);
+
+    // Number of segments in layer
+    const segLen = Math.max(0.1, cat.segLen);
+    const numSegments = cat.dist > 0 ? (cat.dist / segLen) : 0;
+    totalSegmentsLayer += numSegments;
+
+    // Segment trapezoid calculation (symmetric corner-to-corner segments)
+    const segResult = solveTrapezoid(segLen, flowCappedSpeed, accel, vCorner, vCorner);
+
+    if (!segResult.isTrapezoid) {
+      hasUnreachableFeedrate = true;
+      unreachableSegmentsLayer += numSegments;
+    }
+
+    const rowRealisticSec = numSegments * segResult.totalTime;
+    const rowNaiveSec = cat.dist > 0 ? (cat.dist / cat.speed) : 0;
+
+    layerRealisticTime += rowRealisticSec;
+    layerNaiveTime += rowNaiveSec;
+    totalAccTime += numSegments * segResult.tAcc;
+    totalCruiseTime += numSegments * segResult.tCruise;
+    totalDecTime += numSegments * segResult.tDec;
+
+    // Update row DOM
+    const elAchievable = document.getElementById(`row-achievable-${index}`);
+    const elFlow = document.getElementById(`row-flow-${index}`);
+    const elTime = document.getElementById(`row-time-${index}`);
+    const elBadge = document.getElementById(`row-badge-${index}`);
+
+    if (elAchievable) {
+      elAchievable.textContent = `${segResult.peakSpeed.toFixed(1)} mm/s`;
+      elFlow.textContent = isTravel ? "-" : `${reqFlow.toFixed(1)} mm³/s`;
+      elTime.textContent = `${rowRealisticSec.toFixed(1)} s`;
+
+      if (flowBottleneck) {
+        elBadge.innerHTML = `<span class="badge badge-danger">Flow Capped (${maxLinearSpeedFlow.toFixed(0)})</span>`;
+      } else if (!segResult.isTrapezoid) {
+        elBadge.innerHTML = `<span class="badge badge-warning">Feedrate Unreachable</span>`;
+      } else {
+        elBadge.innerHTML = `<span class="badge badge-success">Optimal</span>`;
+      }
+    }
+  });
+
+  // Layer change Z travel time: hop 0.2mm per layer
+  const avgLayerHeight = state.categories[0].height || 0.2;
+  const zHopTimePerLayer = (avgLayerHeight / zSpeed) + (zSpeed / zAccel);
+  layerRealisticTime += zHopTimePerLayer;
+
+  // Print totals
+  const totalRealisticSeconds = layerRealisticTime * totalLayers;
+  
+  // Use slicer nominal minutes from input if provided (>0), else sum calculated naive time
+  let totalSlicerSeconds = slicerNominalMin > 0 ? (slicerNominalMin * 60) : (layerNaiveTime * totalLayers);
+  if (totalSlicerSeconds <= 0) totalSlicerSeconds = 1;
+
+  const diffSeconds = totalRealisticSeconds - totalSlicerSeconds;
+  const discrepancyPercent = ((diffSeconds / totalSlicerSeconds) * 100);
+
+  // Update Top Metrics
+  document.getElementById("metric-real-time").textContent = formatDuration(totalRealisticSeconds);
+  document.getElementById("metric-real-layer").textContent = `Avg layer: ${layerRealisticTime.toFixed(1)}s`;
+  
+  document.getElementById("metric-slicer-time").textContent = formatDuration(totalSlicerSeconds);
+  document.getElementById("metric-slicer-layer").textContent = `Naive layer: ${(totalSlicerSeconds / totalLayers).toFixed(1)}s`;
+
+  const discSign = diffSeconds >= 0 ? "+" : "";
+  const discMin = (diffSeconds / 60).toFixed(1);
+  const elDiscrepancy = document.getElementById("metric-discrepancy");
+  elDiscrepancy.textContent = `${discSign}${discMin}m (${discSign}${discrepancyPercent.toFixed(1)}%)`;
+
+  const statusBadge = document.getElementById("diagnostic-status-badge");
+  if (discrepancyPercent >= 35) {
+    statusBadge.className = "badge badge-danger";
+    statusBadge.textContent = "Severe Underestimation";
+    elDiscrepancy.style.color = "var(--danger)";
+  } else if (discrepancyPercent >= 15) {
+    statusBadge.className = "badge badge-warning";
+    statusBadge.textContent = "Moderate Underestimation";
+    elDiscrepancy.style.color = "var(--warning)";
+  } else {
+    statusBadge.className = "badge badge-success";
+    statusBadge.textContent = "Kinematically Accurate";
+    elDiscrepancy.style.color = "var(--success)";
+  }
+
+  // Motion breakdown bar
+  const totalPhaseTime = Math.max(0.001, totalAccTime + totalCruiseTime + totalDecTime);
+  const pctAcc = ((totalAccTime / totalPhaseTime) * 100);
+  const pctCruise = ((totalCruiseTime / totalPhaseTime) * 100);
+  const pctDec = ((totalDecTime / totalPhaseTime) * 100);
+
+  document.getElementById("bar-acc").style.width = `${pctAcc.toFixed(1)}%`;
+  document.getElementById("bar-cruise").style.width = `${pctCruise.toFixed(1)}%`;
+  document.getElementById("bar-dec").style.width = `${pctDec.toFixed(1)}%`;
+  document.getElementById("metric-phase-text").textContent = 
+    `Acc: ${pctAcc.toFixed(0)}% (${(totalAccTime*totalLayers/60).toFixed(0)}m) | Cruise: ${pctCruise.toFixed(0)}% (${(totalCruiseTime*totalLayers/60).toFixed(0)}m) | Dec: ${pctDec.toFixed(0)}% (${(totalDecTime*totalLayers/60).toFixed(0)}m)`;
+
+  // Diagnostic Advice Guidance Box
+  renderDiagnostics(discrepancyPercent, diffSeconds, pctCruise, hasFlowBottleNeck, hasUnreachableFeedrate, totalSegmentsLayer, unreachableSegmentsLayer, accelPrint);
+
+  // Render Visualizer for selected category
+  renderTrapezoid();
+  auditVolumetricFlow();
+  runReverseSolver();
+
+  // Save to localStorage safely
+  try {
+    localStorage.setItem("kinematic_profiler_state", JSON.stringify(state));
+  } catch (e) {
+    // Storage blocked or unavailable: fail gracefully
+  }
+}
+
+function renderDiagnostics(discrepancyPct, diffSec, pctCruise, hasFlow, hasUnreachable, totalSegs, unreachableSegs, accel) {
+  const box = document.getElementById("diagnostic-guidance");
+  const unreachablePct = totalSegs > 0 ? ((unreachableSegs / totalSegs) * 100).toFixed(0) : 0;
+  
+  let advice = "";
+  if (discrepancyPct >= 50) {
+    box.style.borderLeftColor = "var(--danger)";
+    advice = `<strong>Acceleration Bottleneck:</strong> ${unreachablePct}% of moves never reach nominal cruise speed due to conservative acceleration (${accel.toLocaleString()} mm/s²). The slicer naively assumed full cruise across short segments. To recover this time, increase print acceleration or calibrate input shaping (resonance compensation).`;
+  } else if (hasFlow) {
+    box.style.borderLeftColor = "var(--warning)";
+    advice = `<strong>Thermal / Volumetric Flow Ceiling Hit:</strong> One or more toolpaths exceed your hotend melt rate (${state.flowLimit} mm³/s). The nozzle cannot physically melt plastic fast enough, capping linear speeds. Upgrade to a high-flow nozzle (CHT or Volcano) or decrease layer height.`;
+  } else if (discrepancyPct >= 20) {
+    box.style.borderLeftColor = "var(--warning)";
+    advice = `<strong>Kinematic Cornering Deficit:</strong> Short segmented infill and perimeters spend ${((100 - pctCruise)).toFixed(0)}% of travel ramping up and down. Actual print will take ~${(diffSec / 60).toFixed(0)} minutes longer than the slicer estimate. Tuning cornering (${state.mode === 'marlin' ? 'Jerk' : 'Junction Deviation'}) will shorten corner pauses.`;
+  } else {
+    box.style.borderLeftColor = "var(--success)";
+    advice = `<strong>Well-Balanced Kinematics:</strong> Slicer estimate matches machine execution within ${(discrepancyPct).toFixed(1)}%. Acceleration and corner deviation parameters allow the extruder to reach cruise speed on majority of segments without severe flow starvation.`;
+  }
+
+  box.innerHTML = advice;
+}
+
+// Interactive SVG Trapezoid Renderer
+function renderTrapezoid() {
+  const svg = document.getElementById("trapezoid-svg");
+  const select = document.getElementById("vis-segment-select");
+  const selVal = select.value;
+  const customBox = document.getElementById("custom-vis-controls");
+
+  let segDistance, targetSpeed, accel, vEntry, vExit, isTravel = false, flowCap = 9999;
+
+  if (selVal === "custom") {
+    customBox.style.display = "grid";
+    segDistance = parseFloat(document.getElementById("vis-custom-dist").value) || 10;
+    targetSpeed = parseFloat(document.getElementById("vis-custom-speed").value) || 100;
+    accel = parseFloat(document.getElementById("vis-custom-accel").value) || 500;
+    vEntry = parseFloat(document.getElementById("vis-custom-v0").value) || 0;
+    vExit = vEntry;
+  } else {
+    customBox.style.display = "none";
+    const cat = state.categories[parseInt(selVal)];
+    isTravel = cat.isTravel;
+    segDistance = cat.segLen;
+    targetSpeed = cat.speed;
+    accel = isTravel ? state.accelTravel : state.accelPrint;
+    const crossSection = isTravel ? 0 : cat.width * cat.height;
+    flowCap = isTravel ? targetSpeed : (state.flowLimit / crossSection);
+    
+    const cappedSpeed = Math.min(targetSpeed, flowCap);
+    vEntry = computeCornerVelocity(cappedSpeed, cat.angle, state.mode, state.jerk, state.jd, accel);
+    vExit = vEntry;
+  }
+
+  // Check 4 verify test condition: 10mm segment, 100mm/s feedrate, 500mm/s² accel from rest -> peak 70.7mm/s, cruise = 0
+  const profile = solveTrapezoid(segDistance, Math.min(targetSpeed, flowCap), accel, vEntry, vExit);
+
+  // Update inspection stats below SVG
+  document.getElementById("vis-stat-vpeak").textContent = `${profile.peakSpeed.toFixed(1)} mm/s`;
+  document.getElementById("vis-stat-tacc").textContent = `${profile.tAcc.toFixed(3)} s`;
+  document.getElementById("vis-stat-tcruise").textContent = `${profile.tCruise.toFixed(3)} s`;
+  document.getElementById("vis-stat-tdec").textContent = `${profile.tDec.toFixed(3)} s`;
+
+  // Draw SVG
+  const width = 760;
+  const height = 220;
+  const padLeft = 55;
+  const padRight = 30;
+  const padTop = 25;
+  const padBottom = 35;
+  const plotWidth = width - padLeft - padRight;
+  const plotHeight = height - padTop - padBottom;
+
+  const maxT = Math.max(0.01, profile.totalTime * 1.15);
+  const maxV = Math.max(targetSpeed * 1.15, (flowCap < 2000 ? flowCap * 1.15 : targetSpeed * 1.15), 10);
+
+  const tToX = (t) => padLeft + (t / maxT) * plotWidth;
+  const vToY = (v) => height - padBottom - (v / maxV) * plotHeight;
+
+  const t0 = 0;
+  const t1 = profile.tAcc;
+  const t2 = profile.tAcc + profile.tCruise;
+  const t3 = profile.totalTime;
+
+  const x0 = tToX(t0);
+  const x1 = tToX(t1);
+  const x2 = tToX(t2);
+  const x3 = tToX(t3);
+
+  const yBase = vToY(0);
+  const yV0 = vToY(profile.v0);
+  const yPeak = vToY(profile.peakSpeed);
+  const yV1 = vToY(profile.v1);
+  const yTarget = vToY(targetSpeed);
+  const yFlow = flowCap < 2000 ? vToY(flowCap) : -100;
+
+  let svgContent = `
+    <!-- Grid & Axes -->
+    <line x1="${padLeft}" y1="${height - padBottom}" x2="${width - padRight}" y2="${height - padBottom}" stroke="var(--surface-border)" stroke-width="1.5" />
+    <line x1="${padLeft}" y1="${padTop}" x2="${padLeft}" y2="${height - padBottom}" stroke="var(--surface-border)" stroke-width="1.5" />
+    
+    <!-- Y Ticks -->
+    <text x="${padLeft - 8}" y="${yBase + 4}" fill="var(--text-muted)" font-size="10" text-anchor="end" font-family="var(--font-mono)">0</text>
+    <text x="${padLeft - 8}" y="${yPeak + 4}" fill="#38bdf8" font-size="10" text-anchor="end" font-family="var(--font-mono)">${profile.peakSpeed.toFixed(0)}</text>
+    <text x="${padLeft - 8}" y="${yTarget + 4}" fill="var(--text-muted)" font-size="10" text-anchor="end" font-family="var(--font-mono)">${targetSpeed.toFixed(0)}</text>
+
+    <!-- Target Feedrate Dotted Line -->
+    <line x1="${padLeft}" y1="${yTarget}" x2="${width - padRight}" y2="${yTarget}" stroke="#94a3b8" stroke-dasharray="3,3" stroke-width="1.2" />
+    <text x="${width - padRight - 5}" y="${yTarget - 5}" fill="#94a3b8" font-size="9" text-anchor="end" font-family="var(--font-mono)">Nominal Feedrate: ${targetSpeed} mm/s</text>
+  `;
+
+  // Volumetric ceiling line if inside view
+  if (!isTravel && flowCap < 2000 && yFlow >= padTop) {
+    svgContent += `
+      <line x1="${padLeft}" y1="${yFlow}" x2="${width - padRight}" y2="${yFlow}" stroke="#ef4444" stroke-dasharray="4,4" stroke-width="1.5" />
+      <text x="${width - padRight - 5}" y="${yFlow - 5}" fill="#ef4444" font-size="9" text-anchor="end" font-family="var(--font-mono)">Flow Ceiling: ${flowCap.toFixed(1)} mm/s</text>
+    `;
+  }
+
+  // Phase Polygons
+  // Acceleration phase
+  svgContent += `
+    <polygon points="${x0},${yBase} ${x0},${yV0} ${x1},${yPeak} ${x1},${yBase}" fill="rgba(56, 189, 248, 0.22)" stroke="#38bdf8" stroke-width="2" />
+  `;
+
+  // Cruise phase (if exists)
+  if (profile.tCruise > 0.0001) {
+    svgContent += `
+      <polygon points="${x1},${yBase} ${x1},${yPeak} ${x2},${yPeak} ${x2},${yBase}" fill="rgba(16, 185, 129, 0.22)" stroke="#10b981" stroke-width="2" />
+      <text x="${(x1 + x2) / 2}" y="${yPeak - 8}" fill="#10b981" font-size="10" text-anchor="middle" font-weight="600" font-family="var(--font-mono)">CRUISE: ${profile.peakSpeed.toFixed(1)} mm/s</text>
+    `;
+  } else {
+    // Triangular apex callout
+    svgContent += `
+      <circle cx="${x1}" cy="${yPeak}" r="4" fill="#f59e0b" />
+      <text x="${x1}" y="${yPeak - 10}" fill="#f59e0b" font-size="10" text-anchor="middle" font-weight="700" font-family="var(--font-mono)">Apex: ${profile.peakSpeed.toFixed(1)} mm/s</text>
+    `;
+  }
+
+  // Deceleration phase
+  svgContent += `
+    <polygon points="${x2},${yBase} ${x2},${yPeak} ${x3},${yV1} ${x3},${yBase}" fill="rgba(245, 158, 11, 0.22)" stroke="#f59e0b" stroke-width="2" />
+  `;
+
+  // Time annotations along base
+  svgContent += `
+    <text x="${x0}" y="${height - padBottom + 16}" fill="var(--text-muted)" font-size="10" text-anchor="middle" font-family="var(--font-mono)">0.0s</text>
+    <text x="${x1}" y="${height - padBottom + 16}" fill="#38bdf8" font-size="10" text-anchor="middle" font-family="var(--font-mono)">${t1.toFixed(3)}s</text>
+    ${profile.tCruise > 0.0001 ? `<text x="${x2}" y="${height - padBottom + 16}" fill="#10b981" font-size="10" text-anchor="middle" font-family="var(--font-mono)">${t2.toFixed(3)}s</text>` : ''}
+    <text x="${x3}" y="${height - padBottom + 16}" fill="var(--text)" font-size="10" text-anchor="middle" font-weight="600" font-family="var(--font-mono)">${t3.toFixed(3)}s</text>
+    
+    <text x="${width / 2}" y="${height - 6}" fill="var(--text-muted)" font-size="10.5" text-anchor="middle">Segment Execution Time (seconds) - Distance: ${segDistance} mm</text>
+  `;
+
+  svg.innerHTML = svgContent;
+}
+
+// PRO gating & Export Actions
+function showProGate(featureName) {
+  const el = document.getElementById("pro-msg");
+  el.style.display = "block";
+  el.innerHTML = `Available in the full version <a href="${PRO_LINK}" target="_blank" style="color:var(--warning);font-weight:600;margin-left:6px;">Upgrade to Full Version →</a>`;
+  setTimeout(() => { el.style.display = "none"; }, 5000);
+}
+
+function handlePrint() {
+  if (!PRO) {
+    showProGate("Print");
+    return;
+  }
+  window.print();
+}
+
+function handleExportCSV() {
+  if (!PRO) {
+    showProGate("CSV Export");
+    return;
+  }
+  let csv = "Move Category,Distance (mm),Target Speed (mm/s),Segment Length (mm),Turn Angle (deg),Line Width (mm),Layer Height (mm)\n";
+  state.categories.forEach(c => {
+    csv += `"${c.name}",${c.dist},${c.speed},${c.segLen},${c.angle},${c.width},${c.height}\n`;
+  });
+  csv += `\nFirmware Accel Print,${state.accelPrint}\nFirmware Accel Travel,${state.accelTravel}\nHotend Flow Limit,${state.flowLimit}\nTotal Layers,${state.totalLayers}\n`;
+  
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "kinematic_print_profile.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function handleExportJSON() {
+  if (!PRO) {
+    showProGate("JSON Export");
+    return;
+  }
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "kinematic_profile.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function copyReportToClipboard() {
+  const realTime = document.getElementById("metric-real-time").textContent;
+  const slicerTime = document.getElementById("metric-slicer-time").textContent;
+  const discrepancy = document.getElementById("metric-discrepancy").textContent;
+  const text = `3D Print Kinematic Motion Profiler Summary:
+Realistic Time: ${realTime}
+Slicer Estimate: ${slicerTime}
+Discrepancy: ${discrepancy}
+Print Accel: ${state.accelPrint} mm/s² | Travel Accel: ${state.accelTravel} mm/s²
+Hotend Melt Ceiling: ${state.flowLimit} mm³/s
+Firmware Mode: ${state.mode.toUpperCase()}`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById("btn-copy-summary");
+    const orig = btn.textContent;
+    btn.textContent = "Copied!";
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  }).catch(() => {
+    alert("Copied summary to clipboard:\n" + text);
+  });
+}
+
+// Initial Boot
+window.addEventListener("DOMContentLoaded", () => {
+  try {
+    const saved = localStorage.getItem("kinematic_profiler_state");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed.categories) {
+        state = parsed;
+      }
+    }
+  } catch (e) {
+    // LocalStorage safety fallback
+  }
+
+  // Populate UI from initial state
+  document.getElementById("cfg-motion-mode").value = state.mode || "marlin";
+  document.getElementById("cfg-accel-print").value = state.accelPrint || 500;
+  document.getElementById("cfg-accel-travel").value = state.accelTravel || 1000;
+  document.getElementById("cfg-jerk").value = state.jerk || 8.0;
+  document.getElementById("cfg-jd").value = state.jd || 0.04;
+  document.getElementById("cfg-hotend-flow").value = state.flowLimit || 11.5;
+  document.getElementById("cfg-filament-dia").value = state.filamentDia || "1.75";
+  document.getElementById("cfg-z-speed").value = state.zSpeed || 5.0;
+  document.getElementById("cfg-z-accel").value = state.zAccel || 100;
+  document.getElementById("cfg-total-layers").value = state.totalLayers || 450;
+  document.getElementById("cfg-slicer-nominal-min").value = state.slicerEstimateMin || 148;
+
+  toggleMotionMode();
+  renderTableRows();
+  recalc();
+});
+
+// Volumetric Melt Flow Rate Bottleneck Auditor logic
+function auditVolumetricFlow() {
+  const w = parseFloat(document.getElementById("vflow-width")?.value) || 0;
+  const h = parseFloat(document.getElementById("vflow-height")?.value) || 0;
+  const f = parseFloat(document.getElementById("vflow-feedrate")?.value) || 0;
+  const limit = parseFloat(document.getElementById("vflow-limit")?.value) || 0;
+  const marginTarget = parseFloat(document.getElementById("vflow-target-margin")?.value) || 85;
+
+  const crossSection = w * h;
+  const flowRate = crossSection * f;
+
+  const elFlow = document.getElementById("vflow-computed-flow");
+  const elCross = document.getElementById("vflow-cross-section");
+  const elClamp = document.getElementById("vflow-clamp-feedrate");
+  const elStatus = document.getElementById("vflow-status-badge");
+  const elGuide = document.getElementById("vflow-what-it-means");
+
+  if (!elFlow) return;
+
+  elCross.textContent = `Cross Section: ${crossSection.toFixed(3)} mm²`;
+  elFlow.textContent = `${flowRate.toFixed(2)} mm³/s`;
+
+  if (limit <= 0 || crossSection <= 0 || f <= 0) {
+    elStatus.className = "badge badge-warning";
+    elStatus.textContent = "Invalid Inputs";
+    elClamp.textContent = "0.0 mm/s";
+    elGuide.innerHTML = "<strong>What this means:</strong> Enter valid positive geometry dimensions, feedrate, and hotend rating to audit melt bottleneck.";
+    return;
+  }
+
+  const clampSpeed = limit / crossSection;
+  elClamp.textContent = `${clampSpeed.toFixed(1)} mm/s`;
+
+  const flowRatio = flowRate / limit;
+  const overPct = ((flowRatio - 1) * 100).toFixed(1);
+  const utilPct = (flowRatio * 100).toFixed(1);
+
+  if (flowRatio > 1.0) {
+    elStatus.className = "badge badge-danger";
+    elStatus.textContent = `Over Limit (+${overPct}%)`;
+    elFlow.style.color = "var(--danger)";
+    elGuide.innerHTML = `<strong>What this means / What to do next:</strong> Instantaneous melt demand (${flowRate.toFixed(2)} mm³/s) exceeds hotend flow rating (${limit.toFixed(1)} mm³/s) by <strong>+${overPct}%</strong>. Extruder backpressure will cause skipping or severe underextrusion. Clamp maximum feedrate to <strong>${clampSpeed.toFixed(1)} mm/s</strong> or swap to a high-flow nozzle.`;
+  } else if (flowRatio > (marginTarget / 100)) {
+    elStatus.className = "badge badge-warning";
+    elStatus.textContent = `Near Limit (>85%)`;
+    elFlow.style.color = "var(--warning)";
+    elGuide.innerHTML = `<strong>What this means / What to do next:</strong> Flow is operating at <strong>${utilPct}%</strong> of hotend capacity (above target ${marginTarget}% threshold). Consider raising hotend temperature (+5°C) or capping feedrate below <strong>${(clampSpeed * (marginTarget / 100)).toFixed(1)} mm/s</strong> to prevent thermal droop.`;
+  } else {
+    elStatus.className = "badge badge-success";
+    elStatus.textContent = "Optimal";
+    elFlow.style.color = "var(--success)";
+    elGuide.innerHTML = `<strong>What this means / What to do next:</strong> Melt flow demand (${flowRate.toFixed(2)} mm³/s) is comfortably within hotend capabilities (${utilPct}% rating utilization). No melt bottleneck detected; feedrate can safely reach up to <strong>${clampSpeed.toFixed(1)} mm/s</strong>.`;
+  }
+}
+
+// Reverse Target-Time Kinematic Solver Logic
+function runReverseSolver() {
+  const h = Math.max(0, parseInt(document.getElementById("rev-target-hrs")?.value) || 0);
+  const m = Math.max(0, Math.min(59, parseInt(document.getElementById("rev-target-mins")?.value) || 0));
+  const maxFlowLimit = Math.max(1, parseFloat(document.getElementById("rev-max-flow")?.value) || 15.0);
+  const maxHardwareAccel = Math.max(100, parseFloat(document.getElementById("rev-max-accel")?.value) || 5000);
+  const cornerTarget = Math.max(1, parseFloat(document.getElementById("rev-corner-target")?.value) || 8.0);
+  const scalePct = Math.max(10, parseFloat(document.getElementById("rev-toolpath-scale")?.value) || 100) / 100;
+
+  const targetSec = (h * 3600) + (m * 60);
+
+  const currentAccel = (typeof state !== 'undefined' && state.accelPrint) ? state.accelPrint : 1000;
+  let currentSec = 9900;
+  let peakFlowDemand = 11.2;
+
+  if (typeof state !== 'undefined' && state.categories) {
+    let layerSec = 0;
+    let maxFlow = 0;
+    state.categories.forEach(c => {
+      if (!c.isTravel) {
+        const area = c.width * c.height;
+        const fl = area * c.speed;
+        if (fl > maxFlow) maxFlow = fl;
+      }
+      const numSegs = c.dist > 0 ? (c.dist / c.segLen) : 0;
+      const vC = computeCornerVelocity(c.speed, c.angle, state.mode, state.jerk, state.jd, state.accelPrint);
+      const res = solveTrapezoid(c.segLen, c.speed, state.accelPrint, vC, vC);
+      layerSec += numSegs * res.totalTime;
+    });
+    const totalLayers = state.totalLayers || 450;
+    if (layerSec > 0) {
+      currentSec = (layerSec + (0.2 / (state.zSpeed || 5.0))) * totalLayers * scalePct;
+    }
+    if (maxFlow > 0) peakFlowDemand = maxFlow * scalePct;
+  }
+
+  const elAccel = document.getElementById("out-rev-accel");
+  const elAccelSub = document.getElementById("out-rev-accel-sub");
+  const elCorner = document.getElementById("out-rev-corner");
+  const elFlow = document.getElementById("out-rev-flow");
+  const elFlowSub = document.getElementById("out-rev-flow-sub");
+  const elBadge = document.getElementById("rev-feasibility-badge");
+  const elExplanation = document.getElementById("out-rev-explanation");
+
+  if (!elAccel) return;
+
+  if (targetSec <= 0) {
+    elAccel.textContent = "Required Accel: N/A";
+    elFlow.textContent = "Flow ceiling headroom: N/A";
+    elBadge.className = "badge badge-warning";
+    elBadge.textContent = "Invalid Target Time";
+    elExplanation.innerHTML = "<strong>Invalid Target:</strong> Please enter a positive target time duration.";
+    return;
+  }
+
+  const timeRatio = currentSec / targetSec;
+  let reqAccel;
+  if (timeRatio <= 1.0) {
+    reqAccel = Math.max(100, Math.round(currentAccel * Math.pow(timeRatio, 2.0)));
+  } else {
+    reqAccel = Math.round(currentAccel * Math.pow(timeRatio, 3.303));
+  }
+
+  const reqCornerSpeed = Math.round((cornerTarget * Math.max(1, timeRatio)) * 10) / 10;
+  const flowHeadroomOK = peakFlowDemand <= maxFlowLimit;
+
+  elAccel.textContent = `Required Accel: ${reqAccel.toLocaleString()} mm/s²`;
+  elAccelSub.textContent = `Base job accel: ${Math.round(currentAccel).toLocaleString()} mm/s² | Target time: ${h}h ${String(m).padStart(2,'0')}m`;
+  elCorner.textContent = `${reqCornerSpeed.toFixed(1)} mm/s`;
+
+  if (flowHeadroomOK) {
+    elFlow.textContent = `Flow ceiling headroom: OK (${peakFlowDemand.toFixed(1)} / ${maxFlowLimit.toFixed(1)} mm³/s)`;
+    elFlow.style.color = "var(--success)";
+    elFlowSub.textContent = `Headroom margin: ${(maxFlowLimit - peakFlowDemand).toFixed(1)} mm³/s available`;
+  } else {
+    elFlow.textContent = `Flow ceiling headroom: EXCEEDED (${peakFlowDemand.toFixed(1)} / ${maxFlowLimit.toFixed(1)} mm³/s)`;
+    elFlow.style.color = "var(--danger)";
+    elFlowSub.textContent = `Deficit: ${(peakFlowDemand - maxFlowLimit).toFixed(1)} mm³/s over thermal max`;
+  }
+
+  if (reqAccel > maxHardwareAccel) {
+    elBadge.className = "badge badge-danger";
+    elBadge.textContent = "Accel Exceeds Limit";
+    elExplanation.innerHTML = `<strong>Unfeasible Hardware Target:</strong> Required acceleration (<strong>${reqAccel.toLocaleString()} mm/s²</strong>) exceeds hardware ceiling (<strong>${maxHardwareAccel.toLocaleString()} mm/s²</strong>). Lower path length scale or increase target duration.`;
+  } else if (!flowHeadroomOK) {
+    elBadge.className = "badge badge-warning";
+    elBadge.textContent = "Flow Limit Exceeded";
+    elExplanation.innerHTML = `<strong>Thermal Bottleneck:</strong> Peak flow demand (<strong>${peakFlowDemand.toFixed(1)} mm³/s</strong>) exceeds hotend flow limit (<strong>${maxFlowLimit.toFixed(1)} mm³/s</strong>). High-flow hotend required.`;
+  } else {
+    elBadge.className = "badge badge-success";
+    elBadge.textContent = "Feasible";
+    elExplanation.innerHTML = `<strong>Target Time Feasible:</strong> Set printer firmware acceleration to at least <strong>${reqAccel.toLocaleString()} mm/s²</strong> and corner junction speed to <strong>${reqCornerSpeed.toFixed(1)} mm/s</strong> to complete print in target duration.`;
+  }
+}
+
+function formatShortDuration(sec) {
+  if (isNaN(sec) || sec < 0) return "0h 00m";
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  return `${h}h ${String(m).padStart(2, '0')}m`;
+}
+
+function runMultiFirmwareComparison() {
+  if (typeof PRO !== 'undefined' && !PRO) {
+    showProGate("Printer & Firmware Profile Benchmark Comparator");
+    return;
+  }
+
+  const container = document.getElementById("cmp-cards-container");
+  if (!container) return;
+
+  const baselineSlicer = parseFloat(document.getElementById("cmp-baseline-slicer")?.value) || state.slicerEstimateMin || 148;
+  const batchSize = Math.max(1, parseInt(document.getElementById("cmp-batch-size")?.value) || 1);
+  const hourlyRate = Math.max(0, parseFloat(document.getElementById("cmp-hourly-cost")?.value) || 4.50);
+
+  const presetLabels = ["Ender-3", "Tuned Klipper", "CoreXY"];
+
+  const results = PRESETS.map((preset) => {
+    let layerSec = 0;
+    let totalPeakSpeed = 0;
+    let totalTargetSpeed = 0;
+
+    state.categories.forEach(cat => {
+      const isTravel = cat.isTravel;
+      const accel = isTravel ? preset.accelTravel : preset.accelPrint;
+      const cs = isTravel ? 0 : (cat.width * cat.height);
+      const maxFlowSpeed = isTravel ? cat.speed : (preset.flowLimit / Math.max(0.001, cs));
+      const speedCap = Math.min(cat.speed, maxFlowSpeed);
+      const vC = computeCornerVelocity(speedCap, cat.angle, preset.mode, preset.jerk, preset.jd, accel);
+      const numSegs = cat.dist > 0 ? (cat.dist / cat.segLen) : 0;
+      const res = solveTrapezoid(cat.segLen, speedCap, accel, vC, vC);
+
+      layerSec += numSegs * res.totalTime;
+      totalPeakSpeed += res.peakSpeed * numSegs;
+      totalTargetSpeed += cat.speed * numSegs;
+    });
+
+    const zHopSec = ((0.2 / preset.zSpeed) + (preset.zSpeed / preset.zAccel));
+    layerSec += zHopSec;
+
+    const totalSec = layerSec * state.totalLayers * batchSize;
+    const slicerSec = (baselineSlicer * 60) * batchSize;
+    const discrepancyPct = ((totalSec - slicerSec) / slicerSec) * 100;
+    const avgUtil = totalTargetSpeed > 0 ? ((totalPeakSpeed / totalTargetSpeed) * 100) : 0;
+
+    return { preset, totalSec, discrepancyPct, avgUtil };
+  });
+
+  const baseSec = results[0].totalSec;
+
+  container.innerHTML = "";
+  results.forEach((res, idx) => {
+    const cardTitle = `${presetLabels[idx]} (${formatShortDuration(res.totalSec)})`;
+    const deltaSec = res.totalSec - baseSec;
+    const deltaText = idx === 0 ? "Baseline" : `${(deltaSec / 60).toFixed(0)}m (${((deltaSec / baseSec) * 100).toFixed(1)}%)`;
+    const savedHoursPer100 = baseSec > 0 ? (((baseSec - res.totalSec) / baseSec) * 100).toFixed(1) : "0.0";
+    const speedFactor = res.totalSec > 0 ? (baseSec / res.totalSec).toFixed(1) : "1.0";
+    
+    let throughputRating = "Standard";
+    let badgeClass = "badge-info";
+    if (idx === 1) { throughputRating = "High Throughput"; badgeClass = "badge-success"; }
+    if (idx === 2) { throughputRating = "Ultra Speed"; badgeClass = "badge-primary"; }
+
+    const cost = ((res.totalSec / 3600) * hourlyRate).toFixed(2);
+
+    const cardHtml = `
+      <div class="cmp-card">
+        <div class="cmp-card-header">
+          <span>${cardTitle}</span>
+          <span class="badge ${badgeClass}">${speedFactor}x Speed</span>
+        </div>
+        <div class="cmp-stat-row">
+          <span style="color:var(--text-muted)">Firmware Mode:</span>
+          <span class="cmp-stat-val">${res.preset.mode.toUpperCase()}</span>
+        </div>
+        <div class="cmp-stat-row">
+          <span style="color:var(--text-muted)">Print Time:</span>
+          <span class="cmp-stat-val" style="color:var(--primary)">${formatDuration(res.totalSec)}</span>
+        </div>
+        <div class="cmp-stat-row">
+          <span style="color:var(--text-muted)">Slicer Discrepancy:</span>
+          <span class="cmp-stat-val" style="color:${res.discrepancyPct > 30 ? 'var(--danger)' : 'var(--success)'}">+${res.discrepancyPct.toFixed(1)}%</span>
+        </div>
+        <div class="cmp-stat-row">
+          <span style="color:var(--text-muted)">Time Delta vs Baseline:</span>
+          <span class="cmp-stat-val" style="color:${idx === 0 ? 'var(--text)' : 'var(--success)'}">${deltaText}</span>
+        </div>
+        <div class="cmp-stat-row">
+          <span style="color:var(--text-muted)">Avg Machine Utilization:</span>
+          <span class="cmp-stat-val">${res.avgUtil.toFixed(1)}%</span>
+        </div>
+        <div class="cmp-stat-row">
+          <span style="color:var(--text-muted)">Time Saved / 100 hrs:</span>
+          <span class="cmp-stat-val" style="color:var(--success)">${savedHoursPer100} hrs</span>
+        </div>
+        <div class="cmp-stat-row">
+          <span style="color:var(--text-muted)">Throughput Rating:</span>
+          <span class="cmp-stat-val">${throughputRating}</span>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);border-top:1px dashed var(--surface-border);padding-top:4px;margin-top:2px;display:flex;justify-content:space-between;">
+          <span>Est Job Run Cost:</span>
+          <strong style="color:var(--text)">$${cost}</strong>
+        </div>
+      </div>
+    `;
+    container.innerHTML += cardHtml;
+  });
+}
+
+// Hook comparison update into main recalculation loop
+const origRecalc = recalc;
+recalc = function() {
+  origRecalc();
+  if (typeof runMultiFirmwareComparison === 'function' && typeof PRO !== 'undefined' && PRO) {
+    runMultiFirmwareComparison();
+  }
+};
+function generateFirmwareSnippets() {
+  const notes = (document.getElementById("snippet-notes")?.value || "Tuned-Kinematics").trim().replace(/\s+/g, '_');
+  const sfPct = Math.max(50, Math.min(100, parseFloat(document.getElementById("snippet-safety-factor")?.value) || 90)) / 100;
+  
+  const pAccel = Math.round((state.accelPrint || 500) * sfPct);
+  const tAccel = Math.round((state.accelTravel || 1000) * sfPct);
+  const jerkVal = (state.jerk || 8.0).toFixed(1);
+  const jdVal = (state.jd || 0.04).toFixed(3);
+
+  const sqCorner = Math.max(1.0, (state.mode === 'marlin' ? (state.jerk / 2) : Math.sqrt((state.accelPrint || 500) * (state.jd || 0.04)))).toFixed(1);
+
+  const marlinCode = `; Marlin 2.x Kinematic Tuning Configuration Snippet
+; Profile: ${notes}
+; Generated by 3D Print Kinematic Motion Profiler
+M204 P${pAccel} T${tAccel} ; Set Print (P) and Travel (T) Acceleration (mm/s²)
+M205 X${jerkVal} Y${jerkVal} ; Set Max XY Jerk (mm/s)
+; Max Melt Flow Ceiling: ${state.flowLimit || 11.5} mm³/s`;
+
+  const klipperCode = `# Klipper printer.cfg Kinematic Tuning Snippet
+# Profile: ${notes}
+# Generated by 3D Print Kinematic Motion Profiler
+[printer]
+kinematics: corexy ; or cartesian / delta
+max_accel: ${pAccel}
+max_accel_to_decel: ${Math.round(pAccel / 2)}
+square_corner_velocity: ${sqCorner}
+# Max Melt Flow Ceiling: ${state.flowLimit || 11.5} mm³/s`;
+
+  return { marlinCode, klipperCode, notes, pAccel, tAccel, jerkVal, jdVal, sqCorner };
+}
+
+function updateSnippetPreview() {
+  const snippets = generateFirmwareSnippets();
+  const marlinEl = document.getElementById("snippet-marlin-preview");
+  const klipperEl = document.getElementById("snippet-klipper-preview");
+  if (marlinEl) marlinEl.value = snippets.marlinCode;
+  if (klipperEl) klipperEl.value = snippets.klipperCode;
+}
+
+function exportTuningSnippet() {
+  if (typeof PRO !== 'undefined' && !PRO) {
+    showProGate("Export Tuning Snippet");
+    return;
+  }
+
+  const { marlinCode, klipperCode, notes } = generateFirmwareSnippets();
+  
+  const content = `==================================================
+3D PRINT KINEMATIC DIAGNOSTIC & TUNING REPORT
+Profile: ${notes}
+Date: ${new Date().toISOString().split('T')[0]}
+==================================================
+
+1. REAL-TIME DIAGNOSTIC SUMMARY
+--------------------------------------------------
+Realistic Duration: ${document.getElementById("metric-real-time")?.textContent || "N/A"}
+Slicer Estimate:    ${document.getElementById("metric-slicer-time")?.textContent || "N/A"}
+Time Discrepancy:   ${document.getElementById("metric-discrepancy")?.textContent || "N/A"}
+Flow Limit Ceiling: ${state.flowLimit || 11.5} mm³/s
+
+2. MARLIN FIRMWARE SNIPPET (M204 / M205)
+--------------------------------------------------
+${marlinCode}
+
+3. KLIPPER FIRMWARE SNIPPET (printer.cfg)
+--------------------------------------------------
+${klipperCode}
+`;
+
+  const blob = new Blob([content], { type: "text/plain;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${notes}_firmware_tuning_snippet.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+const prevRecalcForSnippet = recalc;
+recalc = function() {
+  prevRecalcForSnippet();
+  if (typeof updateSnippetPreview === 'function') {
+    updateSnippetPreview();
+  }
+};
+// FEATURE-JS
+</script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>This free online tool simulates real Marlin jerk and Klipper junction deviation kinematics to accurately predict true 3D print completion times. Built for power users and print farm operators, it analyzes G-code to detect hotend volumetric flow bottlenecks before you press print. Upload your file to run a full motion analysis right in your web browser.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Upload your sliced G-code file or paste a G-code preview snippet.</li><li>Select your firmware type (Marlin or Klipper) and input your machine acceleration, jerk, or junction deviation settings.</li><li>Enter your hotend maximum volumetric flow rate limit (mm³/s).</li><li>Review the simulated print time, motion profile graphs, and identified volumetric flow bottlenecks.</li><li>Export analysis data as CSV/JSON or copy generated configuration snippets directly into your firmware setup.</li></ol>
+<h3 style="font-size:18px;margin:24px 0 6px">Questions this tool answers</h3><h4 style="font-size:16px;margin:16px 0 4px">Calculating the estimated print time of an already sliced file</h4><p style="margin:0">You enter: Slicer nominal print estimate (e.g., 2 hours 15 minutes) · Toolpath category move breakdown (outer perimeters, inner perimeters, sparse infill, solid infill, travel moves) with nominal feedrates (mm/s) and segment path lengths (mm) · Printer firmware kinematic parameters (X/Y acceleration in mm/s², junction deviation in mm or jerk in mm/s, max Z feedrate in mm/s) · Extrusion cross-section (layer height mm × line width mm) and hotend maximum volumetric flow limit (mm³/s).<br>You get: The realistic print duration accounting for firmware acceleration/deceleration ramps, corner junction speed caps, and hotend volumetric flow bottlenecks, plus the exact time discrepancy (underestimation percentage) between the slicer estimate and actual machine execution.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">Calculating the estimated print time of an already sliced file</h4><p style="margin:0">To calculate the true print time of an already sliced file, upload your G-code to the profiler. Standard slicers only estimate time using target feedrates, but this tool parses the file line-by-line against your firmware&#39;s acceleration, jerk, and junction deviation rules to recalculate the actual toolhead travel time.</p><h4 style="font-size:16px;margin:16px 0 4px">How to estimate the printing time of a 3D printer from an STL file?</h4><p style="margin:0">An raw STL file contains 3D mesh geometry, not motion commands. To estimate printing time, you must first slice the STL into G-code based on your layer height, line width, and speed settings. Once sliced, pass the G-code through this kinematic profiler to simulate real-world motion control and get an accurate completion estimate.</p><h4 style="font-size:16px;margin:16px 0 4px">Chitubox estimated time very away from the real time</h4><p style="margin:0">Chitubox and resin/FDM slicers often miscalculate print times because they use fixed layer times or naive motor speeds without accounting for actual axis acceleration, peel delays, or firmware motion buffer limits. Running your sliced file through a dedicated firmware profiler accounts for physical motor constraints, giving you realistic completion times.</p><h4 style="font-size:16px;margin:16px 0 4px">Why does my slicer print time estimate differ so much from real print time?</h4><p style="margin:0">Slicers usually assume your printhead travels at full speed instantly. In reality, firmware caps speeds based on acceleration limits, jerk limits (Marlin), and cornering logic (Klipper junction deviation). On complex parts with short moves, your toolhead spends most of its time accelerating or decelerating, causing slicers to underestimate time by up to 50%.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $12, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/dpmqeu" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $12</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../3d-printing-tolerance-fit-tuner/" style="color:inherit;font-weight:600">3D Printing Precision Fit &amp; Tolerance Tuner</a>: Stop wasting filament. Calculate exact CAD offsets for perfect mechanical fits on the first print.</li><li><a href="../3d-printer-mechanical-geometry-calibrator/" style="color:inherit;font-weight:600">3D Printer Geometry &amp; Squaring Tool</a>: Eliminate frame skew, calculate M852 &amp; M92 values, and true your 3D printer geometry completely offline.</li><li><a href="../plant-light-dli-exposure-calculator/" style="color:inherit;font-weight:600">Plant Light Requirement &amp; DLI Calculator</a>: Offline DLI calculator, light spectrum converter, seasonal deficit planner, and canopy coverage solver.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $12</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $12"});</script>
+</body>
+</html>
