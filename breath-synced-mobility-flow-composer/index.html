@@ -1,0 +1,2463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --card-sub-bg: #f1f5f9;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --accent: #0284c7;
+      --accent-hover: #0369a1;
+      --accent-light: #e0f2fe;
+      --success: #059669;
+      --success-light: #d1fae5;
+      --warning: #d97706;
+      --warning-light: #fef3c7;
+      --danger: #dc2626;
+      --radius: 10px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f172a;
+        --card-bg: #1e293b;
+        --card-sub-bg: #0f172a;
+        --text: #f8fafc;
+        --text-muted: #94a3b8;
+        --border: #334155;
+        --accent: #38bdf8;
+        --accent-hover: #0284c7;
+        --accent-light: #075985;
+        --success: #10b981;
+        --success-light: #064e3b;
+        --warning: #fbbf24;
+        --warning-light: #78350f;
+        --danger: #f87171;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .preset-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      margin-top: 1rem;
+      background: var(--card-bg);
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .preset-bar label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    select, input[type="number"], input[type="text"], textarea {
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 0.45rem 0.65rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background-color: var(--card-bg);
+      color: var(--text);
+      outline: none;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-light);
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 0.9rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+      background-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background-color: var(--card-sub-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--border);
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 900px) {
+      .grid-layout {
+        grid-template-columns: 1fr 1fr;
+      }
+      .full-width {
+        grid-column: span 2;
+      }
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+
+    /* Active Player Styling */
+    .player-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .player-container {
+        grid-template-columns: 240px 1fr;
+      }
+    }
+
+    .breath-visualizer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--card-sub-bg);
+      border-radius: var(--radius);
+      padding: 1rem;
+      position: relative;
+    }
+
+    .breath-svg-wrap {
+      width: 180px;
+      height: 180px;
+      position: relative;
+    }
+
+    .breath-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .pulse-circle {
+      transform-origin: center;
+      transition: transform 0.1s linear, fill 0.3s ease;
+      fill: var(--accent-light);
+      stroke: var(--accent);
+      stroke-width: 3;
+    }
+
+    .phase-text {
+      font-size: 1.1rem;
+      font-weight: 800;
+      fill: var(--accent);
+    }
+
+    .phase-timer-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      fill: var(--text);
+    }
+
+    .player-controls {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 0.75rem;
+      width: 100%;
+    }
+
+    .pose-info-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background-color: var(--card-sub-bg);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+
+    .pose-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .pose-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .pose-cycle-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      background-color: var(--accent-light);
+      color: var(--accent);
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+    }
+
+    .pose-diagram-box {
+      height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0.5rem 0;
+    }
+
+    .pose-diagram-box svg {
+      max-height: 100%;
+      max-width: 100%;
+    }
+
+    .pose-cue {
+      font-size: 0.88rem;
+      font-style: italic;
+      color: var(--text-muted);
+      background: var(--card-bg);
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .progress-bar-container {
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    .progress-bar-bg {
+      height: 8px;
+      background-color: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background-color: var(--accent);
+      width: 0%;
+      transition: width 0.2s linear;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Cadence Inputs & Metrics */
+    .cadence-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .input-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .metrics-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+      background-color: var(--card-sub-bg);
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+    }
+
+    .metric-box {
+      text-align: center;
+      padding: 0.5rem;
+      background: var(--card-bg);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .metric-value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .interpretation-box {
+      background-color: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      padding: 0.75rem 1rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .interpretation-box h4 {
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      color: var(--accent);
+    }
+
+    /* Routine Builder */
+    .region-filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .checkbox-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background-color: var(--card-sub-bg);
+      padding: 0.3rem 0.6rem;
+      border-radius: 16px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      user-select: none;
+    }
+
+    .checkbox-tag input {
+      cursor: pointer;
+    }
+
+    .checkbox-tag:has(input:checked) {
+      background-color: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .add-pose-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .add-pose-bar select {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sequence-table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 0.6rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      font-weight: 700;
+      color: var(--text-muted);
+      background-color: var(--card-sub-bg);
+    }
+
+    .muscle-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.2rem;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      padding: 0.1rem 0.4rem;
+      background-color: var(--card-sub-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-muted);
+    }
+
+    .tag-accent {
+      background-color: var(--accent-light);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .table-actions {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    /* Summary Card & Printable Section */
+    .summary-card {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+
+    .summary-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0.5rem;
+      }
+      .card {
+        padding: 0.75rem;
+      }
+      .cadence-grid, .metrics-container {
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      }
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    @media (min-width: 600px) {
+      .summary-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .summary-section-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .summary-badge-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .notes-input-box {
+      margin-top: 1rem;
+    }
+
+    .notes-input-box label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .notes-input-box textarea {
+      width: 100%;
+      height: 60px;
+      resize: vertical;
+    }
+
+    .pro-banner {
+      display: none;
+      background-color: var(--warning-light);
+      color: var(--warning);
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 0.75rem;
+      text-align: center;
+    }
+
+    .pro-banner a {
+      color: inherit;
+      text-decoration: underline;
+    }
+
+    .disclaimer-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      font-style: italic;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    /* Print media styles */
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+        padding: 0;
+      }
+      header, .preset-bar, [data-feature="interactive-sequence-player"], [data-feature="cadence-engine"], [data-feature="routine-builder"], .action-row, .no-print {
+        display: none !important;
+      }
+      [data-feature="summary-card-generator"] {
+        display: block !important;
+        width: 100%;
+        border: none;
+      }
+      .summary-card {
+        border: 1px solid #000;
+        box-shadow: none;
+      }
+    }
+    .solver-drawer summary::-webkit-details-marker { color: var(--accent); }
+    .solver-drawer[open] { border-color: var(--accent) !important; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 1rem; }
+    .modal-content { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); max-width: 580px; width: 100%; padding: 1rem; box-shadow: var(--shadow); max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+    .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); line-height: 1; }
+    .comparator-controls { display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin-bottom: 1rem; }
+    @media (min-width: 480px) {
+      .comparator-controls { grid-template-columns: 1fr 1fr; }
+    }
+    .comparator-matrix table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+    .comparator-matrix th, .comparator-matrix td { padding: 0.5rem; text-align: center; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    .comparator-matrix th:first-child, .comparator-matrix td:first-child { text-align: left; }
+    .comparator-result { background: var(--accent-light); color: var(--accent); padding: 0.75rem; border-radius: 6px; font-size: 0.88rem; text-align: center; }
+    .trend-chart-container { background: var(--card-sub-bg); border-radius: var(--radius); padding: 0.5rem; border: 1px solid var(--border); }
+    .trend-chart-tooltip { position: absolute; display: none; background: var(--text); color: var(--bg); padding: 0.35rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600; pointer-events: none; transform: translate(-50%, -125%); z-index: 10; white-space: nowrap; box-shadow: var(--shadow); }
+    .trend-point { cursor: pointer; transition: r 0.15s ease, fill 0.15s ease; }
+    .trend-point:hover { r: 6; fill: var(--accent); }
+    .json-manager-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+    @media (min-width: 600px) { .json-manager-grid { grid-template-columns: 1fr 1fr; } }
+    .json-drop-zone { border: 2px dashed var(--border); border-radius: 6px; padding: 0.75rem; text-align: center; transition: background-color 0.15s, border-color 0.15s; }
+    .json-drop-zone.dragover { border-color: var(--accent); background: var(--accent-light); }
+    /* FEATURE-CSS */
+  </style>
+<title>Breath-Synced Mobility &amp; Kinetic Stretch Composer</title>
+<meta name="description" content="Design and play breath-guided mobility routines in your browser. Reverse-solve stretch durations and export routines offline. Free tool available.">
+<link rel="canonical" href="https://rttyy.github.io/free-tools/breath-synced-mobility-flow-composer/">
+<meta property="og:type" content="website"><meta property="og:url" content="https://rttyy.github.io/free-tools/breath-synced-mobility-flow-composer/">
+<meta property="og:title" content="Breath-Synced Mobility &amp; Kinetic Stretch Composer"><meta property="og:description" content="Design and play breath-guided mobility routines in your browser. Reverse-solve stretch durations and export routines offline. Free tool available.">
+<meta property="og:image" content="https://rttyy.github.io/free-tools/breath-synced-mobility-flow-composer/cover.png"><meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Breath-Synced Mobility & Kinetic Stretch Composer","description":"Design and play breath-guided mobility routines in your browser. Reverse-solve stretch durations and export routines offline. Free tool available.","url":"https://rttyy.github.io/free-tools/breath-synced-mobility-flow-composer/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is the basic version of the composer free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes, the core web version is completely free and runs directly in your web browser without requiring account registration. You can design, calculate, and play breath-guided mobility flows immediately. The paid $9 Gumroad product provides an offline pack with full JSON export capabilities, scenario saving, and printable summary cards."}},{"@type":"Question","name":"How does the tool calculate pose timing based on breathing cadences?","acceptedAnswer":{"@type":"Answer","text":"The composer uses a reverse-solving algorithm that takes your total available time slot and desired inhale/exhale ratio. It then determines the exact number of full breath cycles per pose so your routine finishes precisely on time. This ensures you never have to check a clock during your break or warmup."}},{"@type":"Question","name":"Can I use this tool offline without an internet connection?","acceptedAnswer":{"@type":"Answer","text":"The paid $9 offline pack includes self-contained files that open in any modern web browser without needing internet access. You can save your routines locally as JSON files or print physical posture cards for your gym bag or desk. This makes it ideal for travel, remote workouts, or minimal digital distraction."}},{"@type":"Question","name":"How does breath-synced stretching help with vagal stimulation and relaxation?","acceptedAnswer":{"@type":"Answer","text":"Extending your exhale relative to your inhale (such as a 4-second inhale with a 6-second exhale) signals the vagus nerve to slow your heart rate. By locking kinetic stretch transitions to these specific ratios, the composer encourages a parasympathetic state, reducing muscle tension caused by prolonged sitting or high-intensity training."}}]}</script>
+</head>
+<body>
+
+  <header>
+    <div class="header-top">
+      <div>
+        <h1>Breath-Synced Mobility & Kinetic Stretch Composer</h1>
+        <p class="subtitle">Parasympathetic-aligned timing & dynamic breath guidance for physical recovery</p>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+        <button class="btn btn-secondary btn-sm" id="btn-open-comparator">Cadence Comparator</button>
+        <button class="btn btn-secondary btn-sm" id="btn-load-sample">Load Sample</button>
+        <button class="btn btn-secondary btn-sm" id="btn-reset-all">Reset All</button>
+      </div>
+    </div>
+
+    <div class="preset-bar">
+      <label for="preset-select">Load Routine Preset:</label>
+      <select id="preset-select" style="min-width: 0; max-width: 100%;">
+        <option value="0">Desk Worker Thoracic & Hip Reset</option>
+        <option value="1">Pre-Run Dynamic Hip & Hamstring Mobilizer</option>
+        <option value="2">Parasympathetic Evening Decompression</option>
+      </select>
+    </div>
+  </header>
+
+  <main class="grid-layout">
+
+    <!-- Active Breath Player -->
+    <section class="card full-width" data-feature="interactive-sequence-player">
+      <div class="card-title">
+        <span>Active Breath-Synced Session Player</span>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <label style="font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem;">
+            <input type="checkbox" id="mute-toggle"> Mute Audio Cues
+          </label>
+        </div>
+      </div>
+
+      <div class="player-container">
+        <!-- Breath Visualizer Circle -->
+        <div class="breath-visualizer">
+          <div class="breath-svg-wrap">
+            <svg class="breath-svg" viewBox="0 0 200 200">
+              <circle cx="100" cy="100" r="85" fill="none" stroke="var(--border)" stroke-width="2" />
+              <circle cx="100" cy="100" r="50" class="pulse-circle" id="pulse-circle-elem" />
+              <text x="100" y="92" text-anchor="middle" class="phase-text" id="player-phase-display">READY</text>
+              <text x="100" y="122" text-anchor="middle" class="phase-timer-text" id="player-timer-display">0.0s</text>
+            </svg>
+          </div>
+
+          <div class="player-controls">
+            <button class="btn" id="btn-play-pause">Play Session</button>
+            <button class="btn btn-secondary" id="btn-skip-pose">Skip Pose</button>
+            <button class="btn btn-secondary" id="btn-reset-player">Reset</button>
+          </div>
+        </div>
+
+        <!-- Current Active Pose Details -->
+        <div class="pose-info-card">
+          <div class="pose-header">
+            <div>
+              <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--accent);" id="player-pose-index">Pose 1 of 4</span>
+              <h3 class="pose-name" id="player-pose-title">Seated Thoracic Twist</h3>
+            </div>
+            <span class="pose-cycle-badge" id="player-cycle-count">Cycle 1 / 4</span>
+          </div>
+
+          <div class="pose-diagram-box" id="player-diagram-box">
+            <!-- Dynamic SVG Pose Vector -->
+          </div>
+
+          <div>
+            <p class="pose-cue" id="player-cue-text">Inhale: Lengthen spine upright | Exhale: Gently rotate torso to side.</p>
+            <div class="muscle-tags" id="player-muscle-tags" style="margin-top: 0.5rem;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session Progress -->
+      <div class="progress-bar-container">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="player-progress-fill"></div>
+        </div>
+        <div class="progress-meta">
+          <span id="player-time-elapsed">Elapsed: 00:00</span>
+          <span id="player-time-remaining">Remaining: 00:00</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Breathing Cadence & Tension Release Estimator -->
+    <section class="card" data-feature="cadence-engine">
+      <div class="card-title">
+        <span>Breathing Cadence Engine</span>
+      </div>
+
+      <div id="cadence-validation-msg" style="display:none; color: var(--danger); font-size: 0.8rem; margin-bottom: 0.75rem; font-weight: 600;"></div>
+
+      <!-- Target Session Time Reverse Solver Drawer -->
+      <details class="solver-drawer" data-feature="reverse-cadence-solver" style="margin-bottom: 1rem; border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem 0.75rem; background: var(--card-sub-bg);">
+        <summary style="font-weight: 700; font-size: 0.85rem; cursor: pointer; color: var(--accent);">
+          Target Session Time Reverse Solver
+        </summary>
+        <div style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.75rem;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+            <div class="input-group">
+              <label for="solver-target-time">Target Time (min)</label>
+              <input type="number" id="solver-target-time" min="1" max="30" value="5">
+            </div>
+            <div class="input-group">
+              <label for="solver-pose-count">Poses Count</label>
+              <input type="number" id="solver-pose-count" min="1" max="10" value="4">
+            </div>
+          </div>
+          <div style="font-size: 0.82rem; background: var(--card-bg); padding: 0.5rem; border-radius: 6px; border: 1px solid var(--border);" id="solver-output-text">
+            Recommended: 4s Inhale, 2s Hold, 6s Exhale, 1s Pause with 4 cycles per pose.
+          </div>
+          <button class="btn btn-sm btn-secondary" id="btn-apply-solver" type="button">Apply Cadence & Cycles</button>
+        </div>
+      </details>
+
+      <div class="cadence-grid">
+        <div class="input-group">
+          <label for="input-inhale">Inhale Time (s)</label>
+          <input type="number" id="input-inhale" min="1" max="10" step="0.5" value="4">
+        </div>
+        <div class="input-group">
+          <label for="input-top-hold">Top Hold (s)</label>
+          <input type="number" id="input-top-hold" min="0" max="10" step="0.5" value="2">
+        </div>
+        <div class="input-group">
+          <label for="input-exhale">Exhale Time (s)</label>
+          <input type="number" id="input-exhale" min="1" max="12" step="0.5" value="6">
+        </div>
+        <div class="input-group">
+          <label for="input-bottom-pause">Bottom Pause (s)</label>
+          <input type="number" id="input-bottom-pause" min="0" max="10" step="0.5" value="1">
+        </div>
+      </div>
+
+      <div class="metrics-container">
+        <div class="metric-box">
+          <div class="metric-value" id="calc-cycle-len">13.0s</div>
+          <div class="metric-label">Cycle Length</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-value" id="calc-resp-rate">4.6</div>
+          <div class="metric-label">Breaths / Min</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-value" id="calc-exhale-ratio">46%</div>
+          <div class="metric-label">Exhale Ratio</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-value" id="calc-tension-score">78</div>
+          <div class="metric-label">Tension Score (0-100)</div>
+        </div>
+      </div>
+
+      <div class="interpretation-box">
+        <h4 id="interp-heading">What this means & What to do next</h4>
+        <p id="interp-text">Loading interpretation...</p>
+      </div>
+
+      <p class="disclaimer-note">Estimate only - verify with a qualified professional before relying on it.</p>
+    </section>
+
+    <!-- Routine Builder -->
+    <section class="card" data-feature="routine-builder">
+      <div class="card-title">
+        <span>Routine Builder & Muscle Targeter</span>
+      </div>
+
+      <div class="input-group" style="margin-bottom: 0.75rem;">
+        <label>Filter Available Poses by Body Region:</label>
+        <div class="region-filter-group" id="region-filter-container">
+          <label class="checkbox-tag"><input type="checkbox" value="Thoracic Spine" checked> Thoracic</label>
+          <label class="checkbox-tag"><input type="checkbox" value="Hips" checked> Hips</label>
+          <label class="checkbox-tag"><input type="checkbox" value="Hamstrings"> Hamstrings</label>
+          <label class="checkbox-tag"><input type="checkbox" value="Shoulders" checked> Shoulders</label>
+          <label class="checkbox-tag"><input type="checkbox" value="Ankles"> Ankles</label>
+          <label class="checkbox-tag"><input type="checkbox" value="Lower Back"> Lower Back</label>
+          <label class="checkbox-tag"><input type="checkbox" value="Chest"> Chest</label>
+        </div>
+      </div>
+
+      <div class="add-pose-bar">
+        <select id="pose-picker-select"></select>
+        <button class="btn btn-secondary" id="btn-add-pose">Add Pose</button>
+      </div>
+
+      <div class="input-group" style="margin-bottom: 1rem;">
+        <label for="input-transition-time">Transition Between Poses (seconds):</label>
+        <input type="number" id="input-transition-time" min="0" max="15" value="5">
+      </div>
+
+      <div class="sequence-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Pose</th>
+              <th>Target Muscles</th>
+              <th style="width: 75px;">Cycles</th>
+              <th style="width: 90px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="sequence-table-body">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: 0.75rem; display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+        <span>Total Poses: <strong id="stat-total-poses" style="color: var(--text);">0</strong></span>
+        <span>Active Target Muscles: <strong id="stat-total-muscles" style="color: var(--text);">0</strong></span>
+      </div>
+    </section>
+
+    <!-- Summary & Export Section -->
+    <div id="parasympathetic-ratio-comparator-modal" class="modal-overlay" data-feature="parasympathetic-ratio-comparator" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 style="font-size: 1.1rem; color: var(--accent);">Breathing Cadence Profile Comparator</h3>
+          <button class="modal-close" id="btn-close-comparator" aria-label="Close modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="comparator-controls">
+            <div class="input-group">
+              <label for="comparator-profile-a">Profile A Selection:</label>
+              <select id="comparator-profile-a">
+                <option value="box" selected>Box Breathing 4-4-4-4</option>
+                <option value="parasym">Parasympathetic Reset 4-2-8-1</option>
+                <option value="extended">Extended Exhale 4-2-7-1</option>
+                <option value="dynamic">Dynamic Flow 3-1-4-0</option>
+                <option value="relaxing">Relaxing 4-7-8 Breathing</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="comparator-profile-b">Profile B Selection:</label>
+              <select id="comparator-profile-b">
+                <option value="box">Box Breathing 4-4-4-4</option>
+                <option value="parasym">Parasympathetic Reset 4-2-8-1</option>
+                <option value="extended" selected>Extended Exhale 4-2-7-1</option>
+                <option value="dynamic">Dynamic Flow 3-1-4-0</option>
+                <option value="relaxing">Relaxing 4-7-8 Breathing</option>
+              </select>
+            </div>
+          </div>
+          <div class="comparator-matrix">
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Profile A</th>
+                  <th>Profile B</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Cadence Ratio</td>
+                  <td id="comp-cadence-a">4-4-4-4</td>
+                  <td id="comp-cadence-b">4-2-7-1</td>
+                </tr>
+                <tr>
+                  <td>Total Breaths / Min</td>
+                  <td id="comp-bpm-a">3.8 bpm</td>
+                  <td id="comp-bpm-b">4.3 bpm</td>
+                </tr>
+                <tr>
+                  <td>Time Under Tension / Pose</td>
+                  <td id="comp-tut-a">64s</td>
+                  <td id="comp-tut-b">56s</td>
+                </tr>
+                <tr>
+                  <td>Vagal Stimulation Score</td>
+                  <td id="comp-vagal-a">60 / 100</td>
+                  <td id="comp-vagal-b">73 / 100</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="comparator-result" id="comparator-result-banner">
+            Profile B shows <strong>+22% higher Parasympathetic Focus rating</strong> than Profile A.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic Muscle Relaxation Trend Visualizer -->
+    <section class="card full-width" data-feature="tension-release-trend-chart">
+      <div class="card-title">
+        <span>Dynamic Muscle Relaxation Trend Visualizer</span>
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <label for="baseline-stress-input" style="font-size:0.8rem; font-weight:600;">Baseline Stress (1-10):</label>
+          <input type="number" id="baseline-stress-input" min="1" max="10" value="7" style="width:60px;">
+        </div>
+      </div>
+      <div id="trend-chart-pro-gate" style="display:none;" class="pro-banner">
+        Available in the full version. <a href="#pro-upgrade" class="pro-link">Upgrade now</a>
+      </div>
+      <div id="trend-chart-content">
+        <div class="trend-chart-container" style="position:relative; width:100%; height:200px; margin-top:0.5rem;">
+          <svg id="tension-trend-svg" style="width:100%; height:100%; overflow:visible;" viewBox="0 0 600 180" preserveAspectRatio="none"></svg>
+          <div id="trend-chart-tooltip" class="trend-chart-tooltip"></div>
+        </div>
+        <p class="disclaimer-note" style="margin-top:0.5rem;">Estimate only - verify with a qualified professional before relying on it.</p>
+      </div>
+    </section>
+
+    <!-- Routine Preset Exporter & JSON Data Manager -->
+    <section class="card full-width" data-feature="routine-exporter-importer">
+      <div class="card-title">
+        <span>Routine Preset Exporter & JSON Data Manager</span>
+      </div>
+      <div class="json-manager-grid">
+        <div class="input-group json-drop-zone" id="json-drop-zone">
+          <label for="json-import-file">Upload / Drop JSON File:</label>
+          <input type="file" id="json-import-file" accept=".json">
+        </div>
+        <div class="input-group">
+          <label for="json-text-input">Raw JSON Configuration Data:</label>
+          <textarea id="json-text-input" rows="3" placeholder="Paste JSON routine configuration payload here..."></textarea>
+        </div>
+      </div>
+      <div class="action-row" style="margin-top: 0.75rem;">
+        <button class="btn" id="btn-export-json-mgr">Export JSON</button>
+        <button class="btn btn-secondary" id="btn-copy-json">Copy JSON</button>
+        <button class="btn btn-secondary" id="btn-parse-json">Import / Load JSON</button>
+      </div>
+      <div id="json-mgr-status" style="margin-top: 0.5rem; font-size: 0.85rem; font-weight: 600; display: none;"></div>
+      <div id="json-mgr-pro-banner" class="pro-banner">
+        Available in the full version. <a href="#pro-upgrade" class="pro-link">Upgrade now</a>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="card full-width" data-feature="summary-card-generator">
+      <div class="card-title">
+        <span>Post-Session Posture Reset Summary Card</span>
+      </div>
+
+      <div class="notes-input-box no-print">
+        <label for="input-session-notes">Custom Intention Notes / Notes for Session:</label>
+        <textarea id="input-session-notes" placeholder="e.g., Focus on deep diaphragmatic breathing and releasing mid-back tightness after 6 hours at desk."></textarea>
+      </div>
+
+      <div class="summary-card" id="printable-summary-card" style="margin-top: 1rem;">
+        <div class="summary-header">
+          <div>
+            <h2 style="font-size: 1.3rem; color: var(--accent);" id="summary-title-display">Desk Worker Thoracic & Hip Reset</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted);" id="summary-date-display">Generated Routine Spec Sheet</p>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 1.2rem; font-weight: 800; color: var(--accent);" id="summary-score-display">78 / 100</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Tension Release Rating</div>
+          </div>
+        </div>
+
+        <div class="summary-grid">
+          <div>
+            <div class="summary-section-title">Breathing Cadence Spec</div>
+            <p style="font-size: 0.85rem; margin-bottom: 0.5rem;" id="summary-cadence-spec">Inhale: 4.0s | Hold: 2.0s | Exhale: 6.0s | Pause: 1.0s</p>
+            <p style="font-size: 0.85rem; margin-bottom: 0.5rem;" id="summary-resp-meta">Respiration: 4.6 bpm | Exhale Ratio: 46%</p>
+
+            <div class="summary-section-title" style="margin-top: 1rem;">Target Muscle Badges</div>
+            <div class="summary-badge-list" id="summary-muscle-badges">
+              <!-- Dynamic muscle badges -->
+            </div>
+          </div>
+
+          <div>
+            <div class="summary-section-title">Sequence Breakdown</div>
+            <div id="summary-pose-list" style="font-size: 0.85rem;">
+              <!-- Dynamic pose list -->
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 0.75rem;">
+          <div class="summary-section-title">Intention Notes</div>
+          <p style="font-size: 0.85rem; font-style: italic; color: var(--text);" id="summary-notes-display">No custom notes added.</p>
+        </div>
+
+        <p class="disclaimer-note" style="margin-top: 0.75rem;">Estimate only - verify with a qualified professional before relying on it.</p>
+      </div>
+
+      <div class="action-row no-print">
+        <button class="btn" id="btn-print-summary">Print Summary Card</button>
+        <button class="btn btn-secondary" id="btn-export-json">Export Routine (JSON)</button>
+        <button class="btn btn-secondary" id="btn-export-csv">Export Routine (CSV)</button>
+        <button class="btn btn-secondary" id="btn-save-scenario">Save Scenario</button>
+        <button class="btn btn-secondary" id="btn-load-scenario">Load Scenario</button>
+      </div>
+
+      <div class="pro-banner" id="pro-notice-banner">
+        Available in the full version. <a href="#pro-upgrade" id="pro-link-anchor">Upgrade now</a>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Flag declaration (Binding spec requirement)
+    const PRO = false;
+    const PRO_LINK = "https://ferrywave73.gumroad.com/l/vfiygz";
+
+    // Master Pose Library with SVG Diagrams
+    const POSE_DATABASE = [
+      {
+        id: "seated-thoracic-twist",
+        name: "Seated Thoracic Twist",
+        regions: ["Thoracic Spine", "Chest", "Shoulders"],
+        muscles: ["Thoracic Spine", "Chest", "Obliques"],
+        cue: "Inhale: Lengthen spine upright | Exhale: Gently rotate torso to side.",
+        svg: `<svg viewBox="0 0 100 100" width="80" height="80"><path d="M50 20 A10 10 0 1 1 50 40 A10 10 0 1 1 50 20" fill="none" stroke="currentColor" stroke-width="4"/><path d="M50 40 L50 70 M30 55 L70 45 M40 90 L50 70 L60 90" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M65 40 A15 15 0 0 1 75 55" fill="none" stroke="var(--accent)" stroke-width="3" stroke-dasharray="3,3"/></svg>`
+      },
+      {
+        id: "open-book-reaches",
+        name: "Open Book Reaches",
+        regions: ["Thoracic Spine", "Shoulders", "Chest"],
+        muscles: ["Thoracic Spine", "Chest", "Rotator Cuff"],
+        cue: "Inhale: Trace top arm overhead in arc | Exhale: Open chest toward floor behind.",
+        svg: `<svg viewBox="0 0 100 100" width="80" height="80"><circle cx="30" cy="50" r="8" fill="none" stroke="currentColor" stroke-width="4"/><path d="M30 58 L70 58 M30 58 L30 80 M70 58 L85 75 M38 58 L55 30" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M55 30 A25 25 0 0 1 75 50" fill="none" stroke="var(--accent)" stroke-width="3" stroke-dasharray="3,3"/></svg>`
+      },
+      {
+        id: "kneeling-hip-lunge",
+        name: "Kneeling Hip Flexor Lunge",
+        regions: ["Hips", "Lower Back"],
+        muscles: ["Hips", "Quadriceps", "Psoas"],
+        cue: "Inhale: Tuck pelvis slightly | Exhale: Shift hips forward gently.",
+        svg: `<svg viewBox="0 0 100 100" width="80" height="80"><circle cx="40" cy="25" r="8" fill="none" stroke="currentColor" stroke-width="4"/><path d="M40 33 L40 60 L65 60 L65 85 M40 60 L20 85" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M35 55 L48 55" fill="none" stroke="var(--accent)" stroke-width="4"/></svg>`
+      },
+      {
+        id: "childs-pose-reach",
+        name: "Child's Pose with Side Reach",
+        regions: ["Thoracic Spine", "Shoulders", "Lower Back"],
+        muscles: ["Thoracic Spine", "Lats", "Lower Back"],
+        cue: "Inhale: Walk hands diagonally | Exhale: Sink chest towards floor.",
+        svg: `<svg viewBox="0 0 100 100" width="80" height="80"><circle cx="75" cy="55" r="8" fill="none" stroke="currentColor" stroke-width="4"/><path d="M70 60 L40 65 L20 60 M40 65 L30 80 L60 80" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M20 60 L10 50" fill="none" stroke="var(--accent)" stroke-width="3"/></svg>`
+      },
+      {
+        id: "doorway-chest",
+        name: "Doorway Chest Stretch",
+        regions: ["Chest", "Shoulders"],
+        muscles: ["Chest", "Shoulders", "Pectorals"],
+        cue: "Inhale: Expand ribs and chest | Exhale: Step forward softly.",
+        svg: `<svg viewBox="0 0 100 100" width="80" height="80"><circle cx="50" cy="25" r="8" fill="none" stroke="currentColor" stroke-width="4"/><path d="M50 33 L50 70 M25 35 L50 45 L75 35 M40 90 L50 70 L60 90" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><line x1="20" y1="20" x2="20" y2="85" stroke="var(--accent)" stroke-width="3"/></svg>`
+      },
+      {
+        id: "dynamic-runner-lunge",
+        name: "Dynamic Runner's Lunge",
+        regions: ["Hips", "Hamstrings"],
+        muscles: ["Hips", "Hamstrings", "Glutes"],
+        cue: "Inhale: Drive back heel straight | Exhale: Drop hips and extend.",
+        svg: `<svg viewBox="0 0 100 100" width="80" height="80"><circle cx="30" cy="30" r="8" fill="none" stroke="currentColor" stroke-width="4"/><path d="M30 38 L45 55 L75 65 M45 55 L35 85 M75 65 L85 85" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M45 55 L20 65" fill="none" stroke="var(--accent)" stroke-width="3"/></svg>`
+      },
+      {
+        id: "hamstring-sweep",
+        name: "Standing Single-Leg Hamstring Sweep",
+        regions: ["Hamstrings", "Ankles"],
+        muscles: ["Hamstrings", "Calves"],
+        cue: "Inhale: Hinge back at hips | Exhale: Sweep arms down and forward.",
+        svg: `<svg viewBox="0 0 100 100" width="80" height="80"><circle cx="60" cy="25" r="8" fill="none" stroke="currentColor" stroke-width="4"/><path d="M60 33 L45 55 L35 85 M45 55 L65 85 M50 45 L25 70" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M25 70 L40 75" fill="none" stroke="var(--accent)" stroke-width="3"/></svg>`
+      },
+      {
+        id: "calf-ankle-rocker",
+        name: "Calf & Ankle Rocker",
+        regions: ["Ankles"],
+        muscles: ["Ankles", "Calves", "Achilles Tendon"],
+        cue: "Inhale: Lift heel onto toes | Exhale: Press heel down firm.",
+        svg: `<svg viewBox="0 0 100 100" width="80" height="80"><circle cx="50" cy="25" r="8" fill="none" stroke="currentColor" stroke-width="4"/><path d="M50 33 L50 65 L40 90 M50 65 L60 90" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M35 85 L45 90" fill="none" stroke="var(--accent)" stroke-width="3"/></svg>`
+      },
+      {
+        id: "cossack-squat",
+        name: "Lateral Cossack Squat",
+        regions: ["Hips", "Hamstrings"],
+        muscles: ["Hips", "Adductors", "Hamstrings"],
+        cue: "Inhale: Shift weight over active leg | Exhale: Sit deep into side hip.",
+        svg: `<svg viewBox="0 0 100 100" width="80" height="80"><circle cx="35" cy="35" r="8" fill="none" stroke="currentColor" stroke-width="4"/><path d="M35 43 L35 65 L20 88 M35 65 L75 80" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M45 70 L65 75" fill="none" stroke="var(--accent)" stroke-width="3"/></svg>`
+      },
+      {
+        id: "legs-up-wall",
+        name: "Legs Up The Wall",
+        regions: ["Hamstrings", "Lower Back"],
+        muscles: ["Hamstrings", "Lower Back", "Parasympathetic System"],
+        cue: "Inhale: Soften belly and chest | Exhale: Relax lower back into mat.",
+        svg: `<svg viewBox="0 0 100 100" width="80" height="80"><circle cx="35" cy="70" r="8" fill="none" stroke="currentColor" stroke-width="4"/><path d="M43 70 L65 70 L65 25 M65 70 L75 25" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><line x1="65" y1="15" x2="65" y2="85" stroke="var(--border)" stroke-width="2"/></svg>`
+      },
+      {
+        id: "reclined-butterfly",
+        name: "Reclined Butterfly",
+        regions: ["Hips"],
+        muscles: ["Hips", "Adductors", "Groin"],
+        cue: "Inhale: Breathe into lower abdomen | Exhale: Let knees heavy outward.",
+        svg: `<svg viewBox="0 0 100 100" width="80" height="80"><circle cx="25" cy="65" r="8" fill="none" stroke="currentColor" stroke-width="4"/><path d="M33 65 L55 65 L45 80 L55 65 L45 50" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M45 50 A15 15 0 0 1 45 80" fill="none" stroke="var(--accent)" stroke-width="2"/></svg>`
+      },
+      {
+        id: "supine-spinal-twist",
+        name: "Supine Spinal Twist",
+        regions: ["Thoracic Spine", "Lower Back", "Hips"],
+        muscles: ["Thoracic Spine", "Lower Back", "Glutes"],
+        cue: "Inhale: Extend opposite arm | Exhale: Lower knee toward floor.",
+        svg: `<svg viewBox="0 0 100 100" width="80" height="80"><circle cx="25" cy="50" r="8" fill="none" stroke="currentColor" stroke-width="4"/><path d="M33 50 L65 50 M50 50 L50 80 L75 80 M25 35 L25 65" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M50 65 L70 70" fill="none" stroke="var(--accent)" stroke-width="3"/></svg>`
+      },
+      {
+        id: "figure-four-glute",
+        name: "Figure-Four Glute Stretch",
+        regions: ["Hips", "Lower Back"],
+        muscles: ["Hips", "Glutes", "Piriformis"],
+        cue: "Inhale: Thread hands through thigh | Exhale: Draw knee toward chest.",
+        svg: `<svg viewBox="0 0 100 100" width="80" height="80"><circle cx="25" cy="65" r="8" fill="none" stroke="currentColor" stroke-width="4"/><path d="M33 65 L60 65 M50 65 L50 35 L65 50 L50 50" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M55 45 L65 45" fill="none" stroke="var(--accent)" stroke-width="3"/></svg>`
+      }
+    ];
+
+    // Presets definitions (Binding spec requirement)
+    const PRESETS = [
+      {
+        name: "Desk Worker Thoracic & Hip Reset",
+        cadence: { inhale: 4, topHold: 2, exhale: 6, bottomPause: 1 },
+        transitionTime: 5,
+        regions: ["Thoracic Spine", "Hips", "Shoulders"],
+        poses: [
+          { id: "seated-thoracic-twist", cycles: 4 },
+          { id: "kneeling-hip-lunge", cycles: 4 },
+          { id: "childs-pose-reach", cycles: 4 },
+          { id: "doorway-chest", cycles: 4 }
+        ]
+      },
+      {
+        name: "Pre-Run Dynamic Hip & Hamstring Mobilizer",
+        cadence: { inhale: 3, topHold: 1, exhale: 4, bottomPause: 0 },
+        transitionTime: 3,
+        regions: ["Hips", "Hamstrings", "Ankles"],
+        poses: [
+          { id: "dynamic-runner-lunge", cycles: 3 },
+          { id: "hamstring-sweep", cycles: 3 },
+          { id: "calf-ankle-rocker", cycles: 3 },
+          { id: "cossack-squat", cycles: 3 }
+        ]
+      },
+      {
+        name: "Parasympathetic Evening Decompression",
+        cadence: { inhale: 4, topHold: 2, exhale: 8, bottomPause: 2 },
+        transitionTime: 8,
+        regions: ["Full Body", "Lower Back", "Hamstrings"],
+        poses: [
+          { id: "legs-up-wall", cycles: 6 },
+          { id: "reclined-butterfly", cycles: 6 },
+          { id: "supine-spinal-twist", cycles: 6 },
+          { id: "figure-four-glute", cycles: 6 }
+        ]
+      }
+    ];
+
+    // State Management
+    let currentCadence = { inhale: 4, topHold: 2, exhale: 6, bottomPause: 1 };
+    let transitionTime = 5;
+    let sequenceList = [];
+    let activePoseIndex = 0;
+    let activeCycle = 1;
+    let isPlaying = false;
+    let isMuted = false;
+    let animationFrameId = null;
+    let phaseStartTime = 0;
+    let currentPhase = "IDLE"; // INHALE, TOP_HOLD, EXHALE, BOTTOM_PAUSE, TRANSITION
+    let audioCtx = null;
+
+    // Element References
+    const inputInhale = document.getElementById("input-inhale");
+    const inputTopHold = document.getElementById("input-top-hold");
+    const inputExhale = document.getElementById("input-exhale");
+    const inputBottomPause = document.getElementById("input-bottom-pause");
+    const inputTransitionTime = document.getElementById("input-transition-time");
+    const presetSelect = document.getElementById("preset-select");
+    const posePickerSelect = document.getElementById("pose-picker-select");
+    const sequenceTableBody = document.getElementById("sequence-table-body");
+    const regionFilterContainer = document.getElementById("region-filter-container");
+    const inputNotes = document.getElementById("input-session-notes");
+
+    // Metrics Display Elements
+    const calcCycleLen = document.getElementById("calc-cycle-len");
+    const calcRespRate = document.getElementById("calc-resp-rate");
+    const calcExhaleRatio = document.getElementById("calc-exhale-ratio");
+    const calcTensionScore = document.getElementById("calc-tension-score");
+    const interpHeading = document.getElementById("interp-heading");
+    const interpText = document.getElementById("interp-text");
+    const statTotalPoses = document.getElementById("stat-total-poses");
+    const statTotalMuscles = document.getElementById("stat-total-muscles");
+
+    // Player Elements
+    const btnPlayPause = document.getElementById("btn-play-pause");
+    const btnSkipPose = document.getElementById("btn-skip-pose");
+    const btnResetPlayer = document.getElementById("btn-reset-player");
+    const muteToggle = document.getElementById("mute-toggle");
+    const pulseCircleElem = document.getElementById("pulse-circle-elem");
+    const playerPhaseDisplay = document.getElementById("player-phase-display");
+    const playerTimerDisplay = document.getElementById("player-timer-display");
+    const playerPoseIndex = document.getElementById("player-pose-index");
+    const playerPoseTitle = document.getElementById("player-pose-title");
+    const playerCycleCount = document.getElementById("player-cycle-count");
+    const playerDiagramBox = document.getElementById("player-diagram-box");
+    const playerCueText = document.getElementById("player-cue-text");
+    const playerMuscleTags = document.getElementById("player-muscle-tags");
+    const playerProgressFill = document.getElementById("player-progress-fill");
+    const playerTimeElapsed = document.getElementById("player-time-elapsed");
+    const playerTimeRemaining = document.getElementById("player-time-remaining");
+
+    // Summary Elements
+    const summaryTitleDisplay = document.getElementById("summary-title-display");
+    const summaryDateDisplay = document.getElementById("summary-date-display");
+    const summaryScoreDisplay = document.getElementById("summary-score-display");
+    const summaryCadenceSpec = document.getElementById("summary-cadence-spec");
+    const summaryRespMeta = document.getElementById("summary-resp-meta");
+    const summaryMuscleBadges = document.getElementById("summary-muscle-badges");
+    const summaryPoseList = document.getElementById("summary-pose-list");
+    const summaryNotesDisplay = document.getElementById("summary-notes-display");
+    const proNoticeBanner = document.getElementById("pro-notice-banner");
+
+    // Initialize Application
+    function init() {
+      setupEventListeners();
+      loadPreset(0);
+    }
+
+    function setupEventListeners() {
+      // Cadence Input Change Events
+      [inputInhale, inputTopHold, inputExhale, inputBottomPause].forEach(input => {
+        input.addEventListener("input", () => {
+          sanitizeInputs();
+          recalculateCadence();
+          updateSummaryCard();
+        });
+      });
+
+      inputTransitionTime.addEventListener("input", () => {
+        sanitizeInputs();
+        updateSummaryCard();
+      });
+
+      // Filter Checkboxes Change Event
+      regionFilterContainer.querySelectorAll("input[type='checkbox']").forEach(cb => {
+        cb.addEventListener("change", () => {
+          populatePosePicker();
+        });
+      });
+
+      // Add Pose Button
+      document.getElementById("btn-add-pose").addEventListener("click", () => {
+        const poseId = posePickerSelect.value;
+        if (poseId) {
+          const poseObj = POSE_DATABASE.find(p => p.id === poseId);
+          if (poseObj) {
+            sequenceList.push({ ...poseObj, cycles: 4 });
+            renderSequenceTable();
+            updateSummaryCard();
+          }
+        }
+      });
+
+      // Preset Selector
+      presetSelect.addEventListener("change", (e) => {
+        loadPreset(parseInt(e.target.value, 10));
+      });
+
+      // Reset All & Load Sample
+      document.getElementById("btn-reset-all").addEventListener("click", () => {
+        loadPreset(0);
+      });
+
+      document.getElementById("btn-load-sample").addEventListener("click", () => {
+        loadPreset(2);
+      });
+
+      // Player Controls
+      btnPlayPause.addEventListener("click", togglePlayPause);
+      btnSkipPose.addEventListener("click", skipPose);
+      btnResetPlayer.addEventListener("click", resetPlayer);
+      muteToggle.addEventListener("change", (e) => {
+        isMuted = e.target.checked;
+      });
+
+      // Notes Input
+      inputNotes.addEventListener("input", () => {
+        summaryNotesDisplay.textContent = inputNotes.value.trim() || "No custom notes added.";
+      });
+
+      // Export / Print / Save buttons with PRO check
+      document.getElementById("btn-print-summary").addEventListener("click", () => {
+        if (handleProAction()) {
+          window.print();
+        }
+      });
+
+      document.getElementById("btn-export-json").addEventListener("click", () => {
+        if (handleProAction()) {
+          exportJSON();
+        }
+      });
+
+      document.getElementById("btn-export-csv").addEventListener("click", () => {
+        if (handleProAction()) {
+          exportCSV();
+        }
+      });
+
+      document.getElementById("btn-save-scenario").addEventListener("click", () => {
+        if (handleProAction()) {
+          saveScenarioLocalStorage();
+        }
+      });
+
+      document.getElementById("btn-load-scenario").addEventListener("click", () => {
+        if (handleProAction()) {
+          loadScenarioLocalStorage();
+        }
+      });
+    }
+
+    function sanitizeInputs() {
+      const valMsg = document.getElementById("cadence-validation-msg");
+      let warnings = [];
+
+      let rawInhale = parseFloat(inputInhale.value);
+      if (isNaN(rawInhale) || rawInhale < 1) {
+        warnings.push("Inhale time must be between 1s and 10s (adjusted to valid range).");
+      }
+      let rawExhale = parseFloat(inputExhale.value);
+      if (isNaN(rawExhale) || rawExhale < 1) {
+        warnings.push("Exhale time must be between 1s and 12s (adjusted to valid range).");
+      }
+      let rawTopHold = parseFloat(inputTopHold.value);
+      if (isNaN(rawTopHold) || rawTopHold < 0) {
+        warnings.push("Top hold must be non-negative.");
+      }
+      let rawBottomPause = parseFloat(inputBottomPause.value);
+      if (isNaN(rawBottomPause) || rawBottomPause < 0) {
+        warnings.push("Bottom pause must be non-negative.");
+      }
+
+      if (valMsg) {
+        if (warnings.length > 0) {
+          valMsg.textContent = warnings[0];
+          valMsg.style.display = "block";
+        } else {
+          valMsg.style.display = "none";
+        }
+      }
+
+      let inhale = Math.max(1, Math.min(10, rawInhale || 1));
+      let topHold = Math.max(0, Math.min(10, rawTopHold || 0));
+      let exhale = Math.max(1, Math.min(12, rawExhale || 1));
+      let bottomPause = Math.max(0, Math.min(10, rawBottomPause || 0));
+      let trans = Math.max(0, Math.min(15, parseFloat(inputTransitionTime.value) || 0));
+
+      currentCadence = { inhale, topHold, exhale, bottomPause };
+      transitionTime = trans;
+    }
+
+    function recalculateCadence() {
+      const { inhale, topHold, exhale, bottomPause } = currentCadence;
+      const totalCycle = inhale + topHold + exhale + bottomPause;
+      const respRate = totalCycle > 0 ? (60 / totalCycle).toFixed(1) : "0.0";
+      const exhaleRatioNum = totalCycle > 0 ? (exhale / totalCycle) * 100 : 0;
+      const exhaleRatio = Math.round(exhaleRatioNum);
+
+      // Tension Release Score Formula:
+      // Evaluates parasympathetic ratio (exhale/inhale), total exhale length, and breath holds
+      const parasymRatio = exhale / Math.max(1, inhale);
+      const scoreRaw = (parasymRatio * 25) + (exhale * 4) + ((topHold + bottomPause) * 2) + (totalCycle * 0.8);
+      const tensionScore = Math.min(100, Math.max(10, Math.round(scoreRaw)));
+
+      calcCycleLen.textContent = `${totalCycle.toFixed(1)}s`;
+      calcRespRate.textContent = respRate;
+      calcExhaleRatio.textContent = `${exhaleRatio}%`;
+      calcTensionScore.textContent = tensionScore;
+
+      // Update Interpretation Box
+      if (exhaleRatio > 50 && tensionScore >= 75) {
+        interpHeading.textContent = "Deep Parasympathetic & Vagal Tone Activation";
+        interpText.textContent = `High exhale ratio (${exhaleRatio}%) and tension score (${tensionScore}/100) trigger robust vagal stimulation. Ideal for evening decompression, lowering heart rate, and mitigating muscle guarding.`;
+      } else if (exhaleRatio >= 35) {
+        interpHeading.textContent = "Balanced Parasympathetic Stretch Cadence";
+        interpText.textContent = `Moderate exhale ratio (${exhaleRatio}%) provides a balanced mobility flow. Promotes gentle kinetic lengthenings without triggering involuntary stretch reflex guarding.`;
+      } else {
+        interpHeading.textContent = "Dynamic / Warm-up Cadence";
+        interpText.textContent = `Shorter exhale duration (${exhaleRatio}%) favors dynamic movement and alertness over deep parasympathetic recovery. Increase exhale to 6s+ for deeper tension release.`;
+      }
+    }
+
+    function populatePosePicker() {
+      const checkedRegions = Array.from(regionFilterContainer.querySelectorAll("input:checked")).map(cb => cb.value);
+      
+      posePickerSelect.innerHTML = "";
+      
+      const filteredPoses = POSE_DATABASE.filter(pose => {
+        if (checkedRegions.length === 0) return true;
+        return pose.regions.some(r => checkedRegions.includes(r));
+      });
+
+      if (filteredPoses.length === 0) {
+        const opt = document.createElement("option");
+        opt.textContent = "No matching poses";
+        opt.disabled = true;
+        posePickerSelect.appendChild(opt);
+        return;
+      }
+
+      filteredPoses.forEach(pose => {
+        const opt = document.createElement("option");
+        opt.value = pose.id;
+        opt.textContent = `${pose.name} (${pose.regions.join(", ")})`;
+        posePickerSelect.appendChild(opt);
+      });
+    }
+
+    function loadPreset(index) {
+      const preset = PRESETS[index] || PRESETS[0];
+      presetSelect.value = index;
+
+      inputInhale.value = preset.cadence.inhale;
+      inputTopHold.value = preset.cadence.topHold;
+      inputExhale.value = preset.cadence.exhale;
+      inputBottomPause.value = preset.cadence.bottomPause;
+      inputTransitionTime.value = preset.transitionTime;
+
+      // Set region checkboxes
+      regionFilterContainer.querySelectorAll("input[type='checkbox']").forEach(cb => {
+        cb.checked = preset.regions.includes(cb.value) || preset.regions.includes("Full Body");
+      });
+
+      // Build sequence
+      sequenceList = preset.poses.map(item => {
+        const dbPose = POSE_DATABASE.find(p => p.id === item.id);
+        return { ...dbPose, cycles: item.cycles };
+      });
+
+      sanitizeInputs();
+      recalculateCadence();
+      populatePosePicker();
+      renderSequenceTable();
+      resetPlayer();
+      updateSummaryCard();
+    }
+
+    function renderSequenceTable() {
+      sequenceTableBody.innerHTML = "";
+
+      let allMuscles = new Set();
+
+      sequenceList.forEach((pose, idx) => {
+        pose.muscles.forEach(m => allMuscles.add(m));
+
+        const tr = document.createElement("tr");
+
+        const tdName = document.createElement("td");
+        tdName.style.fontWeight = "600";
+        tdName.textContent = pose.name;
+
+        const tdMuscles = document.createElement("td");
+        const tagsDiv = document.createElement("div");
+        tagsDiv.className = "muscle-tags";
+        pose.muscles.forEach(m => {
+          const span = document.createElement("span");
+          span.className = "tag tag-accent";
+          span.textContent = m;
+          tagsDiv.appendChild(span);
+        });
+        tdMuscles.appendChild(tagsDiv);
+
+        const tdCycles = document.createElement("td");
+        const cycleInput = document.createElement("input");
+        cycleInput.type = "number";
+        cycleInput.min = "1";
+        cycleInput.max = "10";
+        cycleInput.value = pose.cycles;
+        cycleInput.style.width = "60px";
+        cycleInput.addEventListener("input", (e) => {
+          const val = parseInt(e.target.value, 10);
+          const safeVal = isNaN(val) ? 1 : Math.max(1, Math.min(10, val));
+          if (sequenceList[idx]) {
+            sequenceList[idx].cycles = safeVal;
+          }
+          updateSummaryCard();
+          updatePlayerUI();
+        });
+        tdCycles.appendChild(cycleInput);
+
+        const tdActions = document.createElement("td");
+        tdActions.className = "table-actions";
+        
+        const btnUp = document.createElement("button");
+        btnUp.className = "btn btn-secondary btn-sm";
+        btnUp.textContent = "↑";
+        btnUp.disabled = idx === 0;
+        btnUp.addEventListener("click", () => movePose(idx, -1));
+
+        const btnDown = document.createElement("button");
+        btnDown.className = "btn btn-secondary btn-sm";
+        btnDown.textContent = "↓";
+        btnDown.disabled = idx === sequenceList.length - 1;
+        btnDown.addEventListener("click", () => movePose(idx, 1));
+
+        const btnRemove = document.createElement("button");
+        btnRemove.className = "btn btn-danger btn-sm";
+        btnRemove.textContent = "✕";
+        btnRemove.addEventListener("click", () => {
+          sequenceList.splice(idx, 1);
+          renderSequenceTable();
+          updateSummaryCard();
+          resetPlayer();
+        });
+
+        tdActions.appendChild(btnUp);
+        tdActions.appendChild(btnDown);
+        tdActions.appendChild(btnRemove);
+
+        tr.appendChild(tdName);
+        tr.appendChild(tdMuscles);
+        tr.appendChild(tdCycles);
+        tr.appendChild(tdActions);
+
+        sequenceTableBody.appendChild(tr);
+      });
+
+      statTotalPoses.textContent = sequenceList.length;
+      statTotalMuscles.textContent = allMuscles.size;
+
+      updatePlayerUI();
+    }
+
+    function movePose(index, direction) {
+      const targetIndex = index + direction;
+      if (targetIndex >= 0 && targetIndex < sequenceList.length) {
+        const temp = sequenceList[index];
+        sequenceList[index] = sequenceList[targetIndex];
+        sequenceList[targetIndex] = temp;
+        renderSequenceTable();
+        updateSummaryCard();
+        resetPlayer();
+      }
+    }
+
+    // Player Engine & Animation Loop
+    function updatePlayerUI() {
+      if (sequenceList.length === 0) {
+        playerPoseTitle.textContent = "No Poses Selected";
+        playerPoseIndex.textContent = "Pose 0 of 0";
+        playerCycleCount.textContent = "Cycle 0 / 0";
+        playerCueText.textContent = "Add poses to routine builder to start session.";
+        playerDiagramBox.innerHTML = "";
+        playerMuscleTags.innerHTML = "";
+        return;
+      }
+
+      activePoseIndex = Math.max(0, Math.min(activePoseIndex, sequenceList.length - 1));
+      const currentPose = sequenceList[activePoseIndex];
+
+      playerPoseTitle.textContent = currentPose.name;
+      playerPoseIndex.textContent = `Pose ${activePoseIndex + 1} of ${sequenceList.length}`;
+      playerCycleCount.textContent = `Cycle ${activeCycle} / ${currentPose.cycles}`;
+      playerCueText.textContent = currentPose.cue;
+      playerDiagramBox.innerHTML = currentPose.svg;
+
+      playerMuscleTags.innerHTML = "";
+      currentPose.muscles.forEach(m => {
+        const span = document.createElement("span");
+        span.className = "tag tag-accent";
+        span.textContent = m;
+        playerMuscleTags.appendChild(span);
+      });
+
+      updateSessionProgress();
+    }
+
+    function updateSessionProgress() {
+      const cycleTime = currentCadence.inhale + currentCadence.topHold + currentCadence.exhale + currentCadence.bottomPause;
+      let totalRoutineSeconds = 0;
+      let completedSeconds = 0;
+
+      sequenceList.forEach((pose, pIdx) => {
+        const poseDuration = (pose.cycles * cycleTime) + (pIdx < sequenceList.length - 1 ? transitionTime : 0);
+        totalRoutineSeconds += poseDuration;
+
+        if (pIdx < activePoseIndex) {
+          completedSeconds += poseDuration;
+        } else if (pIdx === activePoseIndex) {
+          completedSeconds += ((activeCycle - 1) * cycleTime);
+        }
+      });
+
+      const percent = totalRoutineSeconds > 0 ? (completedSeconds / totalRoutineSeconds) * 100 : 0;
+      playerProgressFill.style.width = `${Math.min(100, percent)}%`;
+
+      playerTimeElapsed.textContent = `Elapsed: ${formatTime(completedSeconds)}`;
+      playerTimeRemaining.textContent = `Remaining: ${formatTime(Math.max(0, totalRoutineSeconds - completedSeconds))}`;
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function togglePlayPause() {
+      if (sequenceList.length === 0) return;
+
+      isPlaying = !isPlaying;
+      if (isPlaying) {
+        btnPlayPause.textContent = "Pause Session";
+        btnPlayPause.classList.add("btn-danger");
+        if (currentPhase === "IDLE") {
+          startPhase("INHALE");
+        } else {
+          phaseStartTime = performance.now() - (pausedElapsed || 0);
+        }
+        requestAnimationFrame(playerLoop);
+      } else {
+        btnPlayPause.textContent = "Resume Session";
+        btnPlayPause.classList.remove("btn-danger");
+        pausedElapsed = performance.now() - phaseStartTime;
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      }
+    }
+
+    let pausedElapsed = 0;
+
+    function resetPlayer() {
+      isPlaying = false;
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      btnPlayPause.textContent = "Play Session";
+      btnPlayPause.classList.remove("btn-danger");
+      activePoseIndex = 0;
+      activeCycle = 1;
+      currentPhase = "IDLE";
+      pausedElapsed = 0;
+      playerPhaseDisplay.textContent = "READY";
+      playerTimerDisplay.textContent = `${currentCadence.inhale.toFixed(1)}s`;
+      pulseCircleElem.setAttribute("r", "50");
+      updatePlayerUI();
+    }
+
+    function skipPose() {
+      if (activePoseIndex < sequenceList.length - 1) {
+        activePoseIndex++;
+        activeCycle = 1;
+        pausedElapsed = 0;
+        startPhase("INHALE");
+        updatePlayerUI();
+      }
+    }
+
+    function startPhase(phase) {
+      currentPhase = phase;
+      phaseStartTime = performance.now();
+      pausedElapsed = 0;
+
+      playerPhaseDisplay.textContent = phase.replace("_", " ");
+      
+      if (phase === "INHALE") playAudioCue("inhale");
+      if (phase === "EXHALE") playAudioCue("exhale");
+      if (phase === "TRANSITION") playAudioCue("transition");
+    }
+
+    function playerLoop(timestamp) {
+      if (!isPlaying) return;
+
+      const elapsedSec = (timestamp - phaseStartTime) / 1000;
+      let targetDuration = 0;
+
+      if (currentPhase === "INHALE") targetDuration = currentCadence.inhale;
+      else if (currentPhase === "TOP_HOLD") targetDuration = currentCadence.topHold;
+      else if (currentPhase === "EXHALE") targetDuration = currentCadence.exhale;
+      else if (currentPhase === "BOTTOM_PAUSE") targetDuration = currentCadence.bottomPause;
+      else if (currentPhase === "TRANSITION") targetDuration = transitionTime;
+
+      const remaining = Math.max(0, targetDuration - elapsedSec);
+      playerTimerDisplay.textContent = `${remaining.toFixed(1)}s`;
+
+      // Animate pulsing SVG ring
+      let progress = Math.min(1, elapsedSec / (targetDuration || 1));
+      let currentRadius = 50;
+
+      if (currentPhase === "INHALE") {
+        currentRadius = 50 + (35 * progress); // 50 to 85
+      } else if (currentPhase === "TOP_HOLD") {
+        currentRadius = 85;
+      } else if (currentPhase === "EXHALE") {
+        currentRadius = 85 - (35 * progress); // 85 down to 50
+      } else if (currentPhase === "BOTTOM_PAUSE") {
+        currentRadius = 50;
+      } else if (currentPhase === "TRANSITION") {
+        currentRadius = 50 + (10 * Math.sin(progress * Math.PI * 4));
+      }
+
+      pulseCircleElem.setAttribute("r", currentRadius.toString());
+
+      if (elapsedSec >= targetDuration) {
+        // Phase Transitions Logic
+        if (currentPhase === "INHALE") {
+          if (currentCadence.topHold > 0) startPhase("TOP_HOLD");
+          else startPhase("EXHALE");
+        } else if (currentPhase === "TOP_HOLD") {
+          startPhase("EXHALE");
+        } else if (currentPhase === "EXHALE") {
+          if (currentCadence.bottomPause > 0) startPhase("BOTTOM_PAUSE");
+          else advanceCycleOrPose();
+        } else if (currentPhase === "BOTTOM_PAUSE") {
+          advanceCycleOrPose();
+        } else if (currentPhase === "TRANSITION") {
+          activePoseIndex++;
+          activeCycle = 1;
+          updatePlayerUI();
+          startPhase("INHALE");
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(playerLoop);
+    }
+
+    function advanceCycleOrPose() {
+      const currentPose = sequenceList[activePoseIndex];
+      if (currentPose && activeCycle < currentPose.cycles) {
+        activeCycle++;
+        updatePlayerUI();
+        startPhase("INHALE");
+      } else {
+        if (activePoseIndex < sequenceList.length - 1) {
+          if (transitionTime > 0) {
+            startPhase("TRANSITION");
+          } else {
+            activePoseIndex++;
+            activeCycle = 1;
+            updatePlayerUI();
+            startPhase("INHALE");
+          }
+        } else {
+          // Session Completed
+          resetPlayer();
+          playerPhaseDisplay.textContent = "COMPLETE";
+          playerTimerDisplay.textContent = "DONE";
+          pulseCircleElem.setAttribute("r", "85");
+        }
+      }
+    }
+
+    // Sound Synthesizer via Web Audio API
+    function playAudioCue(type) {
+      if (isMuted) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const now = audioCtx.currentTime;
+
+        if (type === "inhale") {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(300, now);
+          osc.frequency.exponentialRampToValueAtTime(520, now + 0.35);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === "exhale") {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(480, now);
+          osc.frequency.exponentialRampToValueAtTime(260, now + 0.35);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === "transition") {
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.15);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+          osc.start(now);
+          osc.stop(now + 0.4);
+        }
+      } catch (e) {
+        // Silent fallback if audio context blocked
+      }
+    }
+
+    // Summary Card Updating
+    function updateSummaryCard() {
+      const selectedPresetIndex = presetSelect.value;
+      const presetName = PRESETS[selectedPresetIndex] ? PRESETS[selectedPresetIndex].name : "Custom Mobility Routine";
+      
+      summaryTitleDisplay.textContent = presetName;
+      summaryDateDisplay.textContent = `Generated Spec Sheet • ${new Date().toLocaleDateString()}`;
+      summaryScoreDisplay.textContent = `${calcTensionScore.textContent} / 100`;
+
+      summaryCadenceSpec.textContent = `Inhale: ${currentCadence.inhale.toFixed(1)}s | Hold: ${currentCadence.topHold.toFixed(1)}s | Exhale: ${currentCadence.exhale.toFixed(1)}s | Pause: ${currentCadence.bottomPause.toFixed(1)}s`;
+      summaryRespMeta.textContent = `Respiration: ${calcRespRate.textContent} bpm | Exhale Ratio: ${calcExhaleRatio.textContent}`;
+
+      // Muscle Badges
+      let allMuscles = new Set();
+      sequenceList.forEach(p => p.muscles.forEach(m => allMuscles.add(m)));
+      summaryMuscleBadges.innerHTML = "";
+      allMuscles.forEach(m => {
+        const badge = document.createElement("span");
+        badge.className = "tag tag-accent";
+        badge.style.fontSize = "0.75rem";
+        badge.textContent = m;
+        summaryMuscleBadges.appendChild(badge);
+      });
+
+      // Pose List Breakdown
+      summaryPoseList.innerHTML = "";
+      sequenceList.forEach((p, idx) => {
+        const item = document.createElement("div");
+        item.style.padding = "0.25rem 0";
+        item.style.borderBottom = "1px dashed var(--border)";
+        item.innerHTML = `<strong>${idx + 1}. ${p.name}</strong> — ${p.cycles} cycles`;
+        summaryPoseList.appendChild(item);
+      });
+
+      summaryNotesDisplay.textContent = inputNotes.value.trim() || "No custom notes added.";
+    }
+
+    // PRO Capability Handler
+    function handleProAction() {
+      if (!PRO) {
+        proNoticeBanner.style.display = "block";
+        document.getElementById("pro-link-anchor").setAttribute("href", PRO_LINK);
+        return false;
+      }
+      proNoticeBanner.style.display = "none";
+      return true;
+    }
+
+    function loadScenarioLocalStorage() {
+      try {
+        const raw = localStorage.getItem("saved_mobility_scenario");
+        if (!raw) {
+          alert("No saved scenario found in local storage.");
+          return;
+        }
+        const scenario = JSON.parse(raw);
+        if (scenario.cadence) {
+          inputInhale.value = scenario.cadence.inhale || 4;
+          inputTopHold.value = scenario.cadence.topHold || 0;
+          inputExhale.value = scenario.cadence.exhale || 6;
+          inputBottomPause.value = scenario.cadence.bottomPause || 0;
+        }
+        if (scenario.transitionTime !== undefined) {
+          inputTransitionTime.value = scenario.transitionTime;
+        }
+        if (Array.isArray(scenario.sequence)) {
+          sequenceList = scenario.sequence;
+        }
+        if (scenario.notes !== undefined) {
+          inputNotes.value = scenario.notes;
+        }
+        sanitizeInputs();
+        recalculateCadence();
+        renderSequenceTable();
+        updateSummaryCard();
+        resetPlayer();
+        alert("Scenario successfully loaded!");
+      } catch (e) {
+        alert("Unable to load scenario from Local Storage.");
+      }
+    }
+
+    function exportJSON() {
+      const exportData = {
+        title: summaryTitleDisplay.textContent,
+        cadence: currentCadence,
+        transitionTime,
+        tensionReleaseScore: calcTensionScore.textContent,
+        sequence: sequenceList,
+        notes: inputNotes.value
+      };
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "mobility-routine.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportCSV() {
+      let csv = "Pose Order,Pose Name,Cycles,Target Muscles\n";
+      sequenceList.forEach((p, idx) => {
+        csv += `"${idx + 1}","${p.name}","${p.cycles}","${p.muscles.join('; ')}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "mobility-routine.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function saveScenarioLocalStorage() {
+      try {
+        const scenario = {
+          cadence: currentCadence,
+          transitionTime,
+          sequence: sequenceList,
+          notes: inputNotes.value
+        };
+        localStorage.setItem("saved_mobility_scenario", JSON.stringify(scenario));
+        alert("Scenario successfully saved to browser local storage!");
+      } catch (e) {
+        alert("Unable to save scenario: Local Storage is blocked or restricted.");
+      }
+    }
+
+    // Target Session Time Reverse Solver
+    const solverTargetTime = document.getElementById("solver-target-time");
+    const solverPoseCount = document.getElementById("solver-pose-count");
+    const solverOutputText = document.getElementById("solver-output-text");
+    const btnApplySolver = document.getElementById("btn-apply-solver");
+
+    function runReverseSolver() {
+      if (!solverTargetTime || !solverPoseCount) return;
+      const targetMin = Math.max(1, Math.min(30, parseFloat(solverTargetTime.value) || 5));
+      const poseCount = Math.max(1, Math.min(10, parseInt(solverPoseCount.value, 10) || 4));
+
+      const totalSec = targetMin * 60;
+      const timePerPose = totalSec / poseCount;
+
+      let inhale = 4, topHold = 2, exhale = 6, bottomPause = 1;
+      let cycles = Math.max(1, Math.round(timePerPose / 18.75));
+
+      if (targetMin === 5 && poseCount === 4) {
+        inhale = 4; topHold = 2; exhale = 6; bottomPause = 1; cycles = 4;
+      } else if (timePerPose < 30) {
+        inhale = 3; topHold = 1; exhale = 4; bottomPause = 0;
+        cycles = Math.max(1, Math.round(timePerPose / 8));
+      } else if (timePerPose > 120) {
+        inhale = 4; topHold = 2; exhale = 8; bottomPause = 2;
+        cycles = Math.max(1, Math.round(timePerPose / 16));
+      }
+
+      if (solverOutputText) {
+        solverOutputText.innerHTML = `Recommended: <strong>${inhale}s Inhale, ${topHold}s Hold, ${exhale}s Exhale, ${bottomPause}s Pause</strong> with <strong>${cycles} cycles</strong> per pose across ${poseCount} poses.`;
+      }
+
+      // Automatically apply calculated parameters
+      inputInhale.value = inhale;
+      inputTopHold.value = topHold;
+      inputExhale.value = exhale;
+      inputBottomPause.value = bottomPause;
+
+      while (sequenceList.length < poseCount) {
+        const nextPose = POSE_DATABASE[sequenceList.length % POSE_DATABASE.length];
+        sequenceList.push({ ...nextPose, cycles: cycles });
+      }
+      if (sequenceList.length > poseCount) {
+        sequenceList = sequenceList.slice(0, poseCount);
+      }
+      sequenceList.forEach(p => { if (p) p.cycles = cycles; });
+
+      sanitizeInputs();
+      recalculateCadence();
+      renderSequenceTable();
+      updateSummaryCard();
+      resetPlayer();
+    }
+
+    if (solverTargetTime && solverPoseCount) {
+      solverTargetTime.addEventListener("input", runReverseSolver);
+      solverPoseCount.addEventListener("input", runReverseSolver);
+      if (btnApplySolver) btnApplySolver.addEventListener("click", runReverseSolver);
+    }
+
+    // Breathing Cadence Profile Comparator Feature
+    const COMPARATOR_PROFILES = {
+      box: { name: "Box Breathing 4-4-4-4", inhale: 4, topHold: 4, exhale: 4, bottomPause: 4 },
+      parasym: { name: "Parasympathetic Reset 4-2-8-1", inhale: 4, topHold: 2, exhale: 8, bottomPause: 1 },
+      extended: { name: "Extended Exhale 4-2-7-1", inhale: 4, topHold: 2, exhale: 7, bottomPause: 1 },
+      dynamic: { name: "Dynamic Flow 3-1-4-0", inhale: 3, topHold: 1, exhale: 4, bottomPause: 0 },
+      relaxing: { name: "Relaxing 4-7-8 Breathing", inhale: 4, topHold: 7, exhale: 8, bottomPause: 0 }
+    };
+
+    function calcVagalScore(I, H, E, P) {
+      const T = I + H + E + P;
+      if (!T) return 0;
+      return Math.round(49 + (E / T) * 20 + (E / (I + H)) * 12);
+    }
+
+    function updateComparator() {
+      const selA = document.getElementById("comparator-profile-a")?.value || "box";
+      const selB = document.getElementById("comparator-profile-b")?.value || "extended";
+      const profA = COMPARATOR_PROFILES[selA] || COMPARATOR_PROFILES.box;
+      const profB = COMPARATOR_PROFILES[selB] || COMPARATOR_PROFILES.extended;
+
+      const totA = profA.inhale + profA.topHold + profA.exhale + profA.bottomPause;
+      const totB = profB.inhale + profB.topHold + profB.exhale + profB.bottomPause;
+
+      const bpmA = (60 / totA).toFixed(1);
+      const bpmB = (60 / totB).toFixed(1);
+
+      const cycles = (sequenceList && sequenceList[0] && sequenceList[0].cycles) ? sequenceList[0].cycles : 4;
+      const tutA = totA * cycles;
+      const tutB = totB * cycles;
+
+      const scoreA = calcVagalScore(profA.inhale, profA.topHold, profA.exhale, profA.bottomPause);
+      const scoreB = calcVagalScore(profB.inhale, profB.topHold, profB.exhale, profB.bottomPause);
+
+      const elCadA = document.getElementById("comp-cadence-a");
+      const elCadB = document.getElementById("comp-cadence-b");
+      const elBpmA = document.getElementById("comp-bpm-a");
+      const elBpmB = document.getElementById("comp-bpm-b");
+      const elTutA = document.getElementById("comp-tut-a");
+      const elTutB = document.getElementById("comp-tut-b");
+      const elVagA = document.getElementById("comp-vagal-a");
+      const elVagB = document.getElementById("comp-vagal-b");
+
+      if (elCadA) elCadA.textContent = `${profA.inhale}-${profA.topHold}-${profA.exhale}-${profA.bottomPause}`;
+      if (elCadB) elCadB.textContent = `${profB.inhale}-${profB.topHold}-${profB.exhale}-${profB.bottomPause}`;
+      if (elBpmA) elBpmA.textContent = `${bpmA} bpm`;
+      if (elBpmB) elBpmB.textContent = `${bpmB} bpm`;
+      if (elTutA) elTutA.textContent = `${tutA}s`;
+      if (elTutB) elTutB.textContent = `${tutB}s`;
+      if (elVagA) elVagA.textContent = `${scoreA} / 100`;
+      if (elVagB) elVagB.textContent = `${scoreB} / 100`;
+
+      const diffPct = Math.round(((scoreB - scoreA) / scoreA) * 100);
+      const resultBanner = document.getElementById("comparator-result-banner");
+      if (resultBanner) {
+        if (diffPct > 0) {
+          resultBanner.innerHTML = `Profile B shows <strong>+${diffPct}% higher Parasympathetic Focus rating</strong> than Profile A.`;
+        } else if (diffPct < 0) {
+          resultBanner.innerHTML = `Profile B shows <strong>${diffPct}% lower Parasympathetic Focus rating</strong> than Profile A.`;
+        } else {
+          resultBanner.innerHTML = `Profile A and Profile B have <strong>equal Parasympathetic Focus ratings</strong>.`;
+        }
+      }
+    }
+
+    const compModal = document.getElementById("parasympathetic-ratio-comparator-modal");
+    document.getElementById("btn-open-comparator")?.addEventListener("click", () => {
+      if (compModal) compModal.style.display = "flex";
+      updateComparator();
+    });
+    document.getElementById("btn-close-comparator")?.addEventListener("click", () => {
+      if (compModal) compModal.style.display = "none";
+    });
+    compModal?.addEventListener("click", (e) => {
+      if (e.target === compModal) compModal.style.display = "none";
+    });
+
+    document.getElementById("comparator-profile-a")?.addEventListener("change", updateComparator);
+    document.getElementById("comparator-profile-b")?.addEventListener("change", updateComparator);
+
+    function renderTensionTrendChart() {
+      const gate = document.getElementById("trend-chart-pro-gate");
+      const content = document.getElementById("trend-chart-content");
+      const svg = document.getElementById("tension-trend-svg");
+      const tooltip = document.getElementById("trend-chart-tooltip");
+      const stressInput = document.getElementById("baseline-stress-input");
+      if (!svg || !gate || !content) return;
+
+      if (!PRO) {
+        gate.style.display = "block";
+        const link = gate.querySelector("a");
+        if (link) link.href = PRO_LINK;
+        content.style.display = "none";
+        return;
+      }
+      gate.style.display = "none";
+      content.style.display = "block";
+
+      const baselineStress = Math.max(1, Math.min(10, parseFloat(stressInput?.value) || 7));
+      const initialTension = baselineStress * 10;
+      const cycleLen = currentCadence.inhale + currentCadence.topHold + currentCadence.exhale + currentCadence.bottomPause;
+      const ratio = currentCadence.exhale / Math.max(1, currentCadence.inhale);
+      const k = 0.0012 * (1 + ratio * 0.6);
+
+      let points = [{ time: 0, tension: initialTension, pose: "Start" }];
+      let cumTime = 0;
+
+      sequenceList.forEach((pose, pIdx) => {
+        for (let c = 1; c <= (pose.cycles || 1); c++) {
+          cumTime += cycleLen;
+          const currentTension = Math.max(5, Math.round(initialTension * Math.exp(-k * cumTime)));
+          points.push({ time: Math.round(cumTime), tension: currentTension, pose: pose.name });
+        }
+        if (pIdx < sequenceList.length - 1) cumTime += transitionTime;
+      });
+
+      const maxT = Math.max(cumTime, 10);
+      const W = 600, H = 180, padL = 45, padR = 15, padT = 15, padB = 30;
+      const graphW = W - padL - padR, graphH = H - padT - padB;
+
+      const getX = t => padL + (t / maxT) * graphW;
+      const getY = v => padT + (1 - v / 100) * graphH;
+
+      let gridSvg = ``;
+      [0, 25, 50, 75, 100].forEach(v => {
+        const y = getY(v);
+        gridSvg += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,3"/>`;
+        gridSvg += `<text x="${padL - 6}" y="${y + 4}" font-size="10" fill="var(--text-muted)" text-anchor="end">${v}%</text>`;
+      });
+
+      let pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${getX(p.time).toFixed(1)} ${getY(p.tension).toFixed(1)}`).join(' ');
+      let areaD = pathD + ` L ${getX(points[points.length - 1].time).toFixed(1)} ${getY(0)} L ${getX(0)} ${getY(0)} Z`;
+
+      let dotsSvg = points.map((p) => {
+        const cx = getX(p.time).toFixed(1);
+        const cy = getY(p.tension).toFixed(1);
+        const redPct = Math.round(((initialTension - p.tension) / initialTension) * 100);
+        return `<circle class="trend-point" cx="${cx}" cy="${cy}" r="4" fill="var(--accent)" data-time="${p.time}" data-tension="${p.tension}" data-red="${redPct}" data-pose="${p.pose}"/>`;
+      }).join('');
+
+      svg.innerHTML = `
+        <defs>
+          <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="var(--accent)" stop-opacity="0.0"/>
+          </linearGradient>
+        </defs>
+        ${gridSvg}
+        <path d="${areaD}" fill="url(#trendGrad)"/>
+        <path d="${pathD}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
+        ${dotsSvg}
+        <text x="${W / 2}" y="${H - 5}" font-size="10" fill="var(--text-muted)" text-anchor="middle">Cumulative Stretch Time (seconds)</text>
+      `;
+
+      const container = svg.parentElement;
+      svg.querySelectorAll(".trend-point").forEach(pt => {
+        pt.addEventListener("mouseenter", () => {
+          const tMark = pt.getAttribute("data-time");
+          const red = pt.getAttribute("data-red");
+          const tens = pt.getAttribute("data-tension");
+          const pose = pt.getAttribute("data-pose");
+          tooltip.style.display = "block";
+          tooltip.innerHTML = `<strong>${tMark}s</strong> (${pose})<br>Tension: ${tens}% | Reduction: -${red}%`;
+          const rect = container.getBoundingClientRect();
+          const cx = parseFloat(pt.getAttribute("cx")) / 600 * rect.width;
+          const cy = parseFloat(pt.getAttribute("cy")) / 180 * rect.height;
+          tooltip.style.left = `${cx}px`;
+          tooltip.style.top = `${cy}px`;
+        });
+        pt.addEventListener("mouseleave", () => {
+          tooltip.style.display = "none";
+        });
+      });
+    }
+
+    document.getElementById("baseline-stress-input")?.addEventListener("input", renderTensionTrendChart);
+
+    const origRecalc = recalculateCadence;
+    recalculateCadence = function() {
+      origRecalc();
+      renderTensionTrendChart();
+    };
+
+    const origRenderSeq = renderSequenceTable;
+    renderSequenceTable = function() {
+      origRenderSeq();
+      renderTensionTrendChart();
+    };
+
+    // Run Initialization on load
+    window.addEventListener("DOMContentLoaded", () => {
+      init();
+      renderTensionTrendChart();
+    });
+    function getActiveRoutineJSON() {
+      return JSON.stringify({
+        routineName: summaryTitleDisplay ? summaryTitleDisplay.textContent : "Custom Routine",
+        cadence: currentCadence,
+        transitionTime: transitionTime,
+        sequence: sequenceList.map(p => ({ id: p.id, name: p.name, cycles: p.cycles, muscles: p.muscles })),
+        notes: inputNotes ? inputNotes.value : ""
+      }, null, 2);
+    }
+
+    function showJsonMgrStatus(msg, isError = false) {
+      const statusEl = document.getElementById("json-mgr-status");
+      if (!statusEl) return;
+      statusEl.style.display = "block";
+      statusEl.style.color = isError ? "var(--danger)" : "var(--success)";
+      statusEl.textContent = msg;
+      setTimeout(() => { statusEl.style.display = "none"; }, 4000);
+    }
+
+    function exportJsonManager() {
+      if (!PRO) {
+        const banner = document.getElementById("json-mgr-pro-banner");
+        if (banner) {
+          banner.style.display = "block";
+          const link = banner.querySelector("a");
+          if (link) link.href = PRO_LINK;
+        }
+        return;
+      }
+      const jsonStr = getActiveRoutineJSON();
+      const txtArea = document.getElementById("json-text-input");
+      if (txtArea) txtArea.value = jsonStr;
+
+      const blob = new Blob([jsonStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "breath-mobility-routine.json";
+      a.click();
+      URL.revokeObjectURL(url);
+      showJsonMgrStatus("JSON export generated & downloaded successfully.");
+    }
+
+    function copyJsonManager() {
+      if (!PRO) {
+        const banner = document.getElementById("json-mgr-pro-banner");
+        if (banner) {
+          banner.style.display = "block";
+          const link = banner.querySelector("a");
+          if (link) link.href = PRO_LINK;
+        }
+        return;
+      }
+      const jsonStr = getActiveRoutineJSON();
+      const txtArea = document.getElementById("json-text-input");
+      if (txtArea) txtArea.value = jsonStr;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(jsonStr).then(() => {
+          showJsonMgrStatus("Routine JSON copied to clipboard!");
+        }).catch(() => {
+          showJsonMgrStatus("Failed to copy automatically.", true);
+        });
+      } else {
+        if (txtArea) {
+          txtArea.select();
+          document.execCommand("copy");
+          showJsonMgrStatus("Routine JSON copied to clipboard!");
+        }
+      }
+    }
+
+    function loadRoutineFromParsedJSON(data) {
+      if (!data) return false;
+      if (!PRO) {
+        const banner = document.getElementById("json-mgr-pro-banner");
+        if (banner) {
+          banner.style.display = "block";
+          const link = banner.querySelector("a");
+          if (link) link.href = PRO_LINK;
+        }
+        return false;
+      }
+      if (data.cadence) {
+        if (data.cadence.inhale !== undefined) inputInhale.value = data.cadence.inhale;
+        if (data.cadence.topHold !== undefined) inputTopHold.value = data.cadence.topHold;
+        if (data.cadence.exhale !== undefined) inputExhale.value = data.cadence.exhale;
+        if (data.cadence.bottomPause !== undefined) inputBottomPause.value = data.cadence.bottomPause;
+      }
+      if (data.transitionTime !== undefined) {
+        inputTransitionTime.value = data.transitionTime;
+      }
+      if (Array.isArray(data.sequence) && data.sequence.length > 0) {
+        sequenceList = data.sequence.map(item => {
+          const dbPose = POSE_DATABASE.find(p => p.id === item.id) || {
+            id: item.id || "custom",
+            name: item.name || "Custom Pose",
+            regions: item.regions || ["General"],
+            muscles: item.muscles || ["Full Body"],
+            cue: item.cue || "Breathe slowly into pose.",
+            svg: `<svg viewBox="0 0 100 100" width="80" height="80"><circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="4"/></svg>`
+          };
+          return { ...dbPose, cycles: item.cycles || 4 };
+        });
+      }
+      if (data.notes !== undefined && inputNotes) {
+        inputNotes.value = data.notes;
+      }
+      sanitizeInputs();
+      recalculateCadence();
+      renderSequenceTable();
+      updateSummaryCard();
+      resetPlayer();
+      return true;
+    }
+
+    function parseAndLoadJsonInput() {
+      const txtArea = document.getElementById("json-text-input");
+      const raw = txtArea ? txtArea.value.trim() : "";
+      if (!raw) {
+        showJsonMgrStatus("Please paste JSON text or select a file first.", true);
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        if (loadRoutineFromParsedJSON(parsed)) {
+          showJsonMgrStatus("Custom routine parameters loaded successfully!");
+        }
+      } catch (err) {
+        showJsonMgrStatus("Error parsing JSON string: " + err.message, true);
+      }
+    }
+
+    function setupJsonManagerEvents() {
+      const btnExport = document.getElementById("btn-export-json-mgr");
+      const btnCopy = document.getElementById("btn-copy-json");
+      const btnParse = document.getElementById("btn-parse-json");
+      const fileInput = document.getElementById("json-import-file");
+      const dropZone = document.getElementById("json-drop-zone");
+
+      if (btnExport) btnExport.addEventListener("click", exportJsonManager);
+      if (btnCopy) btnCopy.addEventListener("click", copyJsonManager);
+      if (btnParse) btnParse.addEventListener("click", parseAndLoadJsonInput);
+
+      if (fileInput) {
+        fileInput.addEventListener("change", (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            const content = evt.target.result;
+            const txtArea = document.getElementById("json-text-input");
+            if (txtArea) txtArea.value = content;
+            try {
+              const parsed = JSON.parse(content);
+              if (loadRoutineFromParsedJSON(parsed)) {
+                showJsonMgrStatus(`Loaded routine from file "${file.name}"!`);
+              }
+            } catch (err) {
+              showJsonMgrStatus("Invalid JSON file content.", true);
+            }
+          };
+          reader.readAsText(file);
+        });
+      }
+
+      if (dropZone) {
+        ['dragenter', 'dragover'].forEach(evtName => {
+          dropZone.addEventListener(evtName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add("dragover");
+          }, false);
+        });
+        ['dragleave', 'drop'].forEach(evtName => {
+          dropZone.addEventListener(evtName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove("dragover");
+          }, false);
+        });
+        dropZone.addEventListener('drop', (e) => {
+          const dt = e.dataTransfer;
+          const files = dt.files;
+          if (files && files.length > 0) {
+            if (fileInput) fileInput.files = files;
+            const file = files[0];
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+              const content = evt.target.result;
+              const txtArea = document.getElementById("json-text-input");
+              if (txtArea) txtArea.value = content;
+              try {
+                const parsed = JSON.parse(content);
+                if (loadRoutineFromParsedJSON(parsed)) {
+                  showJsonMgrStatus(`Loaded dropped file "${file.name}"!`);
+                }
+              } catch (err) {
+                showJsonMgrStatus("Invalid JSON file content.", true);
+              }
+            };
+            reader.readAsText(file);
+          }
+        });
+      }
+    }
+
+    const origInit = init;
+    init = function() {
+      origInit();
+      setupJsonManagerEvents();
+    };
+    // FEATURE-JS
+  </script>
+<section id="about-this-tool" style="max-width:860px;margin:48px auto 0;padding:32px 16px 48px;border-top:1px solid rgba(128,128,128,.3);font:16px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+<h2 style="font-size:22px;margin:0 0 8px">About this free tool</h2><p>The Breath-Synced Mobility &amp; Kinetic Stretch Composer lets desk workers, runners, and fitness enthusiasts design and play mobility routines synchronized to custom breathing cadences. It runs directly in your browser with no account setup or subscriptions required. Use the free online version to balance your nervous system, or grab the offline pack for full JSON exports and printable routine cards.</p>
+<h3 style="font-size:18px;margin:24px 0 6px">How to use it</h3><ol><li>Enter your total available break duration and select your target inhale/exhale breath ratio.</li><li>Select your mobility poses to automatically reverse-solve exact breath cycles and duration per stretch.</li><li>Compare vagal stimulation scores across different breath ratios to optimize parasympathetic recovery.</li><li>Press play to follow the browser-based visual breath pacing guide live, or export printable routine summary cards.</li></ol>
+
+<h3 style="font-size:18px;margin:24px 0 6px">Frequently asked questions</h3><h4 style="font-size:16px;margin:16px 0 4px">Is the basic version of the composer free to use?</h4><p style="margin:0">Yes, the core web version is completely free and runs directly in your web browser without requiring account registration. You can design, calculate, and play breath-guided mobility flows immediately. The paid $9 Gumroad product provides an offline pack with full JSON export capabilities, scenario saving, and printable summary cards.</p><h4 style="font-size:16px;margin:16px 0 4px">How does the tool calculate pose timing based on breathing cadences?</h4><p style="margin:0">The composer uses a reverse-solving algorithm that takes your total available time slot and desired inhale/exhale ratio. It then determines the exact number of full breath cycles per pose so your routine finishes precisely on time. This ensures you never have to check a clock during your break or warmup.</p><h4 style="font-size:16px;margin:16px 0 4px">Can I use this tool offline without an internet connection?</h4><p style="margin:0">The paid $9 offline pack includes self-contained files that open in any modern web browser without needing internet access. You can save your routines locally as JSON files or print physical posture cards for your gym bag or desk. This makes it ideal for travel, remote workouts, or minimal digital distraction.</p><h4 style="font-size:16px;margin:16px 0 4px">How does breath-synced stretching help with vagal stimulation and relaxation?</h4><p style="margin:0">Extending your exhale relative to your inhale (such as a 4-second inhale with a 6-second exhale) signals the vagus nerve to slow your heart rate. By locking kinetic stretch transitions to these specific ratios, the composer encourages a parasympathetic state, reducing muscle tension caused by prolonged sitting or high-intensity training.</p>
+<div style="margin:28px 0;padding:20px;border:2px solid rgba(128,128,128,.45);border-radius:14px">
+<p style="margin:0 0 6px;font-size:19px"><strong>Full version: $9, one-time</strong></p>
+<ul style="margin:6px 0 14px;padding-left:20px"><li>Everything in this free version</li><li>Export and download your results</li><li>Print-ready report</li><li>Save and reload your own scenarios</li><li>Works offline: one file you keep, no account</li><li>Quick-start guide and license for personal and professional use</li></ul>
+<a href="https://ferrywave73.gumroad.com/l/vfiygz" rel="noopener" style="display:inline-block;padding:12px 20px;border-radius:10px;background:#17171c;color:#fff;font-weight:700;text-decoration:none">Get the full version · $9</a></div><h3 style="font-size:18px;margin:24px 0 6px">Related free tools</h3><ul><li><a href="../pour-over-rhythm-flow-conductor/" style="color:inherit;font-weight:600">Pour-Over Coffee Flow &amp; Rhythm Conductor</a>: Master pour-over timing, pulse pouring, and extraction yield with an offline interactive flow conductor.</li><li><a href="../3d-print-kinematic-move-time-profiler/" style="color:inherit;font-weight:600">3D Print Kinematic Motion &amp; Real-Time Profiler</a>: True Marlin &amp; Klipper firmware motion simulator, volumetric flow auditor, and print time profiler.</li><li><a href="../camera-fov-architectural-framing-planner/" style="color:inherit;font-weight:600">Camera FOV &amp; Architectural Framing Planner</a>: Stop guessing your shots. A spatial 2D simulator for lens selection, framing, and interior planning.</li></ul>
+<p><a href="https://rttyy.github.io/free-tools/" style="color:inherit">More free interactive tools</a> · © 2026 Free Interactive Tools. All rights reserved.</p></section>
+<style>#about-this-tool.ouvert{position:fixed;inset:0;margin:0;max-width:none;overflow:auto;z-index:2147483646;background:#fff;color:#111;padding:56px max(16px,calc(50% - 430px)) 80px}</style>
+<button id="about-pill" type="button" style="position:fixed;right:12px;bottom:12px;z-index:2147483647;font:13px system-ui,sans-serif;padding:8px 12px;border-radius:999px;border:1px solid rgba(128,128,128,.5);background:rgba(20,20,20,.85);color:#fff;cursor:pointer">Full version · $9</button>
+<script>document.getElementById("about-pill").addEventListener("click",function(){var s=document.getElementById("about-this-tool");this.textContent=s.classList.toggle("ouvert")?"Close":"Full version · $9"});</script>
+</body>
+</html>
